@@ -253,11 +253,6 @@ namespace menu
     {
         srand((uint32_t)time(NULL));
 
-        auto t = std::time(nullptr);
-        struct tm tm;
-        localtime_s(&tm, &t);
-        globals::is_december = tm.tm_mon == 11;
-
         // Initialize ImGui
         ImGuiIO &io = ImGui::GetIO();
         io.IniFilename = NULL; // we are saving window positions manually

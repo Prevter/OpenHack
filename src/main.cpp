@@ -14,14 +14,20 @@ DWORD WINAPI MainThread(LPVOID param)
 {
 #if _DEBUG
     logger::init(true, true, "log.txt");
+    utils::set_console_title("OpenHack - Geometry Dash");
 #else
     logger::init(false, true, "log.txt");
 #endif
 
     L_INFO("Loading OpenHack...");
 
-    utils::set_console_title("OpenHack - Geometry Dash");
+    // Check if it's december (for snow particles)
+    auto t = std::time(nullptr);
+    struct tm tm;
+    localtime_s(&tm, &t);
+    globals::is_december = tm.tm_mon == 11;
 
+    // Initialize menu after the game has loaded
     hooks::MenuLayer::on_init = []()
     {
         if (initialized)
@@ -36,6 +42,7 @@ DWORD WINAPI MainThread(LPVOID param)
         L_INFO("OpenHack loaded successfully!");
     };
 
+    // Initialize hooks
     hook::init();
     config::load();
 

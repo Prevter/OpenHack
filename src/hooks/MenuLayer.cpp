@@ -9,6 +9,14 @@ namespace hooks::MenuLayer
         auto ret = init(self);
         if (on_init)
             on_init();
+
+        // add snow in december
+        if (globals::is_december)
+        {
+            cocos2d::CCParticleSnow *snow = cocos2d::CCParticleSnow::createWithTotalParticles(700);
+            self->addChild(snow);
+        }
+
         return ret;
     };
 }
