@@ -1,0 +1,122 @@
+{
+    "title": "Creator",
+    "items": [
+        {
+            "type": "toggle",
+            "title": "Custom Object Bypass",
+            "id": "creator.custom_object",
+            "opcodes": [
+                {
+                    "addr": "0xA76A4",
+                    "on": "0xE98300",
+                    "off": "0x0F8682"
+                },
+                {
+                    "addr": "0xA7854",
+                    "on": "0x9090",
+                    "off": "0x773A"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Copy Hack",
+            "id": "creator.copy",
+            "opcodes": [
+                {
+                    "addr": "0x24E077",
+                    "on": "0x0F85",
+                    "off": "0x0F84"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Level Edit",
+            "id": "creator.level_edit",
+            "opcodes": [
+                {
+                    "addr": "0x2B3A33",
+                    "on": "0x90909090909090909090909090",
+                    "off": "0x83B9BC030000020F8589000000"
+                },
+                {
+                    "addr": "0x2B3A96",
+                    "on": "0x909090909090908BCA90",
+                    "off": "0x83B8BC030000020F44CA"
+                },
+                {
+                    "addr": "0x2B4D98",
+                    "on": "0x90909090909090909090909090",
+                    "off": "0x83B8BC030000020F85BD000000"
+                },
+                {
+                    "addr": "0x2B4E15",
+                    "on": "0xEB",
+                    "off": "0x74"
+                },
+                {
+                    "addr": "0x270AC4",
+                    "on": "0xB001",
+                    "off": "0x8AC3"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Slider Limit",
+            "id": "creator.slider",
+            "opcodes": [
+                {
+                    "addr": "0x4CDAA",
+                    "on": "0xEB",
+                    "off": "0x76"
+                },
+                {
+                    "addr": "0x4CDD8",
+                    "on": "0xEB",
+                    "off": "0x76"
+                },
+                {
+                    "addr": "0xDE538",
+                    "on": "0xEB",
+                    "off": "0x75"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Testmode Bypass",
+            "id": "creator.testmode",
+            "opcodes": [
+                {
+                    "addr": "0x2D7D75",
+                    "on": "0xE9B300",
+                    "off": "0x0F84B2"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Verify Hack",
+            "id": "creator.verify",
+            "opcodes": [
+                {
+                    "addr": "0x381BF5",
+                    "on": "0x74",
+                    "off": "0x0F84B2"
+                },
+                {
+                    "addr": "0x80617",
+                    "on": "0xBAA8",
+                    "off": "0xBAB4"
+                },
+                {
+                    "addr": "0x9D538",
+                    "on": "0x9090",
+                    "off": "0x7511"
+                }
+            ]
+        }
+    ]
+}

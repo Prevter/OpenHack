@@ -1,0 +1,21 @@
+[submodule "libs/json"]
+	path = libs/json
+	url = https://github.com/nlohmann/json
+[submodule "libs/minhook"]
+	path = libs/minhook
+	url = https://github.com/TsudaKageyu/minhook
+[submodule "libs/cocos-headers"]
+	path = libs/cocos-headers
+	url = https://github.com/HJfod/cocos-headers
+[submodule "libs/glfw"]
+	path = libs/glfw
+	url = https://github.com/glfw/glfw
+[submodule "libs/imgui"]
+	path = libs/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "libs/spdlog"]
+	path = libs/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "libs/stb"]
+	path = libs/stb
+	url = https://github.com/nothings/stb

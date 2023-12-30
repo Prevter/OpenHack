@@ -1,0 +1,106 @@
+{
+    "title": "Cosmetic",
+    "items": [
+        {
+            "type": "toggle",
+            "title": "No Respawn Flash",
+            "id": "cosmetic.respawn_flash",
+            "opcodes": [
+                {
+                    "addr": "0x2CBD5A",
+                    "on": "0xE9A800",
+                    "off": "0x0F85A7"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Death Effect",
+            "id": "cosmetic.death_effect",
+            "opcodes": [
+                {
+                    "addr": "0x2CC3B2",
+                    "on": "0x9090909090",
+                    "off": "0xE8398DFEFF"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Wave Pulse",
+            "id": "cosmetic.wave_pulse",
+            "opcodes": [
+                {
+                    "addr": "0x2DD37B",
+                    "on": "0xC0",
+                    "off": "0xC1"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Particles",
+            "id": "cosmetic.particles",
+            "opcodes": [
+                {
+                    "addr": "0xBD24A",
+                    "lib": "libcocos2d.dll",
+                    "on": "0xE92501000090",
+                    "off": "0x0F8424010000"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Inversed Trail",
+            "id": "cosmetic.inversed_trail",
+            "opcodes": [
+                {
+                    "addr": "0xB0E4C",
+                    "lib": "libcocos2d.dll",
+                    "on": "0x0F8568020000",
+                    "off": "0x0F8468020000"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Solid Wave Trail",
+            "id": "cosmetic.solid_wave",
+            "opcodes": [
+                {
+                    "addr": "0x2BEB61",
+                    "on": "0x9090",
+                    "off": "0x7518"
+                },
+                {
+                    "addr": "0x2BEB6A",
+                    "on": "0x9090",
+                    "off": "0x750F"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Practice Pulse",
+            "id": "cosmetic.practice_pulse",
+            "opcodes": [
+                {
+                    "addr": "0x2DD33D",
+                    "on": "0xEB09",
+                    "off": "0x7409"
+                },
+                {
+                    "addr": "0x5BB4F",
+                    "on": "0x909090909090909090",
+                    "off": "0x80B8742A000000750C"
+                },
+                {
+                    "addr": "0x2DD36E",
+                    "on": "0xEB09",
+                    "off": "0x7409"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+{
+    "title": "Universal",
+    "items": [
+        {
+            "type": "toggle",
+            "title": "No Transition",
+            "id": "universal.transition",
+            "opcodes": [
+                {
+                    "addr": "0xA7414",
+                    "lib": "libcocos2d.dll",
+                    "on": "0x9090909090",
+                    "off": "0xF30F104508"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Ignore ESC",
+            "id": "universal.ignoreesc",
+            "opcodes": [
+                {
+                    "addr": "0x2B4F31",
+                    "on": "0x9090909090",
+                    "off": "0xE81A070300"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Safe Mode",
+            "id": "universal.safemode",
+            "opcodes": [
+                {
+                    "addr": "0x2E0CDF",
+                    "on": "0x9090909090909090909090909090909090909090E98601000090",
+                    "off": "0x80BBA42A0000000F859201000080BBBE290000000F8585010000"
+                },
+                {
+                    "addr": "0x2D80D1",
+                    "on": "0x9090909090909090909090909090909090909090E9DF01000090",
+                    "off": "0x80BBA42A0000000F85EB01000080BB742A0000000F85DE010000"
+                },
+                {
+                    "addr": "0x2D82D6",
+                    "on": "0x90909090909090E9B202000090",
+                    "off": "0x80BBA42A0000000F85B1020000"
+                }
+            ]
+        }
+    ]
+}

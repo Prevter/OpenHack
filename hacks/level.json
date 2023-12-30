@@ -1,0 +1,106 @@
+{
+    "title": "Level",
+    "items": [
+        {
+            "type": "toggle",
+            "title": "Noclip",
+            "id": "level.noclip",
+            "opcodes": [
+                {
+                    "addr": "0x2E0AD9",
+                    "on": "0x909090909090C683802D000001E98F070000",
+                    "off": "0x0F859B0700003883BA2A00000F858F070000"
+                }
+            ],
+            "cheat": true
+        },
+        {
+            "type": "toggle",
+            "title": "Practice Music Bypass",
+            "id": "level.music",
+            "opcodes": [
+                {
+                    "addr": "0x2E4F35",
+                    "on": "0xEB",
+                    "off": "0x75"
+                },
+                {
+                    "addr": "0x2E0EBA",
+                    "on": "0x9090",
+                    "off": "0x740C"
+                },
+                {
+                    "addr": "0x2E54B8",
+                    "on": "0x909090909090",
+                    "off": "0x0F858A000000"
+                },
+                {
+                    "addr": "0x3A18A",
+                    "on": "0x9090",
+                    "off": "0x751C"
+                },
+                {
+                    "addr": "0x2E4A34",
+                    "on": "0x9090",
+                    "off": "0x750F"
+                },
+                {
+                    "addr": "0x2E4A30",
+                    "on": "0x9090",
+                    "off": "0x7413"
+                },
+                {
+                    "addr": "0x2E4A3C",
+                    "on": "0x9090",
+                    "off": "0x7507"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Practice Coins",
+            "id": "level.coins",
+            "opcodes": [
+                {
+                    "addr": "0x198CEC",
+                    "on": "0x909090909090",
+                    "off": "0x0F856A010000"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Freeze Jumps Counter",
+            "id": "level.jumps",
+            "opcodes": [
+                {
+                    "addr": "0x2E4E50",
+                    "on": "0x909090909090",
+                    "off": "0xFF818C2E0000"
+                },
+                {
+                    "addr": "0x2E4E77",
+                    "on": "0x90",
+                    "off": "0x46"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Freeze Attempts Counter",
+            "id": "level.jumps",
+            "opcodes": [
+                {
+                    "addr": "0x2E49AA",
+                    "on": "0x00",
+                    "off": "0x01"
+                },
+                {
+                    "addr": "0x2E49C7",
+                    "on": "0x90",
+                    "off": "0x46"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,167 @@
+{
+    "title": "Bypass",
+    "items": [
+        {
+            "type": "toggle",
+            "title": "Text Bypass",
+            "id": "bypass.text",
+            "opcodes": [
+                {
+                    "addr": "0x2F9A7",
+                    "on": "0xEB",
+                    "off": "0x7C"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Character Filter",
+            "id": "bypass.filter",
+            "opcodes": [
+                {
+                    "addr": "0x2F974",
+                    "on": "0x74",
+                    "off": "0x75"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Diamond Shopkeeper Bypass",
+            "id": "bypass.diamond",
+            "opcodes": [
+                {
+                    "addr": "0x2F7156",
+                    "on": "0xEB",
+                    "off": "0x74"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "The Mechanic Bypass",
+            "id": "bypass.mechanic",
+            "opcodes": [
+                {
+                    "addr": "0x2F7132",
+                    "on": "0x74",
+                    "off": "0x75"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Potbor Bypass",
+            "id": "bypass.potbor",
+            "opcodes": [
+                {
+                    "addr": "0x2F710E",
+                    "on": "0xEB",
+                    "off": "0x75"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Scratch Bypass",
+            "id": "bypass.scratch",
+            "opcodes": [
+                {
+                    "addr": "0x2F70EA",
+                    "on": "0xEB",
+                    "off": "0x75"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Vault of Secrets Bypass",
+            "id": "bypass.vault1",
+            "opcodes": [
+                {
+                    "addr": "0x70991",
+                    "on": "0x75",
+                    "off": "0x74"
+                },
+                {
+                    "addr": "0x2FF97C",
+                    "on": "0x75",
+                    "off": "0x74"
+                },
+                {
+                    "addr": "0x6F9EB",
+                    "on": "0x909090",
+                    "off": "0x0F9DC1"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Vault of Secrets Key Bypass",
+            "id": "bypass.vault2",
+            "opcodes": [
+                {
+                    "addr": "0x30515F",
+                    "on": "0x0F84",
+                    "off": "0x0F85"
+                },
+                {
+                    "addr": "0x305307",
+                    "on": "0x0F84",
+                    "off": "0x0F85"
+                },
+                {
+                    "addr": "0x3054B3",
+                    "on": "0x0F84",
+                    "off": "0x0F85"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "The Treasure Room Bypass",
+            "id": "bypass.treasure",
+            "opcodes": [
+                {
+                    "addr": "0x70CB5",
+                    "on": "0x9090",
+                    "off": "0x744C"
+                },
+                {
+                    "addr": "0x6FC3B",
+                    "on": "0x909090",
+                    "off": "0x0F44CA"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Unlock All Icons",
+            "id": "bypass.icons",
+            "opcodes": [
+                {
+                    "addr": "0x12019B",
+                    "on": "0xE9A5000000",
+                    "off": "0x8BD98B7D0C"
+                },
+                {
+                    "addr": "0x12069B",
+                    "on": "0xEB77",
+                    "off": "0x8BD9"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Unlock All Levels",
+            "id": "bypass.levels",
+            "opcodes": [
+                {
+                    "addr": "0x2676A4",
+                    "on": "0x7E",
+                    "off": "0xEB"
+                }
+            ]
+        }
+    ]
+}
