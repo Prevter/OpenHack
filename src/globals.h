@@ -27,6 +27,8 @@ struct Color
     }
 };
 
+class EaseInAnimation;
+
 namespace globals
 {
     using json = nlohmann::json;
@@ -39,7 +41,8 @@ namespace globals
     extern float animation;                             // window animation timer
     extern bool animation_done;                         // flag to check if animation is finished
     extern int random_direction;                        // random direction for window animation
-    extern cocos2d::CCEaseRateAction *animation_action; // animation action
+    // extern cocos2d::CCEaseRateAction *animation_action; // animation action (deprecated)
+    extern EaseInAnimation *animation_action;           // animation action
 
     extern bool is_december; // flag to check if it's december (for snow effect in main menu)
 

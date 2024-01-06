@@ -2,13 +2,14 @@
 
 #include "../config.h"
 #include "../hacks/hacks.h"
-#include "custom_action.h"
+// #include "custom_action.h"
+#include "animation.h"
 #include "gui.h"
 
 namespace menu
 {
     bool menu_open = false;
-    bool opening = true;
+    // bool opening = true;
     int wait_one_frame = 1;
 
     void animation_is_done()
@@ -21,34 +22,46 @@ namespace menu
 
     void set_transition()
     {
-        cocos2d::CCEaseRateAction *ease;
+        // cocos2d::CCEaseRateAction *ease;
+        EaseInAnimation *ease;
         globals::animation_done = false;
         globals::random_direction = rand() % 4 + 1;
 
         if (menu_open)
         {
-            float timescale = cocos2d::CCDirector::sharedDirector()->getScheduler()->getTimeScale();
-            float duration = config::menu_animation_length * timescale;
-            ease = cocos2d::CCEaseIn::create(CustomAction::create(duration, 1, 0, &globals::animation, nullptr), 0.5f);
+            // float timescale = cocos2d::CCDirector::sharedDirector()->getScheduler()->getTimeScale();
+            // float duration = config::menu_animation_length * timescale;
+            // ease = cocos2d::CCEaseIn::create(CustomAction::create(duration, 1, 0, &globals::animation, nullptr), 0.5f);
+            ease = new EaseInAnimation(config::menu_animation_length, 1, 0, &globals::animation, animation_is_done);
 
             cocos2d::CCEGLView::sharedOpenGLView()->showCursor(true);
-            opening = true;
+            // opening = true;
         }
         else
         {
-            float timescale = cocos2d::CCDirector::sharedDirector()->getScheduler()->getTimeScale();
-            float duration = config::menu_animation_length * timescale;
-            ease = cocos2d::CCEaseOut::create(CustomAction::create(duration, 0, 1, &globals::animation, animation_is_done), 0.5f);
+            // float timescale = cocos2d::CCDirector::sharedDirector()->getScheduler()->getTimeScale();
+            // float duration = config::menu_animation_length * timescale;
+            // ease = cocos2d::CCEaseOut::create(CustomAction::create(duration, 0, 1, &globals::animation, animation_is_done), 0.5f);
+            ease = new EaseInAnimation(config::menu_animation_length, 0, 1, &globals::animation, animation_is_done);
 
             menu_open = true;
-            opening = false;
+            // opening = false;
         }
+
+        // if (ease)
+        // {
+        //     auto scene = cocos2d::CCDirector::sharedDirector()->getRunningScene();
+        //     scene->stopActionByTag(4000);
+        //     ease->setTag(4000);
+        //     scene->runAction(ease);
+        //     globals::animation_action = ease;
+        // }
 
         if (ease)
         {
-            cocos2d::CCDirector::sharedDirector()->getRunningScene()->stopActionByTag(4000);
-            ease->setTag(4000);
-            cocos2d::CCDirector::sharedDirector()->getRunningScene()->runAction(ease);
+            if (globals::animation_action)
+                delete globals::animation_action;
+
             globals::animation_action = ease;
         }
     }
@@ -105,7 +118,8 @@ namespace menu
     {
         globals::reset_windows = true;
 
-        const int game_width = (int)cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().width;
+        // const int game_width = (int)cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().width;
+        const int game_width = (int)ImGui::GetIO().DisplaySize.x;
 
         // pack windows left to right
         const float step = (float)config::window_snap;
@@ -162,17 +176,35 @@ namespace menu
 
     void draw()
     {
-        float s = cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().width / 1920.0f;
+        // float s = cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().width / 1920.0f;
+        // if (s != globals::screen_size.x)
+        // {
+        //     globals::screen_size.x = s;
+        //     globals::reset_windows = true;
+        // }
+        // s = cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().height / 1080.0f;
+        // if (s != globals::screen_size.y)
+        // {
+        //     globals::screen_size.y = s;
+        //     globals::reset_windows = true;
+        // }
+        float s = ImGui::GetIO().DisplaySize.x / 1920.0f;
         if (s != globals::screen_size.x)
         {
             globals::screen_size.x = s;
             globals::reset_windows = true;
         }
-        s = cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().height / 1080.0f;
+        s = ImGui::GetIO().DisplaySize.y / 1080.0f;
         if (s != globals::screen_size.y)
         {
             globals::screen_size.y = s;
             globals::reset_windows = true;
+        }
+
+        if (globals::animation_action && !globals::animation_action->is_done())
+        {
+            float dt = cocos2d::CCDirector::sharedDirector()->getDeltaTime();
+            globals::animation_action->update(dt);
         }
 
         hacks::update();
@@ -234,9 +266,15 @@ namespace menu
         gui::End();
 
         // Animation stuff
-        if (!globals::animation_done && (opening && globals::animation == 0 || !opening && globals::animation == 1))
+        // if (!globals::animation_done && (opening && globals::animation == 0 || !opening && globals::animation == 1))
+        // {
+        //     globals::animation_done = true;
+        //     globals::animation_action = nullptr;
+        // }
+        if (!globals::animation_done && globals::animation_action && globals::animation_action->is_done())
         {
             globals::animation_done = true;
+            delete globals::animation_action;
             globals::animation_action = nullptr;
         }
 
@@ -267,8 +305,10 @@ namespace menu
         ImGui_ImplOpenGL3_CreateFontsTexture();
         io.FontDefault = globals::main_font;
 
-        globals::screen_size.x = cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().width / 1920.0f;
-        globals::screen_size.y = cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().height / 1080.0f;
+        // globals::screen_size.x = cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().width / 1920.0f;
+        // globals::screen_size.y = cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().height / 1080.0f;
+        globals::screen_size.x = io.DisplaySize.x / 1920.0f;
+        globals::screen_size.y = io.DisplaySize.y / 1080.0f;
 
         set_styles();
     }
