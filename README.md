@@ -28,14 +28,6 @@ Planned:
 
 If there are any issues, please check the [issues](https://github.com/prevter/gdopenhack/issues) page or create a new issue.
 
-## Issues to fix
-Some issues I'm aware of that I haven't been able to fix yet:
-
-- For some reason, only Debug builds work. Release builds will crash the game on startup. This happens when calling methods from cocos2d, probably because of outdated headers. Fix would probably require updating the headers, but I'll leave that for later (probably until Geode is released, so I can just move there).
-- Menu animation is bugged on launch, requiring you to open and close the menu once to fix it. I've been debugging this for a while, but couldn't find the cause.
-
-If you know how to fix any of these, please let me know!
-
 ## Building
 You will need to have Visual Studio 2022 installed with the C++ workload.  
 You will also need to have the following installed:
@@ -54,10 +46,9 @@ Best way to build is to use Visual Studio Code with the "CMake Tools" extension:
 
 If you want to build using the command line, you can use the following commands:
 ```sh
-cmake -B build -A Win32 -DCMAKE_BUILD_TYPE=Debug
-cmake --build build --config Debug
+cmake -B build -A Win32 -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
 ```
-> Note: Debug build is required for now, because Release build will crash the game on startup.
 
 After that, you also need to copy the following files to the game directory:
 - `hacks/*` to `openhack/hacks/*`
