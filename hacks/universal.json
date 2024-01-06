@@ -47,6 +47,18 @@
                     "off": "0x80BBA42A0000000F85B1020000"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Short Numbers",
+            "id": "universal.noshortnumbers",
+            "opcodes": [
+                {
+                    "addr": "0x451BE",
+                    "on": "0x9090",
+                    "off": "0x7D12"
+                }
+            ]
         }
     ]
 }

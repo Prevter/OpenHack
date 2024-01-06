@@ -103,8 +103,8 @@
             "opcodes": [
                 {
                     "addr": "0x381BF5",
-                    "on": "0x74",
-                    "off": "0x0F84B2"
+                    "on": "0x75",
+                    "off": "0x74"
                 },
                 {
                     "addr": "0x80617",
@@ -115,6 +115,23 @@
                     "addr": "0x9D538",
                     "on": "0x9090",
                     "off": "0x7511"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Editor Extension",
+            "id": "creator.editorext",
+            "opcodes": [
+                {
+                    "addr": "0xD73B7",
+                    "on": "0x0F60EA4B",
+                    "off": "0x80676A48"
+                },
+                {
+                    "addr": "0x496122",
+                    "on": "0xEA4B",
+                    "off": "0x6A48"
                 }
             ]
         }

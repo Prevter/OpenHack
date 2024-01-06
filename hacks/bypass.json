@@ -33,7 +33,7 @@
                 {
                     "addr": "0x2F7156",
                     "on": "0xEB",
-                    "off": "0x74"
+                    "off": "0x75"
                 }
             ]
         },
@@ -158,8 +158,62 @@
             "opcodes": [
                 {
                     "addr": "0x2676A4",
-                    "on": "0x7E",
-                    "off": "0xEB"
+                    "on": "0xEB",
+                    "off": "0x7E"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Free Shops",
+            "id": "bypass.shops",
+            "opcodes": [
+                {
+                    "addr": "0x168223",
+                    "on": "0x90909090909090",
+                    "off": "0x5250E836050000"
+                },
+                {
+                    "addr": "0x216666",
+                    "on": "0xEB",
+                    "off": "0x74"
+                },
+                {
+                    "addr": "0x168205",
+                    "on": "0xEB",
+                    "off": "0x7D"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Free Chests",
+            "id": "bypass.chests",
+            "opcodes": [
+                {
+                    "addr": "0x17811B",
+                    "on": "0x9090B800",
+                    "off": "0x7E07B864"
+                },
+                {
+                    "addr": "0x172E0D",
+                    "on": "0x9090B800",
+                    "off": "0x7E07B864"
+                },
+                {
+                    "addr": "0x2F6DCE",
+                    "on": "0x9090B800",
+                    "off": "0x7E07BB64"
+                },
+                {
+                    "addr": "0x2F742A",
+                    "on": "0xE95D0100",
+                    "off": "0x0F8D5C01"
+                },
+                {
+                    "addr": "0x2F6E18",
+                    "off": "0x0F8DD601",
+                    "on": "0xE9D70100"
                 }
             ]
         }

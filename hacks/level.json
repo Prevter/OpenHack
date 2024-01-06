@@ -16,43 +16,23 @@
         },
         {
             "type": "toggle",
-            "title": "Practice Music Bypass",
+            "title": "Music Unlocker",
             "id": "level.music",
             "opcodes": [
                 {
-                    "addr": "0x2E4F35",
+                    "addr": "0x385293",
                     "on": "0xEB",
                     "off": "0x75"
                 },
                 {
-                    "addr": "0x2E0EBA",
-                    "on": "0x9090",
-                    "off": "0x740C"
+                    "addr": "0x385313",
+                    "on": "0xEB",
+                    "off": "0x75"
                 },
                 {
-                    "addr": "0x2E54B8",
-                    "on": "0x909090909090",
-                    "off": "0x0F858A000000"
-                },
-                {
-                    "addr": "0x3A18A",
-                    "on": "0x9090",
-                    "off": "0x751C"
-                },
-                {
-                    "addr": "0x2E4A34",
-                    "on": "0x9090",
-                    "off": "0x750F"
-                },
-                {
-                    "addr": "0x2E4A30",
-                    "on": "0x9090",
-                    "off": "0x7413"
-                },
-                {
-                    "addr": "0x2E4A3C",
-                    "on": "0x9090",
-                    "off": "0x7507"
+                    "addr": "0x384D94",
+                    "on": "0xE9BA00000090",
+                    "off": "0x0F85B9000000"
                 }
             ]
         },
@@ -99,6 +79,76 @@
                     "addr": "0x2E49C7",
                     "on": "0x90",
                     "off": "0x46"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Camera Move",
+            "id": "level.cameramove",
+            "opcodes": [
+                {
+                    "addr": "0x3ABFB0",
+                    "on": "0xC20C00",
+                    "off": "0x558BEC"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Camera Zoom",
+            "id": "level.camerazoom",
+            "opcodes": [
+                {
+                    "addr": "0x396FC4",
+                    "on": "0xEB4490909090",
+                    "off": "0xFFB7E0050000"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "All Modes Platformer",
+            "id": "level.platformermodes",
+            "opcodes": [
+                {
+                    "addr": "0x198837",
+                    "on": "0x909090909090",
+                    "off": "0x0F851F060000"
+                },
+                {
+                    "addr": "0x198898",
+                    "on": "0x909090909090",
+                    "off": "0x0F85BE050000"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Force Platformer",
+            "id": "level.platformerforce",
+            "opcodes": [
+                {
+                    "addr": "0x1B9639",
+                    "on": "0xB20190909090",
+                    "off": "0x8A9019010000"
+                },
+                {
+                    "addr": "0x1B966A",
+                    "on": "0xEB",
+                    "off": "0x74"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Platformer Practice Mode",
+            "id": "level.platformerpractice",
+            "opcodes": [
+                {
+                    "addr": "0x2B3AE1",
+                    "on": "0xEB",
+                    "off": "0x74"
                 }
             ]
         }
