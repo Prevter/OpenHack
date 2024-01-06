@@ -17,13 +17,17 @@ namespace hacks
         // called during hooks::init()
         virtual void init() = 0;
         // called during menu rendering
-        virtual void draw() = 0;
+        // (embedded = true if the hack is being rendered from "EmbeddedHackComponent")
+        virtual void draw(bool embedded = false) = 0;
         // called every frame
         virtual void update() = 0;
 
         // methods for saving and loading settings for this hack
         virtual void load(nlohmann::json *data) = 0;
         virtual void save(nlohmann::json *data) = 0;
+
+        // used to identify hacks
+        virtual std::string get_id() = 0;
     };
 
     extern std::vector<Hack *> hacks;
@@ -50,6 +54,7 @@ namespace hacks
         std::vector<uint8_t> off_bytes;
     };
 
+    // Controls a single toggleable hack
     class ToggleComponent : public Component
     {
     public:
@@ -73,6 +78,7 @@ namespace hacks
         std::vector<opcode_t> m_opcodes;
     };
 
+    // A component that only displays text
     class TextComponent : public Component
     {
     public:
@@ -85,6 +91,20 @@ namespace hacks
 
     private:
         std::string m_text;
+    };
+
+    class EmbeddedHackComponent : public Component
+    {
+    public:
+        EmbeddedHackComponent(Hack* hack);
+        virtual void draw() override;
+
+        // saving is handled by the hack itself
+        virtual void load(nlohmann::json *data) override {}
+        virtual void save(nlohmann::json *data) override {}
+
+    private:
+        Hack* m_hack;
     };
 
     class Window

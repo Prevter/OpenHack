@@ -199,8 +199,28 @@ namespace hacks
         gui::ImText(m_text.c_str());
     }
 
+    /* ===== EmbeddedHackComponent ===== */
+
+    EmbeddedHackComponent::EmbeddedHackComponent(Hack *hack)
+    {
+        m_hack = hack;
+    }
+
+    void EmbeddedHackComponent::draw()
+    {
+        m_hack->draw(true);
+    }
+
     void init()
     {
+        // Initialize all hacks
+        hacks.push_back(new Speedhack());
+
+        for (auto &hack : hacks)
+        {
+            hack->init();
+        }
+
         // create directory if it doesn't exist
         std::filesystem::create_directory(MAIN_DIR "\\hacks");
 
@@ -257,6 +277,25 @@ namespace hacks
                             auto text_component = new TextComponent(text);
                             window.add_component(text_component);
                         }
+                        else if (type == "embedded")
+                        {
+                            auto hack_name = component["hack"].get<std::string>();
+                            Hack *hack = nullptr;
+                            for (auto &h : hacks)
+                            {
+                                if (h->get_id() == hack_name)
+                                {
+                                    hack = h;
+                                    break;
+                                }
+                            }
+
+                            if (hack != nullptr)
+                            {
+                                auto embedded = new EmbeddedHackComponent(hack);
+                                window.add_component(embedded);
+                            }
+                        }
                     }
 
                     // sort toggle components alphabetically
@@ -283,14 +322,6 @@ namespace hacks
                     L_ERROR("Failed to parse config file: {}", e.what());
                 }
             }
-        }
-
-        // Initialize all hacks
-        hacks.push_back(new Speedhack());
-
-        for (auto &hack : hacks)
-        {
-            hack->init();
         }
     }
 
