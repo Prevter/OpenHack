@@ -176,25 +176,15 @@ namespace menu
 
     void draw()
     {
-        // float s = cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().width / 1920.0f;
-        // if (s != globals::screen_size.x)
-        // {
-        //     globals::screen_size.x = s;
-        //     globals::reset_windows = true;
-        // }
-        // s = cocos2d::CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().height / 1080.0f;
-        // if (s != globals::screen_size.y)
-        // {
-        //     globals::screen_size.y = s;
-        //     globals::reset_windows = true;
-        // }
-        float s = ImGui::GetIO().DisplaySize.x / 1920.0f;
+        auto& io = ImGui::GetIO();
+
+        float s = io.DisplaySize.x / 1920.0f;
         if (s != globals::screen_size.x)
         {
             globals::screen_size.x = s;
             globals::reset_windows = true;
         }
-        s = ImGui::GetIO().DisplaySize.y / 1080.0f;
+        s = io.DisplaySize.y / 1080.0f;
         if (s != globals::screen_size.y)
         {
             globals::screen_size.y = s;
@@ -203,7 +193,7 @@ namespace menu
 
         if (globals::animation_action && !globals::animation_action->is_done())
         {
-            float dt = cocos2d::CCDirector::sharedDirector()->getDeltaTime();
+            float dt = io.DeltaTime;
             globals::animation_action->update(dt);
         }
 

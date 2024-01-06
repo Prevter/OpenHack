@@ -158,8 +158,7 @@ namespace hook
                     block_input = true;
                 }
             }
-
-            if (msg.message == WM_KEYDOWN && msg.wParam == menu_hotkey)
+            else if (msg.message == WM_KEYDOWN && msg.wParam == menu_hotkey)
             {
                 menu_toggle_callback();
             }
