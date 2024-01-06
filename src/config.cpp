@@ -51,7 +51,6 @@ namespace config
             file.close();
 
             std::string json = buffer.str();
-            json.erase(std::remove_if(json.begin(), json.end(), isspace), json.end());
 
             // parse json
             try
@@ -95,7 +94,6 @@ namespace config
             file2.close();
 
             std::string json = buffer.str();
-            json.erase(std::remove_if(json.begin(), json.end(), isspace), json.end());
 
             // parse json
             try
@@ -123,7 +121,6 @@ namespace config
             file3.close();
 
             std::string json = buffer.str();
-            json.erase(std::remove_if(json.begin(), json.end(), isspace), json.end());
 
             // parse json
             try
