@@ -7,8 +7,8 @@
             "id": "level.noclip",
             "opcodes": [
                 {
-                    "pattern": "^0F859B0700003883?2A00000F858F070000",
-                    "mask": "909090909090C6?%(-3A)2D??01E9????"
+                    "pattern": "0F859B0700003883?2A00000F858F070000",
+                    "mask": "909090909090C6?%(-3A)2D??01E9"
                 }
             ],
             "cheat": true
@@ -19,19 +19,12 @@
             "id": "level.music",
             "opcodes": [
                 {
-                    "addr": "0x385293",
-                    "on": "0xEB",
-                    "off": "0x75"
+                    "pattern": "*6A106A0CE8????84C0^750B8BCE",
+                    "mask": "EB"
                 },
                 {
-                    "addr": "0x385313",
-                    "on": "0xEB",
-                    "off": "0x75"
-                },
-                {
-                    "addr": "0x384D94",
-                    "on": "0xE9BA00000090",
-                    "off": "0x0F85B9000000"
+                    "pattern": "6A106A0CE8????84C0^0F85????8BCE",
+                    "mask": "E9&(01+01)$01$01$0190"
                 }
             ]
         },

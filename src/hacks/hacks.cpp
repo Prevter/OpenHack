@@ -49,43 +49,42 @@ namespace hacks
     }
 
     // parse patterned opcode from json
-    opcode_t read_pattern(nlohmann::json j)
+    std::vector<opcode_t> read_pattern(nlohmann::json j)
     {
         auto pattern = j["pattern"].get<std::string>();
         auto mask = j["mask"].get<std::string>();
-
-        opcode_t opcode;
-
-        // Optional library name
+        std::string library = "";
         if (j.contains("lib"))
-            opcode.library = j["lib"].get<std::string>();
-        else
-            opcode.library = "";
+            library = j["lib"].get<std::string>();
+
+        std::vector<opcode_t> opcodes;
 
         // Search for the pattern
-        auto &result = patterns::match(pattern, opcode.library, mask);
+        auto &result = patterns::match(pattern, library, mask);
 
         // Check if the pattern was found
         if (result.found)
         {
-            opcode.on_bytes = result.on_bytes;
-            opcode.off_bytes = result.off_bytes;
-            opcode.address = result.address;
+            // Iterate over all addresses
+            for (auto &address : result.opcodes)
+            {
+                // Create opcode
+                opcode_t opcode;
+                opcode.address = address.address;
+                opcode.library = library;
+                opcode.on_bytes = address.on_bytes;
+                opcode.off_bytes = address.off_bytes;
+
+                // Add opcode to list
+                opcodes.push_back(opcode);
+            }
         }
         else
         {
             L_WARN("Pattern not found: {}", pattern);
-
-            // Pattern not found, so fill with 0x90 (NOP)
-            // This will be handled by verify_opcode() later
-            for (size_t i = 0; i < mask.size(); i++)
-            {
-                opcode.on_bytes.push_back(0x90);
-                opcode.off_bytes.push_back(0x90);
-            }
         }
 
-        return opcode;
+        return opcodes;
     }
 
     // applies the opcode to the process
@@ -362,15 +361,23 @@ namespace hacks
                             bool warn = false;
                             for (auto &opcode : component["opcodes"])
                             {
-                                opcode_t opc;
                                 if (opcode.contains("pattern"))
-                                    opc = read_pattern(opcode);
+                                {
+                                    auto pattern_opcodes = read_pattern(opcode);
+                                    for (auto &pattern_opcode : pattern_opcodes)
+                                    {
+                                        if (!verify_opcode(pattern_opcode))
+                                            warn = true;
+                                        opcodes.push_back(pattern_opcode);
+                                    }
+                                }
                                 else
-                                    opc = read_opcode(opcode);
-
-                                if (!verify_opcode(opc))
-                                    warn = true;
-                                opcodes.push_back(opc);
+                                {
+                                    opcode_t opc = read_opcode(opcode);
+                                    if (!verify_opcode(opc))
+                                        warn = true;
+                                    opcodes.push_back(opc);
+                                }
                             }
 
                             if (warn)
