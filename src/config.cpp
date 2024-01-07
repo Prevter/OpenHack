@@ -15,6 +15,7 @@
 namespace config
 {
     bool reposition_windows = true;
+    bool always_reposition = true;
     std::string menu_hotkey = "tab";
     float menu_animation_length = 0.25f;
     float menu_size = 1.0f;
@@ -57,6 +58,7 @@ namespace config
             {
                 nlohmann::json j = nlohmann::json::parse(json);
                 LOAD_KEY(reposition_windows);
+                LOAD_KEY(always_reposition);
                 LOAD_KEY(menu_hotkey);
                 LOAD_KEY(menu_animation_length);
                 LOAD_KEY(menu_size);
@@ -153,6 +155,7 @@ namespace config
 
         nlohmann::json j;
         j["reposition_windows"] = reposition_windows;
+        j["always_reposition"] = always_reposition;
         j["menu_hotkey"] = menu_hotkey;
         j["menu_animation_length"] = menu_animation_length;
         j["menu_size"] = menu_size;

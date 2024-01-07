@@ -180,14 +180,15 @@ namespace gui
         return res;
     }
 
-    bool ImButton(const char *label)
+    bool ImButton(const char *label, float width)
     {
         ImGui::PushItemWidth(-1.0f);
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
 
-        ImVec2 cr = ImGui::GetWindowContentRegionMax();
+        ImVec2 cr = width != -1.0f ? ImVec2(width * globals::screen_size.x * config::menu_size, 0)
+                                   : ImGui::GetWindowContentRegionMax();
         bool res = ImGui::Button(label, ImVec2(cr.x - 4, 0));
 
         // draw lines on the left and right side of the button to make it look like a clickable object

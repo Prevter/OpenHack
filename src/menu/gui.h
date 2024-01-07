@@ -11,7 +11,7 @@ namespace gui
     // wrappers for ImGui functions
     void ImText(const char *fmt, ...);
     bool ImCheckbox(const char *label, bool *v);
-    bool ImButton(const char *label);
+    bool ImButton(const char *label, float width = -1.f);
     bool ImInputFloat(const char *label, float *v, const char *format = "%.3f");
     bool ImInputInt(const char *label, int *v, int step);
     bool ImInputInt2(const char *label, int *v);
