@@ -70,12 +70,15 @@ namespace hacks
         std::string get_id();
         std::string get_title();
 
+        void set_warnings(bool has_warnings) { m_has_warnings = has_warnings; }
+
     private:
         bool m_enabled;
         std::string m_title;
         std::string m_id;
         std::function<void()> m_callback;
         std::vector<opcode_t> m_opcodes;
+        bool m_has_warnings = false;
     };
 
     // A component that only displays text

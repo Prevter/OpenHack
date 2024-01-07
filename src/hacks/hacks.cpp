@@ -74,6 +74,38 @@ namespace hacks
         return false;
     }
 
+    // checks if the opcode has correct disable bytes
+    bool verify_opcode(opcode_t opcode)
+    {
+        // get process handle (or library if specified)
+        uintptr_t process_handle;
+        if (opcode.library == "")
+            process_handle = (uintptr_t)GetModuleHandleA(NULL);
+        else
+            process_handle = (uintptr_t)GetModuleHandleA(opcode.library.c_str());
+
+        uintptr_t address = process_handle + (uintptr_t)opcode.address;
+
+        // enable page protection
+        DWORD old_protect;
+        if (VirtualProtect((void *)address, opcode.off_bytes.size(), PAGE_EXECUTE_READWRITE, &old_protect))
+        {
+            // read bytes
+            std::vector<uint8_t> bytes;
+            bytes.resize(opcode.off_bytes.size());
+            memcpy(bytes.data(), (void *)address, opcode.off_bytes.size());
+
+            // restore page protection
+            VirtualProtect((void *)address, opcode.off_bytes.size(), old_protect, &old_protect);
+
+            // check if bytes are correct
+            return bytes == opcode.off_bytes;
+        }
+
+        // failed to change page protection
+        return false;
+    }
+
     /* ===== Window ===== */
 
     Window::Window(std::string title)
@@ -130,7 +162,26 @@ namespace hacks
 
     void ToggleComponent::draw()
     {
+        if (m_has_warnings)
+        {
+            ImGui::BeginDisabled();
+        }
+
         bool toggled = gui::ImToggleButton(m_title.c_str(), &m_enabled);
+
+        if (m_has_warnings)
+        {
+            ImGui::EndDisabled();
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+            {
+                ImVec2 pos = ImGui::GetMousePos();
+                pos.x += 10;
+                pos.y += 10;
+                ImGui::SetNextWindowPos(pos);
+                ImGui::SetTooltip("This hack won't work on current version of Geometry Dash!");
+            }
+        }
+
         if (toggled)
         {
             bool success = apply_patch();
@@ -148,6 +199,9 @@ namespace hacks
 
     bool ToggleComponent::apply_patch()
     {
+        if (m_has_warnings)
+            return false;
+
         bool success = true;
         for (auto &opcode : m_opcodes)
         {
@@ -264,11 +318,22 @@ namespace hacks
                             auto title = component["title"].get<std::string>();
                             auto id = component["id"].get<std::string>();
                             auto opcodes = std::vector<opcode_t>();
+                            bool warn = false;
                             for (auto &opcode : component["opcodes"])
                             {
-                                opcodes.push_back(read_opcode(opcode));
+                                auto &opc = read_opcode(opcode);
+                                if (!verify_opcode(opc))
+                                    warn = true;
+                                opcodes.push_back(opc);
                             }
+
+                            if (warn)
+                            {
+                                L_WARN("{} has invalid opcodes!", title);
+                            }
+
                             auto toggle = new ToggleComponent(title, id, nullptr, opcodes);
+                            toggle->set_warnings(warn);
                             window.add_component(toggle);
                         }
                         else if (type == "text")
