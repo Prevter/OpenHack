@@ -3,6 +3,54 @@
 
 namespace patterns
 {
+    /*
+
+    Pattern syntax:
+    ?  - any byte
+    ^  - set address cursor
+    *  - multi pattern (finds all matches)
+    1F - byte value (any hex value)
+
+    Example:
+    "*6A106A0CE8????84C0^750B8BCE"
+    1. '*' tells to find all occurences of the pattern
+    2. Then match this pattern:
+    6A 10 6A 0C E8 XX XX XX XX 84 C0 75 0B 8B CE
+                                    ^
+    3. Store address of the byte marked with '^' in the result
+
+    This will return two addresses which we can use to patch the game.
+
+    */
+
+    /*
+
+    Mask syntax:
+    ?                 - any byte
+    %([+/-]XX)        - add or subtract XX from original byte value
+    $([+/-]XX)        - get byte value from original_address + XX as offset
+    &([+/-]XX[+/-]YY) - combines % and $ (XX is offset, YY is value to add/subtract)
+    *XX               - repeat next mask token XX times
+    1F                - byte value (any hex value)
+
+    Example 1:
+    "909090909090C6?%(-3A)2D??01E9"
+    1. First 7 bytes ("909090909090C6") are simply replaced
+    2. Next byte ("?") is left as is
+    3. "%(-3A)" tells to subtract 0x3A from original byte value
+    4. "2D ? ? 01 E9" does the same as step 1-2
+
+    Example 2:
+    "E9&(01+01)*03$0190"
+    1. "E9" is replaced
+    2. "&(01+01)" takes the value of the byte with offset 0x01 (next byte),
+    adds 0x01 to it and stores it here
+    3. "*03" tells to repeat the next mask token 3 times:
+        - "$01" gets the value of the next byte
+    4. "90" is replaced
+
+    */
+
     // Either a byte or a wildcard
     struct byte_t
     {

@@ -86,6 +86,8 @@ namespace patterns
         uint32_t current_index = 0;
         std::vector<byte_t> bytes;
 
+        uint32_t repeat_count = 1;
+
         while (current_index < mask.length())
         {
             byte_t byte;
@@ -127,13 +129,23 @@ namespace patterns
                 byte.value = read_signed_byte(mask, current_index);
                 eat_token(')', mask, current_index);
             }
+            else if (mask[current_index] == '*') // repeat next byte n times
+            {
+                eat_token('(', mask, ++current_index);
+                repeat_count = std::stoi(mask.substr(current_index, 2), nullptr, 16);
+                current_index += 2;
+                eat_token(')', mask, current_index);
+            }
             else
             {
                 byte.value = std::stoi(mask.substr(current_index, 2), nullptr, 16);
                 current_index += 2;
             }
 
-            bytes.push_back(byte);
+            for (uint32_t i = 0; i < repeat_count; i++)
+                bytes.push_back(byte);
+
+            repeat_count = 1;
         }
 
         return bytes;
