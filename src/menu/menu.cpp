@@ -188,6 +188,12 @@ namespace menu
             gui::ImText("Build date: " __DATE__ " " __TIME__);
             if (gui::ImButton("Open GitHub page"))
                 cocos2d::CCApplication::sharedApplication()->openURL(PROJECT_HOMEPAGE_URL);
+
+            ImGui::Dummy(ImVec2(0, 10));
+
+            gui::PushWidth(160);
+            gui::ImInputText("Search", globals::search, sizeof(globals::search));
+            gui::PopWidth();
         }
         gui::End();
 

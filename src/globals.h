@@ -41,7 +41,6 @@ namespace globals
     extern float animation;                             // window animation timer
     extern bool animation_done;                         // flag to check if animation is finished
     extern int random_direction;                        // random direction for window animation
-    // extern cocos2d::CCEaseRateAction *animation_action; // animation action (deprecated)
     extern EaseInAnimation *animation_action;           // animation action
 
     extern bool is_december; // flag to check if it's december (for snow effect in main menu)
@@ -52,4 +51,6 @@ namespace globals
     extern ImFont *title_font; // font for window titles
 
     extern ImVec4 current_color; // current color for ImGui elements (either rainbow or config::text_color)
+
+    extern char search[64]; // buffer for search bar
 }

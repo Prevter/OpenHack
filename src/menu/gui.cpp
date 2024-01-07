@@ -274,6 +274,30 @@ namespace gui
                                    : ImGui::GetWindowContentRegionMax();
         bool toggled = false;
 
+        // check for search
+        if (globals::search[0] != '\0')
+        {
+            ImGui::PopStyleColor(1);
+
+            std::string label_lower = label;
+            std::transform(label_lower.begin(), label_lower.end(), label_lower.begin(), ::tolower);
+            std::string search_lower = globals::search;
+            std::transform(search_lower.begin(), search_lower.end(), search_lower.begin(), ::tolower);
+
+            if (label_lower.find(search_lower) != std::string::npos)
+            {
+                auto color = config::text_color.to_imvec4();
+                color.w = 1.f;
+                ImGui::PushStyleColor(ImGuiCol_Text, color);
+            }
+            else
+            {
+                auto color = config::disabled_color.to_imvec4();
+                color.w = 0.5f;
+                ImGui::PushStyleColor(ImGuiCol_Text, color);
+            }
+        }
+
         if (settings)
         {
             toggled = ImGui::Button(label, ImVec2(cr.x - 20, 0));
