@@ -16,6 +16,7 @@ namespace patterns
             token.any_byte = false;
             token.byte = 0;
             token.set_address_cursor = false;
+            token.multi_pattern = false;
 
             if (pattern[current_index] == ' ')
             {
@@ -137,6 +138,7 @@ namespace patterns
                 repeat_count = std::stoi(mask.substr(current_index, 2), nullptr, 16);
                 current_index += 2;
                 eat_token(')', mask, current_index);
+                continue;
             }
             else
             {
