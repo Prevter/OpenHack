@@ -247,21 +247,12 @@ namespace patterns
             opcode_t opcode;
             opcode.address = (void *)((uintptr_t)address - module_addr);
 
-            L_TRACE("pattern: {}", pattern);
-            L_TRACE("address: 0x{:X}", (uintptr_t)address);
-            L_TRACE("relative address: 0x{:X}", (uintptr_t)opcode.address);
-
             // read bytes
             for (uint32_t i = 0; i < bytes.size(); i++)
             {
                 uintptr_t curr_address = (uintptr_t)address + i;
                 uint8_t byte = *(uint8_t *)curr_address;
                 opcode.off_bytes.push_back(byte);
-
-                L_TRACE(
-                    "token(i:{}, wild:{}, rel:{}, addr:{}, val:{:02X}, off:{:02X})",
-                    i, bytes[i].any_byte, bytes[i].is_relative,
-                    bytes[i].is_address, bytes[i].value, bytes[i].offset);
 
                 if (bytes[i].any_byte)
                 {
@@ -290,8 +281,6 @@ namespace patterns
                     // set byte to a specific value
                     opcode.on_bytes.push_back(bytes[i].value);
                 }
-
-                L_TRACE("off: 0x{:02X}, on: 0x{:02X}", opcode.off_bytes[i], opcode.on_bytes[i]);
             }
 
             result.opcodes.push_back(opcode);
