@@ -56,14 +56,8 @@
             "id": "level.jumps",
             "opcodes": [
                 {
-                    "addr": "0x2E49AA",
-                    "on": "0x00",
-                    "off": "0x01"
-                },
-                {
-                    "addr": "0x2E49C7",
-                    "on": "0x90",
-                    "off": "0x46"
+                    "pattern": "8B?????6A^01????????????????????????????46",
+                    "mask": "00*1C?90"
                 }
             ]
         },
@@ -73,11 +67,11 @@
             "id": "level.cameramove",
             "opcodes": [
                 {
-                    "addr": "0x3ABFB0",
-                    "on": "0xC20C00",
-                    "off": "0x558BEC"
+                    "pattern": "558BEC83E4F883EC0C568BF18B8684030000",
+                    "mask": "C20C00"
                 }
-            ]
+            ],
+            "cheat": true
         },
         {
             "type": "toggle",
@@ -85,11 +79,11 @@
             "id": "level.camerazoom",
             "opcodes": [
                 {
-                    "addr": "0x396FC4",
-                    "on": "0xEB4490909090",
-                    "off": "0xFFB7E0050000"
+                    "pattern": "FFB7E0050000F30F108734050000",
+                    "mask": "EB4490909090"
                 }
-            ]
+            ],
+            "cheat": true
         },
         {
             "type": "toggle",
