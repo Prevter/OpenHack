@@ -96,12 +96,11 @@ namespace menu
     {
         globals::reset_windows = true;
 
-        const int game_width = (int)ImGui::GetIO().DisplaySize.x;
+        const int game_width = 1920;
 
         // pack windows left to right
         const float step = (float)config::window_snap;
         float x = step;
-        float win_w = WINDOW_WIDTH * globals::screen_size.x * config::menu_size;
         std::vector<std::vector<float>> rows;
         std::vector<float> row;
         int column_index = 0;
@@ -118,6 +117,8 @@ namespace menu
         {
             // get window name
             std::string name = window.key();
+            float win_w = globals::window_positions[name]["w"].get<float>();
+            float win_h = globals::window_positions[name]["h"].get<float>();
 
             if (column_index != 0)
                 x += win_w + step;
@@ -141,7 +142,7 @@ namespace menu
             }
 
             // add window position to the row
-            row.push_back(y + globals::window_positions[name]["h"].get<float>());
+            row.push_back(y + win_h);
 
             // set window position
             globals::window_positions[name]["x"] = x;

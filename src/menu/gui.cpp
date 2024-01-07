@@ -148,7 +148,8 @@ namespace gui
         }
 
         auto win_size = ImGui::GetWindowSize();
-        globals::window_positions[name]["h"] = win_size.y;
+        globals::window_positions[name]["w"] = win_size.x / globals::screen_size.x;
+        globals::window_positions[name]["h"] = win_size.y / globals::screen_size.x;
 
         // Translucent background
         // 1. Copy contents of the window bounding box to a texture
@@ -305,10 +306,12 @@ namespace gui
 
             bool settings_toggled = ImGui::Button(" ", ImVec2(16, 0));
 
+            float ratio = globals::screen_size.x * config::menu_size;
+
             ImGui::GetWindowDrawList()->AddTriangleFilled(
-                ImVec2(ImGui::GetItemRectMax().x - 2, ImGui::GetItemRectMin().y + 4),
-                ImVec2(ImGui::GetItemRectMax().x - 2, ImGui::GetItemRectMax().y - 4),
-                ImVec2(ImGui::GetItemRectMax().x - 14, ImGui::GetItemRectMax().y - 4),
+                ImVec2(ImGui::GetItemRectMax().x - 2 * ratio, ImGui::GetItemRectMin().y + 4 * ratio),
+                ImVec2(ImGui::GetItemRectMax().x - 2 * ratio, ImGui::GetItemRectMax().y - 4 * ratio),
+                ImVec2(ImGui::GetItemRectMax().x - 14 * ratio, ImGui::GetItemRectMax().y - 4 * ratio),
                 config::disabled_color.to_uint32());
 
             std::string settings_label = "##" + std::string(label);
