@@ -1,4 +1,5 @@
 #include "hacks.h"
+#include "patterns.h"
 #include "../config.h"
 #include "../menu/gui.h"
 
@@ -43,6 +44,46 @@ namespace hacks
 
         opcode.on_bytes = on_bytes;
         opcode.off_bytes = off_bytes;
+
+        return opcode;
+    }
+
+    // parse patterned opcode from json
+    opcode_t read_pattern(nlohmann::json j)
+    {
+        auto pattern = j["pattern"].get<std::string>();
+        auto mask = j["mask"].get<std::string>();
+
+        opcode_t opcode;
+
+        // Optional library name
+        if (j.contains("lib"))
+            opcode.library = j["lib"].get<std::string>();
+        else
+            opcode.library = "";
+
+        // Search for the pattern
+        auto &result = patterns::match(pattern, opcode.library, mask);
+
+        // Check if the pattern was found
+        if (result.found)
+        {
+            opcode.on_bytes = result.on_bytes;
+            opcode.off_bytes = result.off_bytes;
+            opcode.address = result.address;
+        }
+        else
+        {
+            L_WARN("Pattern not found: {}", pattern);
+
+            // Pattern not found, so fill with 0x90 (NOP)
+            // This will be handled by verify_opcode() later
+            for (size_t i = 0; i < mask.size(); i++)
+            {
+                opcode.on_bytes.push_back(0x90);
+                opcode.off_bytes.push_back(0x90);
+            }
+        }
 
         return opcode;
     }
@@ -321,7 +362,12 @@ namespace hacks
                             bool warn = false;
                             for (auto &opcode : component["opcodes"])
                             {
-                                auto &opc = read_opcode(opcode);
+                                opcode_t opc;
+                                if (opcode.contains("pattern"))
+                                    opc = read_pattern(opcode);
+                                else
+                                    opc = read_opcode(opcode);
+
                                 if (!verify_opcode(opc))
                                     warn = true;
                                 opcodes.push_back(opc);
