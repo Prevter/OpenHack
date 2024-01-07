@@ -86,6 +86,7 @@
         "queue": "cpp",
         "stack": "cpp",
         "codecvt": "cpp",
-        "*.in": "cpp"
+        "*.in": "cpp",
+        "coroutine": "cpp"
     }
 }

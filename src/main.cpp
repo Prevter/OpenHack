@@ -8,8 +8,6 @@
 #include "menu/menu.h"
 #include "hooks/MenuLayer.h"
 
-bool initialized = false;
-
 DWORD WINAPI MainThread(LPVOID param)
 {
 #if _DEBUG
@@ -27,24 +25,16 @@ DWORD WINAPI MainThread(LPVOID param)
     localtime_s(&tm, &t);
     globals::is_december = tm.tm_mon == 11;
 
-    // Initialize menu after the game has loaded
-    hooks::MenuLayer::on_init = []()
-    {
-        if (initialized)
-            return;
-
-        hook::set_menu_hotkey(config::menu_hotkey);
-        hook::set_menu_toggle_callback(menu::toggle);
-        hook::set_menu_draw_callback(menu::draw);
-        hook::set_menu_init_callback(menu::init);
-
-        initialized = true;
-        L_INFO("OpenHack loaded successfully!");
-    };
-
     // Initialize hooks
     hook::init();
     config::load();
+
+    hook::set_menu_hotkey(config::menu_hotkey);
+    hook::set_menu_toggle_callback(menu::toggle);
+    hook::set_menu_init_callback(menu::init);
+    hook::set_menu_draw_callback(menu::draw);
+
+    L_INFO("OpenHack loaded successfully!");
 
     return 0;
 }
