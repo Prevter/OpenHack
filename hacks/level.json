@@ -24,7 +24,7 @@
                 },
                 {
                     "pattern": "6A106A0CE8????84C0^0F85????8BCE",
-                    "mask": "E9&(01+01)$01$01$0190"
+                    "mask": "E9&(01+01)*03$0190"
                 }
             ]
         },
@@ -97,16 +97,15 @@
             "id": "level.platformermodes",
             "opcodes": [
                 {
-                    "addr": "0x198837",
-                    "on": "0x909090909090",
-                    "off": "0x0F851F060000"
+                    "pattern": "0F851F060000",
+                    "mask": "909090909090"
                 },
                 {
-                    "addr": "0x198898",
-                    "on": "0x909090909090",
-                    "off": "0x0F85BE050000"
+                    "pattern": "0F85BE050000",
+                    "mask": "909090909090"
                 }
-            ]
+            ],
+            "cheat": true
         },
         {
             "type": "toggle",
@@ -114,28 +113,11 @@
             "id": "level.platformerforce",
             "opcodes": [
                 {
-                    "addr": "0x1B9639",
-                    "on": "0xB20190909090",
-                    "off": "0x8A9019010000"
-                },
-                {
-                    "addr": "0x1B966A",
-                    "on": "0xEB",
-                    "off": "0x74"
+                    "pattern": "8A9019010000",
+                    "mask": "B20190909090*2A?EB"
                 }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Platformer Practice Mode",
-            "id": "level.platformerpractice",
-            "opcodes": [
-                {
-                    "addr": "0x2B3AE1",
-                    "on": "0xEB",
-                    "off": "0x74"
-                }
-            ]
+            ],
+            "cheat": true
         }
     ]
 }
