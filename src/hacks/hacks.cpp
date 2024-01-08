@@ -364,6 +364,9 @@ namespace hacks
                                 if (opcode.contains("pattern"))
                                 {
                                     auto pattern_opcodes = read_pattern(opcode);
+                                    if (pattern_opcodes.empty())
+                                        warn = true;
+
                                     for (auto &pattern_opcode : pattern_opcodes)
                                     {
                                         if (!verify_opcode(pattern_opcode))
