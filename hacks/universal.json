@@ -7,10 +7,9 @@
             "id": "universal.transition",
             "opcodes": [
                 {
-                    "addr": "0xA7414",
-                    "lib": "libcocos2d.dll",
-                    "on": "0x9090909090",
-                    "off": "0xF30F104508"
+                    "pattern": "8B16^F30F10450868",
+                    "mask": "*0590",
+                    "lib": "libcocos2d.dll"
                 }
             ]
         },

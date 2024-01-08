@@ -73,19 +73,16 @@
             "id": "bypass.vault1",
             "opcodes": [
                 {
-                    "addr": "0x70991",
-                    "on": "0x75",
-                    "off": "0x74"
+                    "pattern": "0F9DC084C0^74?FF",
+                    "mask": "75"
                 },
                 {
-                    "addr": "0x2FF97C",
-                    "on": "0x75",
-                    "off": "0x74"
+                    "pattern": "8BC8E8????84C0^74?FF?????8BF0FF",
+                    "mask": "75"
                 },
                 {
-                    "addr": "0x6F9EB",
-                    "on": "0x909090",
-                    "off": "0x0F9DC1"
+                    "pattern": "0F9DC184C9",
+                    "mask": "*0390"
                 }
             ]
         },
@@ -151,9 +148,8 @@
             "id": "bypass.levels",
             "opcodes": [
                 {
-                    "addr": "0x2676A4",
-                    "on": "0xEB",
-                    "off": "0x7E"
+                    "pattern": "8B81??????^7E7A",
+                    "mask": "EB"
                 }
             ]
         },

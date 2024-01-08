@@ -7,9 +7,8 @@
             "id": "cosmetic.respawn_flash",
             "opcodes": [
                 {
-                    "addr": "0x2CBD5A",
-                    "on": "0xE9A800",
-                    "off": "0x0F85A7"
+                    "pattern": "80BF??000000^0F85????566A0B",
+                    "mask": "E9&(01+01)*03$0190"
                 }
             ]
         },
@@ -19,9 +18,8 @@
             "id": "cosmetic.death_effect",
             "opcodes": [
                 {
-                    "addr": "0x2CC3B2",
-                    "on": "0x9090909090",
-                    "off": "0xE8398DFEFF"
+                    "pattern": "750E8BCE^E8????5F5E595DC20400",
+                    "mask": "*0590"
                 }
             ]
         },
@@ -31,9 +29,8 @@
             "id": "cosmetic.wave_pulse",
             "opcodes": [
                 {
-                    "addr": "0x2DD37B",
-                    "on": "0xC0",
-                    "off": "0xC1"
+                    "pattern": "74030F28^C18B86",
+                    "mask": "C0"
                 }
             ]
         },
@@ -43,10 +40,9 @@
             "id": "cosmetic.particles",
             "opcodes": [
                 {
-                    "addr": "0xBD24A",
-                    "lib": "libcocos2d.dll",
-                    "on": "0xE92501000090",
-                    "off": "0x0F8424010000"
+                    "pattern": "83BE????00^0F84????83BE",
+                    "mask": "E9&(01+01)*03$0190",
+                    "lib": "libcocos2d.dll"
                 }
             ]
         },
