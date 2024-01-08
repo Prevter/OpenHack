@@ -7,14 +7,12 @@
             "id": "creator.custom_object",
             "opcodes": [
                 {
-                    "addr": "0xA76A4",
-                    "on": "0xE98300",
-                    "off": "0x0F8682"
+                    "pattern": "3DE8030000^0F86????68",
+                    "mask": "E9&(01+01)$01"
                 },
                 {
-                    "addr": "0xA7854",
-                    "on": "0x9090",
-                    "off": "0x773A"
+                    "pattern": "3DE8030000^773A",
+                    "mask": "9090"
                 }
             ]
         },
@@ -24,9 +22,8 @@
             "id": "creator.copy",
             "opcodes": [
                 {
-                    "addr": "0x24E077",
-                    "on": "0x0F85",
-                    "off": "0x0F84"
+                    "pattern": "2B88F00100000F^84",
+                    "mask": "85"
                 }
             ]
         },

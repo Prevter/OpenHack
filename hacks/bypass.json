@@ -7,9 +7,8 @@
             "id": "bypass.text",
             "opcodes": [
                 {
-                    "addr": "0x2F9A7",
-                    "on": "0xEB",
-                    "off": "0x7C"
+                    "pattern": "398858020000^7C04",
+                    "mask": "EB"
                 }
             ]
         },
@@ -19,9 +18,8 @@
             "id": "bypass.filter",
             "opcodes": [
                 {
-                    "addr": "0x2F974",
-                    "on": "0x74",
-                    "off": "0x75"
+                    "pattern": "803F00^750433C9EB0F",
+                    "mask": "74"
                 }
             ]
         },
@@ -31,9 +29,8 @@
             "id": "bypass.diamond",
             "opcodes": [
                 {
-                    "addr": "0x2F7156",
-                    "on": "0xEB",
-                    "off": "0x75"
+                    "pattern": "84C0^750F8BCE",
+                    "mask": "EB"
                 }
             ]
         },
@@ -43,9 +40,8 @@
             "id": "bypass.mechanic",
             "opcodes": [
                 {
-                    "addr": "0x2F7132",
-                    "on": "0x74",
-                    "off": "0x75"
+                    "pattern": "84C0^75338BCE",
+                    "mask": "74"
                 }
             ]
         },
@@ -55,9 +51,8 @@
             "id": "bypass.potbor",
             "opcodes": [
                 {
-                    "addr": "0x2F710E",
-                    "on": "0xEB",
-                    "off": "0x75"
+                    "pattern": "84C0^75578BCE",
+                    "mask": "EB"
                 }
             ]
         },
@@ -67,9 +62,8 @@
             "id": "bypass.scratch",
             "opcodes": [
                 {
-                    "addr": "0x2F70EA",
-                    "on": "0xEB",
-                    "off": "0x75"
+                    "pattern": "84C0^757B8BCE",
+                    "mask": "EB"
                 }
             ]
         },
