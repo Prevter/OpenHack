@@ -43,10 +43,16 @@
             "id": "cosmetic.particles",
             "opcodes": [
                 {
-                    "addr": "0xBD24A",
+                    "addr": "0xbbb06",
                     "lib": "libcocos2d.dll",
-                    "on": "0xE92501000090",
-                    "off": "0x0F8424010000"
+                    "on": "00",
+                    "off": "01"
+                },
+                {
+                    "addr": "0xba1d5",
+                    "lib": "libcocos2d.dll",
+                    "on": "31 f6",
+                    "off": "8b f0"
                 }
             ]
         },
