@@ -99,7 +99,7 @@ namespace hacks
     class EmbeddedHackComponent : public Component
     {
     public:
-        EmbeddedHackComponent(Hack* hack);
+        EmbeddedHackComponent(Hack *hack);
         virtual void draw() override;
 
         // saving is handled by the hack itself
@@ -107,7 +107,7 @@ namespace hacks
         virtual void save(nlohmann::json *data) override {}
 
     private:
-        Hack* m_hack;
+        Hack *m_hack;
     };
 
     class Window

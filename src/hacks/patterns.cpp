@@ -234,6 +234,20 @@ namespace patterns
         return addresses;
     }
 
+    std::vector<uintptr_t> find_patterns(std::string pattern, std::string library)
+    {
+        auto tokens = parse_pattern(pattern);
+        return find_pattern(tokens, library);
+    }
+
+    uintptr_t find_pattern(std::string pattern, std::string library)
+    {
+        std::vector<uintptr_t> addresses = find_patterns(pattern, library);
+        if (addresses.size() == 0)
+            return 0;
+        return addresses[0];
+    }
+
     result_t match(std::string pattern, std::string library, std::string mask)
     {
         result_t result;

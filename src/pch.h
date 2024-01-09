@@ -26,3 +26,5 @@ using json = nlohmann::json;
 #include "utils.h"
 
 #include "project.h"
+
+#include "hacks/patterns.h"

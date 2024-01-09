@@ -97,7 +97,11 @@ namespace patterns
     std::vector<byte_t> parse_mask(std::string mask);
 
     // Finds a pattern in a library and returns the address (or addresses if pattern contains *)
-    std::vector<uintptr_t> find_pattern(std::vector<token_t> pattern, std::string library);
+    std::vector<uintptr_t> find_pattern(std::vector<token_t> pattern, std::string library = "");
+
+    // methods for finding only addresses
+    std::vector<uintptr_t> find_patterns(std::string pattern, std::string library = "");
+    uintptr_t find_pattern(std::string pattern, std::string library = "");
 
     // Parses a pattern string and returns a result_t
     result_t match(std::string pattern, std::string library = "", std::string mask = "");

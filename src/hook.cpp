@@ -195,6 +195,20 @@ namespace hook
         ImGui::GetIO().ClearInputKeys();
     }
 
+    // Helper method for creating hooks with debug logging
+    void try_bind_method(std::string name, void *method, void **original, std::string pattern, std::string library = "")
+    {
+        uintptr_t address = patterns::find_pattern(pattern, library);
+        if (address)
+        {
+            MH_CreateHook((void *)address, method, original);
+        }
+        else
+        {
+            L_ERROR("Failed to find " + name + " pattern");
+        }
+    }
+
     // Hooking
     void init()
     {
@@ -204,10 +218,10 @@ namespace hook
         MH_Initialize();
 
         // Hook functions
-        MH_CreateHook(
-            (void *)(game_base + hooks::MenuLayer::init_offset),
-            hooks::MenuLayer::init_hook,
-            (void **)&hooks::MenuLayer::init);
+        // MH_CreateHook(
+        //     (void *)(game_base + hooks::MenuLayer::init_offset),
+        //     hooks::MenuLayer::init_hook,
+        //     (void **)&hooks::MenuLayer::init);
 
         MH_CreateHook(
             GetProcAddress(cocos2d_base, "?swapBuffers@CCEGLView@cocos2d@@UAEXXZ"),
@@ -221,10 +235,12 @@ namespace hook
             GetProcAddress(cocos2d_base, "?toggleFullScreen@CCEGLView@cocos2d@@QAEX_N@Z"),
             toggleFullScreen_hook,
             (void **)&CCEGLView_toggleFullScreen);
-        MH_CreateHook(
-            (void *)(game_base + 0x3d130),
+
+        try_bind_method(
+            "ApplicationWillEnterForeground", 
             AppDelegate_applicationWillEnterForeground_hook,
-            (void **)&AppDelegate_applicationWillEnterForeground);
+            (void **)&AppDelegate_applicationWillEnterForeground,
+            "538B1D????5657FFD38BC88B10");
 
         // Initialize hacks here, to make sure the hooks are created
         hacks::init();

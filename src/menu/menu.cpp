@@ -137,8 +137,14 @@ namespace menu
             float y = step;
             if (rows.size() > 0)
             {
+                auto &last_row = rows[rows.size() - 1];
+                // after maximizing the game, it loses all columns for some reason
+                // so we need to check if there are any columns and if not, just break the loop
+                if (last_row.size() == 0)
+                    break;
+
                 // we have previous rows, so take y from the last row
-                y = rows[rows.size() - 1][column_index] + step;
+                y = last_row[column_index] + step;
             }
 
             // add window position to the row
