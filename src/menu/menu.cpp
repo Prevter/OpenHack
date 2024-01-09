@@ -187,6 +187,7 @@ namespace menu
         {
             gui::ImText("Version: " PROJECT_VERSION);
             gui::ImText("Build date: " __DATE__ " " __TIME__);
+            gui::ImText("Game version: %s", utils::get_game_version());
             if (gui::ImButton("Open GitHub page"))
                 cocos2d::CCApplication::sharedApplication()->openURL(PROJECT_HOMEPAGE_URL);
 

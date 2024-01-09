@@ -1,3 +1,8 @@
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/prevter/gdopenhack)
+![GitHub all releases](https://img.shields.io/github/downloads/prevter/gdopenhack/total)
+![GitHub](https://img.shields.io/github/license/prevter/gdopenhack)
+![GitHub issues](https://img.shields.io/github/issues/prevter/gdopenhack)
+
 <div align="center">
     <img src="docs/screenshot.png" alt="Screenshot">
     <h3 align="center">OpenHack</h3>
@@ -6,18 +11,30 @@
     </p>
 </div>
 
+
+## Table of Contents
+- [About](#about)
+- [Features](#features)
+- [Installation](#installation)
+- [Building](#building)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Acknowledgements](#acknowledgements)
+
 ## About
 Yet another Geometry Dash modded client! I've been using [GDMegaOverlay](https://github.com/maxnut/GDMegaOverlay) for quite some time, but because it has been archived after the release of 2.2, I decided to make my own modded client. Project is still in early stages, so expect bugs and crashes, but I'm working on it! Be sure to check out the [issues](https://github.com/prevter/gdopenhack/issues) page for known issues and planned features (and feel free to leave your own suggestions).
 
 Main goal of this project is primarily me getting more experience with C++ and game hacking, but I also needed a modded client for myself, sharing it with others in the process as well.
 
 ## Features
+- [x] **Update-proof hacks!** (most of them should work even after the game updates)
 - [x] Customizable menu with animations
 - [x] Basic hacks (speedhack, noclip, etc.)
+- [x] Hack search
 
 Planned:
 - [ ] Keybinds
-- [ ] Hack search
 - [ ] Auto-updater
 - [ ] ... and more!
 

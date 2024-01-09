@@ -8,4 +8,6 @@ namespace utils
     std::string get_current_directory();
 
     uint32_t decode_key(std::string key);
+
+    const char* get_game_version();
 }

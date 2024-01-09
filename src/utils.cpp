@@ -2,6 +2,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <map>
 
 namespace utils
 {
@@ -16,6 +17,70 @@ namespace utils
         GetModuleFileNameA(NULL, buffer, MAX_PATH);
         std::string::size_type pos = std::string(buffer).find_last_of("\\/");
         return std::string(buffer).substr(0, pos);
+    }
+
+    std::map<uint32_t, std::string> versions_map = {
+        {1419173053, "1.900"},
+        {1419880840, "1.910"},
+        {1421745341, "1.920"},
+        {1440638199, "2.000"},
+        {1440643927, "2.001"},
+        {1443053232, "2.010"},
+        {1443077847, "2.011"},
+        {1443077847, "2.020"},
+        {1484612867, "2.100"},
+        {1484626658, "2.101"},
+        {1484737207, "2.102"},
+        {1510526914, "2.110"},
+        {1510538091, "2.111"},
+        {1510619253, "2.112"},
+        {1511220108, "2.113"},
+        {1702921605, "2.200"},
+        {1704582672, "2.201"},
+        {1704601266, "2.202"},
+    };
+
+    char *game_version = NULL;
+
+    const char *get_game_version()
+    {
+        if (game_version != NULL)
+            return game_version;
+
+        HMODULE module = GetModuleHandleA(NULL);
+        auto dos_header = (PIMAGE_DOS_HEADER)module;
+
+        if (dos_header->e_magic != IMAGE_DOS_SIGNATURE)
+        {
+            game_version = "unknown";
+            return game_version;
+        }
+
+        auto nt_headers = (PIMAGE_NT_HEADERS)((uint8_t *)module + dos_header->e_lfanew);
+
+        if (nt_headers->Signature != IMAGE_NT_SIGNATURE)
+        {
+            game_version = "unknown";
+            return game_version;
+        }
+
+        uint32_t timestamp = nt_headers->FileHeader.TimeDateStamp;
+        auto version = versions_map.find(timestamp);
+        if (version != versions_map.end())
+        {
+            game_version = (char *)version->second.c_str();
+            return game_version;
+        }
+
+        // check if larger than latest version
+        if (timestamp > versions_map.rbegin()->first)
+        {
+            game_version = (char *)(version->second + "+").c_str();
+            return game_version;
+        }
+        
+        game_version = "unknown";
+        return game_version;
     }
 
     // I need a better way to do this
