@@ -2,7 +2,7 @@
 #include "menu/menu.h"
 
 #include "hacks/hacks.h"
-#include "hooks/MenuLayer.h"
+#include "hooks/hooks.h"
 
 namespace hook
 {
@@ -196,7 +196,7 @@ namespace hook
     }
 
     // Helper method for creating hooks with debug logging
-    void try_bind_method(std::string name, void *method, void **original, std::string pattern, std::string library = "")
+    void try_bind_method(std::string name, void *method, void **original, std::string pattern, std::string library)
     {
         uintptr_t address = patterns::find_pattern(pattern, library);
         if (address)
@@ -217,12 +217,6 @@ namespace hook
 
         MH_Initialize();
 
-        // Hook functions
-        // MH_CreateHook(
-        //     (void *)(game_base + hooks::MenuLayer::init_offset),
-        //     hooks::MenuLayer::init_hook,
-        //     (void **)&hooks::MenuLayer::init);
-
         MH_CreateHook(
             GetProcAddress(cocos2d_base, "?swapBuffers@CCEGLView@cocos2d@@UAEXXZ"),
             swapBuffers_hook,
@@ -237,10 +231,12 @@ namespace hook
             (void **)&CCEGLView_toggleFullScreen);
 
         try_bind_method(
-            "ApplicationWillEnterForeground", 
+            "ApplicationWillEnterForeground",
             AppDelegate_applicationWillEnterForeground_hook,
             (void **)&AppDelegate_applicationWillEnterForeground,
             "538B1D????5657FFD38BC88B10");
+
+        hooks::init_all();
 
         // Initialize hacks here, to make sure the hooks are created
         hacks::init();

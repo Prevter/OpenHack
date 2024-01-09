@@ -78,7 +78,7 @@ namespace utils
             game_version = (char *)(version->second + "+").c_str();
             return game_version;
         }
-        
+
         game_version = "unknown";
         return game_version;
     }

@@ -22,7 +22,7 @@ EaseInAnimation::EaseInAnimation(float duration, float from, float to, float *up
 
 float ease_in(float x)
 {
-    return 1.0f - cosf(x * M_PI / 2);
+    return 1.0f - cosf(x * (float)M_PI / 2.f);
 }
 
 void EaseInAnimation::update(float dt)

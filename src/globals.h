@@ -38,10 +38,10 @@ namespace globals
     extern bool reset_windows;    // flag to reset window positions
     extern json window_positions; // stored window positions
 
-    extern float animation;                             // window animation timer
-    extern bool animation_done;                         // flag to check if animation is finished
-    extern int random_direction;                        // random direction for window animation
-    extern EaseInAnimation *animation_action;           // animation action
+    extern float animation;                   // window animation timer
+    extern bool animation_done;               // flag to check if animation is finished
+    extern int random_direction;              // random direction for window animation
+    extern EaseInAnimation *animation_action; // animation action
 
     extern bool is_december; // flag to check if it's december (for snow effect in main menu)
 
