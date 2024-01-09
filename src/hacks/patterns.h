@@ -33,6 +33,7 @@ namespace patterns
     $([+/-]XX)        - get byte value from original_address + XX as offset
     &([+/-]XX[+/-]YY) - combines % and $ (XX is offset, YY is value to add/subtract)
     *XX               - repeat next mask token XX times
+    @N(PATTERN)       - look for a pattern and store a relative offset in N bytes (used for relative jumps)
     1F                - byte value (any hex value)
 
     Example 1:
@@ -51,12 +52,25 @@ namespace patterns
         - "$01" gets the value of the next byte
     4. "90" is replaced
 
+    Example 3:
+    "E9@4(8BCBFF15????^8B4C24?64890D00000000595F5E)"
+    1. "E9" is replaced (jmp)
+    2. "@4" tells to look for a pattern and store a relative offset in 4 bytes
+    3. "(8BCBFF15????^8B4C24?64890D00000000595F5E)" is the pattern to look for (see pattern syntax)
+    If the offset for this pattern is 0x746, the final mask would be:
+    "E942070000" (jmp 0x747)
+    The changes from 0x746 to 0x742 and to 0x747 are explained by how relative jumps work in x86:
+    - 0x746 to 0x742 is calculated by subtracting 4 bytes because the jump address is 4 bytes long
+    - "E9 42070000" is actually "jmp 0x747" because the jump takes 5 bytes and jumps from it's end (0x742 + 5 = 0x747)
+
     */
 
     // Either a byte or a wildcard
     struct byte_t
     {
         bool any_byte;    // true if the byte is a wildcard
+
+        bool is_pattern; // true if the value should be an address to the pattern
         bool is_relative; // true if the byte value should be changed by a relative offset
         bool is_address;  // true if the value of the byte should be taken from original_address + offset
 
@@ -65,6 +79,18 @@ namespace patterns
 
         uint8_t value; // value to change the byte to
         int8_t offset; // offset to add to the value
+
+        std::string pattern; // pattern to calculate the offset from
+
+        byte_t()
+        {
+            any_byte = false;
+            is_pattern = false;
+            is_relative = false;
+            is_address = false;
+            value = 0;
+            offset = 0;
+        }
     };
 
     struct opcode_t

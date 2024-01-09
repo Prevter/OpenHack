@@ -7,8 +7,8 @@
             "id": "level.noclip",
             "opcodes": [
                 {
-                    "pattern": "0F859B0700003883?2A00000F858F070000",
-                    "mask": "909090909090C6?%(-3A)2D??01E9"
+                    "pattern": "6A148BCBFF15",
+                    "mask": "E9@4(8BCBFF15????^8B4C24?64890D00000000595F5E)"
                 }
             ],
             "cheat": true

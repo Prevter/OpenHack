@@ -140,6 +140,24 @@ namespace patterns
                 eat_token(')', mask, current_index);
                 continue;
             }
+            else if (mask[current_index] == '@') // calculate offset by pattern
+            {
+                byte.is_pattern = true;
+                // read how many bytes should be stored
+                uint8_t bytes_to_store = std::stoi(mask.substr(++current_index, 1), nullptr, 10);
+                eat_token('(', mask, ++current_index);
+
+                // read the pattern
+                std::string pattern;
+                while (!eat_token(')', mask, current_index))
+                {
+                    pattern += mask[current_index];
+                    current_index++;
+                }
+
+                byte.value = bytes_to_store;
+                byte.pattern = pattern;
+            }
             else
             {
                 byte.value = std::stoi(mask.substr(current_index, 2), nullptr, 16);
@@ -276,11 +294,12 @@ namespace patterns
 
             opcode_t opcode;
             opcode.address = (void *)((uintptr_t)address - module_addr);
+            uintptr_t global_offset = 0;
 
             // read bytes
             for (uint32_t i = 0; i < bytes.size(); i++)
             {
-                uintptr_t curr_address = (uintptr_t)address + i;
+                uintptr_t curr_address = (uintptr_t)address + i + global_offset;
                 uint8_t byte = *(uint8_t *)curr_address;
                 opcode.off_bytes.push_back(byte);
 
@@ -305,6 +324,28 @@ namespace patterns
                     // take byte from relative address
                     uint8_t value = *(uint8_t *)(curr_address + bytes[i].offset);
                     opcode.on_bytes.push_back(value);
+                }
+                else if (bytes[i].is_pattern)
+                {
+                    // find pattern and calculate offset
+                    uintptr_t addr = find_pattern(bytes[i].pattern, library);
+
+                    uintptr_t offset = (uintptr_t)addr - (uintptr_t)curr_address;
+                    offset -= bytes[i].value;
+
+                    // format offset to bytes
+                    for (uint32_t j = 0; j < bytes[i].value; j++)
+                    {
+                        curr_address = (uintptr_t)address + i + global_offset + j;
+                        uint8_t byte = *(uint8_t *)curr_address;
+
+                        if (j > 0) // first byte was added already
+                            opcode.off_bytes.push_back(byte);
+
+                        opcode.on_bytes.push_back((offset >> (j * 8)) & 0xFF);
+                    }
+
+                    global_offset += bytes[i].value;
                 }
                 else
                 {
