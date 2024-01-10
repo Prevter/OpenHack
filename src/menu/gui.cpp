@@ -299,14 +299,13 @@ namespace gui
             }
         }
 
+        float ratio = globals::screen_size.x * config::menu_size;
         if (settings)
         {
-            toggled = ImGui::Button(label, ImVec2(cr.x - 20, 0));
+            toggled = ImGui::Button(label, ImVec2(cr.x - 20 * ratio, 0));
             ImGui::SameLine();
 
-            bool settings_toggled = ImGui::Button(" ", ImVec2(16, 0));
-
-            float ratio = globals::screen_size.x * config::menu_size;
+            bool settings_toggled = ImGui::Button(" ", ImVec2(16 * ratio, 0));
 
             ImGui::GetWindowDrawList()->AddTriangleFilled(
                 ImVec2(ImGui::GetItemRectMax().x - 2 * ratio, ImGui::GetItemRectMin().y + 4 * ratio),
@@ -331,13 +330,13 @@ namespace gui
         }
         else
         {
-            toggled = ImGui::Button(label, ImVec2(cr.x - 4, 0));
+            toggled = ImGui::Button(label, ImVec2(cr.x - 4 * ratio, 0));
             ImGui::PopStyleColor(4);
             ImGui::PopStyleVar(2);
 
             ImGui::GetWindowDrawList()->AddRectFilled(
-                ImVec2(ImGui::GetItemRectMax().x - 5, ImGui::GetItemRectMin().y + 1),
-                ImVec2(ImGui::GetItemRectMax().x - 2, ImGui::GetItemRectMax().y - 1),
+                ImVec2(ImGui::GetItemRectMax().x - 5 * ratio, ImGui::GetItemRectMin().y + 1 * ratio),
+                ImVec2(ImGui::GetItemRectMax().x - 2 * ratio, ImGui::GetItemRectMax().y - 1 * ratio),
                 ImGui::ColorConvertFloat4ToU32(*v ? globals::current_color : config::disabled_color.to_imvec4()));
         }
 
@@ -363,19 +362,20 @@ namespace gui
         ImVec2 cr = width != -1.0f ? ImVec2(width * globals::screen_size.x * config::menu_size, 0)
                                    : ImGui::GetWindowContentRegionMax();
 
-        ImGui::Button(label, ImVec2(cr.x - 20, 0));
+        float ratio = globals::screen_size.x * config::menu_size;
+        ImGui::Button(label, ImVec2(cr.x - 20 * ratio, 0));
         ImGui::SameLine();
 
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
-        bool settings_toggled = ImGui::Button(" ", ImVec2(16, 0));
+        bool settings_toggled = ImGui::Button(" ", ImVec2(16 * ratio, 0));
         ImGui::PopStyleColor(3);
 
         ImGui::GetWindowDrawList()->AddTriangleFilled(
-            ImVec2(ImGui::GetItemRectMax().x - 2, ImGui::GetItemRectMin().y + 4),
-            ImVec2(ImGui::GetItemRectMax().x - 2, ImGui::GetItemRectMax().y - 4),
-            ImVec2(ImGui::GetItemRectMax().x - 14, ImGui::GetItemRectMax().y - 4),
+            ImVec2(ImGui::GetItemRectMax().x - 2 * ratio, ImGui::GetItemRectMin().y + 4 * ratio),
+            ImVec2(ImGui::GetItemRectMax().x - 2 * ratio, ImGui::GetItemRectMax().y - 4 * ratio),
+            ImVec2(ImGui::GetItemRectMax().x - 14 * ratio, ImGui::GetItemRectMax().y - 4 * ratio),
             config::disabled_color.to_uint32());
 
         std::string settings_label = "##" + std::string(label);
