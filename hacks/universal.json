@@ -47,6 +47,7 @@
             "type": "toggle",
             "title": "No Short Numbers",
             "id": "universal.noshortnumbers",
+            "version": ">=2.200",
             "opcodes": [
                 {
                     "pattern": "81FE????^7D?568D8D",

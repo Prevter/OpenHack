@@ -1,10 +1,6 @@
 #include "gui.h"
 #include "../config.h"
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#define STBI_MSC_SECURE_CRT
-#include <stb_image_write.h>
-
 int snapping_round(int x, int snapping)
 {
     int a = (x / snapping) * snapping;
@@ -66,7 +62,10 @@ namespace gui
         ImGui::SetNextWindowSizeConstraints({windowSize, 1}, {windowSize, 10000});
 
         ImGui::PushFont(globals::title_font);
-        ImGui::Begin(name, open, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar);
+        ImGuiWindowFlags flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar;
+        if (config::always_reposition)
+            flags |= ImGuiWindowFlags_NoMove;
+        ImGui::Begin(name, open, flags);
         ImGui::PushFont(globals::main_font);
 
         ImGui::SetWindowFontScale(size);
@@ -150,11 +149,6 @@ namespace gui
         auto win_size = ImGui::GetWindowSize();
         globals::window_positions[name]["w"] = win_size.x / globals::screen_size.x;
         globals::window_positions[name]["h"] = win_size.y / globals::screen_size.x;
-
-        // Translucent background
-        // 1. Copy contents of the window bounding box to a texture
-        // 2. Blur the texture and tint it
-        // 3. Draw the texture as window background
     }
 
     void End()
