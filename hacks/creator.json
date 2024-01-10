@@ -22,8 +22,8 @@
             "id": "creator.copy",
             "opcodes": [
                 {
-                    "pattern": "2B88F00100000F^84",
-                    "mask": "85"
+                    "pattern": "0F^8F????8B8D",
+                    "mask": "8E"
                 }
             ]
         },
@@ -62,19 +62,12 @@
             "id": "creator.slider",
             "opcodes": [
                 {
-                    "addr": "0x4CDAA",
-                    "on": "0xEB",
-                    "off": "0x76"
+                    "pattern": "*76?0F57?84C0",
+                    "mask": "EB"
                 },
                 {
-                    "addr": "0x4CDD8",
-                    "on": "0xEB",
-                    "off": "0x76"
-                },
-                {
-                    "addr": "0xDE538",
-                    "on": "0xEB",
-                    "off": "0x75"
+                    "pattern": "75?0F2FCA76",
+                    "mask": "EB"
                 }
             ]
         },
@@ -82,11 +75,11 @@
             "type": "toggle",
             "title": "Testmode Bypass",
             "id": "creator.testmode",
+            "version": "<=2.200",
             "opcodes": [
                 {
-                    "addr": "0x2D7D75",
-                    "on": "0xE9B300",
-                    "off": "0x0F84B2"
+                    "pattern": "E8????80BB????00^0F84????68????68",
+                    "mask": "8E"
                 }
             ]
         },
@@ -96,19 +89,16 @@
             "id": "creator.verify",
             "opcodes": [
                 {
-                    "addr": "0x381BF5",
-                    "on": "0x75",
-                    "off": "0x74"
+                    "pattern": "83F801^74?80B9????00",
+                    "mask": "75"
                 },
                 {
-                    "addr": "0x80617",
-                    "on": "0xBAA8",
-                    "off": "0xBAB4"
+                    "pattern": "8B81????BA^????2B81",
+                    "mask": "*04$0B"
                 },
                 {
-                    "addr": "0x9D538",
-                    "on": "0x9090",
-                    "off": "0x7511"
+                    "pattern": "83F801^75?6A08",
+                    "mask": "9090"
                 }
             ]
         },
@@ -118,14 +108,12 @@
             "id": "creator.editorext",
             "opcodes": [
                 {
-                    "addr": "0xD73B7",
-                    "on": "0x0F60EA4B",
-                    "off": "0x80676A48"
+                    "pattern": "C70424^80676A48",
+                    "mask": "0F60EA4B"
                 },
                 {
-                    "addr": "0x496122",
-                    "on": "0xEA4B",
-                    "off": "0x6A48"
+                    "pattern": "0060^6A4800",
+                    "mask": "EA4B"
                 }
             ]
         }

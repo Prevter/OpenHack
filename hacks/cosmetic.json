@@ -52,10 +52,9 @@
             "id": "cosmetic.inversed_trail",
             "opcodes": [
                 {
-                    "addr": "0xB0E4C",
-                    "lib": "libcocos2d.dll",
-                    "on": "0x0F8568020000",
-                    "off": "0x0F8468020000"
+                    "pattern": "80BE????000F^84????85C0",
+                    "mask": "85",
+                    "lib": "libcocos2d.dll"
                 }
             ]
         },
@@ -76,19 +75,16 @@
             "id": "cosmetic.practice_pulse",
             "opcodes": [
                 {
-                    "addr": "0x2DD33D",
-                    "on": "0xEB09",
-                    "off": "0x7409"
+                    "pattern": "F30F114C24?84C0^74?80",
+                    "mask": "EB"
                 },
                 {
-                    "addr": "0x5BB4F",
-                    "on": "0x909090909090909090",
-                    "off": "0x80B8742A000000750C"
+                    "pattern": "80B8????0075?F30F104D",
+                    "mask": "*0990"
                 },
                 {
-                    "addr": "0x2DD36E",
-                    "on": "0xEB09",
-                    "off": "0x7409"
+                    "pattern": "F30F10?????84C0^74?80BE????00",
+                    "mask": "EB"
                 }
             ]
         }

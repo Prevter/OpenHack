@@ -352,6 +352,15 @@ namespace hacks
                     // iterate over all components
                     for (auto &component : j["items"])
                     {
+                        if (component.contains("version"))
+                        {
+                            auto version = component["version"].get<std::string>();
+                            if (!utils::compare_version(version.c_str()))
+                            {
+                                continue;
+                            }
+                        }
+
                         auto type = component["type"].get<std::string>();
                         if (type == "toggle")
                         {
