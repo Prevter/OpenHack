@@ -45,14 +45,14 @@
                     "mask": "*0D90"
                 },
                 {
-                    "addr": "0x2B4E15",
-                    "on": "0xEB",
-                    "off": "0x74"
+                    "pattern": "8AC35B5DC3",
+                    "mask": "B001"
                 },
                 {
-                    "addr": "0x270AC4",
-                    "on": "0xB001",
-                    "off": "0x8AC3"
+                    "addr": "0x2B4E15",
+                    "on": "0xEB",
+                    "off": "0x74",
+                    "version": "=2.200"
                 }
             ]
         },

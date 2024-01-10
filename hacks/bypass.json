@@ -114,14 +114,12 @@
             "id": "bypass.treasure",
             "opcodes": [
                 {
-                    "addr": "0x70CB5",
-                    "on": "0x9090",
-                    "off": "0x744C"
+                    "pattern": "0F9DC184C0^74?FF15????8BF0",
+                    "mask": "9090"
                 },
                 {
-                    "addr": "0x6FC3B",
-                    "on": "0x909090",
-                    "off": "0x0F44CA"
+                    "pattern": "84C0BA????B9????^0F44CA51FF15????83C4048987",
+                    "mask": "*0390"
                 }
             ]
         },
@@ -131,14 +129,12 @@
             "id": "bypass.icons",
             "opcodes": [
                 {
-                    "addr": "0x12019B",
-                    "on": "0xE9A5000000",
-                    "off": "0x8BD98B7D0C"
+                    "pattern": "8BD98B7D0C8B750885FF",
+                    "mask": "E9@4(EB028AC3^8B4DF464890D00000000)"
                 },
                 {
-                    "addr": "0x12069B",
-                    "on": "0xEB77",
-                    "off": "0x8BD9"
+                    "pattern": "8BD98B75088B7D0C",
+                    "mask": "EB@1(8AD88AC3^8B4DF4)"
                 }
             ]
         },

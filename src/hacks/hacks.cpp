@@ -361,6 +361,16 @@ namespace hacks
                             bool warn = false;
                             for (auto &opcode : component["opcodes"])
                             {
+                                if (opcode.contains("version"))
+                                {
+                                    auto version = opcode["version"].get<std::string>();
+                                    if (!utils::compare_version(version.c_str()))
+                                    {
+                                        L_INFO("Skipping opcode for {} because it's made for version {}", title, version);
+                                        continue;
+                                    }
+                                }
+
                                 if (opcode.contains("pattern"))
                                 {
                                     auto pattern_opcodes = read_pattern(opcode);

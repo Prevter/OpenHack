@@ -3,6 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <map>
+#include <vector>
 
 namespace utils
 {
@@ -81,6 +82,122 @@ namespace utils
 
         game_version = "unknown";
         return game_version;
+    }
+
+    bool compare_version(const char *version_filter)
+    {
+        // split by comma
+        std::vector<std::string> versions;
+        std::string version_filter_str = version_filter;
+        std::string delimiter = ",";
+        size_t pos = 0;
+        std::string token;
+        while ((pos = version_filter_str.find(delimiter)) != std::string::npos)
+        {
+            token = version_filter_str.substr(0, pos);
+            versions.push_back(token);
+            version_filter_str.erase(0, pos + delimiter.length());
+        }
+        versions.push_back(version_filter_str);
+
+        // get current version
+        const char *current_version = get_game_version();
+
+        // check if any version matches
+        bool match = false;
+        for (auto version : versions)
+        {
+            // check if version is a range
+            if (version.find("-") != std::string::npos)
+            {
+                // split by dash
+                std::vector<std::string> range;
+                std::string range_str = version;
+                std::string delimiter = "-";
+                size_t pos = 0;
+                std::string token;
+                while ((pos = range_str.find(delimiter)) != std::string::npos)
+                {
+                    token = range_str.substr(0, pos);
+                    range.push_back(token);
+                    range_str.erase(0, pos + delimiter.length());
+                }
+                range.push_back(range_str);
+
+                // check if current version is in range
+                if (range.size() == 2)
+                {
+                    if (strcmp(current_version, range[0].c_str()) >= 0 && strcmp(current_version, range[1].c_str()) <= 0)
+                    {
+                        match = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                // get operator
+                char op = version.at(0);
+                std::string ver = version.substr(1);
+                std::string operation;
+                switch (op)
+                {
+                case '=':
+                    operation = "==";
+                    break;
+                case '!':
+                    operation = "!=";
+                    break;
+                case '<':
+                    // check if <=
+                    if (version[1] == '=')
+                    {
+                        operation = "<=";
+                        ver = ver.substr(1);
+                    }
+                    else
+                    {
+                        operation = "<";
+                    }
+                    break;
+                case '>':
+                    // check if >=
+                    if (version[1] == '=')
+                    {
+                        operation = ">=";
+                        ver = ver.substr(1);
+                    }
+                    else
+                    {
+                        operation = ">";
+                    }
+                    break;
+                default:
+                    operation = "==";
+                    break;
+                }
+
+                // use operation to compare versions
+                int32_t result = strcmp(current_version, ver.c_str());
+                if (operation == "==" && result == 0)
+                    match = true;
+                else if (operation == "!=" && result != 0)
+                    match = true;
+                else if (operation == "<" && result < 0)
+                    match = true;
+                else if (operation == "<=" && result <= 0)
+                    match = true;
+                else if (operation == ">" && result > 0)
+                    match = true;
+                else if (operation == ">=" && result >= 0)
+                    match = true;
+
+                if (match)
+                    break;
+            }
+        }
+
+        return match;
     }
 
     // I need a better way to do this

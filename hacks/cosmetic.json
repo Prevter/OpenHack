@@ -65,14 +65,8 @@
             "id": "cosmetic.solid_wave",
             "opcodes": [
                 {
-                    "addr": "0x2BEB61",
-                    "on": "0x9090",
-                    "off": "0x7518"
-                },
-                {
-                    "addr": "0x2BEB6A",
-                    "on": "0x9090",
-                    "off": "0x750F"
+                    "pattern": "83F90F^75?80??????75",
+                    "mask": "9090*07?9090"
                 }
             ]
         },

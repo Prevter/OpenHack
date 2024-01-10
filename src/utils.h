@@ -10,4 +10,6 @@ namespace utils
     uint32_t decode_key(std::string key);
 
     const char *get_game_version();
+
+    bool compare_version(const char *version_filter);
 }
