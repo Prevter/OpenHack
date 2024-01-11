@@ -4,6 +4,7 @@
 #include "../menu/gui.h"
 
 #include "speedhack.h"
+#include "display.h"
 
 namespace hacks
 {
@@ -309,6 +310,7 @@ namespace hacks
     {
         // Initialize all hacks
         hacks.push_back(new Speedhack());
+        hacks.push_back(new DisplayHack());
 
         for (auto &hack : hacks)
         {
