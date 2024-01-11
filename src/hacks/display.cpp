@@ -71,23 +71,15 @@ namespace hacks
         if (!robtop::sharedGameManager_h)
         {
             L_ERROR("Failed to find GameManager::sharedState");
-            return;
         }
         if (!robtop::getGameVariable_h)
         {
             L_ERROR("Failed to find GameManager::getGameVariable");
-            return;
         }
         if (!robtop::setGameVariable_h)
         {
             L_ERROR("Failed to find GameManager::setGameVariable");
-            return;
         }
-        // if (!robtop::CCDirector_toggleShowFPS)
-        // {
-        //     L_ERROR("Failed to find CCDirector::toggleShowFPS");
-        //     return;
-        // }
     }
 
     void DisplayHack::update_framerate()
@@ -114,6 +106,9 @@ namespace hacks
 
     void DisplayHack::draw(bool embedded)
     {
+        if (!initialized)
+            return;
+
         gui::Begin("Display");
 
         gui::PushWidth(WINDOW_WIDTH / 2 - 15);
@@ -156,7 +151,7 @@ namespace hacks
 
     void DisplayHack::update()
     {
-        if (!initialized)
+        if (!initialized && robtop::sharedGameManager_h && robtop::getGameVariable_h && robtop::setGameVariable_h)
         {
             initialized = true;
 
