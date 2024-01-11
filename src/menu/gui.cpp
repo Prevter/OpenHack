@@ -151,6 +151,24 @@ namespace gui
         globals::window_positions[name]["h"] = win_size.y / globals::screen_size.x;
     }
 
+    // same as Begin, but without animations and saving window position (+ always centered)
+    void BeginPrompt(const char *name, bool *open)
+    {
+        ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
+                                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar |
+                                 ImGuiWindowFlags_NoScrollWithMouse;
+
+        const float size = globals::screen_size.x * config::menu_size;
+        ImGui::PushFont(globals::title_font);
+        ImGui::Begin(name, open, flags);
+        ImGui::PushFont(globals::main_font);
+        ImGui::SetWindowFontScale(size);
+
+        ImGui::SetWindowPos(ImVec2(
+            (1920 - ImGui::GetWindowWidth()) / 2,
+            (1080 - ImGui::GetWindowHeight()) / 2));
+    }
+
     void End()
     {
         ImGui::PopFont();

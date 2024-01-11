@@ -30,6 +30,7 @@ namespace config
     bool text_color_rainbow = false;
     bool menu_color_rainbow = false;
     float menu_rainbow_speed = 0.15f, menu_rainbow_brightness = 0.65f;
+    bool check_updates = true;
 
     void load(std::string dir_name)
     {
@@ -74,6 +75,7 @@ namespace config
                 LOAD_KEY(menu_color_rainbow);
                 LOAD_KEY(menu_rainbow_speed);
                 LOAD_KEY(menu_rainbow_brightness);
+                LOAD_KEY(check_updates);
             }
             catch (const std::exception &e)
             {
@@ -171,6 +173,7 @@ namespace config
         j["menu_color_rainbow"] = menu_color_rainbow;
         j["menu_rainbow_speed"] = menu_rainbow_speed;
         j["menu_rainbow_brightness"] = menu_rainbow_brightness;
+        j["check_updates"] = check_updates;
 
         file << j.dump(4);
         file.close();

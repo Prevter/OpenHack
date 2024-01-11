@@ -67,7 +67,15 @@ target_link_libraries(imgui PUBLIC
     opengl32
 )
 
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
+
 # Link libraries
+target_include_directories(OpenHack PRIVATE 
+    libs/cocos-headers/cocos2dx/platform/third_party/win32
+    libs/imgui_markdown
+)
 target_link_libraries(OpenHack PRIVATE
     nlohmann_json::nlohmann_json
     minhook
@@ -76,4 +84,5 @@ target_link_libraries(OpenHack PRIVATE
     glfw
     imgui
     spdlog::spdlog
+    ${CMAKE_SOURCE_DIR}/libs/libcurl.lib
 )

@@ -30,6 +30,18 @@ DWORD WINAPI MainThread(LPVOID param)
     hook::init();
     config::load();
 
+    // Check for updates
+    if (config::check_updates)
+    {
+        updater::check_update("prevter/gdopenhack",
+                              [](updater::version_t version)
+                              {
+                                  globals::latest_version = version;
+                                  globals::show_update_popup = PROJECT_VERSION != version.version;
+                                  globals::show_update_popup = true;
+                              });
+    }
+
     hook::set_menu_hotkey(config::menu_hotkey);
     hook::set_menu_toggle_callback(menu::toggle);
     hook::set_menu_init_callback(menu::init);

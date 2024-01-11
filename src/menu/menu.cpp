@@ -158,6 +158,30 @@ namespace menu
         }
     }
 
+    void draw_update_popup()
+    {
+        gui::BeginPrompt("Update available!", &globals::show_update_popup);
+
+        gui::ImText("A new version of " PROJECT_NAME " is available!");
+        gui::ImText("Your version: %s", PROJECT_VERSION);
+
+        gui::ImText("Latest version: %s", globals::latest_version.version.c_str());
+
+        if (gui::ImButton("Download"))
+            cocos2d::CCApplication::sharedApplication()->openURL(globals::latest_version.download.c_str());
+
+        if (gui::ImButton("Close"))
+            globals::show_update_popup = false;
+
+        // tint background to make it darker
+        ImGui::GetBackgroundDrawList()->AddRectFilled(
+            ImVec2(0, 0),
+            ImGui::GetIO().DisplaySize,
+            IM_COL32(0, 0, 0, 100));
+
+        gui::End();
+    }
+
     void draw()
     {
         auto &io = ImGui::GetIO();
@@ -183,6 +207,14 @@ namespace menu
 
         hacks::update();
 
+        if (globals::show_update_popup)
+        {
+            if (!menu_open)
+                set_styles();
+
+            draw_update_popup();
+        }
+
         if (!menu_open)
             return;
 
@@ -196,6 +228,8 @@ namespace menu
             gui::ImText("Game version: %s", utils::get_game_version());
             if (gui::ImButton("Open GitHub page"))
                 cocos2d::CCApplication::sharedApplication()->openURL(PROJECT_HOMEPAGE_URL);
+
+            gui::ImToggleButton("Check for updates", &config::check_updates);
 
             ImGui::Dummy(ImVec2(0, 10));
 
@@ -269,7 +303,9 @@ namespace menu
             config::reposition_windows = false;
         }
         else if (config::always_reposition)
+        {
             reset_windows();
+        }
     }
 
     void init()

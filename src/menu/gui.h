@@ -6,6 +6,7 @@
 namespace gui
 {
     void Begin(const char *name, bool *open = (bool *)false);
+    void BeginPrompt(const char *name, bool *open = (bool *)false);
     void End();
 
     // wrappers for ImGui functions

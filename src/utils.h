@@ -12,4 +12,6 @@ namespace utils
     const char *get_game_version();
 
     bool compare_version(const char *version_filter);
+
+    std::string get_request(const char *url);
 }

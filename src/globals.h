@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include <nlohmann/json.hpp>
 #include <stdint.h>
+#include "updater.h"
 
 struct Vec2
 {
@@ -53,4 +54,7 @@ namespace globals
     extern ImVec4 current_color; // current color for ImGui elements (either rainbow or config::text_color)
 
     extern char search[64]; // buffer for search bar
+
+    extern updater::version_t latest_version; // latest version from GitHub API
+    extern bool show_update_popup;            // flag to show update popup on menu init
 }

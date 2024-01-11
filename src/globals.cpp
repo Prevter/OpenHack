@@ -14,4 +14,6 @@ namespace globals
     ImFont *main_font, *title_font;
     ImVec4 current_color;
     char search[64] = {0};
+    updater::version_t latest_version;
+    bool show_update_popup;
 }

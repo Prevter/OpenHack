@@ -5,7 +5,8 @@
 #include <map>
 #include <vector>
 
-#define _CRT_SECURE_NO_WARNINGS
+#include <curl/curl.h>
+#include "logger.h"
 
 namespace utils
 {
@@ -451,5 +452,49 @@ namespace utils
             else
                 return 0;
         }
+    }
+
+    size_t write_callback(void *contents, size_t size, size_t nmemb, std::string *output)
+    {
+        output->append((char *)contents, size * nmemb);
+        return size * nmemb;
+    }
+
+    bool curl_initialized = false;
+
+    std::string get_request(const char *url)
+    {
+        if (!curl_initialized)
+        {
+            curl_global_init(CURL_GLOBAL_ALL);
+            curl_initialized = true;
+        }
+
+        CURL *curl;
+        CURLcode res;
+        std::string readBuffer;
+
+        curl = curl_easy_init();
+        if (curl)
+        {
+            curl_easy_setopt(curl, CURLOPT_URL, url);
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, utils::write_callback);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+            curl_easy_setopt(curl, CURLOPT_USERAGENT, "openhack");
+            curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
+            res = curl_easy_perform(curl);
+            if (res != CURLE_OK)
+            {
+                L_ERROR("curl_easy_perform() failed: {}", curl_easy_strerror(res));
+            }
+
+            curl_easy_cleanup(curl);
+        }
+
+        return readBuffer;
     }
 }
