@@ -18,6 +18,7 @@ DWORD WINAPI MainThread(LPVOID param)
 #endif
 
     L_INFO("Loading OpenHack...");
+    L_INFO("Game version: {}", utils::get_game_version());
 
     // Check if it's december (for snow particles)
     auto t = std::time(nullptr);

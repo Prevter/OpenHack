@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 
+#define _CRT_SECURE_NO_WARNINGS
+
 namespace utils
 {
     void set_console_title(const char *title)
@@ -39,6 +41,7 @@ namespace utils
         {1702921605, "2.200"},
         {1704582672, "2.201"},
         {1704601266, "2.202"},
+        {1704948277, "2.203"},
     };
 
     char *game_version = NULL;
@@ -76,7 +79,29 @@ namespace utils
         // check if larger than latest version
         if (timestamp > versions_map.rbegin()->first)
         {
-            game_version = (char *)(version->second + "+").c_str();
+            // split by dot
+            std::vector<std::string> version;
+            std::string version_str = versions_map.rbegin()->second;
+            std::string delimiter = ".";
+            size_t pos = 0;
+            std::string token;
+            while ((pos = version_str.find(delimiter)) != std::string::npos)
+            {
+                token = version_str.substr(0, pos);
+                version.push_back(token);
+                version_str.erase(0, pos + delimiter.length());
+            }
+            version.push_back(version_str);
+
+            // increment last number
+            int32_t last = atoi(version[1].c_str());
+            last++;
+            version[1] = std::to_string(last);
+
+            if (game_version != NULL)
+                delete game_version;
+            game_version = new char[version[0].length() + version[1].length() + 2];
+            sprintf(game_version, "%s.%s", version[0].c_str(), version[1].c_str());
             return game_version;
         }
 
