@@ -5,12 +5,16 @@
 
 <div align="center">
     <img src="docs/screenshot.png" alt="Screenshot">
-    <h3 align="center">OpenHack</h3>
+    <h1 align="center">OpenHack</h1>
     <p align="center">
         A free and open source Geometry Dash modded client for version 2.2 with many features.
     </p>
 </div>
 
+<div align="center">
+    <h3><b>Supports Geometry Dash version 2.200 - 2.203+</b></h3>
+    Hacks were made in a way that makes them update-proof, so they should work even after the game updates.
+</div>
 
 ## Table of Contents
 - [About](#about)
