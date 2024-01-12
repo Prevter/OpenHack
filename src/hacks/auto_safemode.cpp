@@ -39,12 +39,22 @@ namespace hacks
             return;
 
         std::string text = fmt::format("Auto Safe Mode ({})", m_has_cheats ? "ON" : "OFF");
-        gui::ImToggleButton(text.c_str(), &m_enabled);
+        if (gui::ImToggleButton(text.c_str(), &m_enabled))
+        {
+            if (!m_enabled)
+            {
+                // if we're disabling it, apply "Safe Mode" settings
+                m_safemode->apply_patch();
+            }
+        }
     }
 
     void AutoSafeMode::update()
     {
         if (!can_use_autosafemode)
+            return;
+
+        if (!m_enabled)
             return;
 
         // check if any cheats are enabled
