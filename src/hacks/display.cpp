@@ -81,6 +81,7 @@ namespace hacks
             L_ERROR("Failed to find GameManager::setGameVariable");
         }
     }
+    void DisplayHack::late_init() {}
 
     void DisplayHack::update_framerate()
     {

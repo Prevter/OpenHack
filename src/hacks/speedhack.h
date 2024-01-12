@@ -9,11 +9,14 @@ namespace hacks
     public:
         Speedhack();
         virtual void init() override;
+        virtual void late_init() override;
         virtual void draw(bool embedded = false) override;
         virtual void update() override;
         virtual void load(nlohmann::json *data) override;
         virtual void save(nlohmann::json *data) override;
         virtual std::string get_id() override { return "speedhack"; }
+
+        bool is_cheating() { return m_enabled && m_speed != 1.0f; }
 
     private:
         bool m_enabled = false;

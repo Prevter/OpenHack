@@ -5,11 +5,13 @@
 
 #include "speedhack.h"
 #include "display.h"
+#include "auto_safemode.h"
 
 namespace hacks
 {
     std::vector<Window> windows;
     std::vector<Hack *> hacks;
+    std::vector<ToggleComponent *> all_hacks;
 
     // parse opcode from json
     opcode_t read_opcode(nlohmann::json j)
@@ -311,6 +313,7 @@ namespace hacks
         // Initialize all hacks
         hacks.push_back(new Speedhack());
         hacks.push_back(new DisplayHack());
+        hacks.push_back(new AutoSafeMode());
 
         for (auto &hack : hacks)
         {
@@ -377,7 +380,6 @@ namespace hacks
                                     auto version = opcode["version"].get<std::string>();
                                     if (!utils::compare_version(version.c_str()))
                                     {
-                                        L_INFO("Skipping opcode for {} because it's made for version {}", title, version);
                                         continue;
                                     }
                                 }
@@ -411,7 +413,15 @@ namespace hacks
 
                             auto toggle = new ToggleComponent(title, id, nullptr, opcodes);
                             toggle->set_warnings(warn);
+
+                            if (component.contains("cheat"))
+                            {
+                                auto cheat = component["cheat"].get<bool>();
+                                toggle->set_is_cheat(cheat);
+                            }
+
                             window.add_component(toggle);
+                            all_hacks.push_back(toggle);
                         }
                         else if (type == "text")
                         {
@@ -464,6 +474,12 @@ namespace hacks
                     L_ERROR("Failed to parse config file: {}", e.what());
                 }
             }
+        }
+
+        // late hack init
+        for (auto &hack : hacks)
+        {
+            hack->late_init();
         }
     }
 

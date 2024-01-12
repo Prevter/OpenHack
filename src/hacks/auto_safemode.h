@@ -4,27 +4,20 @@
 
 namespace hacks
 {
-    class DisplayHack : public Hack
+    class AutoSafeMode : public Hack
     {
-        inline static bool initialized = false;
-
     public:
-        DisplayHack();
+        AutoSafeMode();
         virtual void init() override;
         virtual void late_init() override;
         virtual void draw(bool embedded = false) override;
         virtual void update() override;
         virtual void load(nlohmann::json *data) override;
         virtual void save(nlohmann::json *data) override;
-        virtual std::string get_id() override { return "display"; }
-
-        void update_framerate();
-
+        virtual std::string get_id() override { return "autosafemode"; }
     private:
-        float m_fps = 240;
-        bool m_fps_unlock = false;
-        bool m_fullscreen = false;
-        bool m_vsync = false;
-        bool m_show_fps = false;
+        bool m_enabled = false;
+        bool m_has_cheats = false;
+        ToggleComponent *m_safemode;
     };
 }

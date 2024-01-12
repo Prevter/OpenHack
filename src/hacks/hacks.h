@@ -11,11 +11,26 @@ namespace hacks
     void save(nlohmann::json *data);
     void load(nlohmann::json *data);
 
+    struct opcode_t
+    {
+        void *address;
+        std::string library;
+        std::vector<uint8_t> on_bytes;
+        std::vector<uint8_t> off_bytes;
+    };
+
+    // methods for working with opcodes
+    opcode_t read_opcode(nlohmann::json j);
+    std::vector<opcode_t> read_pattern(nlohmann::json j);
+    bool write_opcode(opcode_t opcode, bool enabled);
+
     class Hack
     {
     public:
-        // called during hooks::init()
+        // called during hooks::init() (before loading hacks)
         virtual void init() = 0;
+        // called during hooks::init() (after loading hacks)
+        virtual void late_init() = 0;
         // called during menu rendering
         // (embedded = true if the hack is being rendered from "EmbeddedHackComponent")
         virtual void draw(bool embedded = false) = 0;
@@ -46,14 +61,6 @@ namespace hacks
         std::string m_type;
     };
 
-    struct opcode_t
-    {
-        void *address;
-        std::string library;
-        std::vector<uint8_t> on_bytes;
-        std::vector<uint8_t> off_bytes;
-    };
-
     // Controls a single toggleable hack
     class ToggleComponent : public Component
     {
@@ -70,7 +77,12 @@ namespace hacks
         std::string get_id();
         std::string get_title();
 
+        std::vector<opcode_t> get_opcodes() { return m_opcodes; }
+
         void set_warnings(bool has_warnings) { m_has_warnings = has_warnings; }
+        bool has_warnings() { return m_has_warnings; }
+        void set_is_cheat(bool is_cheat) { m_is_cheat = is_cheat; }
+        bool is_cheat() { return m_is_cheat; }
 
     private:
         bool m_enabled;
@@ -79,6 +91,7 @@ namespace hacks
         std::function<void()> m_callback;
         std::vector<opcode_t> m_opcodes;
         bool m_has_warnings = false;
+        bool m_is_cheat = false;
     };
 
     // A component that only displays text
@@ -130,4 +143,5 @@ namespace hacks
     };
 
     extern std::vector<Window> windows;
+    extern std::vector<ToggleComponent *> all_hacks;
 }

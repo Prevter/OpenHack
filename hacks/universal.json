@@ -26,6 +26,18 @@
         },
         {
             "type": "toggle",
+            "title": "No Short Numbers",
+            "id": "universal.noshortnumbers",
+            "version": ">=2.200",
+            "opcodes": [
+                {
+                    "pattern": "81FE????^7D?568D8D",
+                    "mask": "9090"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
             "title": "Safe Mode",
             "id": "universal.safemode",
             "opcodes": [
@@ -44,16 +56,8 @@
             ]
         },
         {
-            "type": "toggle",
-            "title": "No Short Numbers",
-            "id": "universal.noshortnumbers",
-            "version": ">=2.200",
-            "opcodes": [
-                {
-                    "pattern": "81FE????^7D?568D8D",
-                    "mask": "9090"
-                }
-            ]
+            "type": "embedded",
+            "hack": "autosafemode"
         }
     ]
 }
