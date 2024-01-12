@@ -2,6 +2,7 @@
 #include "winmm.h"
 
 #include "config.h"
+#include "updater.h"
 
 #include "hacks/hacks.h"
 #include "hook.h"
