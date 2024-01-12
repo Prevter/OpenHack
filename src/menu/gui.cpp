@@ -154,9 +154,8 @@ namespace gui
     // same as Begin, but without animations and saving window position (+ always centered)
     void BeginPrompt(const char *name, bool *open)
     {
-        ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
-                                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar |
-                                 ImGuiWindowFlags_NoScrollWithMouse;
+        ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | 
+                                 ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 
         const float size = globals::screen_size.x * config::menu_size;
         ImGui::PushFont(globals::title_font);
@@ -271,6 +270,22 @@ namespace gui
         bool res = ImGui::ColorEdit4(label, col, flags);
 
         return res;
+    }
+
+    void ImProgressBar(float fraction, float width)
+    {
+        auto progress = fmt::format("{:.0f}%", fraction * 100);
+        ImGui::PushStyleColor(ImGuiCol_PlotHistogram, globals::current_color);
+        if (width == -1.f)
+        {
+            float max_width = ImGui::GetWindowContentRegionMax().x - 4;
+            ImGui::ProgressBar(fraction, ImVec2(max_width, 0), progress.c_str());
+        }
+        else
+        {
+            ImGui::ProgressBar(fraction, ImVec2(width * globals::screen_size.x * config::menu_size, 0), progress.c_str());
+        }
+        ImGui::PopStyleColor();
     }
 
     bool ImToggleButton(const char *label, bool *v, std::function<void()> settings, float width)

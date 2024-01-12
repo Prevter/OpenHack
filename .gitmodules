@@ -19,3 +19,6 @@
 [submodule "libs/stb"]
 	path = libs/stb
 	url = https://github.com/nothings/stb
+[submodule "libs/imgui_markdown"]
+	path = libs/imgui_markdown
+	url = https://github.com/juliettef/imgui_markdown

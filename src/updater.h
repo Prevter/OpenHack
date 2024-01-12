@@ -15,4 +15,6 @@ namespace updater
 
     void check_update(const char *repo, std::function<void(version_t)> callback);
 
+    void install_update(const char *download_url, float* progress = nullptr);
+
 }

@@ -17,7 +17,7 @@ DWORD WINAPI MainThread(LPVOID param)
     logger::init(false, true, "log.txt");
 #endif
 
-    L_INFO("Loading OpenHack...");
+    L_INFO("Loading OpenHack " PROJECT_VERSION "...");
     L_INFO("Game version: {}", utils::get_game_version());
 
     // Check if it's december (for snow particles)

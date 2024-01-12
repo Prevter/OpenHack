@@ -33,4 +33,17 @@ namespace updater
                         } })
             .detach();
     }
+
+    void install_update(const char *download_url, float *progress)
+    {
+        std::thread([=]()
+                    {
+                        std::string path = utils::get_current_directory();
+                        path += "\\update.zip";
+                        
+                        utils::download_file(download_url, path.c_str(), progress);
+
+                        L_INFO("Update installed successfully!"); })
+            .detach();
+    }
 }

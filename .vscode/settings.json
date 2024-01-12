@@ -87,6 +87,8 @@
         "stack": "cpp",
         "codecvt": "cpp",
         "*.in": "cpp",
-        "coroutine": "cpp"
+        "coroutine": "cpp",
+        "complex": "cpp",
+        "future": "cpp"
     }
 }

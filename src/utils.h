@@ -14,4 +14,5 @@ namespace utils
     bool compare_version(const char *version_filter);
 
     std::string get_request(const char *url);
+    bool download_file(const char *url, const char *path, float *progress = nullptr);
 }

@@ -20,6 +20,7 @@ namespace gui
     bool ImCombo(const char *label, int *current_item, const char *const items, int items_count);
     bool ImColorEdit3(const char *label, float *col, ImGuiColorEditFlags flags = 0);
     bool ImColorEdit4(const char *label, float *col, ImGuiColorEditFlags flags = 0);
+    void ImProgressBar(float fraction, float width = -1.f);
 
     // a toggle button to use instead of regular checkbox, which supports settings
     bool ImToggleButton(const char *label, bool *v, std::function<void()> settings = nullptr, float width = -1.f);

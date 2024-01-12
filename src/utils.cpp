@@ -485,6 +485,7 @@ namespace utils
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
             curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
             res = curl_easy_perform(curl);
             if (res != CURLE_OK)
@@ -496,5 +497,73 @@ namespace utils
         }
 
         return readBuffer;
+    }
+
+    struct progress_data
+    {
+        float *progress;
+        CURL *curl;
+        std::ofstream *file;
+    };
+
+    size_t write_callback_progress(void *contents, size_t size, size_t nmemb, progress_data *data)
+    {
+        data->file->write((char *)contents, size * nmemb);
+        if (data->progress != nullptr)
+        {
+            double dltotal = 0;
+            double dlnow = 0;
+            curl_easy_getinfo(data->curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &dltotal);
+            curl_easy_getinfo(data->curl, CURLINFO_SIZE_DOWNLOAD, &dlnow);
+            *data->progress = (float)(dlnow / dltotal);
+        }
+        return size * nmemb;
+    }
+
+    bool download_file(const char *url, const char *path, float *progress)
+    {
+        if (!curl_initialized)
+        {
+            curl_global_init(CURL_GLOBAL_ALL);
+            curl_initialized = true;
+        }
+
+        CURL *curl;
+        CURLcode res;
+        std::ofstream file(path, std::ios::binary);
+
+        curl = curl_easy_init();
+        if (curl)
+        {
+            progress_data data;
+            data.progress = progress;
+            data.curl = curl;
+            data.file = &file;
+
+            curl_easy_setopt(curl, CURLOPT_URL, url);
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, utils::write_callback_progress);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
+            curl_easy_setopt(curl, CURLOPT_USERAGENT, "openhack");
+            curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+            res = curl_easy_perform(curl);
+            if (res != CURLE_OK)
+            {
+                L_ERROR("curl_easy_perform() failed: {}", curl_easy_strerror(res));
+                curl_easy_cleanup(curl);
+                file.close();
+                return false;
+            }
+
+            curl_easy_cleanup(curl);
+        }
+
+        file.close();
+
+        return true;
     }
 }
