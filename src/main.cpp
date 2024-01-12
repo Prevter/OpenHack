@@ -39,7 +39,6 @@ DWORD WINAPI MainThread(LPVOID param)
                               {
                                   globals::latest_version = version;
                                   globals::show_update_popup = PROJECT_VERSION != version.version;
-                                  globals::show_update_popup = true;
                               });
     }
 
