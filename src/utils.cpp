@@ -43,6 +43,7 @@ namespace utils
         {1704582672, "2.201"},
         {1704601266, "2.202"},
         {1704948277, "2.203"},
+        {1705041028, "2.204"},
     };
 
     char *game_version = NULL;
@@ -80,6 +81,8 @@ namespace utils
         // check if larger than latest version
         if (timestamp > versions_map.rbegin()->first)
         {
+            L_TRACE("New version found: {}", timestamp);
+
             // split by dot
             std::vector<std::string> version;
             std::string version_str = versions_map.rbegin()->second;

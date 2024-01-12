@@ -154,8 +154,10 @@ namespace gui
     // same as Begin, but without animations and saving window position (+ always centered)
     void BeginPrompt(const char *name, bool *open)
     {
-        ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | 
-                                 ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+        ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | 
+                                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | 
+                                 ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
+                                 ImGuiWindowFlags_NoMove;
 
         const float size = globals::screen_size.x * config::menu_size;
         ImGui::PushFont(globals::title_font);
