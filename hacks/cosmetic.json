@@ -87,6 +87,17 @@
                     "mask": "EB"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "Enable Menu Buttons",
+            "id": "cosmetic.menu_buttons",
+            "opcodes": [
+                {
+                    "pattern": "84C0^0F84????837C24?10",
+                    "mask": "E9&(01+01)*03$0190"
+                }
+            ]
         }
     ]
 }

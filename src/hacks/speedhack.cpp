@@ -28,6 +28,7 @@ namespace hacks
         auto scheduler = GetProcAddress(cocos2d, "?update@CCScheduler@cocos2d@@UAEXM@Z");
         MH_CreateHook(scheduler, CCScheduler_update_hook, (void **)&CCScheduler_update);
     }
+    void Speedhack::late_init() {}
 
     void Speedhack::draw(bool embedded)
     {
