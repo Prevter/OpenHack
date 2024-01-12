@@ -566,4 +566,14 @@ namespace utils
 
         return true;
     }
+
+    void extract_zip(const char *zip_path, const char *output_path)
+    {
+        std::string command = "powershell -Command \"Expand-Archive -Path '";
+        command += zip_path;
+        command += "' -DestinationPath '";
+        command += output_path;
+        command += "' -Force\"";
+        system(command.c_str());
+    }
 }

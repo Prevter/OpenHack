@@ -43,7 +43,25 @@ namespace updater
                         
                         utils::download_file(download_url, path.c_str(), progress);
 
-                        L_INFO("Update installed successfully!"); })
+                        // delete old dll if exists
+                        std::remove("xinput9_1_0.old");
+                        
+                        // rename "xinput9_1_0.dll" to "xinput9_1_0.old"
+                        std::string old_path = utils::get_current_directory();
+                        old_path += "\\xinput9_1_0.old";
+                        std::rename("xinput9_1_0.dll", old_path.c_str());
+
+                        // extract zip
+                        utils::extract_zip(path.c_str(), ".");
+
+                        // delete zip
+                        std::remove(path.c_str());
+
+                        L_INFO("Update installed successfully!"); 
+
+                        // close the game
+                        std::exit(0);
+                    })
             .detach();
     }
 }

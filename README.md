@@ -12,7 +12,7 @@
 </div>
 
 <div align="center">
-    <h3><b>Supports Geometry Dash version 2.200 - 2.203+</b></h3>
+    <h3><b>Supports Geometry Dash version 2.200 - 2.204+</b></h3>
     Hacks were made in a way that makes them update-proof, so they should work even after the game updates.
 </div>
 
@@ -36,10 +36,10 @@ Main goal of this project is primarily me getting more experience with C++ and g
 - [x] Customizable menu with animations
 - [x] Basic hacks (speedhack, noclip, etc.)
 - [x] Hack search
+- [x] Auto-updater
 
 Planned:
 - [ ] Keybinds
-- [ ] Auto-updater
 - [ ] ... and more!
 
 ## Installation

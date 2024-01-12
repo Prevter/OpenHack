@@ -15,4 +15,6 @@ namespace utils
 
     std::string get_request(const char *url);
     bool download_file(const char *url, const char *path, float *progress = nullptr);
+
+    void extract_zip(const char *zip_path, const char *output_path);
 }
