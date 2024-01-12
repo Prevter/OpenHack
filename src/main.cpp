@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "winmm.h"
+#include "injector/injector.h"
 
 #include "config.h"
 #include "updater.h"
@@ -58,6 +58,7 @@ BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
     switch (dwReason)
     {
     case DLL_PROCESS_ATTACH:
+        injector::load();
         CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
         DisableThreadLibraryCalls(hModule);
         break;

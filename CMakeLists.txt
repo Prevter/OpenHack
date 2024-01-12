@@ -18,7 +18,7 @@ include_directories("${CMAKE_BINARY_DIR}")
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
 
 # Create the library
-add_library(OpenHack SHARED ${SOURCES})
+add_library(OpenHack SHARED ${SOURCES} "src/injector/xinput.def")
 
 # Set the output directory
 set_target_properties(OpenHack PROPERTIES
@@ -28,7 +28,7 @@ set_target_properties(OpenHack PROPERTIES
 )
 
 # Set the output name
-set_target_properties(OpenHack PROPERTIES OUTPUT_NAME "winmm")
+set_target_properties(OpenHack PROPERTIES OUTPUT_NAME "xinput9_1_0")
 
 # Add libraries
 set(JSON_BuildTests OFF CACHE INTERNAL "")
