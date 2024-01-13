@@ -1,5 +1,7 @@
 #include "xinput.h"
 
+#include "../config.h"
+
 #include <winternl.h>
 #include <TlHelp32.h>
 #include <SDKDDKVer.h>
@@ -28,4 +30,29 @@ namespace injector
         }
     }
 
+    void load_dlls()
+    {
+        std::filesystem::create_directory(MAIN_DIR "\\dll");
+
+        for (auto &p : std::filesystem::directory_iterator(MAIN_DIR "\\dll"))
+        {
+            if (p.path().extension() == ".dll")
+            {
+                auto dll_name = p.path().filename().string();
+                auto dll_path = MAIN_DIR "\\dll\\" + dll_name;
+
+                auto hMod = LoadLibraryA(dll_path.c_str());
+                if (hMod > (HMODULE)31)
+                {
+                    auto oDllMain = GetProcAddress(hMod, "DllMain");
+                    if (oDllMain)
+                    {
+                        typedef BOOL(WINAPI * tDllMain)(HINSTANCE, DWORD, LPVOID);
+                        tDllMain DllMain = (tDllMain)oDllMain;
+                        DllMain(hMod, DLL_PROCESS_ATTACH, nullptr);
+                    }
+                }
+            }
+        }
+    }
 }

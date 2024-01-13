@@ -8,6 +8,7 @@
 #include "hook.h"
 #include "menu/menu.h"
 #include "hooks/MenuLayer.h"
+#include "bindings/bindings.h"
 
 DWORD WINAPI MainThread(LPVOID param)
 {
@@ -27,9 +28,10 @@ DWORD WINAPI MainThread(LPVOID param)
     localtime_s(&tm, &t);
     globals::is_december = tm.tm_mon == 11;
 
-    // Initialize hooks
+    // Initialize hooks / load hacks
     hook::init();
     config::load();
+    injector::load_dlls();
 
     // Check for updates
     if (config::check_updates)
