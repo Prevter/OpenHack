@@ -5,48 +5,37 @@
 
 namespace patterns
 {
-    std::vector<token_t> parse_pattern(std::string pattern)
+    token_t parse_token(std::string pattern, uint32_t &current_index)
     {
-        uint32_t current_index = 0;
-        std::vector<token_t> tokens;
+        token_t token;
+        token.any_byte = false;
+        token.byte = 0;
+        token.set_address_cursor = false;
+        token.multi_pattern = false;
+        token.jump_if_fail = -1;
 
-        while (current_index < pattern.length())
+        if (pattern[current_index] == '?')
         {
-            token_t token;
-            token.any_byte = false;
-            token.byte = 0;
-            token.set_address_cursor = false;
-            token.multi_pattern = false;
-
-            if (pattern[current_index] == ' ')
-            {
-                current_index++;
-            }
-            else if (pattern[current_index] == '?')
-            {
-                token.any_byte = true;
-                current_index++;
-            }
-            else if (pattern[current_index] == '^')
-            {
-                token.set_address_cursor = true;
-                current_index++;
-            }
-            else if (pattern[current_index] == '*')
-            {
-                token.multi_pattern = true;
-                current_index++;
-            }
-            else
-            {
-                token.byte = std::stoi(pattern.substr(current_index, 2), nullptr, 16);
-                current_index += 2;
-            }
-
-            tokens.push_back(token);
+            token.any_byte = true;
+            current_index++;
+        }
+        else if (pattern[current_index] == '^')
+        {
+            token.set_address_cursor = true;
+            current_index++;
+        }
+        else if (pattern[current_index] == '*')
+        {
+            token.multi_pattern = true;
+            current_index++;
+        }
+        else
+        {
+            token.byte = std::stoi(pattern.substr(current_index, 2), nullptr, 16);
+            current_index += 2;
         }
 
-        return tokens;
+        return token;
     }
 
     bool eat_token(char symbol, std::string &pattern, uint32_t &current_index)
@@ -58,6 +47,44 @@ namespace patterns
         }
 
         return false;
+    }
+
+    std::vector<token_t> parse_pattern(std::string pattern)
+    {
+        uint32_t current_index = 0;
+        std::vector<token_t> tokens;
+
+        while (current_index < pattern.length())
+        {
+            if (pattern[current_index] == ' ')
+            {
+                current_index++;
+                continue;
+            }
+            else if (eat_token('[', pattern, current_index))
+            {
+                std::vector<token_t> sub_tokens;
+                while (!eat_token(']', pattern, current_index))
+                {
+                    token_t token = parse_token(pattern, current_index);
+                    sub_tokens.push_back(token);
+                }
+
+                int32_t len = sub_tokens.size();
+                for (uint32_t i = 0; i < sub_tokens.size(); i++)
+                {
+                    sub_tokens[i].jump_if_fail = len - i - 1;
+                }
+
+                tokens.insert(tokens.end(), sub_tokens.begin(), sub_tokens.end());
+                continue;
+            }
+
+            token_t token = parse_token(pattern, current_index);
+            tokens.push_back(token);
+        }
+
+        return tokens;
     }
 
     int8_t read_signed_byte(std::string &pattern, uint32_t &current_index)
@@ -208,6 +235,8 @@ namespace patterns
             void *address = (void *)((uintptr_t)module + i);
             void *addr = address;
             bool set_address_cursor = false;
+            uint32_t subtracted_bytes = 0;
+            uint32_t max_jump_length = -1;
 
             // iterate over pattern tokens
             for (uint32_t j = 0; j < pattern.size(); j++)
@@ -222,7 +251,7 @@ namespace patterns
                 }
 
                 // if cursor has been set, we need to offset j by 1
-                uintptr_t addr = (uintptr_t)address + (set_address_cursor ? j - 1 : j);
+                uintptr_t addr = (uintptr_t)address + (set_address_cursor ? j - 1 : j) - subtracted_bytes;
 
                 // check if we have enough memory left
                 if (addr >= (uintptr_t)module + module_info.SizeOfImage)
@@ -231,9 +260,29 @@ namespace patterns
                     break;
                 }
 
+                if (pattern[j].jump_if_fail != -1 && max_jump_length == -1)
+                {
+                    max_jump_length = pattern[j].jump_if_fail;
+                }
+                else if (pattern[j].jump_if_fail == -1)
+                {
+                    max_jump_length = -1;
+                }
+
                 // check if we have a match
                 if (!pattern[j].any_byte && *(uint8_t *)(addr) != pattern[j].byte)
                 {
+                    // check if has "jump_if_fail" set
+                    if (pattern[j].jump_if_fail != -1)
+                    {
+                        // jump to the next token
+                        j += pattern[j].jump_if_fail;
+
+                        // we also need to make sure we return to the original address before the [] brackets
+                        subtracted_bytes += max_jump_length + 1;
+                        continue;
+                    }
+
                     found = false;
                     break;
                 }

@@ -68,9 +68,9 @@ namespace patterns
     // Either a byte or a wildcard
     struct byte_t
     {
-        bool any_byte;    // true if the byte is a wildcard
+        bool any_byte; // true if the byte is a wildcard
 
-        bool is_pattern; // true if the value should be an address to the pattern
+        bool is_pattern;  // true if the value should be an address to the pattern
         bool is_relative; // true if the byte value should be changed by a relative offset
         bool is_address;  // true if the value of the byte should be taken from original_address + offset
 
@@ -110,10 +110,20 @@ namespace patterns
     // A token in a pattern string
     struct token_t
     {
-        bool any_byte;
-        uint8_t byte;
-        bool set_address_cursor;
-        bool multi_pattern;
+        bool any_byte;           // true if the byte is a wildcard
+        uint8_t byte;            // value of the byte
+        bool set_address_cursor; // true if the address cursor should be set to this byte
+        bool multi_pattern;      // true if the pattern should be matched multiple times
+        int8_t jump_if_fail;     // valid inside [] brackets, tells how many tokens to skip in the pattern if the match fails
+
+        token_t()
+        {
+            any_byte = false;
+            byte = 0;
+            set_address_cursor = false;
+            multi_pattern = false;
+            jump_if_fail = -1;
+        }
     };
 
     // Parses a pattern string and returns a vector of tokens
