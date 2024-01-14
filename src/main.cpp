@@ -29,6 +29,7 @@ DWORD WINAPI MainThread(LPVOID param)
     globals::is_december = tm.tm_mon == 11;
 
     // Initialize hooks / load hacks
+    robtop::init_bindings();
     hook::init();
     config::load();
     injector::load_dlls();

@@ -1,86 +1,14 @@
 #include "display.h"
 #include "../menu/gui.h"
 
-namespace robtop
-{
-    const char *getGameManager_pat = "558BEC6AFF68????64A1000000005051A1????33C5508D45F464A300000000A1????85C075406840050000";
-    const char *getGameVariable_pat = "558BEC83E4F86AFF68????64A1000000005083EC38A1????33C489442430535657A1????33C4508D44244864A3000000008BF98B75088D4C24286A03";
-    const char *setGameVariable_pat = "558BEC83E4F86AFF68????64A1000000005083EC58A1????33C489442450535657A1????33C4508D44246864A3000000008BD9895C2410";
+#include "../bindings/bindings.h"
 
-    class GameManager;
-    robtop::GameManager *(__stdcall *sharedGameManager_h)();
-    bool(__thiscall *getGameVariable_h)(robtop::GameManager *manager, const char *key);
-    void(__thiscall *setGameVariable_h)(robtop::GameManager *manager, const char *key, bool value);
-
-#define FPS_OFFSET 900
-
-    class GameManager
-    {
-    public:
-        inline static GameManager *sharedState()
-        {
-            return sharedGameManager_h();
-        }
-        inline float getFps()
-        {
-            return *(float *)((uintptr_t)this + FPS_OFFSET);
-        }
-        inline void setFps(float fps)
-        {
-            *(float *)((uintptr_t)this + FPS_OFFSET) = fps;
-        }
-        inline bool getGameVariable(const char *key)
-        {
-            if (!getGameVariable_h)
-                return false;
-            return getGameVariable_h(this, key);
-        }
-        inline void setGameVariable(const char *key, bool value)
-        {
-            if (!setGameVariable_h)
-                return;
-            setGameVariable_h(this, key, value);
-        }
-    };
-
-    const char *toggleShowFPS_name = "?toggleShowFPS@CCDirector@cocos2d@@QAEX_NV?$basic_string@DU?$char";
-    // void(__thiscall *CCDirector_toggleShowFPS)(cocos2d::CCDirector *self, bool show, cocos2d::CCString str, cocos2d::CCPoint pos);
-
-}
+#define MIN_FPS 30.f
 
 namespace hacks
 {
-    DisplayHack::DisplayHack()
-    {
-    }
-
-    void DisplayHack::init()
-    {
-        // setup hooks
-        robtop::getGameVariable_h = (bool(__thiscall *)(robtop::GameManager *, const char *))
-            patterns::find_pattern(robtop::getGameVariable_pat);
-        robtop::sharedGameManager_h = (robtop::GameManager * (__stdcall *)())
-            patterns::find_pattern(robtop::getGameManager_pat);
-        robtop::setGameVariable_h = (void(__thiscall *)(robtop::GameManager *, const char *, bool))
-            patterns::find_pattern(robtop::setGameVariable_pat);
-
-        // robtop::CCDirector_toggleShowFPS = (void(__thiscall *)(cocos2d::CCDirector *, bool, cocos2d::CCString, cocos2d::CCPoint))
-        //     GetProcAddress(GetModuleHandle("libcocos2d.dll"), robtop::toggleShowFPS_name);
-
-        // check if hooks are valid
-        if (!robtop::sharedGameManager_h)
-        {
-            L_ERROR("Failed to find GameManager::sharedState");
-        }
-        if (!robtop::getGameVariable_h)
-        {
-            L_ERROR("Failed to find GameManager::getGameVariable");
-        }
-        if (!robtop::setGameVariable_h)
-        {
-            L_ERROR("Failed to find GameManager::setGameVariable");
-        }
-    }
+    DisplayHack::DisplayHack() {}
+    void DisplayHack::init() {}
     void DisplayHack::late_init() {}
 
     void DisplayHack::update_framerate()
@@ -92,8 +20,8 @@ namespace hacks
         float frametime;
         if (m_fps_unlock)
         {
-            if (m_fps < 60)
-                m_fps = 60;
+            if (m_fps < MIN_FPS)
+                m_fps = MIN_FPS;
 
             frametime = 1.0f / m_fps;
         }
@@ -115,8 +43,8 @@ namespace hacks
         gui::PushWidth(WINDOW_WIDTH / 2 - 15);
         if (gui::ImInputFloat("##fps", &m_fps, "%.0f FPS"))
         {
-            if (m_fps < 60)
-                m_fps = 60;
+            if (m_fps < MIN_FPS)
+                m_fps = MIN_FPS;
 
             robtop::GameManager::sharedState()->setFps((float)m_fps);
             update_framerate();
