@@ -269,8 +269,11 @@ namespace menu
             gui::ImText("Build date: " __DATE__ " " __TIME__);
             gui::ImText("Game version: %s", utils::get_game_version());
             gui::ImToggleButton("Check for updates", &config::check_updates);
+            
             if (gui::ImButton("Open GitHub page"))
                 cocos2d::CCApplication::sharedApplication()->openURL(PROJECT_HOMEPAGE_URL);
+            if (gui::ImButton("Join Discord server"))
+                cocos2d::CCApplication::sharedApplication()->openURL("https://discord.gg/QSd4jUyc45");
 
             ImGui::Dummy(ImVec2(0, 10));
 
