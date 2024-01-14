@@ -2,6 +2,7 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/prevter/gdopenhack/total)
 ![GitHub](https://img.shields.io/github/license/prevter/gdopenhack)
 ![GitHub issues](https://img.shields.io/github/issues/prevter/gdopenhack)
+[![Discord](https://img.shields.io/discord/1195179573122445312?label=discord&logo=discord)](https://discord.gg/HaHn7RSJ4Q)
 
 <div align="center">
     <img src="docs/screenshot.png" alt="Screenshot">
@@ -82,8 +83,8 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for mo
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Contact
-Discord: `prevter`  
-If this project will grow big enough, I'll probably make a Discord server for it as well.
+Join our Discord server: [discord.gg/HaHn7RSJ4Q](https://discord.gg/HaHn7RSJ4Q)  
+Or you can just contact me directly: `prevter`
 
 ## Acknowledgements
 [GDMegaOverlay](https://github.com/maxnut/GDMegaOverlay) by maxnut for most of the menu code to get me started.
