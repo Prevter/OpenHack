@@ -11,6 +11,14 @@
 namespace utils
 {
     uintptr_t base_addr, cocos_addr;
+    bool is_2_200;
+
+    void init()
+    {
+        base_addr = (uintptr_t)GetModuleHandleA(NULL);
+        cocos_addr = (uintptr_t)GetModuleHandleA("libcocos2d.dll");
+        is_2_200 = compare_version("=2.200");
+    }
 
     void set_console_title(const char *title)
     {

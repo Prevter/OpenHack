@@ -22,8 +22,7 @@ DWORD WINAPI MainThread(LPVOID param)
     L_INFO("Loading OpenHack " PROJECT_VERSION "...");
     L_INFO("Game version: {}", utils::get_game_version());
 
-    utils::base_addr = (uintptr_t)GetModuleHandle(NULL);
-    utils::cocos_addr = (uintptr_t)GetModuleHandle("libcocos2d.dll");
+    utils::init();
 
     // Check if it's december (for snow particles)
     auto t = std::time(nullptr);

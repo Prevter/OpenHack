@@ -5,6 +5,9 @@ namespace utils
 {
     extern uintptr_t base_addr;
     extern uintptr_t cocos_addr;
+    extern bool is_2_200;
+
+    void init();
 
     void set_console_title(const char *title);
 
