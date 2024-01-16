@@ -32,7 +32,6 @@ DWORD WINAPI MainThread(LPVOID param)
     robtop::init_bindings();
     hook::init();
     config::load();
-    injector::load_dlls();
 
     // Check for updates
     if (config::check_updates)
@@ -60,6 +59,7 @@ BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
     switch (dwReason)
     {
     case DLL_PROCESS_ATTACH:
+        injector::load_dlls();
         injector::load();
         CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
         DisableThreadLibraryCalls(hModule);
