@@ -112,15 +112,18 @@ namespace hacks
     class EmbeddedHackComponent : public Component
     {
     public:
-        EmbeddedHackComponent(Hack *hack);
+        EmbeddedHackComponent(Hack *hack, const char* id);
         virtual void draw() override;
 
         // saving is handled by the hack itself
         virtual void load(nlohmann::json *data) override {}
         virtual void save(nlohmann::json *data) override {}
 
+        const char* get_id() { return m_id; }
+
     private:
         Hack *m_hack;
+        const char* m_id;
     };
 
     class Window

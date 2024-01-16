@@ -298,9 +298,10 @@ namespace hacks
 
     /* ===== EmbeddedHackComponent ===== */
 
-    EmbeddedHackComponent::EmbeddedHackComponent(Hack *hack)
+    EmbeddedHackComponent::EmbeddedHackComponent(Hack *hack, const char* id)
     {
         m_hack = hack;
+        m_id = id;
     }
 
     void EmbeddedHackComponent::draw()
@@ -444,7 +445,7 @@ namespace hacks
 
                             if (hack != nullptr)
                             {
-                                auto embedded = new EmbeddedHackComponent(hack);
+                                auto embedded = new EmbeddedHackComponent(hack, hack_name.c_str());
                                 window.add_component(embedded);
                             }
                         }
@@ -453,18 +454,30 @@ namespace hacks
                     // sort toggle components alphabetically
                     std::sort(window.m_components.begin(), window.m_components.end(), [](Component *a, Component *b)
                               {
-                    // check if both components are toggle components
-                    if (dynamic_cast<ToggleComponent*>(a) != nullptr && dynamic_cast<ToggleComponent*>(b) != nullptr) {
-                        // cast components to toggle components
-                        auto toggle_a = dynamic_cast<ToggleComponent*>(a);
-                        auto toggle_b = dynamic_cast<ToggleComponent*>(b);
+                                std::string a_title, b_title;
 
-                        // compare titles
-                        return toggle_a->get_title() < toggle_b->get_title();
-                    }
+                                // determine "a_title"
+                                if (dynamic_cast<ToggleComponent*>(a) != nullptr) {
+                                    auto toggle_a = dynamic_cast<ToggleComponent*>(a);
+                                    a_title = toggle_a->get_title();
+                                }
+                                else if (dynamic_cast<EmbeddedHackComponent*>(a) != nullptr) {
+                                    auto embedded_a = dynamic_cast<EmbeddedHackComponent*>(a);
+                                    a_title = embedded_a->get_id();
+                                }
 
-                    // return false if one of the components is not a toggle component
-                    return false; });
+                                // determine "b_title"
+                                if (dynamic_cast<ToggleComponent*>(b) != nullptr) {
+                                    auto toggle_b = dynamic_cast<ToggleComponent*>(b);
+                                    b_title = toggle_b->get_title();
+                                }
+                                else if (dynamic_cast<EmbeddedHackComponent*>(b) != nullptr) {
+                                    auto embedded_b = dynamic_cast<EmbeddedHackComponent*>(b);
+                                    b_title = embedded_b->get_id();
+                                }
+                                
+                                // compare titles
+                                return a_title < b_title; });
 
                     // add window to list of windows
                     windows.push_back(window);
