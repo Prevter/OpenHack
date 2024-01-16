@@ -1,6 +1,8 @@
 #include "hooks.h"
 #include "MenuLayer.h"
 
+#include "../hacks/discord_rpc.h"
+
 namespace hooks::MenuLayer
 {
     bool(__thiscall *MenuLayer_init_o)(robtop::MenuLayer *self);
@@ -14,6 +16,8 @@ namespace hooks::MenuLayer
             cocos2d::CCParticleSnow *snow = cocos2d::CCParticleSnow::createWithTotalParticles(700);
             self->addChild(snow);
         }
+
+        hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::MENU);
 
         return ret;
     };

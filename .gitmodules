@@ -19,6 +19,9 @@
 [submodule "libs/stb"]
 	path = libs/stb
 	url = https://github.com/nothings/stb
+[submodule "libs/discord-rpc"]
+	path = libs/discord-rpc
+	url = https://github.com/discord/discord-rpc
 [submodule "libs/imgui_markdown"]
 	path = libs/imgui_markdown
 	url = https://github.com/juliettef/imgui_markdown

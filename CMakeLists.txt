@@ -41,6 +41,7 @@ add_subdirectory(libs/minhook)
 add_subdirectory(libs/glfw)
 add_subdirectory(libs/cocos-headers)
 add_subdirectory(libs/spdlog)
+add_subdirectory(libs/discord-rpc)
 
 # Include STB
 include_directories(libs/stb)
@@ -73,6 +74,7 @@ endif()
 
 # Link libraries
 target_include_directories(OpenHack PRIVATE 
+    libs/discord-rpc/include
     libs/cocos-headers/cocos2dx/platform/third_party/win32
     libs/imgui_markdown
 )
@@ -84,5 +86,6 @@ target_link_libraries(OpenHack PRIVATE
     glfw
     imgui
     spdlog::spdlog
+    discord-rpc
     ${CMAKE_SOURCE_DIR}/libs/libcurl.lib
 )

@@ -2,6 +2,10 @@
     "title": "Universal",
     "items": [
         {
+            "type": "embedded",
+            "hack": "discord_rpc"
+        },
+        {
             "type": "toggle",
             "title": "No Transition",
             "id": "universal.transition",

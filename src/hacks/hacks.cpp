@@ -4,6 +4,7 @@
 #include "../menu/gui.h"
 
 #include "speedhack.h"
+#include "discord_rpc.h"
 #include "display.h"
 #include "auto_safemode.h"
 
@@ -313,6 +314,7 @@ namespace hacks
     {
         // Initialize all hacks
         hacks.push_back(new Speedhack());
+        hacks.push_back(new DiscordRPC());
         hacks.push_back(new DisplayHack());
         hacks.push_back(new AutoSafeMode());
 
