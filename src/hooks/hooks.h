@@ -10,12 +10,16 @@ namespace hooks
     {
         if (method == nullptr)
         {
-            L_WARN("Failed to hook " + name);
+            L_ERROR("{} was nullptr", name);
+        }
+        else if (MH_CreateHook(method, hook, original) == MH_STATUS::MH_OK)
+        {
+            L_TRACE("Hooked {}", name);
+            MH_EnableHook(method);
         }
         else
         {
-            MH_CreateHook(method, hook, original);
-            MH_EnableHook(method);
+            L_ERROR("Failed to hook {}", name);
         }
     }
 

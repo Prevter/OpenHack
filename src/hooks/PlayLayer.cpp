@@ -3,20 +3,17 @@
 
 namespace hooks::PlayLayer
 {
-    static bool(__thiscall *PlayLayer_init)(robtop::PlayLayer *, robtop::GJGameLevel *, bool, bool);
-    bool __fastcall init_hook(robtop::PlayLayer *self, robtop::GJGameLevel *level, bool v1, bool v2)
+    bool(__thiscall *PlayLayer_init)(robtop::PlayLayer *, robtop::GJGameLevel *, bool, bool);
+    bool __fastcall init_hook(robtop::PlayLayer *self, int edx, robtop::GJGameLevel *level, bool v1, bool v2)
     {
-        auto ret = PlayLayer_init(self, level, v1, v2);
-
+        const bool ret = PlayLayer_init(self, level, v1, v2);
         return ret;
     }
 
     int(__thiscall *PlayLayer_onExit)(robtop::PlayLayer *);
     int __fastcall onQuit_hook(robtop::PlayLayer *self)
     {
-        auto ret = PlayLayer_onExit(self);
-
-        return ret;
+        return PlayLayer_onExit(self);
     }
 
     void(__thiscall *PlayLayer_resetLevel)(robtop::PlayLayer *);

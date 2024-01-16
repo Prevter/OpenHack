@@ -3,6 +3,9 @@
 
 namespace utils
 {
+    extern uintptr_t base_addr;
+    extern uintptr_t cocos_addr;
+
     void set_console_title(const char *title);
 
     std::string get_current_directory();

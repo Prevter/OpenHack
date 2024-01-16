@@ -10,6 +10,8 @@
 
 namespace utils
 {
+    uintptr_t base_addr, cocos_addr;
+
     void set_console_title(const char *title)
     {
         SetConsoleTitleA(title);
