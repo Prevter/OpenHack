@@ -80,7 +80,7 @@ namespace hacks
 
     void DisplayHack::update()
     {
-        if (!initialized && robtop::sharedGameManager_h && robtop::getGameVariable_h && robtop::setGameVariable_h)
+        if (!initialized && robtop::GameManager_sharedState_h && robtop::GameManager_getGameVariable_h && robtop::GameManager_setGameVariable_h)
         {
             initialized = true;
 

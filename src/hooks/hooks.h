@@ -2,7 +2,7 @@
 #include "../hook.h"
 
 #include "MenuLayer.h"
-// #include "PlayLayer.h"
+#include "PlayLayer.h"
 
 namespace hooks
 {
@@ -22,5 +22,6 @@ namespace hooks
     inline void init_all()
     {
         hooks::MenuLayer::setup();
+        hooks::PlayLayer::setup();
     }
 }

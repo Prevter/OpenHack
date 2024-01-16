@@ -4,14 +4,14 @@
 
 namespace robtop
 {
-    inline const char *getGameManager_pat = "558BEC6AFF68????64A1000000005051A1????33C5508D45F464A300000000A1????85C075406840050000";
-    inline const char *getGameVariable_pat = "558BEC83E4F86AFF68????64A1000000005083EC38A1????33C489442430535657A1????33C4508D44244864A3000000008BF98B75088D4C24286A03";
-    inline const char *setGameVariable_pat = "558BEC83E4F86AFF68????64A1000000005083EC58A1????33C489442450535657A1????33C4508D44246864A3000000008BD9895C2410";
+    inline const char *GameManager_sharedState_pat = "558BEC6AFF68????64A1000000005051A1????33C5508D45F464A300000000A1????85C075406840050000";
+    inline const char *GameManager_getGameVariable_pat = "558BEC83E4F86AFF68????64A1000000005083EC38A1????33C489442430535657A1????33C4508D44244864A3000000008BF98B75088D4C24286A03";
+    inline const char *GameManager_setGameVariable_pat = "558BEC83E4F86AFF68????64A1000000005083EC58A1????33C489442450535657A1????33C4508D44246864A3000000008BD9895C2410";
 
     class GameManager;
-    inline robtop::GameManager *(__stdcall *sharedGameManager_h)();
-    inline bool(__thiscall *getGameVariable_h)(robtop::GameManager *manager, const char *key);
-    inline void(__thiscall *setGameVariable_h)(robtop::GameManager *manager, const char *key, bool value);
+    inline robtop::GameManager *(__stdcall *GameManager_sharedState_h)();
+    inline bool(__thiscall *GameManager_getGameVariable_h)(robtop::GameManager *manager, const char *key);
+    inline void(__thiscall *GameManager_setGameVariable_h)(robtop::GameManager *manager, const char *key, bool value);
 
     inline const uintptr_t FPS_OFFSET = 900;
 
@@ -20,7 +20,9 @@ namespace robtop
     public:
         inline static GameManager *sharedState()
         {
-            return sharedGameManager_h();
+            if (!GameManager_sharedState_h)
+                return nullptr;
+            return GameManager_sharedState_h();
         }
         inline float getFps()
         {
@@ -32,15 +34,15 @@ namespace robtop
         }
         inline bool getGameVariable(const char *key)
         {
-            if (!getGameVariable_h)
+            if (!GameManager_getGameVariable_h)
                 return false;
-            return getGameVariable_h(this, key);
+            return GameManager_getGameVariable_h(this, key);
         }
         inline void setGameVariable(const char *key, bool value)
         {
-            if (!setGameVariable_h)
+            if (!GameManager_setGameVariable_h)
                 return;
-            setGameVariable_h(this, key, value);
+            GameManager_setGameVariable_h(this, key, value);
         }
     };
 }
