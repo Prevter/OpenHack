@@ -1,6 +1,8 @@
 #pragma once
 #include "GameManager.h"
 #include "MenuLayer.h"
+#include "PlayLayer.h"
+#include "LevelEditorLayer.h"
 
 namespace robtop
 {
@@ -30,6 +32,10 @@ namespace robtop
         init_binding("PlayLayer::init", (void **)&robtop::PlayLayer_init, robtop::PlayLayer_init_pat);
         init_binding("PlayLayer::onExit", (void **)&robtop::PlayLayer_onExit, robtop::PlayLayer_onExit_pat);
         init_binding("PlayLayer::resetLevel", (void **)&robtop::PlayLayer_resetLevel, robtop::PlayLayer_resetLevel_pat);
+
+        // LevelEditorLayer
+        init_binding("LevelEditorLayer::init", (void **)&robtop::LevelEditorLayer_init, robtop::LevelEditorLayer_init_pat);
+        init_binding("LevelEditorLayer::onExit", (void **)&robtop::LevelEditorLayer_onExit, robtop::LevelEditorLayer_onExit_pat);
     }
 
 }

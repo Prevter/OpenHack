@@ -3,6 +3,7 @@
 
 #include "MenuLayer.h"
 #include "PlayLayer.h"
+#include "LevelEditorLayer.h"
 
 namespace hooks
 {
@@ -27,5 +28,6 @@ namespace hooks
     {
         hooks::MenuLayer::setup();
         hooks::PlayLayer::setup();
+        hooks::LevelEditorLayer::setup();
     }
 }
