@@ -11,6 +11,35 @@ namespace hacks
     void save(nlohmann::json *data);
     void load(nlohmann::json *data);
 
+    template <typename T>
+    T *find_hack(std::string id)
+    {
+        for (auto hack : hacks)
+        {
+            if (hack->get_id() == id)
+            {
+                return (T *)hack;
+            }
+        }
+        return nullptr;
+    }
+
+    template <typename T>
+    T *find_component(std::string id)
+    {
+        for (auto window : windows)
+        {
+            for (auto component : window.get_components())
+            {
+                if (component->get_id() == id)
+                {
+                    return (T *)component;
+                }
+            }
+        }
+        return nullptr;
+    }
+
     struct opcode_t
     {
         void *address;
@@ -57,8 +86,8 @@ namespace hacks
         virtual void load(nlohmann::json *data) = 0;
         virtual void save(nlohmann::json *data) = 0;
 
-    private:
-        std::string m_type;
+        virtual std::string get_id() { return ""; }
+        virtual std::string get_sort_key() { return get_id(); }
     };
 
     // Controls a single toggleable hack
@@ -72,9 +101,11 @@ namespace hacks
         virtual void load(nlohmann::json *data) override;
         virtual void save(nlohmann::json *data) override;
 
+        virtual std::string get_id() override { return m_id; }
+        virtual std::string get_sort_key() override { return m_title; }
+
         bool apply_patch();
         bool is_enabled();
-        std::string get_id();
         std::string get_title();
 
         std::vector<opcode_t> get_opcodes() { return m_opcodes; }
@@ -112,18 +143,19 @@ namespace hacks
     class EmbeddedHackComponent : public Component
     {
     public:
-        EmbeddedHackComponent(Hack *hack, const char* id);
+        EmbeddedHackComponent(Hack *hack, const char *id);
         virtual void draw() override;
 
         // saving is handled by the hack itself
         virtual void load(nlohmann::json *data) override {}
         virtual void save(nlohmann::json *data) override {}
 
-        const char* get_id() { return m_id; }
+        virtual std::string get_id() override { return m_id; }
+        virtual std::string get_sort_key() override { return m_id; }
 
     private:
         Hack *m_hack;
-        const char* m_id;
+        std::string m_id;
     };
 
     class Window
@@ -133,6 +165,7 @@ namespace hacks
         void draw();
         void add_component(Component *component);
         std::string get_title();
+        std::vector<Component *> get_components() { return m_components; }
 
         // methods for saving and loading settings for this window
         void load(nlohmann::json *data);

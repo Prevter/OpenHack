@@ -264,11 +264,6 @@ namespace hacks
         return m_enabled;
     }
 
-    std::string ToggleComponent::get_id()
-    {
-        return m_id;
-    }
-
     std::string ToggleComponent::get_title()
     {
         return m_title;
@@ -299,10 +294,10 @@ namespace hacks
 
     /* ===== EmbeddedHackComponent ===== */
 
-    EmbeddedHackComponent::EmbeddedHackComponent(Hack *hack, const char* id)
+    EmbeddedHackComponent::EmbeddedHackComponent(Hack *hack, const char *id)
     {
         m_hack = hack;
-        m_id = id;
+        m_id = std::string(id);
     }
 
     void EmbeddedHackComponent::draw()
@@ -435,15 +430,7 @@ namespace hacks
                         else if (type == "embedded")
                         {
                             auto hack_name = component["hack"].get<std::string>();
-                            Hack *hack = nullptr;
-                            for (auto &h : hacks)
-                            {
-                                if (h->get_id() == hack_name)
-                                {
-                                    hack = h;
-                                    break;
-                                }
-                            }
+                            Hack *hack = find_hack<Hack>(hack_name);
 
                             if (hack != nullptr)
                             {
@@ -456,30 +443,14 @@ namespace hacks
                     // sort toggle components alphabetically
                     std::sort(window.m_components.begin(), window.m_components.end(), [](Component *a, Component *b)
                               {
-                                std::string a_title, b_title;
+                                std::string a_key = a->get_sort_key();
+                                std::string b_key = b->get_sort_key();
 
-                                // determine "a_title"
-                                if (dynamic_cast<ToggleComponent*>(a) != nullptr) {
-                                    auto toggle_a = dynamic_cast<ToggleComponent*>(a);
-                                    a_title = toggle_a->get_title();
-                                }
-                                else if (dynamic_cast<EmbeddedHackComponent*>(a) != nullptr) {
-                                    auto embedded_a = dynamic_cast<EmbeddedHackComponent*>(a);
-                                    a_title = embedded_a->get_id();
-                                }
-
-                                // determine "b_title"
-                                if (dynamic_cast<ToggleComponent*>(b) != nullptr) {
-                                    auto toggle_b = dynamic_cast<ToggleComponent*>(b);
-                                    b_title = toggle_b->get_title();
-                                }
-                                else if (dynamic_cast<EmbeddedHackComponent*>(b) != nullptr) {
-                                    auto embedded_b = dynamic_cast<EmbeddedHackComponent*>(b);
-                                    b_title = embedded_b->get_id();
-                                }
+                                // compare lower case strings
+                                std::transform(a_key.begin(), a_key.end(), a_key.begin(), ::tolower);
+                                std::transform(b_key.begin(), b_key.end(), b_key.begin(), ::tolower);
                                 
-                                // compare titles
-                                return a_title < b_title; });
+                                return a_key < b_key; });
 
                     // add window to list of windows
                     windows.push_back(window);
