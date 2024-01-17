@@ -34,10 +34,12 @@ Main goal of this project is primarily me getting more experience with C++ and g
 
 ## Features
 - [x] **Update-proof hacks!** (most of them should work even after the game updates)
+- [x] Supports older versions of the game (2.200+)
 - [x] Customizable menu with animations
 - [x] Basic hacks (speedhack, noclip, etc.)
 - [x] Hack search
 - [x] Auto-updater
+- [x] Discord Rich Presence
 
 Planned:
 - [ ] Keybinds
@@ -92,6 +94,3 @@ Or you can just contact me directly: `prevter`
 [GDH](https://github.com/TobyAdd/GDH) by TobyAdd for JSON files
 
 [MegaHack](https://absolllute.com/store/view_mega_hack_pro) by Absolute for design inspiration
-
-Most of the code I took have been rewritten to be more efficient or/and readable and to support a more modular approach.  
-(GDMegaOverlay's dllmain.cpp is kinda messy tbh :/)
