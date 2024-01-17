@@ -98,6 +98,72 @@
                     "mask": "E9&(01+01)*03$0190"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Orb Ring",
+            "id": "cosmetic.orb_ring",
+            "opcodes": [
+                {
+                    "pattern": "578BF9E8????^83B898010000000F84",
+                    "mask": "*07E9&(01+01)*03$0190"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Glow",
+            "id": "cosmetic.glow",
+            "opcodes": [
+                {
+                    "pattern": "84C0^7405C64424?01E8",
+                    "mask": "9090"
+                },
+                {
+                    "pattern": "*85C0^0F84????807D?007407",
+                    "mask": "E9&(01+01)*03$0190"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Wave Trail",
+            "id": "cosmetic.notrail",
+            "opcodes": [
+                {
+                    "pattern": "01FF15????^80BE????0074?8B068BCE",
+                    "mask": "*0790EB"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Trail Cutting",
+            "id": "cosmetic.trailcut",
+            "opcodes": [
+                {
+                    "pattern": "660F5AC0^F30F59C2E8",
+                    "mask": "*0490",
+                    "lib": "libcocos2d.dll"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Forever Trail",
+            "id": "cosmetic.forevertrail",
+            "opcodes": [
+                {
+                    "pattern": "F30F5E^C1F30F590D????F30F11",
+                    "mask": "C9",
+                    "lib": "libcocos2d.dll"
+                },
+                {
+                    "pattern": "C6811E010000^00C3",
+                    "mask": "01",
+                    "lib": "libcocos2d.dll"
+                }
+            ]
         }
     ]
 }

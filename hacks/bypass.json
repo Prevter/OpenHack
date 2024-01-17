@@ -181,6 +181,28 @@
                     "mask": "E9&(01+01)*03$0190"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "Allow Low Volume",
+            "id": "bypass.lowvol",
+            "opcodes": [
+                {
+                    "pattern": "*F30F11?08^76080F57C0",
+                    "mask": "EB"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Fast Chest Open",
+            "id": "bypass.fastchest",
+            "opcodes": [
+                {
+                    "pattern": "FFD751C70424^9A99993FFF15",
+                    "mask": "*0400"
+                }
+            ]
         }
     ]
 }

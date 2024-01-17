@@ -35,8 +35,8 @@
             "id": "level.coins",
             "opcodes": [
                 {
-                    "pattern": "0F856A01000080",
-                    "mask": "909090909090"
+                    "pattern": "80BF????00^0F85????8B8F????6A00FFB6",
+                    "mask": "*0690"
                 }
             ]
         },
@@ -114,6 +114,37 @@
                 {
                     "pattern": "8A9019010000",
                     "mask": "B20190909090*2A?EB"
+                }
+            ],
+            "cheat": true
+        },
+        {
+            "type": "toggle",
+            "title": "No Rotation",
+            "id": "level.rotation",
+            "opcodes": [
+                {
+                    "pattern": "F30F1149?F30F1149",
+                    "mask": "*0A90",
+                    "lib": "libcocos2d.dll"
+                }
+            ],
+            "cheat": true
+        },
+        {
+            "type": "toggle",
+            "title": "Force Visibility",
+            "id": "level.visibility",
+            "opcodes": [
+                {
+                    "pattern": "558BEC^8A45088881EE000000",
+                    "mask": "B00190",
+                    "lib": "libcocos2d.dll"
+                },
+                {
+                    "pattern": "0F84????E8????8B8B",
+                    "mask": "*0690",
+                    "lib": "libcocos2d.dll"
                 }
             ],
             "cheat": true

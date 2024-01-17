@@ -62,6 +62,18 @@
         {
             "type": "embedded",
             "hack": "autosafemode"
+        },
+        {
+            "type": "toggle",
+            "title": "Free Window Resize",
+            "id": "universal.resize",
+            "opcodes": [
+                {
+                    "pattern": "FF75E85657^E8????83C40C",
+                    "mask": "*0590",
+                    "lib": "libcocos2d.dll"
+                }
+            ]
         }
     ]
 }
