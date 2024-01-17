@@ -4,6 +4,7 @@
         {
             "type": "toggle",
             "title": "Custom Object Bypass",
+            "description": "Save custom objects with more than 1000 objects in them.",
             "id": "creator.custom_object",
             "opcodes": [
                 {
@@ -19,6 +20,7 @@
         {
             "type": "toggle",
             "title": "Copy Hack",
+            "description": "Allows you to copy levels that have copy disabled.",
             "id": "creator.copy",
             "opcodes": [
                 {
@@ -30,6 +32,7 @@
         {
             "type": "toggle",
             "title": "Level Edit",
+            "description": "Access level editor from pause menu in any level.",
             "id": "creator.level_edit",
             "opcodes": [
                 {
@@ -59,6 +62,7 @@
         {
             "type": "toggle",
             "title": "Slider Limit",
+            "description": "Remove min/max limit on sliders.",
             "id": "creator.slider",
             "opcodes": [
                 {
@@ -74,6 +78,7 @@
         {
             "type": "toggle",
             "title": "Testmode Bypass",
+            "description": "Removes the \"Testmode\" label when using startpos",
             "id": "creator.testmode",
             "version": "<=2.200",
             "opcodes": [
@@ -86,6 +91,7 @@
         {
             "type": "toggle",
             "title": "Verify Hack",
+            "description": "Publish levels without verifying them.",
             "id": "creator.verify",
             "opcodes": [
                 {
@@ -105,6 +111,7 @@
         {
             "type": "toggle",
             "title": "Editor Extension",
+            "description": "Allows levels to be longer.",
             "id": "creator.editorext",
             "opcodes": [
                 {
@@ -120,6 +127,7 @@
         {
             "type": "toggle",
             "title": "Free Scroll",
+            "description": "Unlocks horizontal scroll in the editor.",
             "id": "creator.freescroll",
             "opcodes": [
                 {

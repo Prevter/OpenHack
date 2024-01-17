@@ -8,6 +8,7 @@
         {
             "type": "toggle",
             "title": "No Transition",
+            "description": "Makes all transitions instant.",
             "id": "universal.transition",
             "opcodes": [
                 {
@@ -20,6 +21,7 @@
         {
             "type": "toggle",
             "title": "Ignore ESC",
+            "description": "Disables ability to exit the level from the pause menu.\n(You should use \"Confirm Exit\" in the game settings instead.)",
             "id": "universal.ignoreesc",
             "opcodes": [
                 {
@@ -31,6 +33,7 @@
         {
             "type": "toggle",
             "title": "No Short Numbers",
+            "description": "All numbers are displayed in full.\n(For example, \"1.5M\" becomes \"1500000\".)",
             "id": "universal.noshortnumbers",
             "version": ">=2.200",
             "opcodes": [
@@ -43,6 +46,7 @@
         {
             "type": "toggle",
             "title": "Safe Mode",
+            "description": "Disable progress saving if you don't want to beat the level.",
             "id": "universal.safemode",
             "opcodes": [
                 {
@@ -66,6 +70,7 @@
         {
             "type": "toggle",
             "title": "Free Window Resize",
+            "description": "Allows you to resize the window freely.",
             "id": "universal.resize",
             "opcodes": [
                 {

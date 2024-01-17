@@ -4,6 +4,7 @@
         {
             "type": "toggle",
             "title": "Text Bypass",
+            "description": "Remove character count limit on text inputs.",
             "id": "bypass.text",
             "opcodes": [
                 {
@@ -15,6 +16,7 @@
         {
             "type": "toggle",
             "title": "Character Filter",
+            "description": "Allow entering of special characters in text inputs.",
             "id": "bypass.filter",
             "opcodes": [
                 {
@@ -26,7 +28,9 @@
         {
             "type": "toggle",
             "title": "Diamond Shopkeeper Bypass",
+            "description": "Access the Diamond Shopkeeper without having to collect 1000 diamonds.",
             "id": "bypass.diamond",
+            "version": ">=2.200",
             "opcodes": [
                 {
                     "pattern": "84C0^750F8BCE",
@@ -37,6 +41,7 @@
         {
             "type": "toggle",
             "title": "The Mechanic Bypass",
+            "description": "Access the Mechanic shop without having to collect 2000 diamonds.",
             "id": "bypass.mechanic",
             "version": ">=2.200",
             "opcodes": [
@@ -49,8 +54,8 @@
         {
             "type": "toggle",
             "title": "Potbor Bypass",
+            "description": "Access the community shop without having to collect 200 diamonds.",
             "id": "bypass.potbor",
-            "version": ">=2.200",
             "opcodes": [
                 {
                     "pattern": "84C0^75578BCE",
@@ -61,6 +66,7 @@
         {
             "type": "toggle",
             "title": "Scratch Bypass",
+            "description": "Access Scratch shop without having to collect 500 diamonds.",
             "id": "bypass.scratch",
             "opcodes": [
                 {
@@ -72,6 +78,7 @@
         {
             "type": "toggle",
             "title": "Vault of Secrets Bypass",
+            "description": "Access the Vault of Secrets without having to collect 50 diamonds.",
             "id": "bypass.vault1",
             "opcodes": [
                 {
@@ -91,6 +98,7 @@
         {
             "type": "toggle",
             "title": "Vault of Secrets Key Bypass",
+            "description": "Open locks in the basement without having to collect keys.",
             "id": "bypass.vault2",
             "opcodes": [
                 {
@@ -102,6 +110,7 @@
         {
             "type": "toggle",
             "title": "The Treasure Room Bypass",
+            "description": "Access the Treasure Room without having to collect 5 keys.",
             "id": "bypass.treasure",
             "opcodes": [
                 {
@@ -117,6 +126,7 @@
         {
             "type": "toggle",
             "title": "Unlock All Icons",
+            "description": "Unlocks all icons, colors and trails.",
             "id": "bypass.icons",
             "opcodes": [
                 {
@@ -132,6 +142,7 @@
         {
             "type": "toggle",
             "title": "Unlock All Levels",
+            "description": "Unlocks official demons, without having to collect coins.",
             "id": "bypass.levels",
             "opcodes": [
                 {
@@ -143,6 +154,7 @@
         {
             "type": "toggle",
             "title": "Free Shops",
+            "description": "Buy anything from the shops for free.\n(Doesn't save after restart right now)",
             "id": "bypass.shops",
             "opcodes": [
                 {
@@ -162,6 +174,7 @@
         {
             "type": "toggle",
             "title": "Free Chests",
+            "description": "Open chests in the treasure room without keys.",
             "id": "bypass.chests",
             "opcodes": [
                 {
@@ -185,6 +198,7 @@
         {
             "type": "toggle",
             "title": "Allow Low Volume",
+            "description": "Allow setting volume to lower values, without it snapping to 0%.",
             "id": "bypass.lowvol",
             "opcodes": [
                 {
@@ -196,6 +210,7 @@
         {
             "type": "toggle",
             "title": "Fast Chest Open",
+            "description": "Makes chest open animation almost instant.",
             "id": "bypass.fastchest",
             "opcodes": [
                 {

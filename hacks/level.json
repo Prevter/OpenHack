@@ -4,6 +4,7 @@
         {
             "type": "toggle",
             "title": "Noclip",
+            "description": "Disables dying.",
             "id": "level.noclip",
             "opcodes": [
                 {
@@ -16,6 +17,7 @@
         {
             "type": "toggle",
             "title": "Music Unlocker",
+            "description": "Unlocks practice music, and allows setting main menu music.",
             "id": "level.music",
             "version": ">=2.200",
             "opcodes": [
@@ -32,6 +34,7 @@
         {
             "type": "toggle",
             "title": "Practice Coins",
+            "description": "Allows you to collect coins in practice mode.",
             "id": "level.coins",
             "opcodes": [
                 {
@@ -43,6 +46,7 @@
         {
             "type": "toggle",
             "title": "Freeze Jumps Counter",
+            "description": "Freeze global jumps counter (the one in stats menu).",
             "id": "level.jumps",
             "opcodes": [
                 {
@@ -54,6 +58,7 @@
         {
             "type": "toggle",
             "title": "Freeze Attempts Counter",
+            "description": "Freeze global attempts counter (the one in stats menu).",
             "id": "level.jumps",
             "opcodes": [
                 {
@@ -65,6 +70,7 @@
         {
             "type": "toggle",
             "title": "No Camera Move",
+            "description": "Disables all camera move triggers.",
             "id": "level.cameramove",
             "version": ">=2.200",
             "opcodes": [
@@ -78,6 +84,7 @@
         {
             "type": "toggle",
             "title": "No Camera Zoom",
+            "description": "Disables all camera zoom triggers.",
             "id": "level.camerazoom",
             "version": ">=2.200",
             "opcodes": [
@@ -91,6 +98,7 @@
         {
             "type": "toggle",
             "title": "All Modes Platformer",
+            "description": "Allows for all modes to be played in platformer mode.",
             "id": "level.platformermodes",
             "version": ">=2.200",
             "opcodes": [
@@ -108,6 +116,7 @@
         {
             "type": "toggle",
             "title": "Force Platformer",
+            "description": "Forces the level to be played in platformer mode.",
             "id": "level.platformerforce",
             "version": ">=2.200",
             "opcodes": [
@@ -121,6 +130,7 @@
         {
             "type": "toggle",
             "title": "No Rotation",
+            "description": "Locks the rotation of all objects at 0 degrees.",
             "id": "level.rotation",
             "opcodes": [
                 {
@@ -134,6 +144,7 @@
         {
             "type": "toggle",
             "title": "Force Visibility",
+            "description": "Forces all objects to be visible.",
             "id": "level.visibility",
             "opcodes": [
                 {
@@ -152,6 +163,7 @@
         {
             "type": "toggle",
             "title": "No Shaders",
+            "description": "Disables all shaders.",
             "id": "level.shaders",
             "opcodes": [
                 {
@@ -168,6 +180,7 @@
         {
             "type": "toggle",
             "title": "Pause During Complete",
+            "description": "Allows you to pause during level complete cutscene.",
             "id": "level.completepause",
             "opcodes": [
                 {

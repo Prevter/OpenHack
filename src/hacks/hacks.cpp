@@ -202,6 +202,7 @@ namespace hacks
         m_callback = callback;
         m_opcodes = opcodes;
         m_enabled = false;
+        m_description = "";
     }
 
     void ToggleComponent::draw()
@@ -223,6 +224,17 @@ namespace hacks
                 pos.y += 10;
                 ImGui::SetNextWindowPos(pos);
                 ImGui::SetTooltip("This hack won't work on current version of Geometry Dash!");
+            }
+        }
+        else if (m_description != "")
+        {
+            if (ImGui::IsItemHovered())
+            {
+                ImVec2 pos = ImGui::GetMousePos();
+                pos.x += 10;
+                pos.y += 10;
+                ImGui::SetNextWindowPos(pos);
+                ImGui::SetTooltip(m_description.c_str());
             }
         }
 
@@ -416,6 +428,12 @@ namespace hacks
                             {
                                 auto cheat = component["cheat"].get<bool>();
                                 toggle->set_is_cheat(cheat);
+                            }
+
+                            if (component.contains("description"))
+                            {
+                                auto description = component["description"].get<std::string>();
+                                toggle->set_description(description);
                             }
 
                             window.add_component(toggle);

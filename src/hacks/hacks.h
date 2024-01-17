@@ -104,6 +104,8 @@ namespace hacks
         virtual std::string get_id() override { return m_id; }
         virtual std::string get_sort_key() override { return m_title; }
 
+        void set_description(std::string description) { m_description = description; }
+
         bool apply_patch();
         bool is_enabled();
         std::string get_title();
@@ -118,6 +120,7 @@ namespace hacks
     private:
         bool m_enabled;
         std::string m_title;
+        std::string m_description;
         std::string m_id;
         std::function<void()> m_callback;
         std::vector<opcode_t> m_opcodes;
