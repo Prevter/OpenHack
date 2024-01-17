@@ -10,30 +10,32 @@
 #include "hooks/MenuLayer.h"
 #include "bindings/bindings.h"
 
-DWORD WINAPI MainThread(LPVOID param)
+// this gets called immediately after the dll is injected
+// because we need to patch the game before it starts
+void preload()
 {
-#if _DEBUG
-    logger::init(true, true, "log.txt");
-    utils::set_console_title("OpenHack - Geometry Dash");
-#else
+    injector::load();
+
     logger::init(false, true, "log.txt");
-#endif
+    utils::init();
 
     L_INFO("Loading OpenHack " PROJECT_VERSION "...");
     L_INFO("Game version: {}", utils::get_game_version());
-
-    utils::init();
-
-    // Check if it's december (for snow particles)
-    auto t = std::time(nullptr);
-    struct tm tm;
-    localtime_s(&tm, &t);
-    globals::is_december = tm.tm_mon == 11;
 
     // Initialize hooks / load hacks
     robtop::init_bindings();
     hook::init();
     config::load();
+    injector::load_dlls();
+}
+
+DWORD WINAPI MainThread(LPVOID param)
+{
+    // Check if it's december (for snow particles)
+    auto t = std::time(nullptr);
+    struct tm tm;
+    localtime_s(&tm, &t);
+    globals::is_december = tm.tm_mon == 11;
 
     // Check for updates
     if (config::check_updates)
@@ -61,8 +63,7 @@ BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
     switch (dwReason)
     {
     case DLL_PROCESS_ATTACH:
-        injector::load_dlls();
-        injector::load();
+        preload();
         CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
         DisableThreadLibraryCalls(hModule);
         break;
