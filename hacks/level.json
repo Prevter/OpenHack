@@ -148,6 +148,33 @@
                 }
             ],
             "cheat": true
+        },
+        {
+            "type": "toggle",
+            "title": "No Shaders",
+            "id": "level.shaders",
+            "opcodes": [
+                {
+                    "pattern": "660F2EC19FF6C444^0F8B????8B8E",
+                    "mask": "E9&(01+01)*03$0190"
+                },
+                {
+                    "pattern": "8B01FF90????8BC8^FF15????8B8F",
+                    "mask": "*0690"
+                }
+            ],
+            "cheat": true
+        },
+        {
+            "type": "toggle",
+            "title": "Pause During Complete",
+            "id": "level.completepause",
+            "opcodes": [
+                {
+                    "pattern": "56578BF9^80BF????000F85????80BF????000F85????FF15",
+                    "mask": "*0D90"
+                }
+            ]
         }
     ]
 }
