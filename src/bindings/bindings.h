@@ -3,6 +3,7 @@
 #include "MenuLayer.h"
 #include "PlayLayer.h"
 #include "LevelEditorLayer.h"
+#include "GameStatsManager.h"
 
 namespace robtop
 {
@@ -36,6 +37,9 @@ namespace robtop
         // LevelEditorLayer
         init_binding("LevelEditorLayer::init", (void **)&robtop::LevelEditorLayer_init, robtop::LevelEditorLayer_init_pat);
         init_binding("LevelEditorLayer::onExit", (void **)&robtop::LevelEditorLayer_onExit, robtop::LevelEditorLayer_onExit_pat);
+
+        // GameStatsManager
+        init_binding("GameStatsManager::isItemUnlocked", (void **)&robtop::GameStatsManager_isItemUnlocked, robtop::GameStatsManager_isItemUnlocked_pat);
     }
 
 }
