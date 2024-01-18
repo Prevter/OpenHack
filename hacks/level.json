@@ -59,7 +59,7 @@
             "type": "toggle",
             "title": "Freeze Attempts Counter",
             "description": "Freeze global attempts counter (the one in stats menu).",
-            "id": "level.jumps",
+            "id": "level.attempts",
             "opcodes": [
                 {
                     "pattern": "8B?????6A^01????????????????????????????46",
