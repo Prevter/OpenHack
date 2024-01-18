@@ -7,6 +7,7 @@
 namespace hook
 {
     bool gl_initialized = false;
+    bool lock_inputs = false;
 
     // Menu manager
     uint32_t menu_hotkey;
@@ -68,6 +69,8 @@ namespace hook
             menu_init_callback();
         }
 
+        lock_inputs = false;
+
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
@@ -95,6 +98,7 @@ namespace hook
             return;
         }
 
+        utils::reset_key_states();
         auto &io = ImGui::GetIO();
         bool block_input = false;
         MSG msg;
@@ -158,15 +162,17 @@ namespace hook
                     block_input = true;
                 }
             }
-            else if (msg.message == WM_KEYDOWN && msg.wParam == menu_hotkey)
-            {
-                menu_toggle_callback();
-            }
 
-            if (!block_input)
+            if (!block_input && !lock_inputs)
                 DispatchMessage(&msg);
 
             ImGui_ImplWin32_WndProcHandler(msg.hwnd, msg.message, msg.wParam, msg.lParam);
+        }
+
+        // Toggle menu
+        if (utils::is_key_pressed(menu_hotkey))
+        {
+            menu_toggle_callback();
         }
 
         // Call original function

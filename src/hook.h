@@ -12,4 +12,6 @@ namespace hook
     void set_menu_init_callback(void (*callback)());
 
     void try_bind_method(std::string name, void *method, void **original, std::string pattern, std::string library = "");
+
+    extern bool lock_inputs;
 }
