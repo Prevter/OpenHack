@@ -1,5 +1,6 @@
 #include "gui.h"
 #include "../config.h"
+#include "../hook.h"
 
 int snapping_round(int x, int snapping)
 {
@@ -154,8 +155,8 @@ namespace gui
     // same as Begin, but without animations and saving window position (+ always centered)
     void BeginPrompt(const char *name, bool *open)
     {
-        ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | 
-                                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | 
+        ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                                 ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
                                  ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
                                  ImGuiWindowFlags_NoMove;
 
@@ -424,6 +425,113 @@ namespace gui
 
         ImGui::PopID();
         ImGui::PopItemWidth();
+    }
+
+    bool ImKeybind(const char *label, uint32_t *key, float width, size_t max_chars, bool show_delete)
+    {
+        ImGui::PushID(label);
+        ImGui::PushItemWidth(-1.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_Text, config::text_color.to_imvec4());
+        ImVec2 cr = width != -1.0f ? ImVec2(width * globals::screen_size.x * config::menu_size, 0)
+                                   : ImGui::GetWindowContentRegionMax();
+
+        float ratio = globals::screen_size.x * config::menu_size;
+
+        // cut label if it's too long
+        std::string label_ = label;
+        bool cut = false;
+        if (label_.length() > max_chars)
+        {
+            label_ = label_.substr(0, max_chars);
+            label_ += "...";
+            cut = true;
+        }
+
+        ImGui::Button(label_.c_str(), ImVec2(cr.x * 0.58f - (show_delete ? 20.f * ratio : 0.f), 0));
+
+        // if cut, show tooltip
+        if (cut && ImGui::IsItemHovered())
+        {
+            ImVec2 pos = ImGui::GetMousePos();
+            pos.x += 10;
+            pos.y += 10;
+            ImGui::SetNextWindowPos(pos);
+            ImGui::SetTooltip(label);
+        }
+
+        ImGui::SameLine();
+
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0.25f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+        auto key_name = utils::key_name(*key);
+        bool keybind_toggled = ImGui::Button(key_name.c_str(), ImVec2(cr.x * 0.4f, 0));
+        ImGui::PopStyleColor(3);
+        ImGui::PopStyleVar();
+
+        auto popup_name = fmt::format("##{}", label);
+        if (keybind_toggled)
+        {
+            ImGui::OpenPopup(popup_name.c_str());
+        }
+
+        ImGui::PopStyleColor(4);
+        ImGui::PopStyleVar(2);
+
+        if (ImGui::BeginPopup(popup_name.c_str()))
+        {
+            hook::lock_inputs = true;
+            ImGui::Text("Press any key to bind...");
+            ImGui::Separator();
+            ImGui::Text("Press ESC to cancel.");
+
+            if (utils::is_key_pressed(VK_ESCAPE))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            else
+            {
+                for (int i = 0; i < 256; i++)
+                {
+                    if (utils::is_key_pressed(i))
+                    {
+                        *key = i;
+                        ImGui::CloseCurrentPopup();
+                        break;
+                    }
+                }
+            }
+
+            ImGui::EndPopup();
+        }
+
+        ImGui::SameLine();
+        if (show_delete)
+        {
+            ImGui::SetCursorPosX(cr.x - 20.f * ratio);
+            auto delete_name = fmt::format("X##{}", label);
+            ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+            bool deleted = ImGui::Button(delete_name.c_str(), ImVec2(20.f * ratio, 0));
+            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar();
+            ImGui::PopID();
+            ImGui::PopItemWidth();
+            return deleted;
+        }
+
+        ImGui::PopID();
+        ImGui::PopItemWidth();
+
+        return false;
     }
 
     void PushWidth(float width)

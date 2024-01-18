@@ -4,6 +4,7 @@
 #include "../hacks/hacks.h"
 #include "animation.h"
 #include "gui.h"
+#include "keybinds.h"
 
 #include "imgui_markdown.h"
 
@@ -248,6 +249,7 @@ namespace menu
         }
 
         hacks::update();
+        keybinds::update();
 
         if (globals::show_update_popup)
         {
@@ -269,7 +271,7 @@ namespace menu
             gui::ImText("Build date: " __DATE__ " " __TIME__);
             gui::ImText("Game version: %s", utils::get_game_version());
             gui::ImToggleButton("Check for updates", &config::check_updates);
-            
+
             if (gui::ImButton("Open GitHub page"))
                 cocos2d::CCApplication::sharedApplication()->openURL(PROJECT_HOMEPAGE_URL);
             if (gui::ImButton("Join Discord server"))
@@ -284,6 +286,7 @@ namespace menu
         gui::End();
 
         hacks::draw();
+        keybinds::draw_menu();
 
         gui::Begin("Interface");
         {

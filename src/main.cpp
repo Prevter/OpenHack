@@ -7,6 +7,7 @@
 #include "hacks/hacks.h"
 #include "hook.h"
 #include "menu/menu.h"
+#include "menu/keybinds.h"
 #include "hooks/MenuLayer.h"
 #include "bindings/bindings.h"
 
@@ -27,6 +28,9 @@ void preload()
     hook::init();
     config::load();
     injector::load_dlls();
+
+    // Initialize keybinds
+    keybinds::init();
 }
 
 DWORD WINAPI MainThread(LPVOID param)

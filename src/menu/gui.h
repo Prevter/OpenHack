@@ -28,6 +28,9 @@ namespace gui
     // a label with a settings button
     void ImPopupSetting(const char *label, std::function<void()> settings, float width = -1.f);
 
+    // a button to set a keybind
+    bool ImKeybind(const char *label, uint32_t *key, float width = -1.f, size_t max_chars = 15, bool show_delete = true);
+
     void PushWidth(float width);
     void PopWidth();
 }

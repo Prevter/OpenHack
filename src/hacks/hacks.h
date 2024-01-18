@@ -117,6 +117,8 @@ namespace hacks
         void set_is_cheat(bool is_cheat) { m_is_cheat = is_cheat; }
         bool is_cheat() { return m_is_cheat; }
 
+        void toggle();
+
     private:
         bool m_enabled;
         std::string m_title;

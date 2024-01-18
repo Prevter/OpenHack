@@ -2,6 +2,7 @@
 #include "patterns.h"
 #include "../config.h"
 #include "../menu/gui.h"
+#include "../menu/keybinds.h"
 
 #include "speedhack.h"
 #include "discord_rpc.h"
@@ -205,6 +206,19 @@ namespace hacks
         m_description = "";
     }
 
+    void ToggleComponent::toggle()
+    {
+        bool success = apply_patch();
+        if (!success)
+        {
+            L_ERROR("Failed to apply patch {}!", m_title);
+        }
+        if (m_callback != nullptr)
+        {
+            m_callback();
+        }
+    }
+
     void ToggleComponent::draw()
     {
         if (m_has_warnings)
@@ -238,18 +252,44 @@ namespace hacks
             }
         }
 
-        if (toggled)
+        // if right clicked, open menu
+        auto popup_name = fmt::format("##popup_{}", m_id);
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
         {
-            bool success = apply_patch();
-            if (!success)
+            ImGui::OpenPopup(popup_name.c_str());
+        }
+
+        // draw popup menu
+        if (ImGui::BeginPopup(popup_name.c_str()))
+        {
+            if (keybinds::has_keybind(m_id))
             {
-                L_ERROR("Failed to apply patch {}!", m_title);
+                if (ImGui::MenuItem("Remove keybind"))
+                {
+                    keybinds::remove_keybind(m_id);
+                }
+            }
+            else
+            {
+                if (ImGui::MenuItem("Add keybind"))
+                {
+                    auto keybind = keybinds::Keybind(
+                        m_id, m_title,
+                        [this]()
+                        {
+                            this->m_enabled = !this->m_enabled;
+                            this->toggle();
+                        });
+                    keybinds::add_keybind(keybind);
+                }
             }
 
-            if (m_callback != nullptr)
-            {
-                m_callback();
-            }
+            ImGui::EndPopup();
+        }
+
+        if (toggled)
+        {
+            toggle();
         }
     }
 
