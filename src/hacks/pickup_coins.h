@@ -19,6 +19,8 @@ namespace hacks
         virtual std::string get_id() override { return "auto_pickup_coins"; }
         virtual bool load_keybind(keybinds::Keybind *keybind) override;
 
+        bool is_enabled() { return m_enabled; }
+
         // hooks:
         static void playLayer_init(robtop::PlayLayer *self, robtop::GJGameLevel *level);
         static void playLayer_addObject(robtop::PlayLayer *self, robtop::GameObject *object);

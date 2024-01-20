@@ -2,6 +2,7 @@
 #include "../menu/gui.h"
 
 #include "speedhack.h"
+#include "pickup_coins.h"
 
 namespace hacks
 {
@@ -67,10 +68,13 @@ namespace hacks
             }
         }
 
-        // if not, also verify that speedhack is not enabled
-        auto speedhack = (Speedhack *)hacks::hacks[0];
-        if (!m_has_cheats)
-            m_has_cheats = speedhack->is_cheating();
+        // check speedhack
+        auto speedhack = find_hack<Speedhack>("speedhack");
+        m_has_cheats |= speedhack->is_cheating();
+        
+        // check auto pickup coins
+        auto pickup_coins = find_hack<PickupCoins>("auto_pickup_coins");
+        m_has_cheats |= pickup_coins->is_enabled();
 
         // if we have cheats enabled, enable safe mode
         if (m_has_cheats)
