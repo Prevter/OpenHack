@@ -33,6 +33,9 @@ namespace robtop
         init_binding("PlayLayer::init", (void **)&robtop::PlayLayer_init, robtop::PlayLayer_init_pat);
         init_binding("PlayLayer::onExit", (void **)&robtop::PlayLayer_onExit, robtop::PlayLayer_onExit_pat);
         init_binding("PlayLayer::resetLevel", (void **)&robtop::PlayLayer_resetLevel, robtop::PlayLayer_resetLevel_pat);
+        init_binding("PlayLayer::pickupCoin", (void **)&robtop::PlayLayer_pickupCoin, robtop::PlayLayer_pickupCoin_pat);
+        init_binding("PlayLayer::addObject", (void **)&robtop::PlayLayer_addObject, robtop::PlayLayer_addObject_pat);
+        init_binding("PlayLayer::destroyObject", (void **)&robtop::PlayLayer_destroyObject, robtop::PlayLayer_destroyObject_pat);
 
         // LevelEditorLayer
         init_binding("LevelEditorLayer::init", (void **)&robtop::LevelEditorLayer_init, robtop::LevelEditorLayer_init_pat);

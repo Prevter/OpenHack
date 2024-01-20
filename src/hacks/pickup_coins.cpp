@@ -1,0 +1,87 @@
+#include "pickup_coins.h"
+#include "../menu/gui.h"
+#include "../menu/keybinds.h"
+
+namespace hacks
+{
+    PickupCoins *PickupCoins::instance = nullptr;
+
+    PickupCoins::PickupCoins()
+    {
+        instance = this;
+    }
+
+    void PickupCoins::init() {}
+    void PickupCoins::late_init() {}
+
+    void PickupCoins::draw(bool embedded)
+    {
+        if (!embedded)
+            return;
+
+        gui::ImToggleButton("Auto Pickup Coins", &m_enabled);
+        keybinds::add_menu_keybind("auto_pickup_coins", "Pickup Coins", [&]()
+                                   { m_enabled = !m_enabled; });
+    }
+
+    void PickupCoins::update() {}
+
+    void PickupCoins::load(nlohmann::json *data)
+    {
+        m_enabled = data->value("auto_pickup_coins.enabled", false);
+    }
+
+    void PickupCoins::save(nlohmann::json *data)
+    {
+        data->emplace("auto_pickup_coins.enabled", m_enabled);
+    }
+
+    bool PickupCoins::load_keybind(keybinds::Keybind *keybind)
+    {
+        if (keybind->id == "auto_pickup_coins")
+        {
+            keybind->callback = [&]()
+            {
+                m_enabled = !m_enabled;
+            };
+            return true;
+        }
+
+        return false;
+    }
+
+    void PickupCoins::playLayer_init(robtop::PlayLayer *self, robtop::GJGameLevel *level)
+    {
+        if (!instance)
+            return;
+
+        instance->m_coin_objects.clear();
+    }
+
+    void PickupCoins::playLayer_addObject(robtop::PlayLayer *self, robtop::GameObject *object)
+    {
+        if (!instance)
+            return;
+
+        uint32_t id = object->get_id();
+        if (id == 142 || id == 1329)
+        {
+            instance->m_coin_objects.push_back(object);
+        }
+    }
+
+    void PickupCoins::playLayer_resetLevel(robtop::PlayLayer *self)
+    {
+        if (!instance || !instance->m_enabled)
+            return;
+
+        for (auto coin : instance->m_coin_objects)
+        {
+            if (coin == nullptr)
+                continue;
+
+            self->pickupCoin(coin);
+            self->destroyObject(coin);
+        }
+    }
+}

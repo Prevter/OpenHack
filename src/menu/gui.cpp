@@ -511,9 +511,9 @@ namespace gui
             ImGui::EndPopup();
         }
 
-        ImGui::SameLine();
         if (show_delete)
         {
+            ImGui::SameLine();
             ImGui::SetCursorPosX(cr.x - 20.f * ratio);
             auto delete_name = fmt::format("X##{}", label);
             ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));

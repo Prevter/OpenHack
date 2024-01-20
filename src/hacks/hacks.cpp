@@ -7,6 +7,7 @@
 #include "discord_rpc.h"
 #include "display.h"
 #include "auto_safemode.h"
+#include "pickup_coins.h"
 
 namespace hacks
 {
@@ -350,6 +351,7 @@ namespace hacks
         hacks.push_back(new DiscordRPC());
         hacks.push_back(new DisplayHack());
         hacks.push_back(new AutoSafeMode());
+        hacks.push_back(new PickupCoins());
 
         for (auto &hack : hacks)
         {
