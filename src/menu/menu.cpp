@@ -98,63 +98,84 @@ namespace menu
     void reset_windows()
     {
         globals::reset_windows = true;
-
         const int game_width = 1920;
 
-        // pack windows left to right
-        const float step = (float)config::window_snap;
-        float x = step;
-        std::vector<std::vector<float>> rows;
-        std::vector<float> row;
-        int column_index = 0;
-
-        // check if we have window positions
-        if (globals::window_positions.is_null())
+        if (globals::window_positions.is_null() || globals::window_positions.empty())
         {
             globals::reset_windows = false;
             return;
         }
 
-        // iterate over all keys in globals::window_positions
+        // count how many columns we have
+        float win_w = globals::window_positions.begin().value()["w"].get<float>();
+        int column_count = (int)((game_width - config::window_snap) / (win_w + config::window_snap));
+        L_TRACE("Column count: ({} - {}) / ({} + {}) = {}",
+                game_width, config::window_snap, win_w, config::window_snap, column_count);
+
+        std::vector<std::vector<float>> columns; // contains y positions for each window in the column
+
+        // first column is reserved for built-in windows
+        std::string built_in_windows[] = {PROJECT_NAME, "Interface", "Keybinds"};
+        std::vector<float> built_in_y;
+        for (auto &name : built_in_windows)
+        {
+            if (globals::window_positions.contains(name))
+            {
+                float win_h = globals::window_positions[name]["h"].get<float>();
+
+                // calculate y
+                float y = (float)config::window_snap;
+                if (built_in_y.size() > 0)
+                {
+                    // we have previous rows, so take y from the last row
+                    y = built_in_y[built_in_y.size() - 1] + config::window_snap;
+                }
+
+                // add window position to the column
+                built_in_y.push_back(y + win_h);
+
+                // set window position
+                globals::window_positions[name]["x"] = config::window_snap;
+                globals::window_positions[name]["y"] = y;
+            }
+        }
+        columns.push_back(built_in_y);
+
+        // fill the rest of the columns with empty vectors
+        for (int i = 1; i < column_count; i++)
+        {
+            columns.push_back(std::vector<float>());
+        }
+
+        int column_index = 1;
         for (auto &window : globals::window_positions.items())
         {
+            if (column_index >= column_count)
+                column_index = 1;
+
             // get window name
             std::string name = window.key();
-            float win_w = globals::window_positions[name]["w"].get<float>();
+            if (std::find(std::begin(built_in_windows), std::end(built_in_windows), name) != std::end(built_in_windows))
+                continue;
             float win_h = globals::window_positions[name]["h"].get<float>();
 
-            if (column_index != 0)
-                x += win_w + step;
-
-            // check if we have space to the right
-            if (x + win_w > game_width - step)
-            {
-                // we don't have space, so move to the next row
-                rows.push_back(row);
-                row.clear();
-                x = step;
-                column_index = 0;
-            }
-
             // calculate y
-            float y = step;
-            if (rows.size() > 0)
+            float y = (float)config::window_snap;
+            if (columns[column_index].size() > 0)
             {
-                auto &last_row = rows[rows.size() - 1];
-                // after maximizing the game, it loses all columns for some reason
-                // so we need to check if there are any columns and if not, just break the loop
+                auto &last_row = columns[column_index];
                 if (last_row.size() == 0)
                     break;
 
                 // we have previous rows, so take y from the last row
-                y = last_row[column_index] + step;
+                y = last_row[columns[column_index].size() - 1] + config::window_snap;
             }
 
-            // add window position to the row
-            row.push_back(y + win_h);
+            // add window position to the column
+            columns[column_index].push_back(y + win_h);
 
             // set window position
-            globals::window_positions[name]["x"] = x;
+            globals::window_positions[name]["x"] = column_index * (win_w + config::window_snap) + config::window_snap;
             globals::window_positions[name]["y"] = y;
 
             column_index++;
