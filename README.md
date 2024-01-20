@@ -40,10 +40,12 @@ Main goal of this project is primarily me getting more experience with C++ and g
 - [x] Hack search
 - [x] Auto-updater
 - [x] Discord Rich Presence
+- [x] Keybinds
 
 Planned:
-- [ ] Keybinds
-- [ ] ... and more!
+- [ ] StartPos switcher
+- [ ] Macro recorder
+- [ ] More hacks
 
 ## Installation
 1. Download the latest release from the [releases page](https://github.com/prevter/gdopenhack/releases).
