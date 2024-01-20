@@ -34,6 +34,7 @@ namespace hooks::PlayLayer
         PlayLayer_resetLevel(self);
 
         hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::GAME);
+        hacks::PickupCoins::playLayer_resetLevel(self);
     }
 
     void(__thiscall *PlayLayer_addObject)(robtop::PlayLayer *, robtop::GameObject *);
