@@ -179,8 +179,7 @@ namespace hook
         CCEGLView_pollEvents(self);
     }
 
-    void(__thiscall *CCEGLView_toggleFullScreen)(cocos2d::CCEGLView *, bool);
-    void __fastcall toggleFullScreen_hook(cocos2d::CCEGLView *self, bool fullscreen)
+    void uninitialize()
     {
         menu::menu_open = false;
 
@@ -189,9 +188,19 @@ namespace hook
         ImGui::DestroyContext();
 
         gl_initialized = false;
+    }
 
-        // Call original function
-        CCEGLView_toggleFullScreen(self, fullscreen);
+    void(__thiscall *CCEGLView_toggleFullScreen_old)(cocos2d::CCEGLView *, bool);
+    void __fastcall toggleFullScreen_old_hook(cocos2d::CCEGLView *self, void *, bool fullscreen)
+    {
+        uninitialize();
+        CCEGLView_toggleFullScreen_old(self, fullscreen);
+    }
+    void(__thiscall *CCEGLView_toggleFullScreen)(cocos2d::CCEGLView *, bool, bool);
+    void __fastcall toggleFullScreen_hook(cocos2d::CCEGLView *self, void *, bool fullscreen, bool borderless)
+    {
+        uninitialize();
+        CCEGLView_toggleFullScreen(self, fullscreen, borderless);
     }
 
     void(__thiscall *AppDelegate_applicationWillEnterForeground)(void *);
@@ -231,10 +240,18 @@ namespace hook
             GetProcAddress(cocos2d_base, "?pollEvents@CCEGLView@cocos2d@@QAEXXZ"),
             pollEvents_hook,
             (void **)&CCEGLView_pollEvents);
-        MH_CreateHook(
-            GetProcAddress(cocos2d_base, "?toggleFullScreen@CCEGLView@cocos2d@@QAEX_N@Z"),
-            toggleFullScreen_hook,
-            (void **)&CCEGLView_toggleFullScreen);
+
+        uintptr_t fullscreen_addr = (uintptr_t)GetProcAddress(cocos2d_base, "?toggleFullScreen@CCEGLView@cocos2d@@QAEX_N0@Z");
+        if (!fullscreen_addr)
+        {
+            // older version of GD without borderless mode
+            fullscreen_addr = (uintptr_t)GetProcAddress(cocos2d_base, "?toggleFullScreen@CCEGLView@cocos2d@@QAEX_N@Z");
+            MH_CreateHook((void *)fullscreen_addr, toggleFullScreen_old_hook, (void **)&CCEGLView_toggleFullScreen_old);
+        }
+        else
+        {
+            MH_CreateHook((void *)fullscreen_addr, toggleFullScreen_hook, (void **)&CCEGLView_toggleFullScreen);
+        }
 
         try_bind_method(
             "ApplicationWillEnterForeground",
