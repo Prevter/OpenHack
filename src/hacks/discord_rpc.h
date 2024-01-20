@@ -25,6 +25,7 @@ namespace hacks
         virtual void load(nlohmann::json *data) override;
         virtual void save(nlohmann::json *data) override;
         virtual std::string get_id() override { return "discord_rpc"; }
+        virtual bool load_keybind(keybinds::Keybind *keybind) override;
 
         void initialize_discord();
         void deinitialize_discord();

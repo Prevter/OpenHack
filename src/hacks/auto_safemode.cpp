@@ -14,16 +14,12 @@ namespace hacks
     void AutoSafeMode::init() {}
     void AutoSafeMode::late_init()
     {
-        for (auto &hack : hacks::all_hacks)
+        m_safemode = hacks::find_component<hacks::ToggleComponent>("universal.safemode");
+        if (!m_safemode)
         {
-            if (hack->get_id() == "universal.safemode")
-            {
-                m_safemode = hack;
-                break;
-            }
+            L_WARN("AutoSafeMode: Could not find \"Safe Mode\" component, disabling");
         }
-
-        if (m_safemode->has_warnings())
+        else if (m_safemode->has_warnings())
         {
             L_WARN("AutoSafeMode: Safe Mode has warnings, disabling");
         }
@@ -39,14 +35,17 @@ namespace hacks
             return;
 
         std::string text = fmt::format("Auto Safe Mode ({})", m_has_cheats ? "ON" : "OFF");
-        if (gui::ImToggleButton(text.c_str(), &m_enabled))
-        {
-            if (!m_enabled)
+        keybinds::shortcut_toggle(
+            "autosafemode", "Auto Safe Mode",
+            text.c_str(), &m_enabled,
+            [this]()
             {
-                // if we're disabling it, apply "Safe Mode" settings
-                m_safemode->apply_patch();
-            }
-        }
+                if (!m_enabled)
+                {
+                    // if we're disabling it, apply "Safe Mode" settings
+                    m_safemode->apply_patch();
+                }
+            });
     }
 
     void AutoSafeMode::update()
@@ -99,5 +98,20 @@ namespace hacks
     void AutoSafeMode::save(nlohmann::json *data)
     {
         data->emplace("universal.autosafemode", m_enabled);
+    }
+
+    bool AutoSafeMode::load_keybind(keybinds::Keybind *keybind)
+    {
+        if (keybind->id == "autosafemode")
+        {
+            keybind->name = "Auto Safe Mode";
+            keybind->callback = [this]()
+            {
+                m_enabled = !m_enabled;
+            };
+            return true;
+        }
+
+        return false;
     }
 }

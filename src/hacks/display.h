@@ -17,6 +17,7 @@ namespace hacks
         virtual void load(nlohmann::json *data) override;
         virtual void save(nlohmann::json *data) override;
         virtual std::string get_id() override { return "display"; }
+        virtual bool load_keybind(keybinds::Keybind *keybind) override;
 
         void update_framerate();
 

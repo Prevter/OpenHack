@@ -1,5 +1,6 @@
 #include "speedhack.h"
 #include "../menu/gui.h"
+#include "../menu/keybinds.h"
 
 namespace hacks
 {
@@ -38,7 +39,7 @@ namespace hacks
         gui::ImInputFloat("##speed", &m_speed, "%.2fx");
         gui::PopWidth();
         ImGui::SameLine();
-        gui::ImToggleButton("Enabled", &m_enabled, nullptr, WINDOW_WIDTH / 2);
+        keybinds::shortcut_toggle("speedhack.enabled", "Speedhack", "Enabled", &m_enabled, nullptr, WINDOW_WIDTH / 2);
 
         // TODO: Implement audio speedhack
         // gui::ImToggleButton("Speedhack Audio", &audio);
@@ -60,5 +61,19 @@ namespace hacks
         data->emplace("speedhack.speed", m_speed);
         data->emplace("speedhack.enabled", m_enabled);
         data->emplace("speedhack.audio", m_audio);
+    }
+
+    bool Speedhack::load_keybind(keybinds::Keybind *keybind)
+    {
+        if (keybind->id == "speedhack.enabled")
+        {
+            keybind->callback = [this]()
+            {
+                m_enabled = !m_enabled;
+            };
+            return true;
+        }
+
+        return false;
     }
 }

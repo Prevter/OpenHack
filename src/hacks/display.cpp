@@ -1,5 +1,6 @@
 #include "display.h"
 #include "../menu/gui.h"
+#include "../menu/keybinds.h"
 
 #include "../bindings/bindings.h"
 
@@ -52,16 +53,22 @@ namespace hacks
         gui::PopWidth();
         ImGui::SameLine();
 
-        if (gui::ImToggleButton("Unlock FPS", &m_fps_unlock, nullptr, WINDOW_WIDTH / 2))
-        {
-            robtop::GameManager::sharedState()->setGameVariable("0116", m_fps_unlock);
-            update_framerate();
-        }
-        if (gui::ImToggleButton("Vertical Sync", &m_vsync))
-        {
-            robtop::GameManager::sharedState()->setGameVariable("0030", m_vsync);
-            update_framerate();
-        }
+        keybinds::shortcut_toggle(
+            "display.fps_unlock", "FPS Unlock", &m_fps_unlock,
+            [this]()
+            {
+                robtop::GameManager::sharedState()->setGameVariable("0116", m_fps_unlock);
+                update_framerate();
+            },
+            WINDOW_WIDTH / 2);
+
+        keybinds::shortcut_toggle(
+            "display.vsync", "Vertical Sync", &m_vsync,
+            [this]()
+            {
+                robtop::GameManager::sharedState()->setGameVariable("0030", m_vsync);
+                update_framerate();
+            });
 
         // if (gui::ImToggleButton("Show FPS", &m_show_fps))
         // {
@@ -100,5 +107,31 @@ namespace hacks
 
     void DisplayHack::save(nlohmann::json *data)
     {
+    }
+
+    bool DisplayHack::load_keybind(keybinds::Keybind *keybind)
+    {
+        if (keybind->id == "display.fps_unlock")
+        {
+            keybind->callback = [this]()
+            {
+                m_fps_unlock = !m_fps_unlock;
+                robtop::GameManager::sharedState()->setGameVariable("0116", m_fps_unlock);
+                update_framerate();
+            };
+            return true;
+        }
+        else if (keybind->id == "display.vsync")
+        {
+            keybind->callback = [this]()
+            {
+                m_vsync = !m_vsync;
+                robtop::GameManager::sharedState()->setGameVariable("0030", m_vsync);
+                update_framerate();
+            };
+            return true;
+        }
+
+        return false;
     }
 }

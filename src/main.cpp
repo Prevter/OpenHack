@@ -71,6 +71,9 @@ BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
         CreateThread(NULL, 0, MainThread, NULL, 0, NULL);
         DisableThreadLibraryCalls(hModule);
         break;
+    case DLL_PROCESS_DETACH:
+        config::save();
+        break;
     default:
         break;
     }

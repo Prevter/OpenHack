@@ -1,5 +1,6 @@
 #include "config.h"
 #include "hacks/hacks.h"
+#include "menu/keybinds.h"
 
 #define LOAD_KEY(name)     \
     if (j.contains(#name)) \
@@ -138,6 +139,34 @@ namespace config
             }
         }
 
+        // load keybinds from "keybinds.json"
+        if (std::filesystem::exists(dir_name + "\\keybinds.json"))
+        {
+            std::ifstream file4(dir_name + "\\keybinds.json");
+            if (!file4.is_open())
+            {
+                L_ERROR("Failed to open keybinds file!");
+                return;
+            }
+
+            std::stringstream buffer;
+            buffer << file4.rdbuf();
+            file4.close();
+
+            std::string json = buffer.str();
+
+            // parse json
+            try
+            {
+                auto j = nlohmann::json::parse(json);
+                keybinds::load_keybinds(j);
+            }
+            catch (const std::exception &e)
+            {
+                L_ERROR("Failed to parse keybinds file: {}", e.what());
+            }
+        }
+
         // save config to recreate missing files
         save(dir_name);
     }
@@ -201,5 +230,18 @@ namespace config
         hacks::save(&j2);
         file3 << j2.dump(4);
         file3.close();
+
+        // save keybinds to "keybinds.json"
+        std::ofstream file4(dir_name + "\\keybinds.json");
+        if (!file4.is_open())
+        {
+            L_ERROR("Failed to open keybinds file!");
+            return;
+        }
+
+        nlohmann::json j3;
+        keybinds::save_keybinds(j3);
+        file4 << j3.dump(4);
+        file4.close();
     }
 }

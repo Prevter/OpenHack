@@ -15,6 +15,7 @@ namespace hacks
         virtual void load(nlohmann::json *data) override;
         virtual void save(nlohmann::json *data) override;
         virtual std::string get_id() override { return "autosafemode"; }
+        virtual bool load_keybind(keybinds::Keybind *keybind) override;
     private:
         bool m_enabled = false;
         bool m_has_cheats = false;

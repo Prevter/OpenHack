@@ -2,6 +2,7 @@
 #include "gui.h"
 #include "../config.h"
 #include "../hook.h"
+#include "../hacks/hacks.h"
 
 namespace keybinds
 {
@@ -9,6 +10,34 @@ namespace keybinds
 
     void init()
     {
+        for (auto &keybind : keybinds)
+        {
+            L_TRACE("Initializing keybind \"{}\"", keybind.id);
+            auto id = keybind.id;
+
+            // ask for hack to create its keybind
+            auto component = hacks::find_component<hacks::Component>(id);
+            if (component)
+            {
+                component->create_keybind(&keybind);
+                L_TRACE("Initialized keybind for component \"{}\"", id);
+                continue;
+            }
+
+            bool found = false;
+            for (auto &hack : hacks::hacks)
+            {
+                if (hack->load_keybind(&keybind))
+                {
+                    L_TRACE("Initialized keybind for hack \"{}\"", id);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+                L_TRACE("Could not initialize keybind \"{}\"", id);
+        }
     }
 
     void update()
@@ -17,12 +46,15 @@ namespace keybinds
         {
             if (utils::is_key_pressed(keybind.keycode))
             {
-                keybind.callback();
+                if (keybind.callback)
+                    keybind.callback();
+                else
+                    L_WARN("Keybind \"{}\" has no callback", keybind.id);
             }
         }
     }
 
-    bool shortcut_button(const char *id, const char *label, std::function<void()> callback, float width = -1.f)
+    bool shortcut_button(const char *id, const char *shortcut_name, const char *label, std::function<void()> callback, float width)
     {
         bool pressed = false;
 
@@ -41,18 +73,18 @@ namespace keybinds
         // draw popup menu
         if (ImGui::BeginPopup(popup_name.c_str()))
         {
-            if (keybinds::has_keybind(id))
+            if (has_keybind(id))
             {
                 if (ImGui::MenuItem("Remove keybind"))
                 {
-                    keybinds::remove_keybind(id);
+                    remove_keybind(id);
                 }
             }
             else
             {
                 if (ImGui::MenuItem("Add keybind"))
                 {
-                    keybinds::add_keybind(keybinds::Keybind(id, label, callback));
+                    add_keybind(Keybind(id, shortcut_name, callback));
                 }
             }
 
@@ -60,6 +92,94 @@ namespace keybinds
         }
 
         return pressed;
+    }
+
+    bool shortcut_toggle(const char *id, const char *shortcut_name, const char *label, bool *value, std::function<void()> callback, float width)
+    {
+        bool pressed = false;
+
+        if (gui::ImToggleButton(label, value, nullptr, width))
+        {
+            if (callback)
+                callback();
+            pressed = true;
+        }
+
+        auto popup_name = fmt::format("##popup_{}", id);
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+        {
+            ImGui::OpenPopup(popup_name.c_str());
+        }
+
+        // draw popup menu
+        if (ImGui::BeginPopup(popup_name.c_str()))
+        {
+            if (has_keybind(id))
+            {
+                if (ImGui::MenuItem("Remove keybind"))
+                {
+                    remove_keybind(id);
+                }
+            }
+            else
+            {
+                if (ImGui::MenuItem("Add keybind"))
+                {
+                    add_keybind(Keybind(
+                        id, shortcut_name,
+                        [value, callback]()
+                        {
+                            *value = !*value;
+                            if (callback)
+                                callback();
+                        }));
+                }
+            }
+
+            ImGui::EndPopup();
+        }
+
+        return pressed;
+    }
+
+    bool shortcut_button(const char *id, const char *label, std::function<void()> callback, float width)
+    {
+        return shortcut_button(id, label, label, callback, width);
+    }
+
+    bool shortcut_toggle(const char *id, const char *label, bool *value, std::function<void()> callback, float width)
+    {
+        return shortcut_toggle(id, label, label, value, callback, width);
+    }
+
+    void add_menu_keybind(const char *id, const char *label, std::function<void()> callback, float width)
+    {
+        auto popup_name = fmt::format("##popup_{}", id);
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+        {
+            ImGui::OpenPopup(popup_name.c_str());
+        }
+
+        // draw popup menu
+        if (ImGui::BeginPopup(popup_name.c_str()))
+        {
+            if (has_keybind(id))
+            {
+                if (ImGui::MenuItem("Remove keybind"))
+                {
+                    remove_keybind(id);
+                }
+            }
+            else
+            {
+                if (ImGui::MenuItem("Add keybind"))
+                {
+                    add_keybind(Keybind(id, label, callback));
+                }
+            }
+
+            ImGui::EndPopup();
+        }
     }
 
     void draw_menu()
@@ -98,7 +218,7 @@ namespace keybinds
         ImGui::Separator();
 
         // shortcut_button(
-        //     "resetlevel", "Reset Level",
+        //     "resetlevel", "Reset Level", "Reset Level",
         //     []()
         //     {
         //         // TODO:
@@ -159,7 +279,27 @@ namespace keybinds
         return false;
     }
 
-    void load_keybinds()
+    void load_keybinds(nlohmann::json &j)
     {
+        for (auto &keybind : j)
+        {
+            auto id = keybind["id"].get<std::string>();
+            auto key = keybind["key"].get<uint32_t>();
+            auto name = keybind["name"].get<std::string>();
+            Keybind keybind(id, name, nullptr, key);
+            add_keybind(keybind);
+        }
+    }
+
+    void save_keybinds(nlohmann::json &j)
+    {
+        for (auto &keybind : keybinds)
+        {
+            nlohmann::json keybind_json;
+            keybind_json["id"] = keybind.id;
+            keybind_json["key"] = keybind.keycode;
+            keybind_json["name"] = keybind.name;
+            j.push_back(keybind_json);
+        }
     }
 }

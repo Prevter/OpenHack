@@ -56,8 +56,11 @@ namespace hacks
             gui::ImInputText("Editor State", m_edit_state, 60);
             ImGui::Separator();
             ImGui::InputFloat("Update Interval", &m_update_interval, 0.1f, 1.0f, "%.1f s");
-            if (m_update_interval < 1.0f) 
+            if (m_update_interval < 1.0f)
                 m_update_interval = 1.0f; });
+
+        // keybinds::add_menu_keybind("discord_rpc", "Discord RPC", [this]()
+        //                            { m_enabled = !m_enabled; });
     }
 
     void DiscordRPC::update()
@@ -290,5 +293,19 @@ namespace hacks
         data->emplace("discord.game_state", m_game_state);
         data->emplace("discord.edit_detail", m_edit_detail);
         data->emplace("discord.edit_state", m_edit_state);
+    }
+
+    bool DiscordRPC::load_keybind(keybinds::Keybind *keybind)
+    {
+        if (keybind->id == "discord_rpc")
+        {
+            keybind->callback = [this]()
+            {
+                m_enabled = !m_enabled;
+            };
+            return true;
+        }
+
+        return false;
     }
 }

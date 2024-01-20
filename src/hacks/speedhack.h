@@ -15,6 +15,7 @@ namespace hacks
         virtual void load(nlohmann::json *data) override;
         virtual void save(nlohmann::json *data) override;
         virtual std::string get_id() override { return "speedhack"; }
+        virtual bool load_keybind(keybinds::Keybind *keybind) override;
 
         bool is_cheating() { return m_enabled && m_speed != 1.0f; }
 

@@ -1,3 +1,4 @@
+#pragma once
 #include "../pch.h"
 
 namespace keybinds
@@ -29,6 +30,14 @@ namespace keybinds
     void set_keybind(std::string id, uint32_t key);
     bool has_keybind(std::string id);
 
-    void load_keybinds();
+    void load_keybinds(nlohmann::json &j);
+    void save_keybinds(nlohmann::json &j);
+
+    // components with the ability to be bound to a key
+    bool shortcut_button(const char *id, const char *label, std::function<void()> callback, float width = -1.f);
+    bool shortcut_button(const char *id, const char* shortcut_name, const char *label, std::function<void()> callback, float width = -1.f);
+    bool shortcut_toggle(const char *id, const char *label, bool* value, std::function<void()> callback = nullptr, float width = -1.f);
+    bool shortcut_toggle(const char *id, const char* shortcut_name, const char *label, bool* value, std::function<void()> callback = nullptr, float width = -1.f);
+    void add_menu_keybind(const char *id, const char *label, std::function<void()> callback, float width = -1.f);
 
 }

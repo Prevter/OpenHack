@@ -2,7 +2,6 @@
 #include "patterns.h"
 #include "../config.h"
 #include "../menu/gui.h"
-#include "../menu/keybinds.h"
 
 #include "speedhack.h"
 #include "discord_rpc.h"
@@ -252,40 +251,13 @@ namespace hacks
             }
         }
 
-        // if right clicked, open menu
-        auto popup_name = fmt::format("##popup_{}", m_id);
-        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-        {
-            ImGui::OpenPopup(popup_name.c_str());
-        }
-
-        // draw popup menu
-        if (ImGui::BeginPopup(popup_name.c_str()))
-        {
-            if (keybinds::has_keybind(m_id))
+        keybinds::add_menu_keybind(
+            m_id.c_str(), m_title.c_str(),
+            [this]()
             {
-                if (ImGui::MenuItem("Remove keybind"))
-                {
-                    keybinds::remove_keybind(m_id);
-                }
-            }
-            else
-            {
-                if (ImGui::MenuItem("Add keybind"))
-                {
-                    auto keybind = keybinds::Keybind(
-                        m_id, m_title,
-                        [this]()
-                        {
-                            this->m_enabled = !this->m_enabled;
-                            this->toggle();
-                        });
-                    keybinds::add_keybind(keybind);
-                }
-            }
-
-            ImGui::EndPopup();
-        }
+                this->m_enabled = !this->m_enabled;
+                this->toggle();
+            });
 
         if (toggled)
         {
@@ -332,6 +304,15 @@ namespace hacks
         data->emplace(m_id, m_enabled);
     }
 
+    void ToggleComponent::create_keybind(keybinds::Keybind *keybind)
+    {
+        keybind->callback = [this]()
+        {
+            this->m_enabled = !this->m_enabled;
+            this->toggle();
+        };
+    }
+
     /* ===== TextComponent ===== */
 
     TextComponent::TextComponent(std::string text)
@@ -355,6 +336,11 @@ namespace hacks
     void EmbeddedHackComponent::draw()
     {
         m_hack->draw(true);
+    }
+
+    void EmbeddedHackComponent::create_keybind(keybinds::Keybind *keybind)
+    {
+        m_hack->load_keybind(keybind);
     }
 
     void init()

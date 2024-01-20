@@ -1,5 +1,6 @@
 #pragma once
 #include "../pch.h"
+#include "../menu/keybinds.h"
 
 namespace hacks
 {
@@ -65,6 +66,8 @@ namespace hacks
         virtual void draw(bool embedded = false) = 0;
         // called every frame
         virtual void update() = 0;
+        // used to create a keybind for this hack
+        virtual bool load_keybind(struct keybinds::Keybind* keybind) { return false; }
 
         // methods for saving and loading settings for this hack
         virtual void load(nlohmann::json *data) = 0;
@@ -86,6 +89,9 @@ namespace hacks
         virtual void load(nlohmann::json *data) = 0;
         virtual void save(nlohmann::json *data) = 0;
 
+        // initialize the keybind
+        virtual void create_keybind(keybinds::Keybind* keybind) {}
+
         virtual std::string get_id() { return ""; }
         virtual std::string get_sort_key() { return get_id(); }
     };
@@ -100,6 +106,8 @@ namespace hacks
         // save and load toggle setting
         virtual void load(nlohmann::json *data) override;
         virtual void save(nlohmann::json *data) override;
+
+        virtual void create_keybind(keybinds::Keybind* keybind) override;
 
         virtual std::string get_id() override { return m_id; }
         virtual std::string get_sort_key() override { return m_title; }
@@ -154,6 +162,8 @@ namespace hacks
         // saving is handled by the hack itself
         virtual void load(nlohmann::json *data) override {}
         virtual void save(nlohmann::json *data) override {}
+
+        virtual void create_keybind(keybinds::Keybind* keybind) override;
 
         virtual std::string get_id() override { return m_id; }
         virtual std::string get_sort_key() override { return m_id; }
