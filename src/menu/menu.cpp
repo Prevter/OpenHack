@@ -108,7 +108,7 @@ namespace menu
 
         // count how many columns we have
         float win_w = globals::window_positions.begin().value()["w"].get<float>();
-        int column_count = (int)((game_width - config::window_snap) / (win_w + config::window_snap));
+        size_t column_count = (size_t)((game_width - config::window_snap) / (win_w + config::window_snap));
 
         std::vector<std::vector<float>> columns; // contains y positions for each window in the column
 
@@ -140,12 +140,12 @@ namespace menu
         columns.push_back(built_in_y);
 
         // fill the rest of the columns with empty vectors
-        for (int i = 1; i < column_count; i++)
+        for (size_t i = 1; i < column_count; i++)
         {
             columns.push_back(std::vector<float>());
         }
 
-        int column_index = 1;
+        size_t column_index = 1;
         for (auto &window : globals::window_positions.items())
         {
             if (column_index >= column_count)
@@ -159,6 +159,13 @@ namespace menu
 
             // calculate y
             float y = (float)config::window_snap;
+            if (columns.size() <= column_index)
+            {
+                // this only happens when we minimize/maximize the window
+                // so we just ignore it and quit the loop
+                break;
+            }
+
             if (columns[column_index].size() > 0)
             {
                 auto &last_row = columns[column_index];
