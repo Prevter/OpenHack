@@ -109,8 +109,6 @@ namespace menu
         // count how many columns we have
         float win_w = globals::window_positions.begin().value()["w"].get<float>();
         int column_count = (int)((game_width - config::window_snap) / (win_w + config::window_snap));
-        L_TRACE("Column count: ({} - {}) / ({} + {}) = {}",
-                game_width, config::window_snap, win_w, config::window_snap, column_count);
 
         std::vector<std::vector<float>> columns; // contains y positions for each window in the column
 
