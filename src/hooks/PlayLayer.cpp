@@ -45,6 +45,12 @@ namespace hooks::PlayLayer
         hacks::PickupCoins::playLayer_addObject(self, object);
     }
 
+    void(__thiscall *PlayLayer_destructor)(robtop::PlayLayer *);
+    void __fastcall destructor_hook(robtop::PlayLayer *self)
+    {
+        PlayLayer_destructor(self);
+    }
+
     void setup()
     {
         hooks::create_hook(
@@ -70,5 +76,11 @@ namespace hooks::PlayLayer
             robtop::PlayLayer_addObject,
             (void *)addObject_hook,
             (void **)&PlayLayer_addObject);
+
+        hooks::create_hook(
+            "PlayLayer::~PlayLayer",
+            robtop::PlayLayer_destructor,
+            (void *)destructor_hook,
+            (void **)&PlayLayer_destructor);
     }
 }

@@ -25,6 +25,22 @@ namespace robtop
     inline const char *PlayLayer_destroyObject_pat = "558BEC53568B7508578BF98BCE8B06FF90";
     inline void(__thiscall *PlayLayer_destroyObject)(PlayLayer *, GameObject *);
 
+    inline const char *PlayLayer_setStartPosObject_pat = "558BEC568B7508578BF939B7?2A";
+    inline void(__thiscall *PlayLayer_setStartPosObject)(PlayLayer *, GameObject *);
+
+    inline const char *PlayLayer_startMusic_pat = "558BEC83E4F851568BF180BE?2A";
+    inline void(__thiscall *PlayLayer_startMusic)(PlayLayer *);
+
+    inline const char *PlayLayer_removeAllCheckpoints_pat = "558BEC83E4F883EC08565768????8BF9E8????8BC8E8????6A01";
+    inline void(__thiscall *PlayLayer_removeAllCheckpoints)(PlayLayer *);
+
+    inline const char *PlayLayer_destructor_pat = "558BEC6AFF68????64A10000000050515657A1????33C5508D45F464A3000000008BF9897DF0C707????C78708010000????C7870C010000????C78710010000????C78714010000????C78718010000????C7873C010000????C787????????C787????????[C787????????]C745";
+    inline void(__thiscall *PlayLayer_destructor)(PlayLayer *);
+
+    // member offset patterns
+    inline const char *PlayLayer_startPosCheckpoint_pat = "74208B8B^??0000";
+    inline uintptr_t PlayLayer_startPosCheckpoint_offset;
+
     class PlayLayer : public cocos2d::CCLayer
     {
     public:
@@ -47,6 +63,29 @@ namespace robtop
         {
             if (PlayLayer_addObject)
                 PlayLayer_addObject(this, object);
+        }
+        inline void setStartPosObject(GameObject *object)
+        {
+            if (PlayLayer_setStartPosObject)
+                PlayLayer_setStartPosObject(this, object);
+        }
+        inline void startMusic()
+        {
+            if (PlayLayer_startMusic)
+                PlayLayer_startMusic(this);
+        }
+        inline void removeAllCheckpoints()
+        {
+            if (PlayLayer_removeAllCheckpoints)
+                PlayLayer_removeAllCheckpoints(this);
+        }
+        inline void set_startPosCheckpoint(uintptr_t checkpoint)
+        {
+            if (!PlayLayer_startPosCheckpoint_offset)
+                return;
+
+            uintptr_t addr = (uintptr_t)this + PlayLayer_startPosCheckpoint_offset;
+            *(uintptr_t *)addr = checkpoint;
         }
     };
 }

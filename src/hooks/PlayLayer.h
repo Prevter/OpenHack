@@ -8,6 +8,7 @@ namespace hooks::PlayLayer
     int __fastcall onQuit_hook(robtop::PlayLayer *self);
     void __fastcall resetLevel_hook(robtop::PlayLayer *self);
     void __fastcall addObject_hook(robtop::PlayLayer *self, int, robtop::GameObject *object);
+    void __fastcall destructor_hook(robtop::PlayLayer *self);
 
     void setup();
 }
