@@ -8,6 +8,7 @@ namespace hook
 {
     bool gl_initialized = false;
     bool lock_inputs = false;
+    HWND window_handle;
 
     // Menu manager
     uint32_t menu_hotkey;
@@ -61,8 +62,8 @@ namespace hook
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
             ImGuiIO &io = ImGui::GetIO();
-            auto hwnd = WindowFromDC(*reinterpret_cast<HDC *>(reinterpret_cast<uintptr_t>(window) + 0x244));
-            ImGui_ImplWin32_Init(hwnd);
+            window_handle = WindowFromDC(*reinterpret_cast<HDC *>(reinterpret_cast<uintptr_t>(window) + 0x244));
+            ImGui_ImplWin32_Init(window_handle);
             ImGui_ImplOpenGL3_Init();
 
             // Initialize menu
