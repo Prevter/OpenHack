@@ -240,10 +240,23 @@ namespace utils
         return match;
     }
 
+    HWND window_handle = NULL;
+    HWND get_window_handle()
+    {
+        if (window_handle == NULL)
+            window_handle = FindWindowA(NULL, "Geometry Dash");
+
+        return window_handle;
+    }
+
     std::map<uint32_t, bool> key_states;
     std::map<uint32_t, bool> key_states_previous;
     bool is_key_pressed(uint32_t keycode)
-    {   
+    {
+        // if window is not focused
+        if (GetForegroundWindow() != get_window_handle())
+            return false;
+
         // if state changed
         if (key_states[keycode] ^ key_states_previous[keycode])
         {
@@ -253,7 +266,7 @@ namespace utils
 
         return false;
     }
-    
+
     void reset_key_states()
     {
         // set previous states
