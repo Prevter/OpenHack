@@ -2,6 +2,7 @@
 #include "PlayLayer.h"
 
 #include "../hacks/discord_rpc.h"
+#include "../hacks/startpos_switch.h"
 #include "../hacks/pickup_coins.h"
 
 namespace hooks::PlayLayer
@@ -10,10 +11,12 @@ namespace hooks::PlayLayer
     bool __fastcall init_hook(robtop::PlayLayer *self, int edx, robtop::GJGameLevel *level, bool v1, bool v2)
     {
         hacks::PickupCoins::playLayer_init(self, level);
+        hacks::StartposSwitcher::playLayer_init(self, level);
 
         const bool ret = PlayLayer_init(self, level, v1, v2);
 
         hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::GAME, level);
+        hacks::StartposSwitcher::playLayer_lateInit(self);
 
         return ret;
     }
@@ -42,12 +45,15 @@ namespace hooks::PlayLayer
     {
         PlayLayer_addObject(self, object);
 
+        hacks::StartposSwitcher::playLayer_addObject(self, object);
         hacks::PickupCoins::playLayer_addObject(self, object);
     }
 
     void(__thiscall *PlayLayer_destructor)(robtop::PlayLayer *);
     void __fastcall destructor_hook(robtop::PlayLayer *self)
     {
+        hacks::StartposSwitcher::playLayer_destructor(self);
+
         PlayLayer_destructor(self);
     }
 

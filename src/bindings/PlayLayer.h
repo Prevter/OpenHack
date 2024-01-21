@@ -41,6 +41,9 @@ namespace robtop
     inline const char *PlayLayer_startPosCheckpoint_pat = "74208B8B^??0000";
     inline uintptr_t PlayLayer_startPosCheckpoint_offset;
 
+    inline const char *PlayLayer_practiceMode_pat = "E9????8A81^??000084C0";
+    inline uintptr_t PlayLayer_practiceMode_offset;
+
     class PlayLayer : public cocos2d::CCLayer
     {
     public:
@@ -86,6 +89,14 @@ namespace robtop
 
             uintptr_t addr = (uintptr_t)this + PlayLayer_startPosCheckpoint_offset;
             *(uintptr_t *)addr = checkpoint;
+        }
+        inline bool isPracticeMode()
+        {
+            if (!PlayLayer_practiceMode_offset)
+                return false;
+
+            uintptr_t addr = (uintptr_t)this + PlayLayer_practiceMode_offset;
+            return *(bool *)addr;
         }
     };
 }

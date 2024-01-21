@@ -191,6 +191,10 @@
         },
         {
             "type": "embedded",
+            "hack": "startpos_switch"
+        },
+        {
+            "type": "embedded",
             "hack": "auto_pickup_coins"
         }
     ]

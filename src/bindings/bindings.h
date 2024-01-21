@@ -23,7 +23,7 @@ namespace robtop
     // used to find the offset of a member variable from code
     inline void init_member_offset(const char *name, uintptr_t *ptr, const char *pat, size_t size)
     {
-        uintptr_t addr = patterns::find_pattern(pat); 
+        uintptr_t addr = patterns::find_pattern(pat);
         if (!addr)
         {
             L_ERROR("Failed to find {}", name);
@@ -42,7 +42,7 @@ namespace robtop
         {
             result |= bytes[i] << (i * 8);
         }
-        
+
         *ptr = result;
 
         L_TRACE("Member offset for {} is 0x{:x}", name, *ptr);
@@ -71,6 +71,7 @@ namespace robtop
         init_binding("PlayLayer::removeAllCheckpoints", (void **)&robtop::PlayLayer_removeAllCheckpoints, robtop::PlayLayer_removeAllCheckpoints_pat);
         init_binding("PlayLayer::~PlayLayer", (void **)&robtop::PlayLayer_destructor, robtop::PlayLayer_destructor_pat);
         init_member_offset("PlayLayer::startPosCheckpoint", &robtop::PlayLayer_startPosCheckpoint_offset, robtop::PlayLayer_startPosCheckpoint_pat, 4);
+        init_member_offset("PlayLayer::practiceMode", &robtop::PlayLayer_practiceMode_offset, robtop::PlayLayer_practiceMode_pat, 4);
 
         // LevelEditorLayer
         init_binding("LevelEditorLayer::init", (void **)&robtop::LevelEditorLayer_init, robtop::LevelEditorLayer_init_pat);
