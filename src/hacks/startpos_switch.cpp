@@ -86,8 +86,8 @@ namespace hacks
     void StartposSwitcher::load(nlohmann::json *data)
     {
         m_enabled = data->value("startpos_switch.enabled", false);
-        m_prev_keybind = data->value("startpos_switch.prev_keybind", 0);
-        m_next_keybind = data->value("startpos_switch.next_keybind", 0);
+        m_prev_keybind = data->value("startpos_switch.prev_keybind", 81); // Q
+        m_next_keybind = data->value("startpos_switch.next_keybind", 69); // E
         m_show_label = data->value("startpos_switch.show_label", true);
     }
 

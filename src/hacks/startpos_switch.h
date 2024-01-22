@@ -38,8 +38,8 @@ namespace hacks
         bool m_enabled = false;
         bool m_show_label = true;
 
-        uint32_t m_prev_keybind = 0;
-        uint32_t m_next_keybind = 0;
+        uint32_t m_prev_keybind = 81; // Q
+        uint32_t m_next_keybind = 69; // E
 
         int32_t m_current_index = 0;
     };
