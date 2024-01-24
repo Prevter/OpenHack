@@ -196,6 +196,18 @@
         {
             "type": "embedded",
             "hack": "auto_pickup_coins"
+        },
+        {
+            "type": "toggle",
+            "title": "No Shake",
+            "description": "Disables shake triggers.",
+            "id": "level.shake",
+            "opcodes": [
+                {
+                    "pattern": "F30F109F200500008B4D08^E8",
+                    "mask": "*0590"
+                }
+            ]
         }
     ]
 }
