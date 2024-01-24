@@ -135,6 +135,22 @@
                     "mask": "EB"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "No (C) Mark",
+            "description": "Removes the \"(C)\" mark from copied levels.",
+            "id": "creator.nocmark",
+            "opcodes": [
+                {
+                    "pattern": "74268B82??0000",
+                    "mask": "EB"
+                },
+                {
+                    "pattern": "8B87??00002B87^??00008BBF",
+                    "mask": "*04$(-06)"
+                }
+            ]
         }
     ]
 }
