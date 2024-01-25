@@ -70,6 +70,7 @@ namespace robtop
         init_binding("PlayLayer::startMusic", (void **)&robtop::PlayLayer_startMusic, robtop::PlayLayer_startMusic_pat);
         init_binding("PlayLayer::removeAllCheckpoints", (void **)&robtop::PlayLayer_removeAllCheckpoints, robtop::PlayLayer_removeAllCheckpoints_pat);
         init_binding("PlayLayer::~PlayLayer", (void **)&robtop::PlayLayer_destructor, robtop::PlayLayer_destructor_pat);
+        init_binding("PlayLayer::togglePracticeMode", (void **)&robtop::PlayLayer_togglePracticeMode, robtop::PlayLayer_togglePracticeMode_pat);
         init_member_offset("PlayLayer::startPosCheckpoint", &robtop::PlayLayer_startPosCheckpoint_offset, robtop::PlayLayer_startPosCheckpoint_pat, 4);
         init_member_offset("PlayLayer::practiceMode", &robtop::PlayLayer_practiceMode_offset, robtop::PlayLayer_practiceMode_pat, 4);
 

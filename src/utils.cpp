@@ -5,6 +5,8 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <shlobj.h>
+#include <shellapi.h>
 
 #include <curl/curl.h>
 #include "logger.h"
@@ -33,6 +35,19 @@ namespace utils
         GetModuleFileNameA(NULL, buffer, MAX_PATH);
         std::string::size_type pos = std::string(buffer).find_last_of("\\/");
         return std::string(buffer).substr(0, pos);
+    }
+
+    std::string get_save_directory()
+    {
+        char buffer[MAX_PATH];
+        SHGetFolderPathA(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, buffer);
+        std::string path = std::string(buffer) + "\\GeometryDash";
+        return path;
+    }
+
+    void open_folder(const char *path)
+    {
+        ShellExecuteA(NULL, "open", path, NULL, NULL, SW_SHOWNORMAL);
     }
 
     std::map<uint32_t, std::string> versions_map = {

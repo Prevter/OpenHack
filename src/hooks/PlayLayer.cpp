@@ -4,6 +4,7 @@
 #include "../hacks/discord_rpc.h"
 #include "../hacks/startpos_switch.h"
 #include "../hacks/pickup_coins.h"
+#include "../hacks/shortcuts.h"
 
 namespace hooks::PlayLayer
 {
@@ -12,6 +13,7 @@ namespace hooks::PlayLayer
     {
         hacks::PickupCoins::playLayer_init(self, level);
         hacks::StartposSwitcher::playLayer_init(self, level);
+        hacks::Shortcuts::playLayer_init(self, level);
 
         const bool ret = PlayLayer_init(self, level, v1, v2);
 
@@ -53,6 +55,7 @@ namespace hooks::PlayLayer
     void __fastcall destructor_hook(robtop::PlayLayer *self)
     {
         hacks::StartposSwitcher::playLayer_destructor(self);
+        hacks::Shortcuts::playLayer_destructor(self);
 
         PlayLayer_destructor(self);
     }

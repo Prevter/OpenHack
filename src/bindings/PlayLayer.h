@@ -37,6 +37,9 @@ namespace robtop
     inline const char *PlayLayer_destructor_pat = "558BEC6AFF68????64A10000000050515657A1????33C5508D45F464A3000000008BF9897DF0C707????C78708010000????C7870C010000????C78710010000????C78714010000????C78718010000????C7873C010000????C787????????C787????????[C787????????]C745";
     inline void(__thiscall *PlayLayer_destructor)(PlayLayer *);
 
+    inline const char *PlayLayer_togglePracticeMode_pat = "558BEC6AFF68????64A10000000050535657A1????33C5508D45F464A3000000008BF98A5D08";
+    inline void(__thiscall *PlayLayer_togglePracticeMode)(PlayLayer *, bool);
+
     // member offset patterns
     inline const char *PlayLayer_startPosCheckpoint_pat = "74208B8B^??0000";
     inline uintptr_t PlayLayer_startPosCheckpoint_offset;
@@ -97,6 +100,11 @@ namespace robtop
 
             uintptr_t addr = (uintptr_t)this + PlayLayer_practiceMode_offset;
             return *(bool *)addr;
+        }
+        inline void togglePracticeMode(bool enable)
+        {
+            if (PlayLayer_togglePracticeMode)
+                PlayLayer_togglePracticeMode(this, enable);
         }
     };
 }

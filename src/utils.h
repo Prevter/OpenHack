@@ -12,6 +12,8 @@ namespace utils
     void set_console_title(const char *title);
 
     std::string get_current_directory();
+    std::string get_save_directory();
+    void open_folder(const char *path);
 
     void reset_key_states();                // called once every frame, resets key states
     bool is_key_pressed(uint32_t keycode);  // checks if a key was pressed during this frame
