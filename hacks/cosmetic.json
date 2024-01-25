@@ -177,6 +177,58 @@
                     "lib": "libcocos2d.dll"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Spider Dash",
+            "description": "Disables spider dash trail when teleporting.",
+            "id": "cosmetic.spiderdash",
+            "opcodes": [
+                {
+                    "pattern": "80BF????00^0F84????68????FF",
+                    "mask": "E9&(01+01)*03$0190"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Portal Lightning",
+            "description": "Disables portal lightning from size-changing portals.",
+            "id": "cosmetic.portallightning",
+            "opcodes": [
+                {
+                    "pattern": "E8????^83EC088BCC8BB0",
+                    "mask": "EB2C90"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Hide Trigger",
+            "description": "Disables hide player triggers.",
+            "id": "cosmetic.hidetrigger",
+            "opcodes": [
+                {
+                    "pattern": "C2??8B4D?6A^00E8",
+                    "mask": "01"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Ghost Trail",
+            "description": "Disables player ghost trail triggers.",
+            "id": "cosmetic.ghosttrail",
+            "opcodes": [
+                {
+                    "pattern": "FF75?8BF18B8E????E8????80BE?????74?FF75?8B8E????E8????5E5DC2??558BEC83EC?5657",
+                    "mask": "6A0090"
+                },
+                {
+                    "pattern": "FF75?8B8E????E8????5E5DC2??558BEC83EC?5657",
+                    "mask": "6A0090"
+                }
+            ]
         }
     ]
 }
