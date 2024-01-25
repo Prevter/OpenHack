@@ -147,8 +147,32 @@
                     "mask": "EB"
                 },
                 {
-                    "pattern": "8B87??00002B87^??00008BBF",
+                    "pattern": "2B87^??00008BBF",
                     "mask": "*04$(-06)"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Hide UI",
+            "description": "Hides the UI in the editor.",
+            "id": "creator.hideui",
+            "opcodes": [
+                {
+                    "pattern": "B901000000^0F44D98B",
+                    "mask": "B30090"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Z Order Bypass",
+            "description": "Removes the -100 to 100 Z order range limit.",
+            "id": "creator.zorder",
+            "opcodes": [
+                {
+                    "pattern": "0F4CC1B9640000003B?0F4FC1",
+                    "mask": "*0390*07?*0390"
                 }
             ]
         }
