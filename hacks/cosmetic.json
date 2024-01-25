@@ -229,6 +229,18 @@
                     "mask": "6A0090"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Robot Fire",
+            "description": "Disables robot fire when is propelled.",
+            "id": "cosmetic.robotfire",
+            "opcodes": [
+                {
+                    "pattern": "FFD084C0^0F85??00008B[8F???]?FF15",
+                    "mask": "E9&(01+01)*03$0190"
+                }
+            ]
         }
     ]
 }
