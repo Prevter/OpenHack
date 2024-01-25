@@ -352,11 +352,7 @@ namespace menu
             if (globals::reset_windows)
                 globals::reset_windows = false;
 
-            if (gui::ImButton("Stack Windows", WINDOW_WIDTH / 2))
-                reset_windows();
-
-            ImGui::SameLine();
-            gui::ImToggleButton("Always", &config::always_reposition, nullptr, WINDOW_WIDTH / 2 - 15);
+            gui::ImToggleButton("Stack Windows", &config::always_reposition);
         }
         gui::End();
 
@@ -368,14 +364,7 @@ namespace menu
             globals::animation_action = nullptr;
         }
 
-        // set window positions on the first run, but only after the first frame
-        // to allow ImGui to calculate window heights
-        if (!config::always_reposition && config::reposition_windows && wait_one_frame-- == 0)
-        {
-            reset_windows();
-            config::reposition_windows = false;
-        }
-        else if (config::always_reposition)
+        if (config::always_reposition)
         {
             reset_windows();
         }

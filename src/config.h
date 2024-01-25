@@ -6,7 +6,6 @@
 namespace config
 {
     // config variables
-    extern bool reposition_windows; // used to set window positions on the first run
     extern bool always_reposition;  // whether to run reset_windows() every frame
 
     extern std::string menu_hotkey;                       // key for opening/closing the menu
