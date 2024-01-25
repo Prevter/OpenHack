@@ -148,13 +148,27 @@ namespace menu
         size_t column_index = 1;
         for (auto &window : globals::window_positions.items())
         {
-            if (column_index >= column_count)
-                column_index = 1;
-
             // get window name
             std::string name = window.key();
             if (std::find(std::begin(built_in_windows), std::end(built_in_windows), name) != std::end(built_in_windows))
                 continue;
+
+            // find column with the lowest current y
+            // this will make windows stack more evenly
+            size_t lowest_index = 1;
+            float lowest_y = 1000000;
+            for (size_t i = 1; i < column_count; i++)
+            {
+                float last_y = columns[i].size() > 0 ? columns[i][columns[i].size() - 1] : 0;
+                float sum = last_y + config::window_snap;
+                if (sum < lowest_y)
+                {
+                    lowest_y = sum;
+                    lowest_index = i;
+                }
+            }
+            column_index = lowest_index;
+
             float win_h = globals::window_positions[name]["h"].get<float>();
 
             // calculate y
@@ -182,8 +196,6 @@ namespace menu
             // set window position
             globals::window_positions[name]["x"] = column_index * (win_w + config::window_snap) + config::window_snap;
             globals::window_positions[name]["y"] = y;
-
-            column_index++;
         }
     }
 
