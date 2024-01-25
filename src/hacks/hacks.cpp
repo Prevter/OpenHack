@@ -9,6 +9,7 @@
 #include "auto_safemode.h"
 #include "startpos_switch.h"
 #include "pickup_coins.h"
+#include "shortcuts.h"
 
 namespace hacks
 {
@@ -354,6 +355,7 @@ namespace hacks
         hacks.push_back(new AutoSafeMode());
         hacks.push_back(new StartposSwitcher());
         hacks.push_back(new PickupCoins());
+        hacks.push_back(new Shortcuts());
 
         for (auto &hack : hacks)
         {
