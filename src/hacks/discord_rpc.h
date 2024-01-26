@@ -3,8 +3,6 @@
 #include "hacks.h"
 #include <discord_rpc.h>
 
-#include "../bindings/GJGameLevel.h"
-
 namespace hacks
 {
     class DiscordRPC : public Hack
@@ -31,7 +29,7 @@ namespace hacks
         void deinitialize_discord();
 
         static DiscordRPC *get_instance();
-        static void change_state(State state, robtop::GJGameLevel *level = nullptr);
+        static void change_state(State state, GJGameLevel *level = nullptr);
 
     private:
         static DiscordRPC *instance;
@@ -41,7 +39,7 @@ namespace hacks
         float m_update_interval = 5.0f;
         DiscordEventHandlers m_handlers;
 
-        robtop::GJGameLevel *m_level = nullptr;
+        GJGameLevel *m_level = nullptr;
         State m_state = MENU;
 
         // Configurable options

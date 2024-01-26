@@ -2,8 +2,6 @@
 #include "../pch.h"
 #include "hacks.h"
 
-#include "../bindings/PlayLayer.h"
-
 namespace hacks
 {
     class PickupCoins : public Hack
@@ -22,13 +20,13 @@ namespace hacks
         bool is_enabled() { return m_enabled; }
 
         // hooks:
-        static void playLayer_init(robtop::PlayLayer *self, robtop::GJGameLevel *level);
-        static void playLayer_addObject(robtop::PlayLayer *self, robtop::GameObject *object);
-        static void playLayer_resetLevel(robtop::PlayLayer *self);
+        static void playLayer_init(PlayLayer *self, GJGameLevel *level);
+        static void playLayer_addObject(PlayLayer *self, GameObject *object);
+        static void playLayer_resetLevel(PlayLayer *self);
 
     private:
         static PickupCoins *instance;
         bool m_enabled = false;
-        std::vector<robtop::GameObject*> m_coin_objects;
+        std::vector<GameObject*> m_coin_objects;
     };
 }

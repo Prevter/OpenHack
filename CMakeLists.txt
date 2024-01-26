@@ -7,8 +7,17 @@ project(
 )
 
 # Set the C++ standard to C++17
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+
+if (NOT DEFINED ENV{GEODE_SDK})
+    message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
+else()
+    message(STATUS "Found Geode: $ENV{GEODE_SDK}")
+endif()
+
+add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
 # Configure the project.h file
 configure_file("src/project.h.in" "${CMAKE_BINARY_DIR}/project.h")
@@ -18,7 +27,7 @@ include_directories("${CMAKE_BINARY_DIR}")
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
 
 # Create the library
-add_library(OpenHack SHARED ${SOURCES} "src/injector/xinput.def")
+add_library(OpenHack SHARED ${SOURCES})
 
 # Set the output directory
 set_target_properties(OpenHack PROPERTIES
@@ -26,9 +35,6 @@ set_target_properties(OpenHack PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
 )
-
-# Set the output name
-set_target_properties(OpenHack PROPERTIES OUTPUT_NAME "xinput9_1_0")
 
 # Add libraries
 set(JSON_BuildTests OFF CACHE INTERNAL "")
@@ -39,8 +45,6 @@ set(GLEW_STATIC ON CACHE BOOL "" FORCE)
 add_subdirectory(libs/json)
 add_subdirectory(libs/minhook)
 add_subdirectory(libs/glfw)
-add_subdirectory(libs/cocos-headers)
-add_subdirectory(libs/spdlog)
 add_subdirectory(libs/discord-rpc)
 
 # Include STB
@@ -73,19 +77,17 @@ if(MSVC)
 endif()
 
 # Link libraries
-target_include_directories(OpenHack PRIVATE 
+target_include_directories(OpenHack PUBLIC
     libs/discord-rpc/include
-    libs/cocos-headers/cocos2dx/platform/third_party/win32
     libs/imgui_markdown
 )
-target_link_libraries(OpenHack PRIVATE
+target_link_libraries(OpenHack
     nlohmann_json::nlohmann_json
     minhook
-    cocos2d
     opengl32
     glfw
     imgui
-    spdlog::spdlog
     discord-rpc
-    ${CMAKE_SOURCE_DIR}/libs/libcurl.lib
 )
+
+setup_geode_mod(${PROJECT_NAME})

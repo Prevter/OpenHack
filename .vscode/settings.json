@@ -89,6 +89,10 @@
         "*.in": "cpp",
         "coroutine": "cpp",
         "complex": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "bitset": "cpp",
+        "cinttypes": "cpp",
+        "cwctype": "cpp",
+        "typeindex": "cpp"
     }
 }

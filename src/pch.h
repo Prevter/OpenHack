@@ -9,11 +9,8 @@
 #include <vector>
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
 
-#include <MinHook.h>
-#include <cocos-ext.h>
-#include <cocos2d.h>
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_win32.h>
@@ -28,3 +25,5 @@ using json = nlohmann::json;
 #include "project.h"
 
 #include "hacks/patterns.h"
+
+#include <Geode/Geode.hpp>

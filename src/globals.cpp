@@ -9,11 +9,9 @@ namespace globals
     bool animation_done;
     int random_direction;
     EaseInAnimation *animation_action;
-    bool is_december;
+    bool is_december = false;
     uint32_t blur_shader;
     ImFont *main_font, *title_font;
     ImVec4 current_color;
     char search[64] = {0};
-    updater::version_t latest_version;
-    bool show_update_popup;
 }

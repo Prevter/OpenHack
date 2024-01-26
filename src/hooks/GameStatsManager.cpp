@@ -1,36 +1,29 @@
-#include "hooks.h"
-#include "GameStatsManager.h"
-
+#include "../pch.h"
 #include "../hacks/hacks.h"
 
-namespace hooks::GameStatsManager
+#include <Geode/modify/GameStatsManager.hpp>
+
+namespace hooks
 {
-    hacks::ToggleComponent *musicUnlocker;
+    // hacks::ToggleComponent *musicUnlocker = nullptr;
 
-    bool(__thiscall *GameStatsManager_isItemUnlocked)(robtop::GameStatsManager *, int, int);
-    bool __fastcall isItemUnlocked_hook(robtop::GameStatsManager *self, int, int a, int b)
-    {
-        const bool ret = GameStatsManager_isItemUnlocked(self, a, b);
+    // struct GameStatsManagerHook : geode::Modify<GameStatsManagerHook, GameStatsManager>
+    // {
+    //     bool isItemUnlocked(UnlockType a, int b)
+    //     {
+    //         bool value = GameStatsManager::isItemUnlocked(a, b);
 
-        if (!musicUnlocker)
-        {
-            musicUnlocker = hacks::find_component<hacks::ToggleComponent>("level.music");
-        }
+    //         if (!musicUnlocker)
+    //         {
+    //             musicUnlocker = hacks::find_component<hacks::ToggleComponent>("level.music");
+    //         }
 
-        if (musicUnlocker->is_enabled() && a == 12 && b == 17)
-        {
-            return true;
-        }
+    //         // if (musicUnlocker && musicUnlocker->is_enabled() && a == UnlockType::GJItem && b == 17)
+    //         // {
+    //         //     return true;
+    //         // }
 
-        return ret;
-    }
-
-    void setup()
-    {
-        hooks::create_hook(
-            "GameStatsManager::isItemUnlocked",
-            robtop::GameStatsManager_isItemUnlocked,
-            (void *)isItemUnlocked_hook,
-            (void **)&GameStatsManager_isItemUnlocked);
-    }
+    //         return value;
+    //     }
+    // };
 }

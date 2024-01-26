@@ -1,33 +1,26 @@
-#include "hooks.h"
-#include "MenuLayer.h"
-
+#include "../pch.h"
 #include "../hacks/discord_rpc.h"
 
-namespace hooks::MenuLayer
+#include <Geode/modify/MenuLayer.hpp>
+
+namespace hooks
 {
-    bool(__thiscall *MenuLayer_init_o)(robtop::MenuLayer *self);
-    bool __fastcall init_hook(robtop::MenuLayer *self)
+    struct MenuLayerHook : geode::Modify<MenuLayerHook, MenuLayer>
     {
-        auto ret = MenuLayer_init_o(self);
-
-        // add snow in december
-        if (globals::is_december)
+        bool init()
         {
-            cocos2d::CCParticleSnow *snow = cocos2d::CCParticleSnow::createWithTotalParticles(700);
-            self->addChild(snow);
+            if (!MenuLayer::init())
+                return false;
+
+            if (globals::is_december)
+            {
+                cocos2d::CCParticleSnow *snow = cocos2d::CCParticleSnow::createWithTotalParticles(700);
+                this->addChild(snow);
+            }
+
+            hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::MENU);
+
+            return true;
         }
-
-        hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::MENU);
-
-        return ret;
     };
-
-    void setup()
-    {
-        hooks::create_hook(
-            "MenuLayer::init",
-            robtop::MenuLayer_init,
-            (void*)init_hook,
-            (void **)&MenuLayer_init_o);
-    }
 }

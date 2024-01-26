@@ -67,7 +67,7 @@ namespace hacks
         std::vector<opcode_t> opcodes;
 
         // Search for the pattern
-        auto &result = patterns::match(pattern, library, mask);
+        auto result = patterns::match(pattern, library, mask);
 
         // Check if the pattern was found
         if (result.found)

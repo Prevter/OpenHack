@@ -1,95 +1,56 @@
-#include "hooks.h"
-#include "PlayLayer.h"
+#include "../pch.h"
 
 #include "../hacks/discord_rpc.h"
 #include "../hacks/startpos_switch.h"
 #include "../hacks/pickup_coins.h"
 #include "../hacks/shortcuts.h"
 
-namespace hooks::PlayLayer
+#include <Geode/modify/PlayLayer.hpp>
+
+namespace hooks
 {
-    bool(__thiscall *PlayLayer_init)(robtop::PlayLayer *, robtop::GJGameLevel *, bool, bool);
-    bool __fastcall init_hook(robtop::PlayLayer *self, int edx, robtop::GJGameLevel *level, bool v1, bool v2)
+    struct PlayLayerHook : geode::Modify<PlayLayerHook, PlayLayer>
     {
-        hacks::PickupCoins::playLayer_init(self, level);
-        hacks::StartposSwitcher::playLayer_init(self, level);
-        hacks::Shortcuts::playLayer_init(self, level);
+        bool init(GJGameLevel *level, bool v1, bool v2)
+        {
+            hacks::PickupCoins::playLayer_init(this, level);
+            hacks::StartposSwitcher::playLayer_init(this, level);
+            hacks::Shortcuts::playLayer_init(this, level);
 
-        const bool ret = PlayLayer_init(self, level, v1, v2);
+            if (!PlayLayer::init(level, v1, v2))
+                return false;
 
-        hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::GAME, level);
-        hacks::StartposSwitcher::playLayer_lateInit(self);
+            hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::GAME, level);
+            hacks::StartposSwitcher::playLayer_lateInit(this);
 
-        return ret;
-    }
+            return true;
+        }
 
-    int(__thiscall *PlayLayer_onExit)(robtop::PlayLayer *);
-    int __fastcall onQuit_hook(robtop::PlayLayer *self)
-    {
-        const int ret = PlayLayer_onExit(self);
+        void onQuit()
+        {
+            hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::MENU);
+            PlayLayer::onQuit();
+        }
 
-        hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::MENU);
+        void resetLevel()
+        {
+            PlayLayer::resetLevel();
+            hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::GAME);
+            hacks::PickupCoins::playLayer_resetLevel(this);
+        }
 
-        return ret;
-    }
+        void addObject(GameObject *object)
+        {
+            PlayLayer::addObject(object);
 
-    void(__thiscall *PlayLayer_resetLevel)(robtop::PlayLayer *);
-    void __fastcall resetLevel_hook(robtop::PlayLayer *self)
-    {
-        PlayLayer_resetLevel(self);
+            hacks::StartposSwitcher::playLayer_addObject(this, object);
+            hacks::PickupCoins::playLayer_addObject(this, object);
+        }
 
-        hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::GAME);
-        hacks::PickupCoins::playLayer_resetLevel(self);
-    }
-
-    void(__thiscall *PlayLayer_addObject)(robtop::PlayLayer *, robtop::GameObject *);
-    void __fastcall addObject_hook(robtop::PlayLayer *self, int, robtop::GameObject *object)
-    {
-        PlayLayer_addObject(self, object);
-
-        hacks::StartposSwitcher::playLayer_addObject(self, object);
-        hacks::PickupCoins::playLayer_addObject(self, object);
-    }
-
-    void(__thiscall *PlayLayer_destructor)(robtop::PlayLayer *);
-    void __fastcall destructor_hook(robtop::PlayLayer *self)
-    {
-        hacks::StartposSwitcher::playLayer_destructor(self);
-        hacks::Shortcuts::playLayer_destructor(self);
-
-        PlayLayer_destructor(self);
-    }
-
-    void setup()
-    {
-        hooks::create_hook(
-            "PlayLayer::init",
-            robtop::PlayLayer_init,
-            (void *)init_hook,
-            (void **)&PlayLayer_init);
-
-        hooks::create_hook(
-            "PlayLayer::onExit",
-            robtop::PlayLayer_onExit,
-            (void *)onQuit_hook,
-            (void **)&PlayLayer_onExit);
-
-        hooks::create_hook(
-            "PlayLayer::resetLevel",
-            robtop::PlayLayer_resetLevel,
-            (void *)resetLevel_hook,
-            (void **)&PlayLayer_resetLevel);
-
-        hooks::create_hook(
-            "PlayLayer::addObject",
-            robtop::PlayLayer_addObject,
-            (void *)addObject_hook,
-            (void **)&PlayLayer_addObject);
-
-        hooks::create_hook(
-            "PlayLayer::~PlayLayer",
-            robtop::PlayLayer_destructor,
-            (void *)destructor_hook,
-            (void **)&PlayLayer_destructor);
-    }
+        void destructor()
+        {
+            hacks::StartposSwitcher::playLayer_destructor(this);
+            hacks::Shortcuts::playLayer_destructor(this);
+        }
+    };
 }

@@ -4,9 +4,6 @@
 [submodule "libs/minhook"]
 	path = libs/minhook
 	url = https://github.com/TsudaKageyu/minhook
-[submodule "libs/cocos-headers"]
-	path = libs/cocos-headers
-	url = https://github.com/HJfod/cocos-headers
 [submodule "libs/glfw"]
 	path = libs/glfw
 	url = https://github.com/glfw/glfw
@@ -22,6 +19,3 @@
 [submodule "libs/discord-rpc"]
 	path = libs/discord-rpc
 	url = https://github.com/discord/discord-rpc
-[submodule "libs/imgui_markdown"]
-	path = libs/imgui_markdown
-	url = https://github.com/juliettef/imgui_markdown

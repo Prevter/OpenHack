@@ -1,8 +1,6 @@
 #include "discord_rpc.h"
 #include "../menu/gui.h"
 
-#include "../bindings/bindings.h"
-
 namespace hacks
 {
     DiscordRPC *DiscordRPC::instance = nullptr;
@@ -106,23 +104,23 @@ namespace hacks
             str.replace(pos, value.length(), func());
     }
 
-    inline bool is_robtop_level(robtop::GJGameLevel *level)
+    inline bool is_robtop_level(GJGameLevel *level)
     {
         int id = level->m_levelID.value();
         return (id > 0 && id < 100) || (id >= 3001 && id <= 6000);
     }
 
-    inline const char *get_difficulty_asset(robtop::GJGameLevel *level)
+    inline const char *get_difficulty_asset(GJGameLevel *level)
     {
-        if (level->is_auto_level())
+        if (level->m_autoLevel)
             return "auto";
 
         if (level->m_ratingsSum != 0)
-            level->m_difficulty = static_cast<robtop::GJDifficulty>(level->m_ratingsSum / 10);
+            level->m_difficulty = static_cast<GJDifficulty>(level->m_ratingsSum / 10);
 
-        if (level->is_demon())
+        if (level->m_demon)
         {
-            switch (level->get_demon_difficulty())
+            switch (level->m_demonDifficulty)
             {
             case 3:
                 return "easy_demon";
@@ -140,17 +138,17 @@ namespace hacks
 
         switch (level->m_difficulty)
         {
-        case robtop::GJDifficulty::kGJDifficultyEasy:
+        case GJDifficulty::Easy:
             return "easy";
-        case robtop::GJDifficulty::kGJDifficultyNormal:
+        case GJDifficulty::Normal:
             return "normal";
-        case robtop::GJDifficulty::kGJDifficultyHard:
+        case GJDifficulty::Hard:
             return "hard";
-        case robtop::GJDifficulty::kGJDifficultyHarder:
+        case GJDifficulty::Harder:
             return "harder";
-        case robtop::GJDifficulty::kGJDifficultyInsane:
+        case GJDifficulty::Insane:
             return "insane";
-        case robtop::GJDifficulty::kGJDifficultyDemon:
+        case GJDifficulty::Demon:
             return "hard_demon";
         default:
             return "na";
@@ -159,12 +157,12 @@ namespace hacks
         return "na";
     }
 
-    inline bool is_platformer(robtop::GJGameLevel *level)
+    inline bool is_platformer(GJGameLevel *level)
     {
-        return level->get_length() == 5;
+        return level->m_levelLength == 5;
     }
 
-    void DiscordRPC::change_state(State state, robtop::GJGameLevel *level)
+    void DiscordRPC::change_state(State state, GJGameLevel *level)
     {
         if (!instance)
             return;
@@ -192,24 +190,24 @@ namespace hacks
             replace_lambda(state, "{name}", []()
                            { return instance->m_level->m_levelName; });
             replace_lambda(state, "{author}", []()
-                           { return is_robtop_level(instance->m_level) ? std::string("RobTop") : instance->m_level->m_creatorName; });
+                           { return std::string(is_robtop_level(instance->m_level) ? "RobTop" : instance->m_level->m_creatorName); });
             replace_lambda(state, "{stars}", []()
-                           { return std::to_string(instance->m_level->get_stars()); });
+                           { return std::to_string(instance->m_level->m_stars.value()); });
             replace_lambda(state, "{id}", []()
                            { return std::to_string(instance->m_level->m_levelID.value()); });
             replace_lambda(state, "{best}", []()
-                           { return std::to_string(instance->m_level->get_normal_percent()); });
+                           { return std::to_string(instance->m_level->m_normalPercent.value()); });
 
             replace_lambda(detail, "{name}", []()
                            { return instance->m_level->m_levelName; });
             replace_lambda(detail, "{author}", []()
-                           { return is_robtop_level(instance->m_level) ? std::string("RobTop") : instance->m_level->m_creatorName; });
+                           { return std::string(is_robtop_level(instance->m_level) ? "RobTop" : instance->m_level->m_creatorName); });
             replace_lambda(detail, "{stars}", []()
-                           { return std::to_string(instance->m_level->get_stars()); });
+                           { return std::to_string(instance->m_level->m_stars.value()); });
             replace_lambda(detail, "{id}", []()
                            { return std::to_string(instance->m_level->m_levelID.value()); });
             replace_lambda(detail, "{best}", []()
-                           { return std::to_string(instance->m_level->get_normal_percent()); });
+                           { return std::to_string(instance->m_level->m_normalPercent.value()); });
 
             strcpy_s(instance->m_current_detail, detail.c_str());
             strcpy_s(instance->m_current_state, state.c_str());
@@ -217,7 +215,7 @@ namespace hacks
             strcpy_s(
                 instance->m_current_small_text,
                 fmt::format("{} {}",
-                            instance->m_level->get_stars(),
+                            instance->m_level->m_stars.value(),
                             is_platformer(instance->m_level) ? "🌙" : "⭐")
                     .c_str());
         }

@@ -1,29 +1,17 @@
 #include "utils.h"
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <map>
+#include <Windows.h>
 #include <vector>
 #include <algorithm>
 #include <shlobj.h>
 #include <shellapi.h>
 
-#include <curl/curl.h>
 #include "logger.h"
 #include "hook.h"
 
 namespace utils
 {
-    uintptr_t base_addr, cocos_addr;
-    bool is_2_200;
-
-    void init()
-    {
-        base_addr = (uintptr_t)GetModuleHandleA(NULL);
-        cocos_addr = (uintptr_t)GetModuleHandleA("libcocos2d.dll");
-        is_2_200 = compare_version("=2.200");
-    }
-
     void set_console_title(const char *title)
     {
         SetConsoleTitleA(title);
@@ -50,34 +38,11 @@ namespace utils
         ShellExecuteA(NULL, "open", path, NULL, NULL, SW_SHOWNORMAL);
     }
 
-    std::map<uint32_t, std::string> versions_map = {
-        {1419173053, "1.900"},
-        {1419880840, "1.910"},
-        {1421745341, "1.920"},
-        {1440638199, "2.000"},
-        {1440643927, "2.001"},
-        {1443053232, "2.010"},
-        {1443077847, "2.011"},
-        {1443077847, "2.020"},
-        {1484612867, "2.100"},
-        {1484626658, "2.101"},
-        {1484737207, "2.102"},
-        {1510526914, "2.110"},
-        {1510538091, "2.111"},
-        {1510619253, "2.112"},
-        {1511220108, "2.113"},
-        {1702921605, "2.200"},
-        {1704582672, "2.201"},
-        {1704601266, "2.202"},
-        {1704948277, "2.203"},
-        {1705041028, "2.204"},
-    };
-
-    char *game_version = NULL;
+    char game_version[6] = {0};
 
     const char *get_game_version()
     {
-        if (game_version != NULL)
+        if (game_version[0] != 0)
             return game_version;
 
         HMODULE module = GetModuleHandleA(NULL);
@@ -85,7 +50,7 @@ namespace utils
 
         if (dos_header->e_magic != IMAGE_DOS_SIGNATURE)
         {
-            game_version = "unknown";
+            strcpy(game_version, "?.???");
             return game_version;
         }
 
@@ -93,16 +58,41 @@ namespace utils
 
         if (nt_headers->Signature != IMAGE_NT_SIGNATURE)
         {
-            game_version = "unknown";
+            strcpy(game_version, "?.???");
             return game_version;
         }
 
+        std::map<uint32_t, std::string> versions_map = {
+            {1419173053, "1.900"},
+            {1419880840, "1.910"},
+            {1421745341, "1.920"},
+            {1440638199, "2.000"},
+            {1440643927, "2.001"},
+            {1443053232, "2.010"},
+            {1443077847, "2.011"},
+            {1443077847, "2.020"},
+            {1484612867, "2.100"},
+            {1484626658, "2.101"},
+            {1484737207, "2.102"},
+            {1510526914, "2.110"},
+            {1510538091, "2.111"},
+            {1510619253, "2.112"},
+            {1511220108, "2.113"},
+            {1702921605, "2.200"},
+            {1704582672, "2.201"},
+            {1704601266, "2.202"},
+            {1704948277, "2.203"},
+            {1705041028, "2.204"},
+        };
+
         uint32_t timestamp = nt_headers->FileHeader.TimeDateStamp;
-        auto version = versions_map.find(timestamp);
-        if (version != versions_map.end())
+        for (auto &version : versions_map)
         {
-            game_version = (char *)version->second.c_str();
-            return game_version;
+            if (version.first == timestamp)
+            {
+                strcpy(game_version, version.second.c_str());
+                return game_version;
+            }
         }
 
         // check if larger than latest version
@@ -129,14 +119,13 @@ namespace utils
             last++;
             version[1] = std::to_string(last);
 
-            if (game_version != NULL)
-                delete game_version;
-            game_version = new char[version[0].length() + version[1].length() + 2];
-            sprintf(game_version, "%s.%s", version[0].c_str(), version[1].c_str());
+            // join by dot
+            std::string new_version = fmt::format("{}.{}", version[0], version[1]);
+            strcpy(game_version, new_version.c_str());
             return game_version;
         }
 
-        game_version = "unknown";
+        strcpy(game_version, "?.???");
         return game_version;
     }
 
@@ -467,128 +456,5 @@ namespace utils
         }
 
         return 0;
-    }
-
-    size_t write_callback(void *contents, size_t size, size_t nmemb, std::string *output)
-    {
-        output->append((char *)contents, size * nmemb);
-        return size * nmemb;
-    }
-
-    bool curl_initialized = false;
-
-    std::string get_request(const char *url)
-    {
-        if (!curl_initialized)
-        {
-            curl_global_init(CURL_GLOBAL_ALL);
-            curl_initialized = true;
-        }
-
-        CURL *curl;
-        CURLcode res;
-        std::string readBuffer;
-
-        curl = curl_easy_init();
-        if (curl)
-        {
-            curl_easy_setopt(curl, CURLOPT_URL, url);
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, utils::write_callback);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-            curl_easy_setopt(curl, CURLOPT_USERAGENT, "openhack");
-            curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-
-            res = curl_easy_perform(curl);
-            if (res != CURLE_OK)
-            {
-                L_ERROR("curl_easy_perform() failed: {}", curl_easy_strerror(res));
-            }
-
-            curl_easy_cleanup(curl);
-        }
-
-        return readBuffer;
-    }
-
-    struct progress_data
-    {
-        float *progress;
-        CURL *curl;
-        std::ofstream *file;
-    };
-
-    size_t write_callback_progress(void *contents, size_t size, size_t nmemb, progress_data *data)
-    {
-        data->file->write((char *)contents, size * nmemb);
-        if (data->progress != nullptr)
-        {
-            double dltotal = 0;
-            double dlnow = 0;
-            curl_easy_getinfo(data->curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &dltotal);
-            curl_easy_getinfo(data->curl, CURLINFO_SIZE_DOWNLOAD, &dlnow);
-            *data->progress = (float)(dlnow / dltotal);
-        }
-        return size * nmemb;
-    }
-
-    bool download_file(const char *url, const char *path, float *progress)
-    {
-        if (!curl_initialized)
-        {
-            curl_global_init(CURL_GLOBAL_ALL);
-            curl_initialized = true;
-        }
-
-        CURL *curl;
-        CURLcode res;
-        std::ofstream file(path, std::ios::binary);
-
-        curl = curl_easy_init();
-        if (curl)
-        {
-            progress_data data;
-            data.progress = progress;
-            data.curl = curl;
-            data.file = &file;
-
-            curl_easy_setopt(curl, CURLOPT_URL, url);
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, utils::write_callback_progress);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
-            curl_easy_setopt(curl, CURLOPT_USERAGENT, "openhack");
-            curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-
-            res = curl_easy_perform(curl);
-            if (res != CURLE_OK)
-            {
-                L_ERROR("curl_easy_perform() failed: {}", curl_easy_strerror(res));
-                curl_easy_cleanup(curl);
-                file.close();
-                return false;
-            }
-
-            curl_easy_cleanup(curl);
-        }
-
-        file.close();
-
-        return true;
-    }
-
-    void extract_zip(const char *zip_path, const char *output_path)
-    {
-        std::string command = "powershell -Command \"Expand-Archive -Path '";
-        command += zip_path;
-        command += "' -DestinationPath '";
-        command += output_path;
-        command += "' -Force\"";
-        system(command.c_str());
     }
 }

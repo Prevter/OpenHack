@@ -12,35 +12,6 @@ namespace hacks
     void save(nlohmann::json *data);
     void load(nlohmann::json *data);
 
-    template <typename T>
-    T *find_hack(std::string id)
-    {
-        for (auto hack : hacks)
-        {
-            if (hack->get_id() == id)
-            {
-                return (T *)hack;
-            }
-        }
-        return nullptr;
-    }
-
-    template <typename T>
-    T *find_component(std::string id)
-    {
-        for (auto window : windows)
-        {
-            for (auto component : window.get_components())
-            {
-                if (component->get_id() == id)
-                {
-                    return (T *)component;
-                }
-            }
-        }
-        return nullptr;
-    }
-
     struct opcode_t
     {
         void *address;
@@ -195,4 +166,33 @@ namespace hacks
 
     extern std::vector<Window> windows;
     extern std::vector<ToggleComponent *> all_hacks;
+
+    template <typename T>
+    T *find_hack(std::string id)
+    {
+        for (auto hack : hacks)
+        {
+            if (hack->get_id() == id)
+            {
+                return (T *)hack;
+            }
+        }
+        return nullptr;
+    }
+
+    template <typename T>
+    T *find_component(std::string id)
+    {
+        for (auto window : windows)
+        {
+            for (auto component : window.get_components())
+            {
+                if (component->get_id() == id)
+                {
+                    return (T *)component;
+                }
+            }
+        }
+        return nullptr;
+    }
 }

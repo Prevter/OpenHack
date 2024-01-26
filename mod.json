@@ -1,0 +1,14 @@
+{
+	"geode": "2.0.0-beta.9",
+	"gd": "2.204",
+	"version": "v1.6.0",
+	"id": "prevter.openhack",
+	"name": "OpenHack",
+	"developer": "Prevter",
+	"description": "Official port of OpenHack modmenu for Geode",
+	"repository": "https://github.com/Prevter/GDOpenHack/tree/geode",
+	"issues": {
+		"info": "Join the Discord server for support",
+		"url": "https://discord.gg/HaHn7RSJ4Q"
+	}
+}

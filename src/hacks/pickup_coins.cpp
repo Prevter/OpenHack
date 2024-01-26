@@ -50,7 +50,7 @@ namespace hacks
         return false;
     }
 
-    void PickupCoins::playLayer_init(robtop::PlayLayer *self, robtop::GJGameLevel *level)
+    void PickupCoins::playLayer_init(PlayLayer *self, GJGameLevel *level)
     {
         if (!instance)
             return;
@@ -58,19 +58,19 @@ namespace hacks
         instance->m_coin_objects.clear();
     }
 
-    void PickupCoins::playLayer_addObject(robtop::PlayLayer *self, robtop::GameObject *object)
+    void PickupCoins::playLayer_addObject(PlayLayer *self, GameObject *object)
     {
         if (!instance)
             return;
 
-        uint32_t id = object->get_id();
+        uint32_t id = object->m_objectID;
         if (id == 142 || id == 1329)
         {
             instance->m_coin_objects.push_back(object);
         }
     }
 
-    void PickupCoins::playLayer_resetLevel(robtop::PlayLayer *self)
+    void PickupCoins::playLayer_resetLevel(PlayLayer *self)
     {
         if (!instance || !instance->m_enabled)
             return;
@@ -80,7 +80,7 @@ namespace hacks
             if (coin == nullptr)
                 continue;
 
-            self->pickupCoin(coin);
+            // self->pickupCoin(coin);
             self->destroyObject(coin);
         }
     }

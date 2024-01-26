@@ -41,15 +41,15 @@ namespace hacks
 
         m_current_index = index;
 
-        m_play_layer->set_startPosCheckpoint(0);
+        // m_play_layer->set_startPosCheckpoint(0);
 
         if (m_current_index >= 0)
             m_play_layer->setStartPosObject(m_startpos_objects[m_current_index]);
         else
             m_play_layer->setStartPosObject(nullptr);
 
-        if (m_play_layer->isPracticeMode())
-            m_play_layer->removeAllCheckpoints();
+        // if (m_play_layer->m_isPracticeMode)
+        //     m_play_layer->removeAllCheckpoints();
 
         m_play_layer->resetLevel();
         m_play_layer->startMusic();
@@ -112,7 +112,7 @@ namespace hacks
         return false;
     }
 
-    void StartposSwitcher::playLayer_init(robtop::PlayLayer *self, robtop::GJGameLevel *level)
+    void StartposSwitcher::playLayer_init(PlayLayer *self, GJGameLevel *level)
     {
         if (!instance || !instance->m_enabled)
             return;
@@ -121,7 +121,7 @@ namespace hacks
         instance->m_play_layer = self;
     }
 
-    void StartposSwitcher::playLayer_lateInit(robtop::PlayLayer *self)
+    void StartposSwitcher::playLayer_lateInit(PlayLayer *self)
     {
         if (!instance || !instance->m_enabled)
             return;
@@ -130,9 +130,9 @@ namespace hacks
         std::sort(
             instance->m_startpos_objects.begin(),
             instance->m_startpos_objects.end(),
-            [](robtop::GameObject *a, robtop::GameObject *b)
+            [](GameObject *a, GameObject *b)
             {
-                return a->get_x() < b->get_x();
+                return a->m_startPosition.x < b->m_startPosition.x;
             });
 
         size_t startpos_count = instance->m_startpos_objects.size();
@@ -149,7 +149,7 @@ namespace hacks
         // instance->m_play_layer->addChild(instance->m_label);
     }
 
-    void StartposSwitcher::playLayer_destructor(robtop::PlayLayer *self)
+    void StartposSwitcher::playLayer_destructor(PlayLayer *self)
     {
         if (!instance)
             return;
@@ -158,15 +158,14 @@ namespace hacks
         instance->m_startpos_objects.clear();
     }
 
-    void StartposSwitcher::playLayer_addObject(robtop::PlayLayer *self, robtop::GameObject *object)
+    void StartposSwitcher::playLayer_addObject(PlayLayer *self, GameObject *object)
     {
         if (!instance || !instance->m_enabled)
             return;
 
-        if (object->get_id() == 31)
+        if (object->m_objectID == 31)
         {
-            instance->m_startpos_objects.push_back(object);
-            robtop::StartPosObject *startpos = (robtop::StartPosObject *)object;
+            instance->m_startpos_objects.push_back((StartPosObject *)object);
         }
     }
 }

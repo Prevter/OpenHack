@@ -2,8 +2,6 @@
 #include "../pch.h"
 #include "hacks.h"
 
-#include "../bindings/PlayLayer.h"
-
 namespace hacks
 {
     class StartposSwitcher : public Hack
@@ -22,16 +20,16 @@ namespace hacks
         void choose_start_pos(int32_t index);
 
         // hooks:
-        static void playLayer_init(robtop::PlayLayer *self, robtop::GJGameLevel *level);
-        static void playLayer_lateInit(robtop::PlayLayer *self);
-        static void playLayer_destructor(robtop::PlayLayer *self);
-        static void playLayer_addObject(robtop::PlayLayer *self, robtop::GameObject *object);
+        static void playLayer_init(PlayLayer *self, GJGameLevel *level);
+        static void playLayer_lateInit(PlayLayer *self);
+        static void playLayer_destructor(PlayLayer *self);
+        static void playLayer_addObject(PlayLayer *self, GameObject *object);
 
     private:
         static StartposSwitcher *instance;
 
-        robtop::PlayLayer *m_play_layer = nullptr;
-        std::vector<robtop::GameObject *> m_startpos_objects;
+        PlayLayer *m_play_layer = nullptr;
+        std::vector<StartPosObject *> m_startpos_objects;
 
         cocos2d::CCLabelBMFont *m_label = nullptr;
 

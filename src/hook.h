@@ -11,7 +11,9 @@ namespace hook
     void set_menu_draw_callback(void (*callback)());
     void set_menu_init_callback(void (*callback)());
 
-    void try_bind_method(std::string name, void *method, void **original, std::string pattern, std::string library = "");
+    void on_draw(cocos2d::CCEGLView *self);
+    void on_update(cocos2d::CCEGLView *self);
+    void uninitialize();
 
     extern bool lock_inputs;
     extern HWND window_handle;

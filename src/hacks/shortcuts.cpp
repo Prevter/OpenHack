@@ -4,7 +4,7 @@
 
 namespace hacks
 {
-    robtop::PlayLayer *Shortcuts::play_layer = nullptr;
+    PlayLayer *Shortcuts::play_layer = nullptr;
 
     Shortcuts::Shortcuts() {}
     void Shortcuts::init() {}
@@ -19,9 +19,9 @@ namespace hacks
 
     void open_options()
     {
-        // auto layer = robtop::OptionsLayer::create();
-        // cocos2d::CCDirector::sharedDirector()->getRunningScene()->addChild(layer);
-        // layer->showLayer(false);
+        auto layer = OptionsLayer::create();
+        cocos2d::CCDirector::sharedDirector()->getRunningScene()->addChild(layer);
+        layer->showLayer(false);
     }
 
     void restart_level()
@@ -36,8 +36,8 @@ namespace hacks
         auto play_layer = Shortcuts::get_play_layer();
         if (play_layer)
         {
-            bool is_practice = play_layer->isPracticeMode();
-            play_layer->togglePracticeMode(!is_practice);
+            // bool is_practice = play_layer->is_practice();
+            // play_layer->togglePracticeMode(!is_practice);
         }
     }
 
@@ -58,7 +58,7 @@ namespace hacks
         gui::Begin("Shortcuts");
 
         // Options
-        // create_button("shortcuts.options", "Show Options", open_options);
+        create_button("shortcuts.options", "Show Options", open_options);
 
         // Gameplay
         create_button("shortcuts.restart", "Restart Level", restart_level);
@@ -105,12 +105,12 @@ namespace hacks
         return false;
     }
 
-    void Shortcuts::playLayer_init(robtop::PlayLayer *self, robtop::GJGameLevel *level)
+    void Shortcuts::playLayer_init(PlayLayer *self, GJGameLevel *level)
     {
         play_layer = self;
     }
 
-    void Shortcuts::playLayer_destructor(robtop::PlayLayer *self)
+    void Shortcuts::playLayer_destructor(PlayLayer *self)
     {
         play_layer = nullptr;
     }

@@ -1,5 +1,6 @@
 #include "menu.h"
 
+#include "../hook.h"
 #include "../config.h"
 #include "../hacks/hacks.h"
 #include "animation.h"
@@ -199,70 +200,6 @@ namespace menu
         }
     }
 
-    void LinkCallback(ImGui::MarkdownLinkCallbackData data_)
-    {
-        cocos2d::CCApplication::sharedApplication()->openURL(data_.link);
-    }
-
-    float *download_progress = nullptr;
-
-    void draw_update_popup()
-    {
-        gui::BeginPrompt("Update available!", &globals::show_update_popup);
-
-        gui::ImText("A new version of " PROJECT_NAME " is available!");
-        gui::ImText("Your version: %s", PROJECT_VERSION);
-
-        gui::ImText("Latest version: %s", globals::latest_version.version.c_str());
-
-        std::string content = "# " + globals::latest_version.title + "\n" + globals::latest_version.changelog;
-
-        ImGui::MarkdownConfig md_config;
-        md_config.linkCallback = LinkCallback;
-        md_config.tooltipCallback = nullptr;
-        md_config.imageCallback = nullptr;
-        md_config.userData = nullptr;
-        md_config.headingFormats[0] = {globals::title_font, true};
-        md_config.headingFormats[1] = {globals::title_font, false};
-        md_config.headingFormats[2] = {globals::main_font, false};
-
-        ImGui::Markdown(
-            content.c_str(),
-            content.length(),
-            md_config);
-
-        if (download_progress)
-        {
-            if (*download_progress == 1)
-            {
-                gui::ImText("Installing update...");
-            }
-            else
-            {
-                gui::ImProgressBar(*download_progress);
-            }
-        }
-        else
-        {
-            if (gui::ImButton("Download"))
-            {
-                download_progress = new float;
-                updater::install_update(globals::latest_version.download.c_str(), download_progress);
-            }
-
-            if (gui::ImButton("Close"))
-                globals::show_update_popup = false;
-        }
-
-        // tint background to make it darker
-        ImGui::GetBackgroundDrawList()->AddRectFilled(
-            ImVec2(0, 0),
-            ImGui::GetIO().DisplaySize,
-            IM_COL32(0, 0, 0, 100));
-
-        gui::End();
-    }
-
     void draw()
     {
         auto &io = ImGui::GetIO();
@@ -288,14 +225,6 @@ namespace menu
 
         hacks::update();
         keybinds::update();
-
-        if (globals::show_update_popup)
-        {
-            if (!menu_open)
-                set_styles();
-
-            draw_update_popup();
-        }
 
         if (!menu_open)
             return;
@@ -384,6 +313,8 @@ namespace menu
 
     void init()
     {
+        hook::set_menu_hotkey(config::menu_hotkey);
+
         srand((uint32_t)time(NULL));
 
         // Initialize ImGui

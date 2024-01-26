@@ -1,14 +1,10 @@
 #pragma once
 #include <string>
+#include <stdint.h>
+#include <map>
 
 namespace utils
 {
-    extern uintptr_t base_addr;
-    extern uintptr_t cocos_addr;
-    extern bool is_2_200;
-
-    void init();
-
     void set_console_title(const char *title);
 
     std::string get_current_directory();
@@ -23,9 +19,4 @@ namespace utils
     const char *get_game_version();
 
     bool compare_version(const char *version_filter);
-
-    std::string get_request(const char *url);
-    bool download_file(const char *url, const char *path, float *progress = nullptr);
-
-    void extract_zip(const char *zip_path, const char *output_path);
 }

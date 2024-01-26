@@ -2,8 +2,6 @@
 #include "../menu/gui.h"
 #include "../menu/keybinds.h"
 
-#include "../bindings/bindings.h"
-
 #define MIN_FPS 30.f
 
 namespace hacks
@@ -47,7 +45,9 @@ namespace hacks
             if (m_fps < MIN_FPS)
                 m_fps = MIN_FPS;
 
-            robtop::GameManager::sharedState()->setFps((float)m_fps);
+            auto gameManager = GameManager::sharedState();
+            gameManager->m_customFPSTarget = m_fps;
+            gameManager->updateCustomFPS();
             update_framerate();
         }
         gui::PopWidth();
@@ -57,7 +57,7 @@ namespace hacks
             "display.fps_unlock", "FPS Unlock", &m_fps_unlock,
             [this]()
             {
-                robtop::GameManager::sharedState()->setGameVariable("0116", m_fps_unlock);
+                GameManager::sharedState()->setGameVariable("0116", m_fps_unlock);
                 update_framerate();
             },
             WINDOW_WIDTH / 2);
@@ -66,34 +66,34 @@ namespace hacks
             "display.vsync", "Vertical Sync", &m_vsync,
             [this]()
             {
-                robtop::GameManager::sharedState()->setGameVariable("0030", m_vsync);
+                GameManager::sharedState()->setGameVariable("0030", m_vsync);
                 update_framerate();
             });
 
-        // if (gui::ImToggleButton("Show FPS", &m_show_fps))
-        // {
-        //     robtop::GameManager::sharedState()->setGameVariable("0115", m_show_fps);
-        //     auto director = cocos2d::CCDirector::sharedDirector();
-        //     robtop::CCDirector_toggleShowFPS(director, m_show_fps, nullptr, cocos2d::CCPoint(0, 0));
-        // }
+        if (gui::ImToggleButton("Show FPS", &m_show_fps))
+        {
+            GameManager::sharedState()->setGameVariable("0115", m_show_fps);
+            cocos2d::CCDirector::sharedDirector()->toggleShowFPS(m_show_fps, "", {0.f, 0.f});
+        }
 
-        // if (gui::ImToggleButton("Fullscreen", &m_fullscreen))
-        // {
-        //     robtop::GameManager::sharedState()->setGameVariable("0029", m_fullscreen);
-        // }
+        if (gui::ImToggleButton("Fullscreen", &m_fullscreen))
+        {
+            GameManager::sharedState()->setGameVariable("0029", m_fullscreen);
+            cocos2d::CCApplication::sharedApplication()->setFullscreen(m_fullscreen);
+        }
 
         gui::End();
     }
 
     void DisplayHack::update()
     {
-        if (!initialized && robtop::GameManager_sharedState_h && robtop::GameManager_getGameVariable_h && robtop::GameManager_setGameVariable_h)
+        if (!initialized)
         {
             initialized = true;
 
             // get initial values
-            auto gameManager = robtop::GameManager::sharedState();
-            m_fps = gameManager->getFps();
+            auto gameManager = GameManager::sharedState();
+            m_fps = gameManager->m_customFPSTarget;
             m_fullscreen = gameManager->getGameVariable("0029");
             m_vsync = gameManager->getGameVariable("0030");
             m_show_fps = gameManager->getGameVariable("0115");
@@ -115,8 +115,7 @@ namespace hacks
         {
             keybind->callback = [this]()
             {
-                m_fps_unlock = !m_fps_unlock;
-                robtop::GameManager::sharedState()->setGameVariable("0116", m_fps_unlock);
+                GameManager::sharedState()->setGameVariable("0116", m_fps_unlock);
                 update_framerate();
             };
             return true;
@@ -125,8 +124,7 @@ namespace hacks
         {
             keybind->callback = [this]()
             {
-                m_vsync = !m_vsync;
-                robtop::GameManager::sharedState()->setGameVariable("0030", m_vsync);
+                GameManager::sharedState()->setGameVariable("0030", m_vsync);
                 update_framerate();
             };
             return true;
