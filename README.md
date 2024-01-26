@@ -3,6 +3,7 @@
 ![GitHub](https://img.shields.io/github/license/prevter/gdopenhack)
 ![GitHub issues](https://img.shields.io/github/issues/prevter/gdopenhack)
 [![Discord](https://img.shields.io/discord/1195179573122445312?label=discord&logo=discord)](https://discord.gg/HaHn7RSJ4Q)
+[!["Buy Me A Coffee"](https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/prevter)
 
 <div align="center">
     <img src="docs/screenshot.png" alt="Screenshot">
@@ -28,7 +29,9 @@
 - [Acknowledgements](#acknowledgements)
 
 ## About
-Yet another Geometry Dash modded client! I've been using [GDMegaOverlay](https://github.com/maxnut/GDMegaOverlay) for quite some time, but because it has been archived after the release of 2.2, I decided to make my own modded client. Project is still in early stages, so expect bugs and crashes, but I'm working on it! Be sure to check out the [issues](https://github.com/prevter/gdopenhack/issues) page for known issues and planned features (and feel free to leave your own suggestions).
+Yet another Geometry Dash modded client! Has almost everything you'll need, with features being constantly added.
+
+Please visit the [issues](https://github.com/prevter/gdopenhack/issues) page for known issues and planned features (and feel free to leave your own suggestions).
 
 Main goal of this project is primarily me getting more experience with C++ and game hacking, but I also needed a modded client for myself, sharing it with others in the process as well.
 
@@ -41,9 +44,9 @@ Main goal of this project is primarily me getting more experience with C++ and g
 - [x] Auto-updater
 - [x] Discord Rich Presence
 - [x] Keybinds
+- [x] StartPos Switcher
 
 Planned:
-- [ ] StartPos switcher
 - [ ] Macro recorder
 - [ ] More hacks
 
