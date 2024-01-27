@@ -2,9 +2,11 @@
 #include "menu/menu.h"
 #include "hacks/hacks.h"
 
-#define WRAP_HOOK(hook)                                 \
-    if (!(hook).isOk())                                 \
-    {                                                   \
+#include <MinHook.h>
+
+#define WRAP_HOOK(hook)                              \
+    if (!(hook).isOk())                              \
+    {                                                \
         L_ERROR("Failed to hook: {}", (hook).err()); \
     }
 
@@ -184,25 +186,54 @@ namespace hook
         self->pollEvents();
     }
 
-    void toggleFullScreen_hook(cocos2d::CCEGLView *self, void *, bool fullscreen, bool borderless)
+    // Helper method for creating hooks with debug logging
+    void try_bind_method(const char *name, void *method, void **original, const char *pattern, const char *library)
+    {
+        uintptr_t address = patterns::find_pattern(pattern, library);
+        if (address)
+        {
+            MH_CreateHook((void *)address, method, original);
+        }
+        else
+        {
+            L_ERROR("Failed to find {} pattern", name);
+        }
+    }
+
+    void(__thiscall *CCEGLView_toggleFullScreen)(cocos2d::CCEGLView *, bool, bool);
+    void __fastcall toggleFullScreen_hook(cocos2d::CCEGLView *self, void *, bool fullscreen, bool borderless)
     {
         uninitialize();
-        self->toggleFullScreen(fullscreen, borderless);
+        CCEGLView_toggleFullScreen(self, fullscreen, borderless);
+    }
+
+    void(__thiscall *AppDelegate_applicationWillEnterForeground)(void *);
+    void __fastcall AppDelegate_applicationWillEnterForeground_hook(void *self)
+    {
+        AppDelegate_applicationWillEnterForeground(self);
+        ImGui::GetIO().ClearInputKeys();
     }
 
     // Hooking
     void init()
     {
+        MH_Initialize();
         auto cocos_handle = GetModuleHandleA("libcocos2d.dll");
         auto toggleFullScreenSign = "?toggleFullScreen@CCEGLView@cocos2d@@QAEX_N0@Z";
         auto pollEventsSign = "?pollEvents@CCEGLView@cocos2d@@QAEXXZ";
 
         // Hook CCEGLView::toggleFullScreenSign
-        WRAP_HOOK(geode::Mod::get()->hook(
-            reinterpret_cast<void *>(GetProcAddress(cocos_handle, toggleFullScreenSign)),
-            &toggleFullScreen_hook,
-            "cocos2d::CCEGLView::toggleFullScreen",
-            tulip::hook::TulipConvention::Thiscall))
+        auto toggleFullScreenAddr = reinterpret_cast<void *>(GetProcAddress(cocos_handle, toggleFullScreenSign));
+        MH_CreateHook(toggleFullScreenAddr,
+                      &toggleFullScreen_hook,
+                      reinterpret_cast<void **>(&CCEGLView_toggleFullScreen));
+        MH_EnableHook(toggleFullScreenAddr);
+
+        try_bind_method(
+            "ApplicationWillEnterForeground",
+            AppDelegate_applicationWillEnterForeground_hook,
+            (void **)&AppDelegate_applicationWillEnterForeground,
+            "538B1D????5657FFD38BC88B10");
 
         // Hook CCEGLView::pollEvents
         WRAP_HOOK(geode::Mod::get()->hook(
