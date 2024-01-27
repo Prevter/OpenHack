@@ -70,17 +70,17 @@ namespace hacks
                 update_framerate();
             });
 
-        if (gui::ImToggleButton("Show FPS", &m_show_fps))
-        {
-            GameManager::sharedState()->setGameVariable("0115", m_show_fps);
-            cocos2d::CCDirector::sharedDirector()->toggleShowFPS(m_show_fps, "", {0.f, 0.f});
-        }
+        // if (gui::ImToggleButton("Show FPS", &m_show_fps))
+        // {
+        //     GameManager::sharedState()->setGameVariable("0115", m_show_fps);
+        //     cocos2d::CCDirector::sharedDirector()->toggleShowFPS(m_show_fps, "", {0.f, 0.f});
+        // }
 
-        if (gui::ImToggleButton("Fullscreen", &m_fullscreen))
-        {
-            GameManager::sharedState()->setGameVariable("0029", m_fullscreen);
-            cocos2d::CCApplication::sharedApplication()->setFullscreen(m_fullscreen);
-        }
+        // if (gui::ImToggleButton("Fullscreen", &m_fullscreen))
+        // {
+        //     GameManager::sharedState()->setGameVariable("0029", m_fullscreen);
+        //     cocos2d::CCApplication::sharedApplication()->setFullscreen(m_fullscreen);
+        // }
 
         gui::End();
     }
