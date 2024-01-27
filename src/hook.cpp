@@ -218,7 +218,7 @@ namespace hook
         WRAP_HOOK(geode::Mod::get()->hook(
             reinterpret_cast<void *>(GetProcAddress(cocos_handle, toggleFullScreenSign)),
             &toggleFullScreen_hook,
-            "cocos2d::CCEGLView::toggleFullScreenAddr",
+            "cocos2d::CCEGLView::toggleFullScreen",
             tulip::hook::TulipConvention::Thiscall))
 
         BIND_WITH_PATTERN(
