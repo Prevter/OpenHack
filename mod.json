@@ -10,5 +10,11 @@
 	"issues": {
 		"info": "Join the Discord server for support",
 		"url": "https://discord.gg/HaHn7RSJ4Q"
+	},
+	"resources": {
+		"files": [
+			"hacks/*.json",
+			"res/*.ttf"
+		]
 	}
 }

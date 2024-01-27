@@ -2,16 +2,55 @@
 #include "hacks/hacks.h"
 #include "menu/keybinds.h"
 
-#define LOAD_KEY(name)     \
-    if (j.contains(#name)) \
-        name = j[#name].get<decltype(name)>();
+#define LOAD_KEY(name) \
+    name = mod->getSavedValue<decltype(name)>(#name, name);
 
-#define LOAD_COLOR(name)                                 \
-    if (j.contains(#name))                               \
-    {                                                    \
-        auto color = j[#name];                           \
-        name = {color[0], color[1], color[2], color[3]}; \
+template <>
+struct matjson::Serialize<Color>
+{
+    static Color from_json(matjson::Value const &value)
+    {
+        if (!value.is_array())
+            return {0.0f, 0.0f, 0.0f, 0.0f};
+
+        auto arr = value.as_array();
+        if (arr.size() != 4)
+            return {0.0f, 0.0f, 0.0f, 0.0f};
+
+        float r = arr[0].as<float>();
+        float g = arr[1].as<float>();
+        float b = arr[2].as<float>();
+        float a = arr[3].as<float>();
+        return {r, g, b, a};
     }
+
+    static matjson::Value to_json(Color const &value)
+    {
+        auto arr = matjson::Array();
+        arr.push_back(value.r);
+        arr.push_back(value.g);
+        arr.push_back(value.b);
+        arr.push_back(value.a);
+        return arr;
+    }
+};
+
+template <>
+struct matjson::Serialize<nlohmann::json>
+{
+    static nlohmann::json from_json(matjson::Value const &value)
+    {
+        // save json as string
+        std::string str = value.as_string();
+        return nlohmann::json::parse(str);
+    }
+
+    static matjson::Value to_json(nlohmann::json const &value)
+    {
+        // save json as string
+        return value.dump();
+    }
+};
 
 namespace config
 {
@@ -33,135 +72,40 @@ namespace config
 
     void load(std::string dir_name)
     {
-        // create directory if it doesn't exist
-        std::filesystem::create_directory(dir_name);
+        auto mod = geode::Mod::get();
 
-        // check if config file exists
-        if (std::filesystem::exists(dir_name + "\\settings.json"))
-        {
-            // load config from "settings.json"
-            std::ifstream file(dir_name + "\\settings.json");
-            if (!file.is_open())
-            {
-                L_ERROR("Failed to open config file!");
-                return;
-            }
+        // "settings.json"
+        LOAD_KEY(always_reposition);
+        LOAD_KEY(menu_hotkey);
+        LOAD_KEY(menu_animation_length);
+        LOAD_KEY(menu_size);
+        LOAD_KEY(border_size);
+        LOAD_KEY(window_rounding);
+        LOAD_KEY(window_snap);
+        LOAD_KEY(menu_color);
+        LOAD_KEY(frame_color);
+        LOAD_KEY(bg_color);
+        LOAD_KEY(text_color);
+        LOAD_KEY(disabled_color);
+        LOAD_KEY(text_color_rainbow);
+        LOAD_KEY(menu_color_rainbow);
+        LOAD_KEY(menu_rainbow_speed);
+        LOAD_KEY(menu_rainbow_brightness);
 
-            std::stringstream buffer;
-            buffer << file.rdbuf();
-            file.close();
-
-            std::string json = buffer.str();
-
-            // parse json
-            try
-            {
-                nlohmann::json j = nlohmann::json::parse(json);
-                LOAD_KEY(always_reposition);
-                LOAD_KEY(menu_hotkey);
-                LOAD_KEY(menu_animation_length);
-                LOAD_KEY(menu_size);
-                LOAD_KEY(border_size);
-                LOAD_KEY(window_rounding);
-                LOAD_KEY(window_snap);
-                LOAD_COLOR(menu_color);
-                LOAD_COLOR(frame_color);
-                LOAD_COLOR(bg_color);
-                LOAD_COLOR(text_color);
-                LOAD_COLOR(disabled_color);
-                LOAD_KEY(text_color_rainbow);
-                LOAD_KEY(menu_color_rainbow);
-                LOAD_KEY(menu_rainbow_speed);
-                LOAD_KEY(menu_rainbow_brightness);
-            }
-            catch (const std::exception &e)
-            {
-                L_ERROR("Failed to parse config file: {}", e.what());
-            }
-        }
-
-        // load window positions from "windows.json"
-        if (std::filesystem::exists(dir_name + "\\windows.json"))
-        {
-            std::ifstream file2(dir_name + "\\windows.json");
-            if (!file2.is_open())
-            {
-                L_ERROR("Failed to open window positions file!");
-                return;
-            }
-
-            std::stringstream buffer;
-            buffer << file2.rdbuf();
-            file2.close();
-
-            std::string json = buffer.str();
-
-            // parse json
-            try
-            {
-                globals::window_positions = nlohmann::json::parse(json);
-            }
-            catch (const std::exception &e)
-            {
-                L_ERROR("Failed to parse window positions file: {}", e.what());
-            }
-        }
+        // "windows.json"
+        auto windows = mod->getSavedValue("window_positions", json());
+        if (windows.is_object())
+            globals::window_positions = windows;
 
         // load hacks settings from "hacks.json"
-        if (std::filesystem::exists(dir_name + "\\hacks.json"))
-        {
-            std::ifstream file3(dir_name + "\\hacks.json");
-            if (!file3.is_open())
-            {
-                L_ERROR("Failed to open hacks file!");
-                return;
-            }
-
-            std::stringstream buffer;
-            buffer << file3.rdbuf();
-            file3.close();
-
-            std::string json = buffer.str();
-
-            // parse json
-            try
-            {
-                auto j = nlohmann::json::parse(json);
-                hacks::load(&j);
-            }
-            catch (const std::exception &e)
-            {
-                L_ERROR("Failed to parse hacks file: {}", e.what());
-            }
-        }
+        auto hacks = mod->getSavedValue("hacks", json());
+        if (hacks.is_object())
+            hacks::load(&hacks);
 
         // load keybinds from "keybinds.json"
-        if (std::filesystem::exists(dir_name + "\\keybinds.json"))
-        {
-            std::ifstream file4(dir_name + "\\keybinds.json");
-            if (!file4.is_open())
-            {
-                L_ERROR("Failed to open keybinds file!");
-                return;
-            }
-
-            std::stringstream buffer;
-            buffer << file4.rdbuf();
-            file4.close();
-
-            std::string json = buffer.str();
-
-            // parse json
-            try
-            {
-                auto j = nlohmann::json::parse(json);
-                keybinds::load_keybinds(j);
-            }
-            catch (const std::exception &e)
-            {
-                L_ERROR("Failed to parse keybinds file: {}", e.what());
-            }
-        }
+        auto keybinds = mod->getSavedValue("keybinds", json());
+        if (keybinds.is_array())
+            keybinds::load_keybinds(keybinds);
 
         // save config to recreate missing files
         save(dir_name);
@@ -169,73 +113,37 @@ namespace config
 
     void save(std::string dir_name)
     {
-        // create directory if it doesn't exist
-        std::filesystem::create_directory(dir_name);
+        auto mod = geode::Mod::get();
 
-        // save config to "settings.json"
-        std::ofstream file(dir_name + "\\settings.json");
-        if (!file.is_open())
-        {
-            L_ERROR("Failed to open config file!");
-            return;
-        }
+        // "settings.json"
+        mod->setSavedValue("always_reposition", always_reposition);
+        mod->setSavedValue("menu_hotkey", menu_hotkey);
+        mod->setSavedValue("menu_animation_length", menu_animation_length);
+        mod->setSavedValue("menu_size", menu_size);
+        mod->setSavedValue("border_size", border_size);
+        mod->setSavedValue("window_rounding", window_rounding);
+        mod->setSavedValue("window_snap", window_snap);
+        mod->setSavedValue("menu_color", menu_color);
+        mod->setSavedValue("frame_color", frame_color);
+        mod->setSavedValue("bg_color", bg_color);
+        mod->setSavedValue("text_color", text_color);
+        mod->setSavedValue("disabled_color", disabled_color);
+        mod->setSavedValue("text_color_rainbow", text_color_rainbow);
+        mod->setSavedValue("menu_color_rainbow", menu_color_rainbow);
+        mod->setSavedValue("menu_rainbow_speed", menu_rainbow_speed);
+        mod->setSavedValue("menu_rainbow_brightness", menu_rainbow_brightness);
 
-        nlohmann::json j;
-        j["always_reposition"] = always_reposition;
-        j["menu_hotkey"] = menu_hotkey;
-        j["menu_animation_length"] = menu_animation_length;
-        j["menu_size"] = menu_size;
-        j["border_size"] = border_size;
-        j["window_rounding"] = window_rounding;
-        j["window_snap"] = window_snap;
-        j["menu_color"] = {menu_color.r, menu_color.g, menu_color.b, menu_color.a};
-        j["frame_color"] = {frame_color.r, frame_color.g, frame_color.b, frame_color.a};
-        j["bg_color"] = {bg_color.r, bg_color.g, bg_color.b, bg_color.a};
-        j["text_color"] = {text_color.r, text_color.g, text_color.b, text_color.a};
-        j["disabled_color"] = {disabled_color.r, disabled_color.g, disabled_color.b, disabled_color.a};
-        j["text_color_rainbow"] = text_color_rainbow;
-        j["menu_color_rainbow"] = menu_color_rainbow;
-        j["menu_rainbow_speed"] = menu_rainbow_speed;
-        j["menu_rainbow_brightness"] = menu_rainbow_brightness;
+        // "windows.json"
+        mod->setSavedValue("window_positions", globals::window_positions);
 
-        file << j.dump(4);
-        file.close();
-
-        // save window positions to "windows.json"
-        std::ofstream file2(dir_name + "\\windows.json");
-        if (!file2.is_open())
-        {
-            L_ERROR("Failed to open window positions file!");
-            return;
-        }
-
-        file2 << globals::window_positions.dump(4);
-        file2.close();
-
-        // save hacks settings to "hacks.json"
-        std::ofstream file3(dir_name + "\\hacks.json");
-        if (!file3.is_open())
-        {
-            L_ERROR("Failed to open hacks file!");
-            return;
-        }
-
+        // "hacks.json"
         nlohmann::json j2;
         hacks::save(&j2);
-        file3 << j2.dump(4);
-        file3.close();
+        mod->setSavedValue("hacks", j2);
 
-        // save keybinds to "keybinds.json"
-        std::ofstream file4(dir_name + "\\keybinds.json");
-        if (!file4.is_open())
-        {
-            L_ERROR("Failed to open keybinds file!");
-            return;
-        }
-
+        // "keybinds.json"
         nlohmann::json j3;
         keybinds::save_keybinds(j3);
-        file4 << j3.dump(4);
-        file4.close();
+        mod->setSavedValue("keybinds", j3);
     }
 }

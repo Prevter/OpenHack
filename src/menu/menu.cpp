@@ -324,8 +324,10 @@ namespace menu
         ImFontConfig font_cfg;
         font_cfg.OversampleH = 3;
         font_cfg.OversampleV = 3;
-        globals::main_font = io.Fonts->AddFontFromFileTTF("openhack\\Inter.ttf", 16.0f, &font_cfg);
-        globals::title_font = io.Fonts->AddFontFromFileTTF("openhack\\Inter.ttf", 18.0f, &font_cfg);
+        auto resourcesDir = geode::Mod::get()->getResourcesDir().string();
+        std::string fontPath = resourcesDir + "/Inter.ttf";
+        globals::main_font = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 16.0f, &font_cfg);
+        globals::title_font = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 18.0f, &font_cfg);
         io.Fonts->Build();
         ImGui_ImplOpenGL3_CreateFontsTexture();
         io.FontDefault = globals::main_font;

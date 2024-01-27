@@ -361,15 +361,15 @@ namespace hacks
         {
             hack->init();
         }
-
-        // create directory if it doesn't exist
-        std::filesystem::create_directory(MAIN_DIR "\\hacks");
-
+        
         // clear windows
         windows.clear();
 
+        // get geode mod resources directory
+        std::string resources_dir = geode::Mod::get()->getResourcesDir().string();
+
         // iterate over all files in "openhack/hacks" directory
-        for (auto &p : std::filesystem::directory_iterator(MAIN_DIR "\\hacks"))
+        for (auto &p : std::filesystem::directory_iterator(resources_dir))
         {
             // check if file is a json file
             if (p.path().extension() == ".json")
