@@ -2,32 +2,29 @@
 #include "../menu/gui.h"
 #include "../menu/keybinds.h"
 
+#include <Geode/modify/CCScheduler.hpp>
+
 namespace hacks
 {
     Speedhack *speedhack_instance = nullptr;
 
-    void(__thiscall *CCScheduler_update)(cocos2d::CCScheduler *self, float dt);
-    void __fastcall CCScheduler_update_hook(cocos2d::CCScheduler *self, float dt)
+    struct CCSchedulerHook : geode::Modify<CCSchedulerHook, cocos2d::CCScheduler>
     {
-        if (speedhack_instance && speedhack_instance->m_enabled)
-            dt *= speedhack_instance->m_speed;
+        void update(float dt)
+        {
+            if (speedhack_instance && speedhack_instance->is_enabled())
+                dt *= speedhack_instance->get_speed();
 
-        CCScheduler_update(self, dt);
-    }
+            return cocos2d::CCScheduler::update(dt);
+        }
+    };
 
     Speedhack::Speedhack()
     {
         speedhack_instance = this;
     }
 
-    void Speedhack::init()
-    {
-        if (CCScheduler_update)
-            return;
-
-        auto cocos2d = GetModuleHandle("libcocos2d.dll");
-        auto scheduler = GetProcAddress(cocos2d, "?update@CCScheduler@cocos2d@@UAEXM@Z");
-    }
+    void Speedhack::init() {}
     void Speedhack::late_init() {}
 
     void Speedhack::draw(bool embedded)

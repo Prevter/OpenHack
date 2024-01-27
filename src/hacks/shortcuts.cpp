@@ -21,6 +21,7 @@ namespace hacks
     {
         auto layer = OptionsLayer::create();
         cocos2d::CCDirector::sharedDirector()->getRunningScene()->addChild(layer);
+        layer->setZOrder(1000);
         layer->showLayer(false);
     }
 
@@ -36,8 +37,8 @@ namespace hacks
         auto play_layer = Shortcuts::get_play_layer();
         if (play_layer)
         {
-            // bool is_practice = play_layer->is_practice();
-            // play_layer->togglePracticeMode(!is_practice);
+            bool is_practice = play_layer->m_isPracticeMode;
+            play_layer->togglePracticeMode(!is_practice);
         }
     }
 

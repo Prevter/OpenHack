@@ -18,8 +18,6 @@ namespace config
     extern bool menu_color_rainbow;                                             // whether to use rainbow effect
     extern float menu_rainbow_speed, menu_rainbow_brightness;                   // rainbow settings
 
-    extern bool check_updates; // whether to check for updates
-
     // save/load functions
     void load(std::string dir_name = MAIN_DIR);
     void save(std::string dir_name = MAIN_DIR);

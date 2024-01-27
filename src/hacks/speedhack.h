@@ -18,6 +18,8 @@ namespace hacks
         virtual bool load_keybind(keybinds::Keybind *keybind) override;
 
         bool is_cheating() { return m_enabled && m_speed != 1.0f; }
+        bool is_enabled() { return m_enabled; }
+        float get_speed() { return m_speed; }
 
     private:
         bool m_enabled = false;
