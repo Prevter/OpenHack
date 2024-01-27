@@ -6,6 +6,7 @@
 #include "hook.h"
 #include "menu/menu.h"
 #include "menu/keybinds.h"
+#include "bindings/bindings.h"
 
 $execute
 {
@@ -13,6 +14,8 @@ $execute
     L_INFO("Game version: {}", utils::get_game_version());
 
     // Initialize hooks / load hacks
+    L_TRACE("Looking for bindings...");
+    robtop::init_bindings();
     L_TRACE("Initializing hooks...");
     hook::init();
     L_TRACE("Loading hacks...");

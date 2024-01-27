@@ -1,6 +1,7 @@
 #include "hook.h"
 #include "menu/menu.h"
 #include "hacks/hacks.h"
+#include "hooks/hooks.h"
 
 #include <MinHook.h>
 
@@ -241,5 +242,7 @@ namespace hook
             &pollEvents_hook,
             "cocos2d::CCEGLView::pollEvents",
             tulip::hook::TulipConvention::Thiscall))
+
+        hooks::init_all();
     }
 }

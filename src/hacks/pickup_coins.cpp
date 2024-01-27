@@ -2,6 +2,8 @@
 #include "../menu/gui.h"
 #include "../menu/keybinds.h"
 
+#include "../bindings/PlayLayer.h"
+
 namespace hacks
 {
     PickupCoins *PickupCoins::instance = nullptr;
@@ -63,7 +65,7 @@ namespace hacks
         if (!instance)
             return;
 
-        uint32_t id = object->m_objectID;
+        uint32_t id = ((robtop::GameObject*)object)->get_id();
         if (id == 142 || id == 1329)
         {
             instance->m_coin_objects.push_back(object);
@@ -80,7 +82,7 @@ namespace hacks
             if (coin == nullptr)
                 continue;
 
-            // self->pickupCoin(coin);
+            ((robtop::PlayLayer*)self)->pickupCoin((robtop::GameObject*)coin);
             self->destroyObject(coin);
         }
     }

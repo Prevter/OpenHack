@@ -1,5 +1,5 @@
 {
-	"geode": "2.0.0-beta.9",
+	"geode": "2.0.0-beta.10",
 	"gd": "2.204",
 	"version": "v1.6.0",
 	"id": "prevter.openhack",
@@ -16,5 +16,6 @@
 			"hacks/*.json",
 			"res/*.ttf"
 		]
-	}
+	},
+	"early-load": true
 }

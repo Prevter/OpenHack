@@ -1,6 +1,7 @@
 #include "startpos_switch.h"
 #include "../menu/gui.h"
 #include "../menu/keybinds.h"
+#include "../bindings/PlayLayer.h"
 
 namespace hacks
 {
@@ -41,15 +42,15 @@ namespace hacks
 
         m_current_index = index;
 
-        // m_play_layer->set_startPosCheckpoint(0);
+        ((robtop::PlayLayer *)m_play_layer)->set_startPosCheckpoint(0);
 
         if (m_current_index >= 0)
             m_play_layer->setStartPosObject(m_startpos_objects[m_current_index]);
         else
             m_play_layer->setStartPosObject(nullptr);
 
-        // if (m_play_layer->m_isPracticeMode)
-        //     m_play_layer->removeAllCheckpoints();
+        if (m_play_layer->m_isPracticeMode)
+            ((robtop::PlayLayer *)m_play_layer)->removeAllCheckpoints();
 
         m_play_layer->resetLevel();
         m_play_layer->startMusic();
@@ -163,7 +164,8 @@ namespace hacks
         if (!instance || !instance->m_enabled)
             return;
 
-        if (object->m_objectID == 31)
+        uint32_t id = ((robtop::GameObject *)object)->get_id();
+        if (id == 31)
         {
             instance->m_startpos_objects.push_back((StartPosObject *)object);
         }
