@@ -43,7 +43,6 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLEW_STATIC ON CACHE BOOL "" FORCE)
 add_subdirectory(libs/json)
-add_subdirectory(libs/minhook)
 add_subdirectory(libs/glfw)
 add_subdirectory(libs/discord-rpc)
 
@@ -79,11 +78,9 @@ endif()
 # Link libraries
 target_include_directories(OpenHack PUBLIC
     libs/discord-rpc/include
-    libs/imgui_markdown
 )
 target_link_libraries(OpenHack
     nlohmann_json::nlohmann_json
-    minhook
     opengl32
     glfw
     imgui

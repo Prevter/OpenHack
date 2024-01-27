@@ -7,8 +7,6 @@
 #include "gui.h"
 #include "keybinds.h"
 
-#include "imgui_markdown.h"
-
 namespace menu
 {
     bool menu_open = false;

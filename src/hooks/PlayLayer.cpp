@@ -1,6 +1,4 @@
 #include "../pch.h"
-#include "hooks.h"
-#include "PlayLayer.h"
 
 #include "../hacks/discord_rpc.h"
 #include "../hacks/startpos_switch.h"
@@ -8,7 +6,6 @@
 #include "../hacks/shortcuts.h"
 
 #include <Geode/modify/PlayLayer.hpp>
-#include "../bindings/PlayLayer.h"
 
 namespace hooks
 {
@@ -31,6 +28,8 @@ namespace hooks
 
         void onQuit()
         {
+            hacks::StartposSwitcher::playLayer_destructor(this);
+            hacks::Shortcuts::playLayer_destructor(this);
             hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::MENU);
             PlayLayer::onQuit();
         }
@@ -57,26 +56,4 @@ namespace hooks
         //     hacks::Shortcuts::playLayer_destructor(this);
         // }
     };
-
-    namespace PlayLayerHooks
-    {
-
-        void(__thiscall *PlayLayer_destructor)(robtop::PlayLayer *);
-        void __fastcall destructor_hook(robtop::PlayLayer *self)
-        {
-            hacks::StartposSwitcher::playLayer_destructor((PlayLayer*)self);
-            hacks::Shortcuts::playLayer_destructor((PlayLayer*)self);
-
-            PlayLayer_destructor(self);
-        }
-
-        void setup()
-        {
-            hooks::create_hook(
-                "PlayLayer::~PlayLayer",
-                robtop::PlayLayer_destructor,
-                (void *)destructor_hook,
-                (void **)&PlayLayer_destructor);
-        }
-    }
 }

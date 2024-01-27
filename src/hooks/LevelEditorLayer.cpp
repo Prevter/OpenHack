@@ -1,10 +1,9 @@
 #include "../pch.h"
+
 #include "../hacks/discord_rpc.h"
-#include "../bindings/LevelEditorLayer.h"
-#include "hooks.h"
-#include "LevelEditorLayer.h"
 
 #include <Geode/modify/LevelEditorLayer.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
 
 namespace hooks
 {
@@ -18,32 +17,14 @@ namespace hooks
             hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::EDIT, level);
             return true;
         }
-
-        // unavailable in geode
-        // void onExit()
-        // {
-        //     LevelEditorLayer::onExit();
-        //     hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::MENU);
-        // }
     };
 
-    namespace LevelEditorLayerHooks
+    struct GJBaseGameLayerHook : geode::Modify<GJBaseGameLayerHook, GJBaseGameLayer>
     {
-        bool(__thiscall *LevelEditorLayer_onExit)(LevelEditorLayer *, int);
-        bool __fastcall onExit_hook(LevelEditorLayer *self, int edx, int v1)
+        void onExit()
         {
             hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::MENU);
-            const bool ret = LevelEditorLayer_onExit(self, v1);
-            return ret;
+            GJBaseGameLayer::onExit();
         }
-
-        void setup()
-        {
-            hooks::create_hook(
-                "LevelEditorLayer::onExit",
-                robtop::LevelEditorLayer_onExit,
-                (void *)onExit_hook,
-                (void **)&LevelEditorLayer_onExit);
-        }
-    }
+    };
 }

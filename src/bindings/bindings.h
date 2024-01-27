@@ -52,14 +52,14 @@ namespace robtop
         // PlayLayer
         init_binding("PlayLayer::pickupCoin", (void **)&robtop::PlayLayer_pickupCoin, robtop::PlayLayer_pickupCoin_pat);
         init_binding("PlayLayer::removeAllCheckpoints", (void **)&robtop::PlayLayer_removeAllCheckpoints, robtop::PlayLayer_removeAllCheckpoints_pat);
-        init_binding("PlayLayer::~PlayLayer", (void **)&robtop::PlayLayer_destructor, robtop::PlayLayer_destructor_pat);
+        // init_binding("PlayLayer::~PlayLayer", (void **)&robtop::PlayLayer_destructor, robtop::PlayLayer_destructor_pat);
         init_member_offset("PlayLayer::startPosCheckpoint", &robtop::PlayLayer_startPosCheckpoint_offset, robtop::PlayLayer_startPosCheckpoint_pat, 4);
 
         // GameObject
         init_member_offset("GameObject::objectID", &robtop::GameObject_objectID_offset, robtop::GameObject_objectID_pat, 4);
 
         // LevelEditorLayer
-        init_binding("LevelEditorLayer::onExit", (void **)&robtop::LevelEditorLayer_onExit, robtop::LevelEditorLayer_onExit_pat);
+        // init_binding("LevelEditorLayer::onExit", (void **)&robtop::LevelEditorLayer_onExit, robtop::LevelEditorLayer_onExit_pat);
     }
 
 }

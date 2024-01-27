@@ -1,14 +1,22 @@
 #include "hook.h"
 #include "menu/menu.h"
 #include "hacks/hacks.h"
-#include "hooks/hooks.h"
 
-#include <MinHook.h>
-
-#define WRAP_HOOK(hook)                              \
-    if (!(hook).isOk())                              \
-    {                                                \
-        L_ERROR("Failed to hook: {}", (hook).err()); \
+#define BIND_WITH_PATTERN(name, pattern, method, library)             \
+    {                                                                 \
+        uintptr_t address = patterns::find_pattern(pattern, library); \
+        if (address)                                                  \
+        {                                                             \
+            WRAP_HOOK(geode::Mod::get()->hook(                        \
+                reinterpret_cast<void *>(address),                    \
+                method,                                               \
+                name,                                                 \
+                tulip::hook::TulipConvention::Thiscall))              \
+        }                                                             \
+        else                                                          \
+        {                                                             \
+            L_ERROR("Failed to find {} pattern", name);               \
+        }                                                             \
     }
 
 namespace hook
@@ -187,54 +195,36 @@ namespace hook
         self->pollEvents();
     }
 
-    // Helper method for creating hooks with debug logging
-    void try_bind_method(const char *name, void *method, void **original, const char *pattern, const char *library)
-    {
-        uintptr_t address = patterns::find_pattern(pattern, library);
-        if (address)
-        {
-            MH_CreateHook((void *)address, method, original);
-        }
-        else
-        {
-            L_ERROR("Failed to find {} pattern", name);
-        }
-    }
-
-    void(__thiscall *CCEGLView_toggleFullScreen)(cocos2d::CCEGLView *, bool, bool);
-    void __fastcall toggleFullScreen_hook(cocos2d::CCEGLView *self, void *, bool fullscreen, bool borderless)
+    void toggleFullScreen_hook(cocos2d::CCEGLView *self, bool fullscreen, bool borderless)
     {
         uninitialize();
-        CCEGLView_toggleFullScreen(self, fullscreen, borderless);
+        self->toggleFullScreen(fullscreen, borderless);
     }
 
-    void(__thiscall *AppDelegate_applicationWillEnterForeground)(void *);
-    void __fastcall AppDelegate_applicationWillEnterForeground_hook(void *self)
+    void AppDelegate_applicationWillEnterForeground_hook(AppDelegate *self)
     {
-        AppDelegate_applicationWillEnterForeground(self);
+        self->applicationWillEnterForeground();
         ImGui::GetIO().ClearInputKeys();
     }
 
     // Hooking
     void init()
     {
-        MH_Initialize();
         auto cocos_handle = GetModuleHandleA("libcocos2d.dll");
         auto toggleFullScreenSign = "?toggleFullScreen@CCEGLView@cocos2d@@QAEX_N0@Z";
         auto pollEventsSign = "?pollEvents@CCEGLView@cocos2d@@QAEXXZ";
 
-        // Hook CCEGLView::toggleFullScreenSign
-        auto toggleFullScreenAddr = reinterpret_cast<void *>(GetProcAddress(cocos_handle, toggleFullScreenSign));
-        MH_CreateHook(toggleFullScreenAddr,
-                      &toggleFullScreen_hook,
-                      reinterpret_cast<void **>(&CCEGLView_toggleFullScreen));
-        MH_EnableHook(toggleFullScreenAddr);
+        // Hook CCEGLView::toggleFullScreen
+        WRAP_HOOK(geode::Mod::get()->hook(
+            reinterpret_cast<void *>(GetProcAddress(cocos_handle, toggleFullScreenSign)),
+            &toggleFullScreen_hook,
+            "cocos2d::CCEGLView::toggleFullScreenAddr",
+            tulip::hook::TulipConvention::Thiscall))
 
-        try_bind_method(
+        BIND_WITH_PATTERN(
             "ApplicationWillEnterForeground",
-            AppDelegate_applicationWillEnterForeground_hook,
-            (void **)&AppDelegate_applicationWillEnterForeground,
-            "538B1D????5657FFD38BC88B10");
+            "538B1D????5657FFD38BC88B10",
+            AppDelegate_applicationWillEnterForeground_hook, "");
 
         // Hook CCEGLView::pollEvents
         WRAP_HOOK(geode::Mod::get()->hook(
@@ -242,7 +232,5 @@ namespace hook
             &pollEvents_hook,
             "cocos2d::CCEGLView::pollEvents",
             tulip::hook::TulipConvention::Thiscall))
-
-        hooks::init_all();
     }
 }

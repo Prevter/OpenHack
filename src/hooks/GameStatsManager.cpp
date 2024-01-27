@@ -1,4 +1,3 @@
-#include "hooks.h"
 #include "../hacks/hacks.h"
 
 #include <Geode/modify/GameStatsManager.hpp>
