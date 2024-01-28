@@ -47,6 +47,10 @@ DWORD WINAPI MainThread(LPVOID param)
         updater::check_update("prevter/gdopenhack",
                               [](updater::version_t version)
                               {
+                                  // check if has download url
+                                  if (version.download.empty())
+                                      return;
+
                                   globals::latest_version = version;
                                   globals::show_update_popup = PROJECT_VERSION != version.version;
                               });

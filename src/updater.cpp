@@ -22,10 +22,25 @@ namespace updater
                             auto json = nlohmann::json::parse(response);
 
                             auto version = json["tag_name"].get<std::string>();
-                            auto download = json["assets"][0]["browser_download_url"].get<std::string>();
-                            auto title = json["name"].get<std::string>();
-                            auto changelog = json["body"].get<std::string>();
-                            callback({version, download, title, changelog});
+                            auto assets = json["assets"];
+
+                            // check every asset for the .zip file
+                            // this is to make sure we don't download .geode builds
+                            for (auto &asset : assets)
+                            {
+                                auto name = asset["browser_download_url"].get<std::string>();
+                                if (name.find(".zip") != std::string::npos)
+                                {
+                                    auto download = asset["browser_download_url"].get<std::string>();
+                                    auto title = json["name"].get<std::string>();
+                                    auto changelog = json["body"].get<std::string>();
+                                    callback({version, download, title, changelog});
+                                    return;
+                                }
+                            }
+                            
+                            // no .zip file found
+                            callback({version, "", "", ""});
                         }
                         catch (...)
                         {
@@ -60,8 +75,7 @@ namespace updater
                         L_INFO("Update installed successfully!"); 
 
                         // close the game
-                        std::exit(0);
-                    })
+                        std::exit(0); })
             .detach();
     }
 }
