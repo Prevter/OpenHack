@@ -28,8 +28,6 @@ namespace hooks
 
         void onQuit()
         {
-            hacks::StartposSwitcher::playLayer_destructor(this);
-            hacks::Shortcuts::playLayer_destructor(this);
             hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::MENU);
             PlayLayer::onQuit();
         }
@@ -49,11 +47,11 @@ namespace hooks
             hacks::PickupCoins::playLayer_addObject(this, object);
         }
 
-        // unavailable in geode
-        // void destructor()
-        // {
-        //     hacks::StartposSwitcher::playLayer_destructor(this);
-        //     hacks::Shortcuts::playLayer_destructor(this);
-        // }
+        void destructor()
+        {
+            PlayLayer::~PlayLayer();
+            hacks::StartposSwitcher::playLayer_destructor(this);
+            hacks::Shortcuts::playLayer_destructor(this);
+        }
     };
 }
