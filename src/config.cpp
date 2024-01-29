@@ -5,6 +5,9 @@
 #define LOAD_KEY(name) \
     name = mod->getSavedValue<decltype(name)>(#name, name);
 
+#define LOAD_COLOR(name) \
+    name = Color::from_hex(mod->getSavedValue<std::string>(#name, name.to_hex()));
+
 template <>
 struct matjson::Serialize<nlohmann::json>
 {
@@ -68,18 +71,19 @@ namespace config
         LOAD_KEY(border_size);
         LOAD_KEY(window_rounding);
         LOAD_KEY(window_snap);
-        
-        auto menu_color_hex = mod->getSavedValue<std::string>("menu_color", menu_color.to_hex());
-        auto frame_color_hex = mod->getSavedValue<std::string>("frame_color", frame_color.to_hex());
-        auto bg_color_hex = mod->getSavedValue<std::string>("bg_color", bg_color.to_hex());
-        auto text_color_hex = mod->getSavedValue<std::string>("text_color", text_color.to_hex());
-        auto disabled_color_hex = mod->getSavedValue<std::string>("disabled_color", disabled_color.to_hex());
 
-        menu_color = Color::from_hex(menu_color_hex);
-        frame_color = Color::from_hex(frame_color_hex);
-        bg_color = Color::from_hex(bg_color_hex);
-        text_color = Color::from_hex(text_color_hex);
-        disabled_color = Color::from_hex(disabled_color_hex);
+        try
+        {
+            LOAD_COLOR(menu_color);
+            LOAD_COLOR(frame_color);
+            LOAD_COLOR(bg_color);
+            LOAD_COLOR(text_color);
+            LOAD_COLOR(disabled_color);
+        }
+        catch (std::exception &e)
+        {
+            L_WARN("Failed to load color: {}", e.what());
+        }
 
         LOAD_KEY(text_color_rainbow);
         LOAD_KEY(menu_color_rainbow);
@@ -117,11 +121,11 @@ namespace config
         mod->setSavedValue("border_size", border_size);
         mod->setSavedValue("window_rounding", window_rounding);
         mod->setSavedValue("window_snap", window_snap);
-        mod->setSavedValue("menu_color", menu_color);
-        mod->setSavedValue("frame_color", frame_color);
-        mod->setSavedValue("bg_color", bg_color);
-        mod->setSavedValue("text_color", text_color);
-        mod->setSavedValue("disabled_color", disabled_color);
+        mod->setSavedValue("menu_color", menu_color.to_hex());
+        mod->setSavedValue("frame_color", frame_color.to_hex());
+        mod->setSavedValue("bg_color", bg_color.to_hex());
+        mod->setSavedValue("text_color", text_color.to_hex());
+        mod->setSavedValue("disabled_color", disabled_color.to_hex());
         mod->setSavedValue("text_color_rainbow", text_color_rainbow);
         mod->setSavedValue("menu_color_rainbow", menu_color_rainbow);
         mod->setSavedValue("menu_rainbow_speed", menu_rainbow_speed);
