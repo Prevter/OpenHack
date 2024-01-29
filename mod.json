@@ -16,6 +16,5 @@
 			"hacks/*.json",
 			"res/*.ttf"
 		]
-	},
-	"early-load": true
+	}
 }
