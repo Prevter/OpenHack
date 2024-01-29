@@ -233,6 +233,8 @@ namespace hook
 
         MH_Initialize();
 
+        logger::set_exception_handler();
+
         MH_CreateHook(
             GetProcAddress(cocos2d_base, "?swapBuffers@CCEGLView@cocos2d@@UAEXXZ"),
             swapBuffers_hook,
