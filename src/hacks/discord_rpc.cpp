@@ -17,7 +17,9 @@ namespace hacks
         instance = this;
 
         // set default values
-        strcpy_s(m_current_large_text, (std::string("Geometry Dash ") + utils::get_game_version()).c_str());
+        m_current_large_text = fmt::format("Geometry Dash {}", utils::get_game_version());
+        m_current_small_image = "";
+        m_current_small_text = "";
     }
     void DiscordRPC::late_init() {}
 
@@ -42,20 +44,47 @@ namespace hacks
         if (!embedded)
             return;
 
-        gui::ImToggleButton("Discord RPC", &m_enabled, [this]()
-                            {
-            gui::ImInputText("Menu Detail", m_menu_detail, 60);
-            gui::ImInputText("Menu State", m_menu_state, 60);
-            ImGui::Separator();
-            gui::ImInputText("Playing Detail", m_game_detail, 60);
-            gui::ImInputText("Playing State", m_game_state, 60);
-            ImGui::Separator();
-            gui::ImInputText("Editor Detail", m_edit_detail, 60);
-            gui::ImInputText("Editor State", m_edit_state, 60);
-            ImGui::Separator();
-            ImGui::InputFloat("Update Interval", &m_update_interval, 0.1f, 1.0f, "%.1f s");
-            if (m_update_interval < 1.0f)
-                m_update_interval = 1.0f; });
+        gui::ImToggleButton(
+            "Discord RPC", &m_enabled,
+            [this]()
+            {
+                char buffer[256];
+
+                strcpy_s(buffer, m_menu_detail.c_str());
+                gui::ImInputText("Menu Detail", buffer, 60);
+                m_menu_detail = buffer;
+
+                strcpy_s(buffer, m_menu_state.c_str());
+                gui::ImInputText("Menu State", buffer, 60);
+                m_menu_state = buffer;
+
+                ImGui::Separator();
+
+                strcpy_s(buffer, m_game_detail.c_str());
+                gui::ImInputText("Playing Detail", buffer, 60);
+                m_game_detail = buffer;
+
+                strcpy_s(buffer, m_game_state.c_str());
+                gui::ImInputText("Playing State", buffer, 60);
+                m_game_state = buffer;
+
+                ImGui::Separator();
+
+                strcpy_s(buffer, m_edit_detail.c_str());
+                gui::ImInputText("Editor Detail", buffer, 60);
+                m_edit_detail = buffer;
+
+                strcpy_s(buffer, m_edit_state.c_str());
+                gui::ImInputText("Editor State", buffer, 60);
+                m_edit_state = buffer;
+
+                ImGui::Separator();
+                ImGui::InputFloat("Update Interval", &m_update_interval, 0.1f, 1.0f, "%.1f s");
+                if (m_update_interval < 1.0f)
+                    m_update_interval = 1.0f;
+
+                gui::ImToggleButton("Level Time", &m_level_time);
+            });
 
         // keybinds::add_menu_keybind("discord_rpc", "Discord RPC", [this]()
         //                            { m_enabled = !m_enabled; });
@@ -80,15 +109,17 @@ namespace hacks
 
         m_last_update_time = time(NULL);
 
+        update_labels();
+
         DiscordRichPresence discord_presence;
         memset(&discord_presence, 0, sizeof(discord_presence));
-        discord_presence.startTimestamp = m_start_time;
-        discord_presence.largeImageKey = m_current_large_image;
-        discord_presence.largeImageText = m_current_large_text;
-        discord_presence.smallImageKey = m_current_small_image;
-        discord_presence.smallImageText = m_current_small_text;
-        discord_presence.state = m_current_state;
-        discord_presence.details = m_current_detail;
+        discord_presence.startTimestamp = (m_state == GAME && m_level_time) ? m_level_start_time : m_start_time;
+        discord_presence.largeImageKey = m_current_large_image.c_str();
+        discord_presence.largeImageText = m_current_large_text.c_str();
+        discord_presence.smallImageKey = m_current_small_image.c_str();
+        discord_presence.smallImageText = m_current_small_text.c_str();
+        discord_presence.state = m_current_state.c_str();
+        discord_presence.details = m_current_detail.c_str();
         Discord_UpdatePresence(&discord_presence);
     }
 
@@ -102,6 +133,12 @@ namespace hacks
         size_t pos = str.find(value);
         if (pos != std::string::npos)
             str.replace(pos, value.length(), func());
+    }
+
+    void replace_all_tags(std::map<std::string, std::function<std::string()>> tags, std::string &str)
+    {
+        for (auto &tag : tags)
+            replace_lambda(str, tag.first, tag.second);
     }
 
     inline bool is_robtop_level(GJGameLevel *level)
@@ -162,6 +199,65 @@ namespace hacks
         return level->m_levelLength == 5;
     }
 
+    void DiscordRPC::update_labels()
+    {
+        const std::map<std::string, std::function<std::string()>> tags = {
+            {"{name}", []()
+             { return instance->m_level->m_levelName; }},
+            {"{stars}", []()
+             { return std::to_string(instance->m_level->m_stars.value()); }},
+            {"{id}", []()
+             { return std::to_string(instance->m_level->m_levelID.value()); }},
+            {"{best}", []()
+             { return std::to_string(instance->m_level->m_normalPercent.value()); }},
+            {"{objects}", []()
+             { return std::to_string(instance->m_level->m_objectCount.value()); }},
+            {"{author}", []()
+             { return std::string(is_robtop_level(instance->m_level) ? "RobTop" : instance->m_level->m_creatorName); }},
+        };
+
+        std::string detail, state;
+        switch (m_state)
+        {
+        case MENU:
+            detail = m_menu_detail;
+            state = m_menu_state;
+            m_current_small_image = "";
+            m_current_small_text = "";
+            break;
+        case GAME:
+            detail = m_game_detail;
+            state = m_game_state;
+            break;
+        case EDIT:
+            detail = m_edit_detail;
+            state = m_edit_state;
+            instance->m_current_small_image = "editor";
+            instance->m_current_small_text = "";
+            break;
+        }
+
+        if (!m_level)
+        {
+            // just in case the level is null
+            m_current_detail = detail;
+            m_current_state = state;
+            return;
+        }
+
+        replace_all_tags(tags, state);
+        replace_all_tags(tags, detail);
+
+        m_current_detail = detail;
+        m_current_state = state;
+
+        if (m_state == GAME)
+        {
+            instance->m_current_small_image = get_difficulty_asset(instance->m_level);
+            instance->m_current_small_text = fmt::format("{} {}", instance->m_level->m_stars.value(), is_platformer(instance->m_level) ? "🌙" : "⭐");
+        }
+    }
+
     void DiscordRPC::change_state(State state, GJGameLevel *level)
     {
         if (!instance)
@@ -169,113 +265,26 @@ namespace hacks
 
         instance->m_state = state;
 
+        if (state == MENU)
+            instance->m_level = nullptr;
+
         if (level)
             instance->m_level = level;
 
-        if (state == GAME)
-        {
-            if (!instance->m_level)
-            {
-                // just in case the level is null
-                strcpy_s(instance->m_current_detail, "Playing a level");
-                strcpy_s(instance->m_current_state, "");
-                strcpy_s(instance->m_current_small_image, "");
-                strcpy_s(instance->m_current_small_text, "");
-                return;
-            }
-
-            std::string state = instance->m_game_state;
-            std::string detail = instance->m_game_detail;
-
-            replace_lambda(state, "{name}", []()
-                           { return instance->m_level->m_levelName; });
-            replace_lambda(state, "{author}", []()
-                           { return std::string(is_robtop_level(instance->m_level) ? "RobTop" : instance->m_level->m_creatorName); });
-            replace_lambda(state, "{stars}", []()
-                           { return std::to_string(instance->m_level->m_stars.value()); });
-            replace_lambda(state, "{id}", []()
-                           { return std::to_string(instance->m_level->m_levelID.value()); });
-            replace_lambda(state, "{best}", []()
-                           { return std::to_string(instance->m_level->m_normalPercent.value()); });
-
-            replace_lambda(detail, "{name}", []()
-                           { return instance->m_level->m_levelName; });
-            replace_lambda(detail, "{author}", []()
-                           { return std::string(is_robtop_level(instance->m_level) ? "RobTop" : instance->m_level->m_creatorName); });
-            replace_lambda(detail, "{stars}", []()
-                           { return std::to_string(instance->m_level->m_stars.value()); });
-            replace_lambda(detail, "{id}", []()
-                           { return std::to_string(instance->m_level->m_levelID.value()); });
-            replace_lambda(detail, "{best}", []()
-                           { return std::to_string(instance->m_level->m_normalPercent.value()); });
-
-            strcpy_s(instance->m_current_detail, detail.c_str());
-            strcpy_s(instance->m_current_state, state.c_str());
-            strcpy_s(instance->m_current_small_image, get_difficulty_asset(instance->m_level));
-            strcpy_s(
-                instance->m_current_small_text,
-                fmt::format("{} {}",
-                            instance->m_level->m_stars.value(),
-                            is_platformer(instance->m_level) ? "🌙" : "⭐")
-                    .c_str());
-        }
-        else if (state == EDIT)
-        {
-            if (!instance->m_level)
-            {
-                // just in case the level is null
-                strcpy_s(instance->m_current_detail, "Editing a level");
-                strcpy_s(instance->m_current_state, "");
-                strcpy_s(instance->m_current_small_image, "");
-                strcpy_s(instance->m_current_small_text, "");
-                return;
-            }
-
-            std::string state = instance->m_edit_state;
-            std::string detail = instance->m_edit_detail;
-
-            replace_lambda(state, "{name}", []()
-                           { return instance->m_level->m_levelName; });
-            replace_lambda(state, "{objects}", []()
-                           { return std::to_string(instance->m_level->m_objectCount.value()); });
-
-            replace_lambda(detail, "{name}", []()
-                           { return instance->m_level->m_levelName; });
-            replace_lambda(detail, "{objects}", []()
-                           { return std::to_string(instance->m_level->m_objectCount.value()); });
-
-            strcpy_s(instance->m_current_detail, detail.c_str());
-            strcpy_s(instance->m_current_state, state.c_str());
-            strcpy_s(instance->m_current_small_image, "editor");
-            strcpy_s(instance->m_current_small_text, "");
-        }
-        else
-        {
-            instance->m_level = nullptr;
-            strcpy_s(instance->m_current_detail, instance->m_menu_detail);
-            strcpy_s(instance->m_current_state, instance->m_menu_state);
-            strcpy_s(instance->m_current_small_image, "");
-            strcpy_s(instance->m_current_small_text, "");
-        }
+        if (state == GAME && level) // only called from PlayLayer::init
+            instance->m_level_start_time = time(NULL);
     }
 
     void DiscordRPC::load(nlohmann::json *data)
     {
         m_enabled = data->value("discord.enabled", true);
         m_update_interval = data->value("discord.update_interval", 5.0f);
-        std::string menu_detail = data->value("discord.menu_detail", "Browsing Menus");
-        std::string menu_state = data->value("discord.menu_state", "");
-        std::string game_detail = data->value("discord.game_detail", "{name} by {author}");
-        std::string game_state = data->value("discord.game_state", "PB {best}%");
-        std::string edit_detail = data->value("discord.edit_detail", "Editing {name}");
-        std::string edit_state = data->value("discord.edit_state", "{objects} objects");
-
-        strcpy_s(m_menu_detail, menu_detail.c_str());
-        strcpy_s(m_menu_state, menu_state.c_str());
-        strcpy_s(m_game_detail, game_detail.c_str());
-        strcpy_s(m_game_state, game_state.c_str());
-        strcpy_s(m_edit_detail, edit_detail.c_str());
-        strcpy_s(m_edit_state, edit_state.c_str());
+        m_menu_detail = data->value("discord.menu_detail", "Browsing Menus");
+        m_menu_state = data->value("discord.menu_state", "");
+        m_game_detail = data->value("discord.game_detail", "{name} by {author}");
+        m_game_state = data->value("discord.game_state", "PB {best}%");
+        m_edit_detail = data->value("discord.edit_detail", "Editing {name}");
+        m_edit_state = data->value("discord.edit_state", "{objects} objects");
 
         if (m_enabled)
             initialize_discord();
