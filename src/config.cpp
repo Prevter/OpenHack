@@ -6,49 +6,35 @@
     name = mod->getSavedValue<decltype(name)>(#name, name);
 
 template <>
-struct matjson::Serialize<Color>
-{
-    static Color from_json(matjson::Value const &value)
-    {
-        if (!value.is_array())
-            return {0.0f, 0.0f, 0.0f, 0.0f};
-
-        auto arr = value.as_array();
-        if (arr.size() != 4)
-            return {0.0f, 0.0f, 0.0f, 0.0f};
-
-        float r = arr[0].as<float>();
-        float g = arr[1].as<float>();
-        float b = arr[2].as<float>();
-        float a = arr[3].as<float>();
-        return {r, g, b, a};
-    }
-
-    static matjson::Value to_json(Color const &value)
-    {
-        auto arr = matjson::Array();
-        arr.push_back(value.r);
-        arr.push_back(value.g);
-        arr.push_back(value.b);
-        arr.push_back(value.a);
-        return arr;
-    }
-};
-
-template <>
 struct matjson::Serialize<nlohmann::json>
 {
     static nlohmann::json from_json(matjson::Value const &value)
     {
-        // save json as string
+        // load json from string
         std::string str = value.as_string();
-        return nlohmann::json::parse(str);
+        try
+        {
+            return nlohmann::json::parse(str);
+        }
+        catch (...)
+        {
+            L_WARN("Failed to parse json: {}", str);
+            return nlohmann::json();
+        }
     }
 
     static matjson::Value to_json(nlohmann::json const &value)
     {
         // save json as string
-        return value.dump();
+        try
+        {
+            return value.dump();
+        }
+        catch (...)
+        {
+            L_WARN("Failed to dump json: {}", value.dump());
+            return matjson::Value();
+        }
     }
 };
 
@@ -82,11 +68,19 @@ namespace config
         LOAD_KEY(border_size);
         LOAD_KEY(window_rounding);
         LOAD_KEY(window_snap);
-        LOAD_KEY(menu_color);
-        LOAD_KEY(frame_color);
-        LOAD_KEY(bg_color);
-        LOAD_KEY(text_color);
-        LOAD_KEY(disabled_color);
+        
+        auto menu_color_hex = mod->getSavedValue<std::string>("menu_color", menu_color.to_hex());
+        auto frame_color_hex = mod->getSavedValue<std::string>("frame_color", frame_color.to_hex());
+        auto bg_color_hex = mod->getSavedValue<std::string>("bg_color", bg_color.to_hex());
+        auto text_color_hex = mod->getSavedValue<std::string>("text_color", text_color.to_hex());
+        auto disabled_color_hex = mod->getSavedValue<std::string>("disabled_color", disabled_color.to_hex());
+
+        menu_color = Color::from_hex(menu_color_hex);
+        frame_color = Color::from_hex(frame_color_hex);
+        bg_color = Color::from_hex(bg_color_hex);
+        text_color = Color::from_hex(text_color_hex);
+        disabled_color = Color::from_hex(disabled_color_hex);
+
         LOAD_KEY(text_color_rainbow);
         LOAD_KEY(menu_color_rainbow);
         LOAD_KEY(menu_rainbow_speed);
@@ -103,7 +97,7 @@ namespace config
             hacks::load(&hacks);
 
         // load keybinds from "keybinds.json"
-        auto keybinds = mod->getSavedValue("keybinds", json());
+        auto keybinds = mod->getSavedValue("keybinds", json::array());
         if (keybinds.is_array())
             keybinds::load_keybinds(keybinds);
 

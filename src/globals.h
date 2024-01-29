@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 #include <cocos2d.h>
 #include <imgui.h>
 #include <nlohmann/json.hpp>
@@ -24,6 +25,25 @@ struct Color
                (uint32_t)(g * 255) << 8 |
                (uint32_t)(b * 255) << 16 |
                (uint32_t)(a * 255) << 24;
+    }
+
+    inline std::string to_hex() const
+    {
+        uint32_t hex_int = to_uint32();
+        return fmt::format("{:08X}", hex_int);
+    }
+
+    static inline Color from_hex(std::string const &hex)
+    {
+        if (hex.size() != 8)
+            throw std::runtime_error("Invalid hex string");
+
+        uint32_t hex_int = std::stoul(hex, nullptr, 16);
+        return Color{
+            (float)((hex_int >> 0) & 0xFF) / 255.0f,
+            (float)((hex_int >> 8) & 0xFF) / 255.0f,
+            (float)((hex_int >> 16) & 0xFF) / 255.0f,
+            (float)((hex_int >> 24) & 0xFF) / 255.0f};
     }
 };
 
