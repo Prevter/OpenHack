@@ -30,33 +30,36 @@ namespace hacks
         void initialize_discord();
         void deinitialize_discord();
 
+        void update_labels();
+
         static DiscordRPC *get_instance();
         static void change_state(State state, robtop::GJGameLevel *level = nullptr);
 
     private:
         static DiscordRPC *instance;
         bool m_enabled, m_initialized = false;
-        uint64_t m_start_time;
+        uint64_t m_start_time, m_level_start_time;
         uint64_t m_last_update_time;
         float m_update_interval = 5.0f;
+        bool m_level_time = false;
         DiscordEventHandlers m_handlers;
 
         robtop::GJGameLevel *m_level = nullptr;
         State m_state = MENU;
 
         // Configurable options
-        char m_menu_detail[60] = "Browsing Menus";
-        char m_menu_state[60] = "";
-        char m_game_detail[60] = "{name} by {author}";
-        char m_game_state[60] = "PB {best}%";
-        char m_edit_detail[60] = "Editing {name}";
-        char m_edit_state[60] = "{objects} objects";
+        std::string m_menu_detail = "Browsing Menus";
+        std::string m_menu_state = "";
+        std::string m_game_detail = "{name} by {author}";
+        std::string m_game_state = "PB {best}%";
+        std::string m_edit_detail = "Editing {name}";
+        std::string m_edit_state = "{objects} objects";
 
-        char m_current_detail[60] = "";
-        char m_current_state[60] = "";
-        char m_current_large_image[60] = "cool";
-        char m_current_large_text[60] = "";
-        char m_current_small_image[60] = "";
-        char m_current_small_text[60] = "";
+        std::string m_current_detail = "";
+        std::string m_current_state = "";
+        std::string m_current_large_image = "cool";
+        std::string m_current_large_text = "";
+        std::string m_current_small_image = "";
+        std::string m_current_small_text = "";
     };
 }

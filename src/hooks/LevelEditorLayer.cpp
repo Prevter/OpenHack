@@ -8,8 +8,8 @@ namespace hooks::LevelEditorLayer
     bool(__thiscall *LevelEditorLayer_init)(robtop::LevelEditorLayer *, robtop::GJGameLevel *, bool);
     bool __fastcall init_hook(robtop::LevelEditorLayer *self, int edx, robtop::GJGameLevel *level, bool v1)
     {
-        hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::EDIT, level);
         const bool ret = LevelEditorLayer_init(self, level, v1);
+        hacks::DiscordRPC::change_state(hacks::DiscordRPC::State::EDIT, level);
         return ret;
     }
 
