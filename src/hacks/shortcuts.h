@@ -21,7 +21,7 @@ namespace hacks
         static void playLayer_init(PlayLayer *self, GJGameLevel *level);
         static void playLayer_destructor(PlayLayer *self);
 
-        static PlayLayer* get_play_layer() { return play_layer; }
+        static PlayLayer* get_play_layer() { return GameManager::get()->getPlayLayer(); }
 
     private:
         static PlayLayer* play_layer;

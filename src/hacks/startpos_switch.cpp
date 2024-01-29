@@ -65,6 +65,8 @@ namespace hacks
         if (!instance->m_enabled)
             return;
 
+        m_play_layer = GameManager::get()->getPlayLayer();
+
         if (utils::is_key_pressed(m_prev_keybind))
             choose_start_pos(m_current_index - 1);
         else if (utils::is_key_pressed(m_next_keybind))
@@ -72,7 +74,7 @@ namespace hacks
 
         // Temporary, until CCLabelBMFont is fixed
         // use ImGui to draw the label instead
-        if (m_startpos_objects.empty() || !m_show_label)
+        if (m_startpos_objects.empty() || !m_show_label || !m_play_layer)
             return;
 
         size_t startpos_count = m_startpos_objects.size();
