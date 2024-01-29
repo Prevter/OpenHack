@@ -542,13 +542,17 @@ namespace hacks
 
     void load(nlohmann::json *data)
     {
+        L_TRACE("Loading hack save data...");
         for (auto &hack : hacks)
         {
+            L_TRACE("Loading hack: {}", hack->get_id());
             hack->load(data);
         }
 
+        L_TRACE("Loading window save data...");
         for (auto &window : windows)
         {
+            L_TRACE("Loading window: {}", window.get_title());
             window.load(data);
         }
     }
