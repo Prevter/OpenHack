@@ -46,7 +46,7 @@
         {
             "type": "toggle",
             "title": "Safe Mode",
-            "description": "Disable progress saving if you don't want to beat the level.",
+            "description": "Disables progress saving if you don't want to beat the level.",
             "id": "universal.safemode",
             "opcodes": [
                 {

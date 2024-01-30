@@ -16,7 +16,7 @@
         {
             "type": "toggle",
             "title": "Character Filter",
-            "description": "Allow entering of special characters in text inputs.",
+            "description": "Allows entering special characters in text inputs.",
             "id": "bypass.filter",
             "opcodes": [
                 {
