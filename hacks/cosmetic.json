@@ -4,7 +4,7 @@
         {
             "type": "toggle",
             "title": "No Respawn Flash",
-            "description": "Removes the player respawn blinking effect.",
+            "description": "Removes the blinking effect on respawn.",
             "id": "cosmetic.respawn_flash",
             "opcodes": [
                 {
@@ -181,7 +181,7 @@
         {
             "type": "toggle",
             "title": "No Spider Dash",
-            "description": "Disables spider dash trail when teleporting.",
+            "description": "Disables the spider dash trail.",
             "id": "cosmetic.spiderdash",
             "opcodes": [
                 {
