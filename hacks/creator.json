@@ -20,7 +20,7 @@
         {
             "type": "toggle",
             "title": "Copy Hack",
-            "description": "Allows you to copy levels that have copy disabled.",
+            "description": "Allows you to copy levels that have copying disabled.",
             "id": "creator.copy",
             "opcodes": [
                 {
@@ -32,7 +32,7 @@
         {
             "type": "toggle",
             "title": "Level Edit",
-            "description": "Access level editor from pause menu in any level.",
+            "description": "Allows you to access the level editor from the pause menu in any level.",
             "id": "creator.level_edit",
             "opcodes": [
                 {
@@ -62,7 +62,7 @@
         {
             "type": "toggle",
             "title": "Slider Limit",
-            "description": "Remove min/max limit on sliders.",
+            "description": "Removes the min/max limit on sliders.",
             "id": "creator.slider",
             "opcodes": [
                 {
@@ -91,7 +91,7 @@
         {
             "type": "toggle",
             "title": "Verify Hack",
-            "description": "Publish levels without verifying them.",
+            "description": "Allows you to publish levels without verifying them.",
             "id": "creator.verify",
             "opcodes": [
                 {
