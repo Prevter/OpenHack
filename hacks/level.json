@@ -46,7 +46,7 @@
         {
             "type": "toggle",
             "title": "Freeze Jumps Counter",
-            "description": "Freeze global jumps counter (the one in stats menu).",
+            "description": "Freezes the global jump counter (the one in stats menu).",
             "id": "level.jumps",
             "opcodes": [
                 {
@@ -58,7 +58,7 @@
         {
             "type": "toggle",
             "title": "Freeze Attempts Counter",
-            "description": "Freeze global attempts counter (the one in stats menu).",
+            "description": "Freezes the global attempt counter (the one in stats menu).",
             "id": "level.attempts",
             "opcodes": [
                 {
@@ -180,7 +180,7 @@
         {
             "type": "toggle",
             "title": "Pause During Complete",
-            "description": "Allows you to pause during level complete cutscene.",
+            "description": "Allows you to pause during the level complete cutscene.",
             "id": "level.completepause",
             "opcodes": [
                 {
