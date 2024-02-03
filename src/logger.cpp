@@ -8,6 +8,7 @@
 
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/fmt/xchar.h>
 
 #include "utils.h"
 #include "project.h"
@@ -20,6 +21,8 @@
 
 namespace crashhandler
 {
+    bool symbolsInitialized = false;
+
     std::wstring getModuleName(HMODULE module, bool fullPath = true)
     {
         wchar_t buffer[MAX_PATH];
@@ -65,123 +68,214 @@ namespace crashhandler
         }
     }
 
-    void printAddr(std::wstring &result, const void *addr, bool fullPath = true)
+    HMODULE handleFromAddress(void *address)
     {
-        HMODULE module = NULL;
+        HMODULE hModule = NULL;
+        GetModuleHandleEx(
+            GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+            (LPCTSTR)address, &hModule);
+        return hModule;
+    }
 
-        if (GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCWSTR)addr, &module))
+    void printAddr(std::wstringstream &ss, void *address, bool fullPath = true)
+    {
+        HMODULE hModule = nullptr;
+
+        if (GetModuleHandleEx(
+                GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                (LPCTSTR)address, &hModule))
         {
-            const auto diff = reinterpret_cast<uintptr_t>(addr) - reinterpret_cast<uintptr_t>(module);
-            wchar_t buffer[512];
-            swprintf_s(buffer, L"%s + %IX", getModuleName(module, fullPath).c_str(), diff);
-            result += buffer;
+            auto const diff = (uintptr_t)address - (uintptr_t)hModule;
+            ss << getModuleName(hModule, fullPath) << L" + 0x" << std::hex << diff << std::dec;
+
+            if (symbolsInitialized)
+            {
+                DWORD64 displacement = 0;
+                wchar_t buffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(TCHAR)];
+                PSYMBOL_INFO pSymbol = (PSYMBOL_INFO)buffer;
+                pSymbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+                pSymbol->MaxNameLen = MAX_SYM_NAME;
+
+                auto process = GetCurrentProcess();
+
+                if (SymFromAddr(process, (DWORD64)address, &displacement, pSymbol))
+                {
+                    ss << L" (" << pSymbol->Name << L" + 0x" << std::hex << displacement << std::dec;
+
+                    IMAGEHLP_LINE64 line;
+                    line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+                    DWORD displacement;
+
+                    if (SymGetLineFromAddr64(process, (DWORD64)address, &displacement, &line))
+                    {
+                        PCHAR filePath = line.FileName;
+                        std::string filePathStr(filePath);
+                        std::string sourceRootDir = SOURCE_ROOT_DIR;
+                        std::replace(sourceRootDir.begin(), sourceRootDir.end(), '/', '\\');
+                        std::replace(filePathStr.begin(), filePathStr.end(), '/', '\\');
+                        std::string::size_type i = filePathStr.find(sourceRootDir);
+                        if (i != std::string::npos)
+                        {
+                            filePathStr.erase(i, sourceRootDir.length());
+                        }
+
+                        ss << L" in " << std::wstring(filePathStr.begin(), filePathStr.end()) << L":" << line.LineNumber;
+                    }
+
+                    ss << L")";
+                }
+            }
         }
         else
         {
-            wchar_t buffer[512];
-            swprintf_s(buffer, L"%p", addr);
-            result += buffer;
+            ss << address;
         }
     }
 
-    void printRegisterStates(std::wstring &content, PCONTEXT context)
+    std::wstring getRegisters(PCONTEXT ctx)
     {
-        wchar_t buffer[200];
-
-        swprintf_s(
-            buffer,
-            L"- EAX: %08X\n"
-            L"- EBX: %08X\n"
-            L"- ECX: %08X\n"
-            L"- EDX: %08X\n"
-            L"- ESI: %08X\n"
-            L"- EDI: %08X\n"
-            L"- EBP: %08X\n"
-            L"- ESP: %08X\n"
-            L"- EIP: %08X\n\n",
-            context->Eax, context->Ebx, context->Ecx, context->Edx,
-            context->Esi, context->Edi, context->Ebp, context->Esp, context->Eip);
-
-        content += buffer;
+        return fmt::format(
+            L"EAX: {:08x}\n"
+            L"EBX: {:08x}\n"
+            L"ECX: {:08x}\n"
+            L"EDX: {:08x}\n"
+            L"EBP: {:08x}\n"
+            L"ESP: {:08x}\n"
+            L"EDI: {:08x}\n"
+            L"ESI: {:08x}\n"
+            L"EIP: {:08x}\n",
+            ctx->Eax,
+            ctx->Ebx,
+            ctx->Ecx,
+            ctx->Edx,
+            ctx->Ebp,
+            ctx->Esp,
+            ctx->Edi,
+            ctx->Esi,
+            ctx->Eip);
     }
 
-    void walkStack(std::wstring &result, PCONTEXT context)
+    std::wstring getStackTrace(PCONTEXT ctx)
     {
-        STACKFRAME64 stack;
-        memset(&stack, 0, sizeof(STACKFRAME64));
+        std::wstringstream ss;
 
-        auto process = GetCurrentProcess();
-        auto thread = GetCurrentThread();
-        stack.AddrPC.Offset = context->Eip;
-        stack.AddrPC.Mode = AddrModeFlat;
-        stack.AddrStack.Offset = context->Esp;
-        stack.AddrStack.Mode = AddrModeFlat;
-        stack.AddrFrame.Offset = context->Ebp;
-        stack.AddrFrame.Mode = AddrModeFlat;
+        STACKFRAME64 stackFrame;
+        memset(&stackFrame, 0, sizeof(STACKFRAME64));
 
-        while (true)
+        DWORD machineType = IMAGE_FILE_MACHINE_I386;
+        stackFrame.AddrPC.Offset = ctx->Eip;
+        stackFrame.AddrPC.Mode = AddrModeFlat;
+        stackFrame.AddrFrame.Offset = ctx->Ebp;
+        stackFrame.AddrFrame.Mode = AddrModeFlat;
+        stackFrame.AddrStack.Offset = ctx->Esp;
+        stackFrame.AddrStack.Mode = AddrModeFlat;
+
+        HANDLE process = GetCurrentProcess();
+        HANDLE thread = GetCurrentThread();
+
+        while (StackWalk64(
+            machineType,
+            process,
+            thread,
+            &stackFrame,
+            ctx,
+            NULL,
+            SymFunctionTableAccess64,
+            SymGetModuleBase64,
+            NULL))
         {
-            if (!StackWalk64(IMAGE_FILE_MACHINE_I386, process, thread, &stack, context, NULL, SymFunctionTableAccess64, SymGetModuleBase64, NULL))
+            if (stackFrame.AddrPC.Offset == 0)
                 break;
 
-            wchar_t buffer[512];
-            swprintf_s(buffer, L"- ");
-            result += buffer;
-
-            printAddr(result, reinterpret_cast<void *>(stack.AddrPC.Offset));
-            result += L"\n";
+            ss << L" - ";
+            printAddr(ss, (void *)stackFrame.AddrPC.Offset, false);
+            ss << L"\n";
         }
+
+        return ss.str();
     }
 
-    LONG WINAPI handler(EXCEPTION_POINTERS *info)
+    std::wstring getInformation(LPEXCEPTION_POINTERS info)
     {
-        std::wstring message;
-        message += L"An exception has occurred.\n";
-        message += L"Tip: You can use 'CTRL + C' to copy this message.\n\n";
+        std::wstringstream ss;
 
-        wchar_t buffer[512];
+        ss << L"Exception code: " << std::hex << info->ExceptionRecord->ExceptionCode << std::dec 
+        << L" (" << getExceptionCodeString(info->ExceptionRecord->ExceptionCode) << L")\n"
+        << L"Exception flags: " << info->ExceptionRecord->ExceptionFlags << L"\n"
+        << L"Exception address: " << info->ExceptionRecord->ExceptionAddress << L" (";
+        printAddr(ss, info->ExceptionRecord->ExceptionAddress, false);
+        ss << L")\n"
+        << L"Number of parameters: " << info->ExceptionRecord->NumberParameters << L"\n";
 
-        message += L"Information:\n";
+        return ss.str();
+    }
 
-        std::wstringstream stream;
-        stream << L"- Version: " << PROJECT_VERSION << L"\n";
-        stream << L"- Build date: " << __DATE__ " " __TIME__ << "\n";
-        stream << L"- Geometry Dash Version: " << utils::get_game_version() << L"\n";
-        message += stream.str().c_str();
+    std::wstring generateCrashInfo(LPEXCEPTION_POINTERS info)
+    {
+        std::wstringstream ss;
 
-        message += L"\nException I nformation:\n";
+        ss << L"== Exception Information ==\n";
+        ss << getInformation(info) << L"\n";
 
-        swprintf_s(buffer, L"- Exception Code: %X (%s)\n", info->ExceptionRecord->ExceptionCode, getExceptionCodeString(info->ExceptionRecord->ExceptionCode).c_str());
-        message += buffer;
+        ss << L"== Stack Trace ==\n";
+        ss << getStackTrace(info->ContextRecord) << L"\n";
 
-        swprintf_s(buffer, L"- Exception Flags: %X\n", info->ExceptionRecord->ExceptionFlags);
-        message += buffer;
+        ss << L"== Registers ==\n";
+        ss << getRegisters(info->ContextRecord);
 
-        swprintf_s(buffer, L"- Exception Address: %p (", info->ExceptionRecord->ExceptionAddress);
-        message += buffer;
-        printAddr(message, info->ExceptionRecord->ExceptionAddress, false);
-        message += L")\n";
+        return ss.str();
+    }
 
-        swprintf_s(buffer, L"- Number Parameters: %d\n", info->ExceptionRecord->NumberParameters);
-        message += buffer;
+    LONG WINAPI exceptionHandler(LPEXCEPTION_POINTERS info)
+    {
+        SymSetOptions(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS | SYMOPT_LOAD_LINES);
 
-        message += L"\nStack Trace:\n";
-        walkStack(message, info->ContextRecord);
+        symbolsInitialized = SymInitialize(GetCurrentProcess(), NULL, TRUE);
 
-        message += L"\nRegister States:\n";
-        printRegisterStates(message, info->ContextRecord);
+        std::wstring crashInfo = generateCrashInfo(info);
 
-        MessageBoxW(nullptr, message.c_str(), L"Geometry Dash Crashed", MB_OK | MB_ICONERROR);
+        const char *ver = utils::get_game_version();
+        std::wstring gameVersion = std::wstring(ver, ver + strlen(ver));
+
+        std::string currentDir = utils::get_current_directory();
+        std::wstring wCurrentDir = std::wstring(currentDir.begin(), currentDir.end());
+
+        auto text = fmt::format(
+            L"An exception had occured!\n"
+            L"Tip: You can use 'CTRL + C' to copy this message.\n\n"
+            L"== OpenHack information ==\n"
+            L"- Version: {}\n"
+            L"- Build date: {}\n"
+            L"- Commit hash: {}\n"
+            L"- Game version: {}\n"
+            L"- Game path: {}\n\n{}",
+            L"" PROJECT_VERSION,
+            L"" __DATE__ " " __TIME__,
+            L"" LATEST_COMMIT_HASH,
+            gameVersion.c_str(),
+            wCurrentDir.c_str(),
+            crashInfo.c_str());
+
+        MessageBoxW(NULL, text.c_str(), L"Geometry Dash Crashed", MB_ICONERROR);
+
+        // Save crash info to file
+        std::wofstream file("crashlog.txt");
+        file << text;
+        file.close();
 
         return EXCEPTION_CONTINUE_SEARCH;
     }
 
-    typedef LPTOP_LEVEL_EXCEPTION_FILTER(WINAPI *SetUnhandledExceptionFilterPtr)(LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter);
-    SetUnhandledExceptionFilterPtr SetUnhandledExceptionFilter_Orig = nullptr;
-
-    LPTOP_LEVEL_EXCEPTION_FILTER WINAPI CustomExceptionFilter(LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter)
+    void init()
     {
-        return SetUnhandledExceptionFilter_Orig(handler);
+        AddVectoredExceptionHandler(
+            0,
+            [](PEXCEPTION_POINTERS ExceptionInfo) -> LONG
+            {
+                SetUnhandledExceptionFilter(exceptionHandler);
+                return EXCEPTION_CONTINUE_SEARCH;
+            });
+        SetUnhandledExceptionFilter(exceptionHandler);
     }
 }
 
@@ -218,6 +312,8 @@ namespace logger
         spdlog::register_logger(logger);
         logger->set_level(spdlog::level::trace);
         logger->flush_on(spdlog::level::trace);
+
+        set_exception_handler();
     }
 
     spdlog::logger *get_logger()
@@ -227,11 +323,6 @@ namespace logger
 
     void set_exception_handler()
     {
-        SetUnhandledExceptionFilter(crashhandler::handler);
-        MH_CreateHook(
-            SetUnhandledExceptionFilter,
-            &crashhandler::CustomExceptionFilter,
-            (void **)&crashhandler::SetUnhandledExceptionFilter_Orig);
-        MH_EnableHook(SetUnhandledExceptionFilter);
+        crashhandler::init();
     }
 }
