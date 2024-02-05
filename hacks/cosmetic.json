@@ -53,7 +53,7 @@
         {
             "type": "toggle",
             "title": "Inversed Trail",
-            "description": "Makes the trail go in the opposite direction.",
+            "description": "Reverses the display state of the trail.",
             "id": "cosmetic.inversed_trail",
             "opcodes": [
                 {
@@ -78,7 +78,7 @@
         {
             "type": "toggle",
             "title": "Practice Pulse",
-            "description": "Objects will have pulse effect in practice mode like in normal mode.",
+            "description": "Objects will pulse in practice mode same as in normal mode.",
             "id": "cosmetic.practice_pulse",
             "opcodes": [
                 {
@@ -233,7 +233,7 @@
         {
             "type": "toggle",
             "title": "No Robot Fire",
-            "description": "Disables robot fire when is propelled.",
+            "description": "Disables the robot's fire when jumping.",
             "id": "cosmetic.robotfire",
             "opcodes": [
                 {

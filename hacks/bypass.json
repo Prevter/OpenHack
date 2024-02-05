@@ -98,7 +98,7 @@
         {
             "type": "toggle",
             "title": "Basement Key Bypass",
-            "description": "Open locks in the basement without having to collect keys.",
+            "description": "Unlocks the basement without having to collect the three keys.",
             "id": "bypass.vault2",
             "opcodes": [
                 {
@@ -154,7 +154,7 @@
         {
             "type": "toggle",
             "title": "Free Shops",
-            "description": "Buy anything from the shops for free.\n(Doesn't save after restart right now)",
+            "description": "Buy anything from the shops for free.\n(Gets undone on restart)",
             "id": "bypass.shops",
             "opcodes": [
                 {
@@ -210,7 +210,7 @@
         {
             "type": "toggle",
             "title": "Quick Chests",
-            "description": "Makes chest open animation almost instant.",
+            "description": "Makes chest's opening animation almost instant.",
             "id": "bypass.fastchest",
             "opcodes": [
                 {
