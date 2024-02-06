@@ -4,7 +4,7 @@
         {
             "type": "toggle",
             "title": "Custom Object Bypass",
-            "description": "Save custom objects with more than 1000 objects in them.",
+            "description": "Allows you to save custom objects with more than 1000 objects in them.",
             "id": "creator.custom_object",
             "opcodes": [
                 {
@@ -20,7 +20,7 @@
         {
             "type": "toggle",
             "title": "Copy Hack",
-            "description": "Allows you to copy levels that have copying disabled.",
+            "description": "Allows you to copy any level.",
             "id": "creator.copy",
             "opcodes": [
                 {
