@@ -1,0 +1,20 @@
+{
+	"geode": "2.0.0",
+	"gd": "2.204",
+	"version": "v2.0.0",
+	"id": "prevter.openhack",
+	"name": "OpenHack",
+	"developer": "Prevter",
+	"description": "A collection of hacks for Geometry Dash",
+	"repository": "https://github.com/Prevter/GDOpenHack",
+	"issues": {
+		"info": "Join the Discord server for support",
+		"url": "https://discord.gg/HaHn7RSJ4Q"
+	},
+	"resources": {
+		"files": [
+			"hacks/*.json",
+			"res/*.ttf"
+		]
+	}
+}
