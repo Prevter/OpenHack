@@ -1,39 +1,65 @@
 #include "imgui.hpp"
 
-#include "../../platform/platform.hpp"
+#include "../../openhack.hpp"
 
 #include <imgui.h>
-#include <gd.hpp>
 
 #include <GL/glew.h>
 #include <GL/GL.h>
 
 namespace openhack::imgui
 {
-    bool isInitialized = false;
-    std::function<void()> initCallback = nullptr, drawCallback = nullptr;
+    bool m_isInitialized = false;
+    std::function<void()> drawCallback = nullptr;
+    std::function<bool()> initCallback = nullptr;
+    gd::cocos2d::CCTexture2D *fontTexture = nullptr;
+
+    bool isInitialized()
+    {
+        return m_isInitialized;
+    }
+
+    void generateFontsTextures()
+    {
+        uint8_t *pixels;
+        int width, height;
+
+        auto &io = ImGui::GetIO();
+        io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
+
+        fontTexture = gd::cocos2d::CCTexture2D::create();
+        gd::cocos2d::CCTexture2D::initWithData(
+            fontTexture, pixels,
+            gd::cocos2d::CCTexture2DPixelFormat::kCCTexture2DPixelFormat_RGBA8888,
+            width, height, gd::cocos2d::CCSize(width, height));
+
+        io.Fonts->SetTexID(reinterpret_cast<ImTextureID>(static_cast<std::uintptr_t>(fontTexture->m_uName())));
+    }
 
     void initialize()
     {
-        if (isInitialized)
+        if (m_isInitialized)
             return;
 
         ImGui::CreateContext();
-        if (initCallback)
-            initCallback();
-        isInitialized = true;
+        m_isInitialized = true;
+
+        if (initCallback && !initCallback())
+            deinitialize();
+
+        generateFontsTextures();
     }
 
     void deinitialize()
     {
-        if (!isInitialized)
+        if (!m_isInitialized)
             return;
 
         ImGui::DestroyContext();
-        isInitialized = false;
+        m_isInitialized = false;
     }
 
-    void setInitCallback(std::function<void()> callback)
+    void setInitCallback(std::function<bool()> callback)
     {
         initCallback = callback;
     }
@@ -43,43 +69,13 @@ namespace openhack::imgui
         drawCallback = callback;
     }
 
-    void newFrame()
-    {
-        auto &io = ImGui::GetIO();
-
-        auto *director = gd::cocos2d::CCDirector::sharedDirector();
-        const auto winSize = gd::cocos2d::CCDirector::getWinSize(director);
-        const auto frameSize = gd::cocos2d::CCDirector::getOpenGLView(director)->getFrameSize();
-
-        io.DisplaySize = ImVec2(winSize.width, winSize.height);
-        io.DisplayFramebufferScale = ImVec2(
-            frameSize.width / winSize.width,
-            frameSize.height / winSize.height);
-
-        float deltaTime = gd::cocos2d::CCDirector::getDeltaTime(director);
-        if (deltaTime > 0.0f)
-            io.DeltaTime = deltaTime;
-        else
-            io.DeltaTime = 1.0f / 60.0f;
-
-#ifndef PLATFORM_ANDROID
-        auto mousePos = openhack::utils::getMousePosition();
-        io.AddMousePosEvent(mousePos.x, mousePos.y);
-#endif
-
-        // Keyboard modifiers
-        // auto* kb = gd::cocos2d::CCDirector::getKeyboardDispatcher(director);
-        // io.KeyAlt = kb->getAltKeyPressed() || kb->getCommandKeyPressed(); // look
-        // io.KeyCtrl = kb->getControlKeyPressed();
-        // io.KeyShift = kb->getShiftKeyPressed();
-    }
-
     ImVec2 cocosToFrame(const gd::cocos2d::CCPoint &pos)
     {
         auto *director = gd::cocos2d::CCDirector::sharedDirector();
         auto *glView = gd::cocos2d::CCDirector::getOpenGLView(director);
         const auto frameSize = glView->getFrameSize();
-        const auto winSize = gd::cocos2d::CCDirector::getWinSize(director);
+        gd::cocos2d::CCSize winSize;
+        gd::cocos2d::CCDirector::getWinSize(director, &winSize);
 
         return ImVec2(
             pos.x / winSize.width * frameSize.width,
@@ -91,11 +87,44 @@ namespace openhack::imgui
         auto *director = gd::cocos2d::CCDirector::sharedDirector();
         auto *glView = gd::cocos2d::CCDirector::getOpenGLView(director);
         const auto frameSize = glView->getFrameSize();
-        const auto winSize = gd::cocos2d::CCDirector::getWinSize(director);
+        gd::cocos2d::CCSize winSize;
+        gd::cocos2d::CCDirector::getWinSize(director, &winSize);
 
         return gd::cocos2d::CCPoint(
             pos.x / frameSize.width * winSize.width,
             (1.f - pos.y / frameSize.height) * winSize.height);
+    }
+
+    void newFrame()
+    {
+        auto &io = ImGui::GetIO();
+
+        auto *director = gd::cocos2d::CCDirector::sharedDirector();
+        const auto frameSize = gd::cocos2d::CCDirector::getOpenGLView(director)->getFrameSize();
+        gd::cocos2d::CCSize winSize;
+        gd::cocos2d::CCDirector::getWinSize(director, &winSize);
+
+        io.DisplaySize = ImVec2(frameSize.width, frameSize.height);
+        io.DisplayFramebufferScale = ImVec2(
+            winSize.width / frameSize.width,
+            winSize.height / frameSize.height);
+
+        float deltaTime = gd::cocos2d::CCDirector::getDeltaTime(director);
+        if (deltaTime > 0.0f)
+            io.DeltaTime = deltaTime;
+        else
+            io.DeltaTime = 1.0f / 60.0f;
+
+#ifndef PLATFORM_ANDROID
+        auto mousePos = cocosToFrame(openhack::utils::getMousePosition());
+        io.AddMousePosEvent(mousePos.x, mousePos.y);
+#endif
+
+        // Keyboard modifiers
+        // auto* kb = gd::cocos2d::CCDirector::getKeyboardDispatcher(director);
+        // io.KeyAlt = kb->getAltKeyPressed() || kb->getCommandKeyPressed(); // look
+        // io.KeyCtrl = kb->getControlKeyPressed();
+        // io.KeyShift = kb->getShiftKeyPressed();
     }
 
     void renderFrame()
@@ -126,8 +155,8 @@ namespace openhack::imgui
 
         auto *shaderCache = gd::cocos2d::CCShaderCache::sharedShaderCache();
         auto *shader = gd::cocos2d::CCShaderCache::programForKey(shaderCache, kCCShader_PositionTextureColor);
-        gd::cocos2d::CCEGLProgram::use(shader);
-        gd::cocos2d::CCEGLProgram::setUniformsForBuiltins(shader);
+        gd::cocos2d::CCGLProgram::use(shader);
+        gd::cocos2d::CCGLProgram::setUniformsForBuiltins(shader);
 
         for (int i = 0; i < drawData->CmdListsCount; ++i)
         {
@@ -175,9 +204,9 @@ namespace openhack::imgui
 
     void draw()
     {
-        if (!isInitialized)
+        if (!m_isInitialized)
             return;
-            
+
         gd::cocos2d::ccGLBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         newFrame();
@@ -192,11 +221,16 @@ namespace openhack::imgui
 
     void CCEGLView_toggleFullScreen(std::function<void()> original)
     {
-        if (!isInitialized)
+        if (!m_isInitialized)
             return original();
 
         deinitialize();
         original();
         initialize();
+    }
+
+    void CCTouchDispatcher_touches(void *touches, void *event, uint32_t type, std::function<void(void *, void *, uint32_t)> original)
+    {
+        original(touches, event, type);
     }
 }

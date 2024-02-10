@@ -1,5 +1,5 @@
 #include "logger.hpp"
-#include "crashhandler.hpp"
+#include "../../shared/platform/platform.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -42,8 +42,6 @@ namespace logger
         spdlog::register_logger(logger);
         logger->set_level(spdlog::level::trace);
         logger->flush_on(spdlog::level::trace);
-
-        crashhandler::init();
     }
 
     void setConsole(bool enabled)
@@ -54,6 +52,8 @@ namespace logger
             AllocConsole();
             FILE *fDummy;
             freopen_s(&fDummy, "CONIN$", "r", stdin);
+            freopen_s(&fDummy, "CONOUT$", "w", stdout);
+            freopen_s(&fDummy, "CONOUT$", "w", stderr);
         }
         else
         {

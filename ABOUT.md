@@ -1,6 +1,11 @@
 # OpenHack
 A free and open source collection of hacks for Geometry Dash version 2.2.
 
+## How to use
+1. Press `Tab` to open the menu.
+2. Activate the hacks you want to use.
+3. Have fun! :D
+
 ## About
 OpenHack is a free and open source collection of hacks for Geometry Dash version 2.2. It is designed to be easy to use and highly customizable, with a wide range of features to enhance the game experience.
 

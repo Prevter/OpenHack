@@ -13,8 +13,7 @@
 	},
 	"resources": {
 		"files": [
-			"hacks/*.json",
-			"res/*.ttf"
+			"resources/fonts/*"
 		]
 	}
 }

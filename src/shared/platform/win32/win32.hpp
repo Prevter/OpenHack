@@ -16,10 +16,11 @@ namespace openhack::utils
     {
         gd::cocos2d::CCDirector *director = gd::cocos2d::CCDirector::sharedDirector();
         auto *gl = gd::cocos2d::CCDirector::getOpenGLView(director);
-        auto winSize = gd::cocos2d::CCDirector::getWinSize(director);
         auto frameSize = gl->getFrameSize();
+        gd::cocos2d::CCSize winSize;
+        gd::cocos2d::CCDirector::getWinSize(director, &winSize);
         auto mouse = gl->getMousePosition() / frameSize;
-        return gd::cocos2d::CCPoint(0, 0);
+        return gd::cocos2d::CCPoint(mouse.x * winSize.width, (1.f - mouse.y) * winSize.height);
     }
 
     inline std::string getCurrentDirectory()
@@ -117,7 +118,7 @@ namespace openhack::utils
             int32_t last = atoi(version[1].c_str());
             last++;
             version[1] = std::to_string(last);
-            
+
             // join by dot
             gameVersion = version[0] + "." + version[1];
             return gameVersion;

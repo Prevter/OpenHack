@@ -13,7 +13,12 @@
 #include <string>
 #include <vector>
 
+#ifdef OPENHACK_GEODE
+#include "../geode/pch.hpp"
 #include <gd.hpp>
+#else
+#include "../standalone/pch.hpp"
+#endif
 
 /// @brief The namespace for the OpenHack mod.
 namespace openhack

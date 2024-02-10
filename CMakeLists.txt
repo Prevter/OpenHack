@@ -91,6 +91,13 @@ else()
         ${PROJECT_NAME}
     )
 
+    # Set "OPENHACK_GEODE" to 1
+    target_compile_definitions(
+        ${PROJECT_NAME}-Geode
+        PRIVATE
+        OPENHACK_GEODE=1
+    )
+
     setup_geode_mod(${PROJECT_NAME}-Geode)
 endif()
 
@@ -128,6 +135,13 @@ target_link_libraries(
     spdlog::spdlog
 )
 
+# Set "OPENHACK_STANDALONE" to 1
+target_compile_definitions(
+    ${PROJECT_NAME}-Standalone
+    PRIVATE
+    OPENHACK_STANDALONE=1
+)
+
 set_target_properties(
     ${PROJECT_NAME}-Standalone 
     PROPERTIES 
@@ -135,4 +149,12 @@ set_target_properties(
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
+)
+
+# Create "openhack" directory in the output directory and copy everything from "resources" to it
+add_custom_command(
+    TARGET ${PROJECT_NAME}-Standalone
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}/openhack"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/resources" "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}/openhack"
 )

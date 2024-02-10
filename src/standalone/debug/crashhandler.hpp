@@ -1,5 +1,6 @@
 #pragma once
 #include "../../shared/openhack.hpp"
+#include "logger.hpp"
 
 #ifdef PLATFORM_WINDOWS
 
@@ -12,8 +13,11 @@
 #include <errhandlingapi.h>
 #include <DbgHelp.h>
 #include <string>
+#include <ehdata.h>
 #include <sstream>
 #pragma comment(lib, "DbgHelp")
+
+#include "ehdata_structs.hpp"
 
 namespace crashhandler
 {
@@ -191,17 +195,99 @@ namespace crashhandler
         return ss.str();
     }
 
+    template <typename T, typename U>
+    static std::add_const_t<std::decay_t<T>> rebaseAndCast(intptr_t base, U value)
+    {
+        // U value -> const T* (base+value)
+        return reinterpret_cast<std::add_const_t<std::decay_t<T>>>(base + (ptrdiff_t)(value));
+    }
+
     std::wstring getInformation(LPEXCEPTION_POINTERS info)
     {
         std::wstringstream ss;
 
-        ss << L"Exception code: " << std::hex << info->ExceptionRecord->ExceptionCode << std::dec 
-        << L" (" << getExceptionCodeString(info->ExceptionRecord->ExceptionCode) << L")\n"
-        << L"Exception flags: " << info->ExceptionRecord->ExceptionFlags << L"\n"
-        << L"Exception address: " << info->ExceptionRecord->ExceptionAddress << L" (";
-        printAddr(ss, info->ExceptionRecord->ExceptionAddress, false);
-        ss << L")\n"
-        << L"Number of parameters: " << info->ExceptionRecord->NumberParameters << L"\n";
+        if (info->ExceptionRecord->ExceptionCode == EH_EXCEPTION_NUMBER)
+        {
+            bool isStdException = false;
+
+            auto *exceptionRecord = info->ExceptionRecord;
+            auto exceptionObject = exceptionRecord->ExceptionInformation[1];
+
+            // 0 on 32-bit, dll offset on 64-bit
+            intptr_t imageBase = exceptionRecord->NumberParameters >= 4 ? (intptr_t)exceptionRecord->ExceptionInformation[3] : 0;
+
+            auto *throwInfo = (_MSVC_ThrowInfo *)exceptionRecord->ExceptionInformation[2];
+            if (!throwInfo || !throwInfo->pCatchableTypeArray)
+            {
+                ss << "C++ exception: <no SEH data available about the thrown exception>\n";
+            }
+            else
+            {
+                auto *catchableTypeArray = rebaseAndCast<_MSVC_CatchableTypeArray *>(imageBase, throwInfo->pCatchableTypeArray);
+                auto ctaSize = catchableTypeArray->nCatchableTypes;
+                const char *targetName = nullptr;
+
+                for (int i = 0; i < ctaSize; i++)
+                {
+                    auto *catchableType = rebaseAndCast<_MSVC_CatchableType *>(imageBase, catchableTypeArray->arrayOfCatchableTypes[i]);
+                    auto *ctDescriptor = rebaseAndCast<_MSVC_TypeDescriptor *>(imageBase, catchableType->pType);
+                    const char *classname = ctDescriptor->name;
+
+                    if (i == 0)
+                    {
+                        targetName = classname;
+                    }
+
+                    if (strcmp(classname, ".?AVexception@std@@") == 0)
+                    {
+                        isStdException = true;
+                        break;
+                    }
+                }
+
+                // demangle the name of the thrown object
+                std::wstring demangledName;
+
+                if (!targetName || targetName[0] == '\0' || targetName[1] == '\0')
+                {
+                    demangledName = L"<Unknown type>";
+                }
+                else
+                {
+                    char demangledBuf[256];
+                    size_t written = UnDecorateSymbolName(targetName + 1, demangledBuf, 256, UNDNAME_NO_ARGUMENTS);
+                    if (written == 0)
+                    {
+                        demangledName = L"<Unknown type>";
+                    }
+                    else
+                    {
+                        demangledName = std::wstring(demangledBuf, demangledBuf + written);
+                    }
+                }
+
+                if (isStdException)
+                {
+                    std::exception *excObject = reinterpret_cast<std::exception *>(exceptionObject);
+                    ss << L"C++ Exception: " << demangledName << "(\"" << excObject->what() << "\")"
+                           << "\n";
+                }
+                else
+                {
+                    ss << L"C++ Exception: type '" << demangledName << "'\n";
+                }
+            }
+        }
+        else
+        {
+            ss << L"Exception code: " << std::hex << info->ExceptionRecord->ExceptionCode << std::dec
+               << L" (" << getExceptionCodeString(info->ExceptionRecord->ExceptionCode) << L")\n"
+               << L"Exception flags: " << info->ExceptionRecord->ExceptionFlags << L"\n"
+               << L"Exception address: " << info->ExceptionRecord->ExceptionAddress << L" (";
+            printAddr(ss, info->ExceptionRecord->ExceptionAddress, false);
+            ss << L")\n"
+               << L"Number of parameters: " << info->ExceptionRecord->NumberParameters << L"\n";
+        }
 
         return ss.str();
     }

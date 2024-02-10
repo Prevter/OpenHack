@@ -10,7 +10,7 @@ namespace openhack::hooks
     {
         void swapBuffers()
         {
-            // openhack::imgui::draw();
+            openhack::imgui::draw();
             cocos2d::CCEGLView::swapBuffers();
         }
         void toggleFullScreen(bool fullscreen, bool borderless)

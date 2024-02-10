@@ -21,6 +21,8 @@ namespace openhack::hooks
 
     inline void installHooks()
     {
+        MH_Initialize();
+
         gd::setHookCreation([](void *target, void *detour, void **original)
                             { MH_CreateHook(target, detour, original); MH_EnableHook(target); });
         gd::setHookRemoval([](void *target)

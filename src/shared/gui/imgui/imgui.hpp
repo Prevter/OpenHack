@@ -15,10 +15,13 @@ namespace openhack::imgui
     void draw();
 
     /// @brief Sets the init callback.
-    void setInitCallback(std::function<void()> callback);
+    void setInitCallback(std::function<bool()> callback);
 
     /// @brief Sets the draw callback.
     void setDrawCallback(std::function<void()> callback);
+
+    /// @brief Returns true if ImGui is initialized, false otherwise.
+    bool isInitialized();
 
     /// @brief cocos2d::CCMouseDispatcher::dispatchScrollMSG hook.
     /// @return true if the message should be overridden, false otherwise.
@@ -40,7 +43,7 @@ namespace openhack::imgui
 
     /// @brief cocos2d::CCTouchDispatcher::touches hook.
     /// @param original Used to call the original function.
-    void CCTouchDispatcher_touches(void* touches, void* event, uint32_t type, std::function<void()> original);
+    void CCTouchDispatcher_touches(void* touches, void* event, uint32_t type, std::function<void(void *, void *, uint32_t)> original);
 
     /// @brief cocos2d::CCEGLView::toggleFullscreen hook.
     /// @param original Used to call the original function.
