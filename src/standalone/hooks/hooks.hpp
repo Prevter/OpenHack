@@ -18,6 +18,7 @@
 namespace openhack::hooks
 {
     INSTALL_NAMESPACE(CCEGLView)
+    INSTALL_NAMESPACE(AppDelegate)
 
     inline void installHooks()
     {
@@ -29,5 +30,6 @@ namespace openhack::hooks
                            { MH_DisableHook(target); MH_RemoveHook(target); });
 
         CCEGLView::installHooks();
+        AppDelegate::installHooks();
     }
 }

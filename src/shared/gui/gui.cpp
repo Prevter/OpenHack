@@ -6,7 +6,7 @@ namespace openhack::gui
 {
     std::vector<ImFont *> fonts;
 
-    bool init()
+    void init()
     {
         // Load all fonts from "OPENHACK_DIRECTORY/fonts/"
         auto fontDir = utils::getModFontsDirectory();
@@ -24,9 +24,10 @@ namespace openhack::gui
 
         // Scan for fonts
         ImFontConfig font_cfg;
-        font_cfg.OversampleH = 3;
-        font_cfg.OversampleV = 3;
+        font_cfg.OversampleH = 2;
+        font_cfg.OversampleV = 2;
 
+        fonts.clear();
         for (const auto &entry : std::filesystem::directory_iterator(fontDir))
         {
             if (entry.is_regular_file())

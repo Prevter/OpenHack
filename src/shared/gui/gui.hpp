@@ -2,6 +2,6 @@
 
 namespace openhack::gui
 {
-    bool init();
+    void init();
     void draw();
 }

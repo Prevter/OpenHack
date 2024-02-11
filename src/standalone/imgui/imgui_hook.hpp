@@ -14,6 +14,9 @@ namespace ImGuiHook
     /// @brief Destroys the ImGui context.
     void destroy();
 
+    /// @brief Clears the input state.
+    void clearInput();
+
     /// @brief Sets the callback for the initialization of the ImGui context.
     /// This is called after context creation and before the fonts are loaded,
     /// so this can be used to load custom fonts.

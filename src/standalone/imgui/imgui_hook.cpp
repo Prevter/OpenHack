@@ -39,7 +39,7 @@ namespace ImGuiHook
         ImGui_ImplWin32_Init(windowHandle);
         ImGui_ImplOpenGL3_Init();
 
-        // Clear font cache if it exists
+        // Clear fonts before calling the init callback
         if (io.Fonts)
             io.Fonts->Clear();
 
@@ -161,5 +161,11 @@ namespace ImGuiHook
         ImGui::DestroyContext();
 
         m_initialized = false;
+    }
+
+    void clearInput()
+    {
+        auto &io = ImGui::GetIO();
+        io.ClearInputKeys();
     }
 }
