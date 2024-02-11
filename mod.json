@@ -13,7 +13,8 @@
 	},
 	"resources": {
 		"files": [
-			"resources/fonts/*"
+			"resources/fonts/*",
+			"resources/hacks/*"
 		]
 	}
 }

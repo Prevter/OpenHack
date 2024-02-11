@@ -1,0 +1,246 @@
+{
+    "title": "Cosmetic",
+    "items": [
+        {
+            "type": "toggle",
+            "title": "No Respawn Flash",
+            "description": "Removes the blinking effect on respawn.",
+            "id": "cosmetic.respawn_flash",
+            "opcodes": [
+                {
+                    "pattern": "80BF??000000^0F85????566A0B",
+                    "mask": "E9&(01+01)*03$0190"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Death Effect",
+            "description": "Removes the player death effect.",
+            "id": "cosmetic.death_effect",
+            "opcodes": [
+                {
+                    "pattern": "750E8BCE^E8????5F5E595DC20400",
+                    "mask": "*0590"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Wave Pulse",
+            "description": "Removes the wave pulse effect.",
+            "id": "cosmetic.wave_pulse",
+            "opcodes": [
+                {
+                    "pattern": "74030F28^C18B86",
+                    "mask": "C0"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Particles",
+            "description": "Disables all particles in the game.",
+            "id": "cosmetic.particles",
+            "opcodes": [
+                {
+                    "pattern": "83BE????00^0F84????83BE",
+                    "mask": "E9&(01+01)*03$0190",
+                    "lib": "libcocos2d.dll"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Inversed Trail",
+            "description": "Reverses the display state of the trail.",
+            "id": "cosmetic.inversed_trail",
+            "opcodes": [
+                {
+                    "pattern": "80BE????000F^84????85C0",
+                    "mask": "85",
+                    "lib": "libcocos2d.dll"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Solid Wave Trail",
+            "description": "Makes the wave trail have a solid color.",
+            "id": "cosmetic.solid_wave",
+            "opcodes": [
+                {
+                    "pattern": "83F90F^75?80??????75",
+                    "mask": "9090*07?9090"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Practice Pulse",
+            "description": "Objects will pulse in practice mode same as in normal mode.",
+            "id": "cosmetic.practice_pulse",
+            "opcodes": [
+                {
+                    "pattern": "F30F114C24?84C0^74?80",
+                    "mask": "EB"
+                },
+                {
+                    "pattern": "80B8????0075?F30F104D",
+                    "mask": "*0990"
+                },
+                {
+                    "pattern": "F30F10?????84C0^74?80BE????00",
+                    "mask": "EB"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Enable Menu Buttons",
+            "description": "Enables locked menu buttons (\"Versus\", \"The Map\", \"Event\")",
+            "id": "cosmetic.menu_buttons",
+            "opcodes": [
+                {
+                    "pattern": "84C0^0F84????837C24?10",
+                    "mask": "E9&(01+01)*03$0190"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Orb Ring",
+            "description": "Removes the orb ring.",
+            "id": "cosmetic.orb_ring",
+            "opcodes": [
+                {
+                    "pattern": "578BF9E8????^83B898010000000F84",
+                    "mask": "*0790E9&(01+01)*03$0190"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Glow",
+            "description": "Removes the glow effect.",
+            "id": "cosmetic.glow",
+            "opcodes": [
+                {
+                    "pattern": "84C0^7405C64424?01E8",
+                    "mask": "9090"
+                },
+                {
+                    "pattern": "*85C0^0F84????807D?007407",
+                    "mask": "E9&(01+01)*03$0190"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Wave Trail",
+            "description": "Removes the wave trail.",
+            "id": "cosmetic.notrail",
+            "opcodes": [
+                {
+                    "pattern": "01FF15????^80BE????0074?8B068BCE",
+                    "mask": "*0790EB"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Trail Cutting",
+            "description": "Restores the trail cutting effect.",
+            "id": "cosmetic.trailcut",
+            "opcodes": [
+                {
+                    "pattern": "660F5AC0^F30F59C2E8",
+                    "mask": "*0490",
+                    "lib": "libcocos2d.dll"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Forever Trail",
+            "description": "Makes the trail last forever.",
+            "id": "cosmetic.forevertrail",
+            "opcodes": [
+                {
+                    "pattern": "F30F5E^C1F30F590D????F30F11",
+                    "mask": "C9",
+                    "lib": "libcocos2d.dll"
+                },
+                {
+                    "pattern": "C6811E010000^00C3",
+                    "mask": "01",
+                    "lib": "libcocos2d.dll"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Spider Dash",
+            "description": "Disables the spider dash trail.",
+            "id": "cosmetic.spiderdash",
+            "opcodes": [
+                {
+                    "pattern": "80BF????00^0F84????68????FF",
+                    "mask": "E9&(01+01)*03$0190"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Portal Lightning",
+            "description": "Disables portal lightning from size-changing portals.",
+            "id": "cosmetic.portallightning",
+            "opcodes": [
+                {
+                    "pattern": "E8????^83EC088BCC8BB0",
+                    "mask": "EB2C90"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Hide Trigger",
+            "description": "Disables hide player triggers.",
+            "id": "cosmetic.hidetrigger",
+            "opcodes": [
+                {
+                    "pattern": "C2??8B4D?6A^00E8",
+                    "mask": "01"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Ghost Trail",
+            "description": "Disables player ghost trail triggers.",
+            "id": "cosmetic.ghosttrail",
+            "opcodes": [
+                {
+                    "pattern": "FF75?8BF18B8E????E8????80BE?????74?FF75?8B8E????E8????5E5DC2??558BEC83EC?5657",
+                    "mask": "6A0090"
+                },
+                {
+                    "pattern": "FF75?8B8E????E8????5E5DC2??558BEC83EC?5657",
+                    "mask": "6A0090"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Robot Fire",
+            "description": "Disables the robot's fire when jumping.",
+            "id": "cosmetic.robotfire",
+            "opcodes": [
+                {
+                    "pattern": "FFD084C0^0F85??00008B[8F???]?FF15",
+                    "mask": "E9&(01+01)*03$0190"
+                }
+            ]
+        }
+    ]
+}
