@@ -13,3 +13,6 @@
 [submodule "libs/spdlog"]
 	path = libs/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "libs/imgui-cocos"]
+	path = libs/imgui-cocos
+	url = https://github.com/Prevter/gd-imgui-cocos

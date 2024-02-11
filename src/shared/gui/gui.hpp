@@ -1,5 +1,4 @@
 #pragma once
-#include "imgui/imgui.hpp"
 
 namespace openhack::gui
 {

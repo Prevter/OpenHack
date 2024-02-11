@@ -11,6 +11,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
+# Create build options
+option(BUILD_STANDALONE "Build the standalone version" ON)
+option(BUILD_GEODE "Build the Geode version" ON)
+
 # Get the latest abbreviated commit hash of the working branch
 execute_process(
     COMMAND git log -1 --format=%h
@@ -66,7 +70,9 @@ target_link_libraries(
 # ========================================
 # | Geode build
 # ========================================
-if (NOT DEFINED ENV{GEODE_SDK})
+if (NOT BUILD_GEODE)
+    message(STATUS "Geode build disabled")
+elseif (NOT DEFINED ENV{GEODE_SDK})
     message(STATUS "Geode SDK not found, skipping Geode build")
 else()
     message(STATUS "Found Geode: $ENV{GEODE_SDK}")
@@ -85,10 +91,13 @@ else()
     )
 
     add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
+    set(HAS_IMGUI ON)
+    add_subdirectory(libs/imgui-cocos)
 
     target_link_libraries(
         ${PROJECT_NAME}-Geode
         ${PROJECT_NAME}
+        imgui-cocos
     )
 
     # Set "OPENHACK_GEODE" to 1
@@ -104,6 +113,11 @@ endif()
 # ========================================
 # | Standalone build
 # ========================================
+if (NOT BUILD_STANDALONE)
+    message(STATUS "Standalone build disabled")
+    return()
+endif()
+
 file(
     GLOB_RECURSE STANDALONE_SOURCE_FILES 
     ${CMAKE_CURRENT_LIST_DIR}/src/standalone/*.cpp

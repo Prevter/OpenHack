@@ -10,13 +10,12 @@ namespace openhack::gui
     {
         // Load all fonts from "OPENHACK_DIRECTORY/fonts/"
         auto fontDir = utils::getModFontsDirectory();
-        L_TRACE("Loading fonts from: {}", fontDir);
 
         // Check if the directory exists
         if (!std::filesystem::exists(fontDir))
         {
             L_ERROR("Font directory does not exist: {}", fontDir);
-            return false;
+            return;
         }
 
         ImGuiIO &io = ImGui::GetIO();
@@ -40,7 +39,6 @@ namespace openhack::gui
                     if (font)
                     {
                         fonts.push_back(font);
-                        L_INFO("Loaded font: {}", path);
                     }
                     else
                     {
@@ -55,14 +53,8 @@ namespace openhack::gui
         {
             io.FontDefault = fonts[0];
         }
-        else
-        {
-            L_ERROR("No fonts loaded! Unloading...");
-            return false;
-        }
 
         L_INFO("Initialized ImGui");
-        return true;
     }
 
     void draw()

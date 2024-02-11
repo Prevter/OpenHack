@@ -1,33 +1,32 @@
 #include "hooks.hpp"
+#include "../imgui/imgui_hook.hpp"
 
 namespace openhack::hooks::CCEGLView
 {
 
-#ifdef PLATFORM_WINDOWS
-
     void swapBuffers(gd::cocos2d::CCEGLView *self)
     {
-        openhack::imgui::draw();
+        ImGuiHook::draw(self);
         gd::cocos2d::CCEGLView::swapBuffers(self);
+    }
+
+    void pollEvents(gd::cocos2d::CCEGLView *self)
+    {
+        ImGuiHook::handleEvents();
+        gd::cocos2d::CCEGLView::pollEvents(self);
     }
 
     void toggleFullScreen(gd::cocos2d::CCEGLView *self, bool fullscreen, bool borderless)
     {
-        openhack::imgui::CCEGLView_toggleFullScreen(
-            [&]()
-            {
-                gd::cocos2d::CCEGLView::toggleFullScreen(self, fullscreen, borderless);
-            });
+        ImGuiHook::destroy();
+        gd::cocos2d::CCEGLView::toggleFullScreen(self, fullscreen, borderless);
     }
-
-#endif
 
     void installHooks()
     {
-#ifdef PLATFORM_WINDOWS
         LOG_HOOK(gd::cocos2d::CCEGLView, swapBuffers);
+        LOG_HOOK(gd::cocos2d::CCEGLView, pollEvents);
         LOG_HOOK(gd::cocos2d::CCEGLView, toggleFullScreen);
-#endif
     }
 
 }
