@@ -14,7 +14,8 @@
 	"resources": {
 		"files": [
 			"resources/fonts/*",
-			"resources/hacks/*"
+			"resources/hacks/*",
+			"resources/licenses/*"
 		]
 	}
 }

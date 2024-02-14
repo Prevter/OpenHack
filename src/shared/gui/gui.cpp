@@ -6,22 +6,35 @@ namespace openhack::gui {
     std::vector<Font> fonts;
     Font *currentFont = nullptr;
 
-    void setFont(Font &font) {
-        currentFont = &font;
-        ImGui::GetIO().FontDefault = font.normal;
+    void setFont(Font *font) {
+        currentFont = font;
+        ImGui::GetIO().FontDefault = font->normal;
     }
 
     void setFont(const std::string &name) {
         for (auto &font: fonts) {
             if (font.name == name) {
-                setFont(font);
+                setFont(&font);
                 break;
             }
         }
+        config::set("menu.font", name);
     }
 
     Font &getFont() {
         return *currentFont;
+    }
+
+    std::vector<Font> &getFonts() {
+        return fonts;
+    }
+
+    int32_t getFontIndex() {
+        for (int32_t i = 0; i < fonts.size(); i++) {
+            if (&fonts[i] == currentFont)
+                return i;
+        }
+        return 0;
     }
 
     void init() {
@@ -76,9 +89,12 @@ namespace openhack::gui {
         auto theme = config::get<Themes>("menu.theme");
         setTheme(theme);
 
-        // Set colors if they aren't set
-        if (!config::has("menu.color.background"))
+        try {
+            setStyles();
+        } catch (const std::exception &e) {
+            L_TRACE("Recreating palette...");
             loadPalette();
+        }
 
         L_INFO("Initialized ImGui");
     }

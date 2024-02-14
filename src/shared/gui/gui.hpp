@@ -27,9 +27,15 @@ namespace openhack::gui
     /// @brief Get currently selected font.
     Font &getFont();
 
+    /// @brief Get all available fonts.
+    std::vector<Font> &getFonts();
+
+    /// @brief Get the index of the currently selected font.
+    int32_t getFontIndex();
+
     /// @brief Set the font to use.
     /// @param font The font to use.
-    void setFont(const Font &font);
+    void setFont(Font *font);
 
     /// @brief Set the font to use.
     /// @param name The name of the font to use.

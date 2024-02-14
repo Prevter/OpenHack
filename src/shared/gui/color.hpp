@@ -81,7 +81,7 @@ namespace openhack::gui {
         /// @param color String color in format "RRGGBBAA"
         /// @return New color
         static Color fromString(const char *color) {
-            int c;
+            uint32_t c;
             sscanf_s(color, "%X", &c);
             return fromInt(c);
         }
@@ -89,7 +89,8 @@ namespace openhack::gui {
         /// @brief Converts the color to a string
         /// @return String color in format "RRGGBBAA"
         [[nodiscard]] std::string toString() const {
-            return fmt::format("{:08X}", toInt());
+            uint32_t c = toInt();
+            return fmt::format("{:08X}", c);
         }
     };
 

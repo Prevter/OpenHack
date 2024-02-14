@@ -118,11 +118,16 @@ namespace openhack::menu {
             gui::width();
 
             gui::width(120);
-            // std::vector<std::string> fonts = gui::getFontNames();
-            // if (gui::combo("Font", "menu.font", fonts, fonts.size()))
-            // {
-            //     gui::setFont(config::get<std::string>("menu.font"));
-            // }
+            auto fonts = gui::getFonts();
+            std::string fontsLine;
+            for (auto &font: fonts)
+                fontsLine += font.name + '\0';
+            fontsLine += '\0';
+            int32_t currentFont = gui::getFontIndex();
+            if (gui::combo("Font", &currentFont, fontsLine.c_str())) {
+                auto selected = fonts[currentFont].name;
+                gui::setFont(selected);
+            }
             if (gui::combo("Theme", "menu.theme", gui::THEME_NAMES, gui::THEME_COUNT)) {
                 gui::setTheme(config::get<gui::Themes>("menu.theme"));
             }
