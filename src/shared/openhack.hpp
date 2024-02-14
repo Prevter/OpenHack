@@ -1,5 +1,9 @@
 #pragma once
+
 #include "gui/gui.hpp"
+#include "menu/menu.hpp"
+#include "config.hpp"
+#include "utils.hpp"
 
 #include "platform/platform.hpp"
 #include <version.h>
@@ -9,7 +13,7 @@
 #include <functional>
 #include <iostream>
 #include <sstream>
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -17,12 +21,13 @@
 #include "../geode/pch.hpp"
 #include <gd.hpp>
 #else
+
 #include "../standalone/pch.hpp"
+
 #endif
 
 /// @brief The namespace for the OpenHack mod.
-namespace openhack
-{
+namespace openhack {
     /// @brief Initializes everything.
     /// This function should be called from the entry point of the mod.
     void initialize();

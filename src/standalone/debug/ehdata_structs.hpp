@@ -18,8 +18,8 @@ struct _MSVC_PMD {
 // silence the warning C4200: nonstandard extension used: zero-sized array in struct/union
 #pragma warning (disable:4200)
 struct _MSVC_TypeDescriptor {
-    const void* pVFTable;
-    void* spare;
+    const void *pVFTable;
+    void *spare;
     char name[0];
 };
 #pragma warning (default:4200)

@@ -16,3 +16,6 @@
 [submodule "libs/imgui-cocos"]
 	path = libs/imgui-cocos
 	url = https://github.com/Prevter/gd-imgui-cocos
+[submodule "libs/json"]
+	path = libs/json
+	url = https://github.com/nlohmann/json

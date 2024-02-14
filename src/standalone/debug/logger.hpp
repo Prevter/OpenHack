@@ -1,12 +1,14 @@
 #pragma once
+
 #include <string>
 #include <stdint.h>
 #include <spdlog/spdlog.h>
 
-namespace logger
-{
+namespace logger {
     void initialize(bool console, bool file, std::string filename = "log.txt");
+
     void setConsole(bool enabled);
+
     spdlog::logger *getLogger();
 }
 

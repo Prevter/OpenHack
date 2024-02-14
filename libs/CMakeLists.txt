@@ -29,10 +29,12 @@ target_link_libraries(
 
 # Other libraries
 add_subdirectory(gd.hpp)
+add_subdirectory(json)
 
 # Link all external libraries
 target_link_libraries(
     external_libs INTERFACE
     imgui
     gd.hpp
+    nlohmann_json::nlohmann_json
 )

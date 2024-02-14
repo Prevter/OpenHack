@@ -2,8 +2,7 @@
 
 #include <string>
 
-namespace openhack::utils
-{
+namespace openhack::utils {
     /// @brief Get the directory where all save files are stored.
     /// It's located in "%LOCALAPPDATA%/GeometryDash/geode/mods/prevter.openhack/"
     std::string getModSaveDirectory() noexcept;

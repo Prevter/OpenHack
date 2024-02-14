@@ -22,6 +22,7 @@
 
 #include <windef.h>
 #include <Psapi.h>
+
 typedef int WINBOOL;
 /*
  * Bitmasks for the joysticks buttons, determines what has
@@ -215,20 +216,26 @@ typedef struct _XINPUT_KEYSTROKE {
     BYTE HidCode;
 } XINPUT_KEYSTROKE, *PXINPUT_KEYSTROKE;
 
-typedef struct _XINPUT_BATTERY_INFORMATION
-{
+typedef struct _XINPUT_BATTERY_INFORMATION {
     BYTE BatteryType;
     BYTE BatteryLevel;
 } XINPUT_BATTERY_INFORMATION, *PXINPUT_BATTERY_INFORMATION;
 
-typedef void(WINAPI* tXInputEnable)(WINBOOL);
-typedef DWORD(WINAPI* tXInputSetState)(DWORD x1, XINPUT_VIBRATION* x2);
-typedef DWORD(WINAPI* tXInputGetState)(DWORD x1, XINPUT_STATE* x2);
-typedef DWORD(WINAPI* tXInputGetKeystroke)(DWORD x1, DWORD x2, PXINPUT_KEYSTROKE x3);
-typedef DWORD(WINAPI* tXInputGetCapabilities)(DWORD x1, DWORD x2, XINPUT_CAPABILITIES* x3);
-typedef DWORD(WINAPI* tXInputGetDSoundAudioDeviceGuids)(DWORD x1, GUID* x2, GUID* x3);
-typedef DWORD(WINAPI* tXInputGetBatteryInformation)(DWORD x1, BYTE x2, XINPUT_BATTERY_INFORMATION* x3);
-typedef DWORD(WINAPI* tXInputGetAudioDeviceIds)(DWORD x1, LPWSTR x2, UINT* x3, LPWSTR x4, UINT* x5);
+typedef void(WINAPI *tXInputEnable)(WINBOOL);
+
+typedef DWORD(WINAPI *tXInputSetState)(DWORD x1, XINPUT_VIBRATION *x2);
+
+typedef DWORD(WINAPI *tXInputGetState)(DWORD x1, XINPUT_STATE *x2);
+
+typedef DWORD(WINAPI *tXInputGetKeystroke)(DWORD x1, DWORD x2, PXINPUT_KEYSTROKE x3);
+
+typedef DWORD(WINAPI *tXInputGetCapabilities)(DWORD x1, DWORD x2, XINPUT_CAPABILITIES *x3);
+
+typedef DWORD(WINAPI *tXInputGetDSoundAudioDeviceGuids)(DWORD x1, GUID *x2, GUID *x3);
+
+typedef DWORD(WINAPI *tXInputGetBatteryInformation)(DWORD x1, BYTE x2, XINPUT_BATTERY_INFORMATION *x3);
+
+typedef DWORD(WINAPI *tXInputGetAudioDeviceIds)(DWORD x1, LPWSTR x2, UINT *x3, LPWSTR x4, UINT *x5);
 
 
 extern HMODULE hMod;
@@ -247,13 +254,13 @@ extern "C" {
 #endif
 
 void WINAPI XInputEnable(WINBOOL);
-DWORD WINAPI XInputSetState(DWORD, XINPUT_VIBRATION*);
-DWORD WINAPI XInputGetState(DWORD, XINPUT_STATE*);
+DWORD WINAPI XInputSetState(DWORD, XINPUT_VIBRATION *);
+DWORD WINAPI XInputGetState(DWORD, XINPUT_STATE *);
 DWORD WINAPI XInputGetKeystroke(DWORD, DWORD, PXINPUT_KEYSTROKE);
-DWORD WINAPI XInputGetCapabilities(DWORD, DWORD, XINPUT_CAPABILITIES*);
-DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD, GUID*, GUID*);
-DWORD WINAPI XInputGetBatteryInformation(DWORD, BYTE, XINPUT_BATTERY_INFORMATION*);
-DWORD WINAPI XInputGetAudioDeviceIds(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
+DWORD WINAPI XInputGetCapabilities(DWORD, DWORD, XINPUT_CAPABILITIES *);
+DWORD WINAPI XInputGetDSoundAudioDeviceGuids(DWORD, GUID *, GUID *);
+DWORD WINAPI XInputGetBatteryInformation(DWORD, BYTE, XINPUT_BATTERY_INFORMATION *);
+DWORD WINAPI XInputGetAudioDeviceIds(DWORD, LPWSTR, UINT *, LPWSTR, UINT *);
 
 #ifdef __cplusplus
 }

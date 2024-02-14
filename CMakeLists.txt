@@ -11,6 +11,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
+# Enable C++ exceptions for Clang-cl
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(-Xclang -fcxx-exceptions)
+endif()
+
 # Create build options
 option(BUILD_STANDALONE "Build the standalone version" ON)
 option(BUILD_GEODE "Build the Geode version" ON)
@@ -160,9 +165,9 @@ set_target_properties(
     ${PROJECT_NAME}-Standalone 
     PROPERTIES 
     OUTPUT_NAME "xinput9_1_0"
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}"
 )
 
 # Create "openhack" directory in the output directory and copy everything from "resources" to it

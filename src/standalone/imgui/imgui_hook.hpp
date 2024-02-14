@@ -1,9 +1,9 @@
 #pragma once
+
 #include <functional>
 #include "../pch.hpp"
 
-namespace ImGuiHook
-{
+namespace ImGuiHook {
     /// @brief Called every frame to draw the ImGui UI.
     /// @param view The CCEGLView instance.
     void draw(gd::cocos2d::CCEGLView *view);
