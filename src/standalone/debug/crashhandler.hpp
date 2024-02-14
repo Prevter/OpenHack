@@ -14,6 +14,12 @@
 #include <errhandlingapi.h>
 #include <DbgHelp.h>
 #include <string>
+
+// Fix for "_ThrowInfo" on Clang
+#ifdef __clang__
+struct _ThrowInfo;
+#endif
+
 #include <ehdata.h>
 #include <sstream>
 

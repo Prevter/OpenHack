@@ -5,6 +5,10 @@
 #include <string>
 #include <cmath>
 
+#ifdef OPENHACK_STANDALONE
+#include <spdlog/fmt/fmt.h>
+#endif
+
 namespace openhack::gui {
     struct Color {
         float r, g, b, a;

@@ -3,10 +3,11 @@
 #if defined(__clang__) || defined(__GNUC__)
 #include <cmath>
 #else
-#define _USE_MATH_DEFINES
-
 #include <math.h>
+#endif
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
 #endif
 
 namespace openhack::gui::animation {
