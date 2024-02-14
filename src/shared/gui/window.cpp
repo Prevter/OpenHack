@@ -19,8 +19,9 @@ namespace openhack::gui {
             return;
 
         ImGuiWindowFlags flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize;
+        auto scale = config::get<float>("menu.uiScale");
 
-        ImGui::SetNextWindowSizeConstraints(MIN_SIZE, MAX_SIZE);
+        ImGui::SetNextWindowSizeConstraints({MIN_SIZE.x * scale, MIN_SIZE.y * scale}, {MAX_SIZE.x * scale, MAX_SIZE.y * scale});
 
         ImGui::SetNextWindowCollapsed(!m_isOpen, ImGuiCond_Always);
 

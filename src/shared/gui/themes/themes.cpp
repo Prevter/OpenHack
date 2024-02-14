@@ -7,11 +7,19 @@
 
 namespace openhack::gui {
     bool Theme::beginWindow(const char *name, bool *open, ImGuiWindowFlags flags) {
-        return ImGui::Begin(name, open, flags);
+        auto font = gui::getFont();
+        ImGui::PushFont(font.title);
+        bool opened = ImGui::Begin(name, open, flags);
+        ImGui::PushFont(font.normal);
+        auto scale = config::get<float>("menu.uiScale");
+        ImGui::SetWindowFontScale(scale);
+        return opened;
     }
 
     void Theme::endWindow() {
+        ImGui::PopFont();
         ImGui::End();
+        ImGui::PopFont();
     }
 
     void Theme::text(const char *text, va_list args) {
@@ -141,10 +149,10 @@ namespace openhack::gui {
 
     void text(const char *text, ...) {
         va_list args;
-                va_start(args, text);
+        va_start(args, text);
         if (currentTheme)
             currentTheme->text(text, args);
-                va_end(args);
+        va_end(args);
     }
 
     bool button(const char *label, const ImVec2 &size) {

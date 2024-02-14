@@ -85,7 +85,8 @@ namespace openhack::gui {
 
     void width(float width) {
         if (width > 0) {
-            ImGui::PushItemWidth(width);
+            auto scale = config::get<float>("menu.uiScale");
+            ImGui::PushItemWidth(width * scale);
         } else {
             ImGui::PopItemWidth();
         }
