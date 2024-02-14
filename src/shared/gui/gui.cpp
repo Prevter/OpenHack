@@ -37,6 +37,20 @@ namespace openhack::gui {
         return 0;
     }
 
+    /// @brief Verify that all colors are stored in the config
+    /// @return True if all colors are stored in the config
+    bool checkPalette() {
+        return config::has("menu.color.text") &&
+               config::has("menu.color.textDisabled") &&
+               config::has("menu.color.background") &&
+               config::has("menu.color.accent") &&
+               config::has("menu.color.primary") &&
+               config::has("menu.color.secondary") &&
+               config::has("menu.color.border") &&
+               config::has("menu.color.hovered") &&
+               config::has("menu.color.clicked");
+    }
+
     void init() {
         utils::resetWindowHandle();
 
@@ -89,12 +103,8 @@ namespace openhack::gui {
         auto theme = config::get<Themes>("menu.theme");
         setTheme(theme);
 
-        try {
-            setStyles();
-        } catch (const std::exception &e) {
-            L_TRACE("Recreating palette...");
+        if (!checkPalette())
             loadPalette();
-        }
 
         L_INFO("Initialized ImGui");
     }
