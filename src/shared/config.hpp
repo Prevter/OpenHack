@@ -1,19 +1,20 @@
 #pragma once
+
+#include <stdexcept>
 #include <string>
+#include <vector>
 #include <nlohmann/json.hpp>
 #include <imgui.h>
 
 /// @brief Namespace for all save data and configuration.
-namespace openhack::config
-{
+namespace openhack::config {
     inline nlohmann::json storage; // Object that holds options which are saved to disk
     inline nlohmann::json globals; // Object that holds temporary values
 
     /// @brief Check if a key exists in the configuration.
     /// @param key Key to check.
     /// @return True if the key exists in the configuration.
-    inline bool has(const std::string &key)
-    {
+    inline bool has(const std::string &key) {
         return storage.contains(key);
     }
 
@@ -22,9 +23,8 @@ namespace openhack::config
     /// @param key Key to get the value from.
     /// @param defaultValue Default value to return if the key does not exist.
     /// @return Value from the configuration or the default value if the key does not exist.
-    template <typename T>
-    inline T get(const std::string &key, const T &defaultValue)
-    {
+    template<typename T>
+    inline T get(const std::string &key, const T &defaultValue) {
         if (!has(key))
             return defaultValue;
 
@@ -36,9 +36,8 @@ namespace openhack::config
     /// @tparam T Type of the value to get.
     /// @param key Key to get the value from.
     /// @return Value from the configuration.
-    template <typename T>
-    inline T get(const std::string &key)
-    {
+    template<typename T>
+    inline T get(const std::string &key) {
         if (!has(key))
             throw std::runtime_error("Key " + key + " does not exist");
 
@@ -49,9 +48,8 @@ namespace openhack::config
     /// @tparam T Type of the value to set.
     /// @param key Key to set the value to.
     /// @param value Value to set.
-    template <typename T>
-    inline void set(const std::string &key, const T &value)
-    {
+    template<typename T>
+    inline void set(const std::string &key, const T &value) {
         storage[key] = value;
     }
 
@@ -59,9 +57,8 @@ namespace openhack::config
     /// @tparam T Type of the value to set.
     /// @param key Key to set the value to.
     /// @param value Value to set.
-    template <typename T>
-    inline void setIfEmpty(const std::string &key, const T &value)
-    {
+    template<typename T>
+    inline void setIfEmpty(const std::string &key, const T &value) {
         if (!has(key))
             set(key, value);
     }
@@ -69,8 +66,7 @@ namespace openhack::config
     /// @brief Check if a key exists in the global variables.
     /// @param key Key to check.
     /// @return True if the key exists in the global variables.
-    inline bool hasGlobal(const std::string &key)
-    {
+    inline bool hasGlobal(const std::string &key) {
         return globals.contains(key);
     }
 
@@ -79,9 +75,8 @@ namespace openhack::config
     /// @param key Key to get the value from.
     /// @param defaultValue Default value to return if the key does not exist.
     /// @return Value from the global variables or the default value if the key does not exist.
-    template <typename T>
-    inline T getGlobal(const std::string &key, const T &defaultValue)
-    {
+    template<typename T>
+    inline T getGlobal(const std::string &key, const T &defaultValue) {
         if (!hasGlobal(key))
             return defaultValue;
 
@@ -93,9 +88,8 @@ namespace openhack::config
     /// @tparam T Type of the value to get.
     /// @param key Key to get the value from.
     /// @return Value from the global variables.
-    template <typename T>
-    inline T getGlobal(const std::string &key)
-    {
+    template<typename T>
+    inline T getGlobal(const std::string &key) {
         if (!hasGlobal(key))
             throw std::runtime_error("Key " + key + " does not exist");
 
@@ -106,9 +100,8 @@ namespace openhack::config
     /// @tparam T Type of the value to set.
     /// @param key Key to set the value to.
     /// @param value Value to set.
-    template <typename T>
-    inline void setGlobal(const std::string &key, const T &value)
-    {
+    template<typename T>
+    inline void setGlobal(const std::string &key, const T &value) {
         globals[key] = value;
     }
 
@@ -127,24 +120,38 @@ namespace openhack::config
 #include "gui/color.hpp"
 #include "gui/themes/themes.hpp"
 #include "gui/window.hpp"
+#include "menu/blur.hpp"
 
 void to_json(nlohmann::json &j, const ImVec2 &v);
+
 void from_json(const nlohmann::json &j, ImVec2 &v);
 
-namespace openhack::gui::animation
-{
+namespace openhack::gui::animation {
     void to_json(nlohmann::json &j, const Easing &e);
+
     void from_json(const nlohmann::json &j, Easing &e);
 
     void to_json(nlohmann::json &j, const EasingMode &e);
+
     void from_json(const nlohmann::json &j, EasingMode &e);
 }
 
-namespace openhack::gui
-{
+namespace openhack::gui {
     void to_json(nlohmann::json &j, const Color &e);
+
     void from_json(const nlohmann::json &j, Color &e);
 
     void to_json(nlohmann::json &j, const Window &e);
+
     void from_json(const nlohmann::json &j, Window &e);
+
+    void to_json(nlohmann::json &j, const std::vector<Window> &e);
+
+    void from_json(const nlohmann::json &j, std::vector<Window> &e);
+}
+
+namespace openhack::menu::blur {
+    void to_json(nlohmann::json &j, const State &e);
+
+    void from_json(const nlohmann::json &j, State &e);
 }

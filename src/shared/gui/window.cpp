@@ -10,7 +10,7 @@ namespace openhack::gui {
         // TODO: Load default window size and position from config
         m_position = ImVec2(0, 0);
         m_drawPosition = m_position;
-        m_size = ImVec2(220, 0);
+        m_size = ImVec2(MIN_SIZE);
         m_isOpen = true;
     }
 

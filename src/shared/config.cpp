@@ -96,4 +96,28 @@ namespace openhack::gui {
         e.setOpen(j.at("open").get<bool>());
         e.setTitle(j.at("title").get<std::string>());
     }
+
+    void to_json(nlohmann::json &j, const std::vector<Window> &e) {
+        j = nlohmann::json::array();
+        for (const auto &window : e) {
+            j.push_back(window);
+        }
+    }
+
+    void from_json(const nlohmann::json &j, std::vector<Window> &e) {
+        e.clear();
+        for (const auto &windowJ : j) {
+            e.push_back(windowJ.get<Window>());
+        }
+    }
+}
+
+namespace openhack::menu::blur {
+    void to_json(nlohmann::json &j, const State &e) {
+        j = static_cast<int>(e);
+    }
+
+    void from_json(const nlohmann::json &j, State &e) {
+        e = static_cast<State>(j.get<int>());
+    }
 }

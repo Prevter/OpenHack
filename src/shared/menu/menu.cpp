@@ -1,6 +1,7 @@
 #include "menu.hpp"
 #include "../openhack.hpp"
 #include "../config.hpp"
+// #include "blur.hpp"
 
 namespace openhack::menu {
     bool isOpened = false;
@@ -42,6 +43,12 @@ namespace openhack::menu {
             default: // Bottom-Left
                 target = ImVec2(-window.getSize().x, screenSize.y);
                 break;
+        }
+
+        // If the window is collapsed, multiply the target position by 1.5
+        if (!window.isOpen()) {
+            target.x *= 1.5;
+            target.y *= 1.5;
         }
 
         return target;
@@ -87,6 +94,7 @@ namespace openhack::menu {
     void init() {
         // Make sure to initialize ImGui
         gui::init();
+        // blur::compileShader();
 
         // Then initialize the windows
         if (isInitialized)
@@ -112,14 +120,14 @@ namespace openhack::menu {
             gui::width(70);
             gui::inputFloat("UI Scale", "menu.uiScale", 0.25f, 3.0f, "%.3f");
             gui::inputFloat("Border Size", "menu.borderSize", 0.0f, 10.0f, "%.3f");
-            gui::inputFloat("Window Round", "menu.windowRounding", 0.0f, 10.0f, "%.3f");
-            gui::inputFloat("Frame Round", "menu.frameRounding", 0.0f, 10.0f, "%.3f");
-            gui::inputFloat("Window Snap", "menu.windowSnap", 0.0f, 10.0f, "%.3f");
+            gui::inputFloat("Window Rounding", "menu.windowRounding", 0.0f, 10.0f, "%.3f");
+            gui::inputFloat("Frame Rounding", "menu.frameRounding", 0.0f, 10.0f, "%.3f");
+            gui::inputFloat("Window Margin", "menu.windowSnap", 0.0f, 10.0f, "%.3f");
             gui::width();
 
             gui::width(120);
             auto fonts = gui::getFonts();
-            std::string fontsLine;
+            std::string fontsLine; // Create null-delimited string with all font names
             for (auto &font: fonts)
                 fontsLine += font.name + '\0';
             fontsLine += '\0';
@@ -162,12 +170,14 @@ namespace openhack::menu {
             gui::width(70);
             gui::inputFloat("Animation Time", "menu.animationTime", 0.0f, 10.0f, "%.3f");
             gui::width();
-            gui::width(120);
-            gui::combo("Easing", "menu.easingType", gui::animation::EASING_NAMES, gui::animation::EASING_COUNT);
-            gui::combo("Mode", "menu.easingMode", gui::animation::EASING_MODE_NAMES, 3);
-            gui::combo("Blur", "menu.blur", "Off\0Windows\0Screen\0\0");
+            gui::width(110);
+            gui::combo("Easing Type", "menu.easingType", gui::animation::EASING_NAMES, gui::animation::EASING_COUNT);
+            gui::combo("Easing Mode", "menu.easingMode", gui::animation::EASING_MODE_NAMES, 3);
+            // TODO: Implement blur properly
+            // if (gui::combo("Blur", "menu.blur", "Off\0Windows\0Screen\0\0")) {
+            //     blur::setState(config::get<blur::State>("menu.blur"));
+            // }
             gui::width();
-
 
             if (gui::button("Reorder Windows"))
                 stackWindows();
@@ -184,20 +194,17 @@ namespace openhack::menu {
         }
 
         // Restore window positions from config
-//        if (config::has("windows"))
-//        {
-//            auto loaded = config::get<std::vector<gui::Window>>("windows");
-//            for (auto &window : windows)
-//            {
-//                auto it = std::find_if(loaded.begin(), loaded.end(), [&window](const gui::Window &w)
-//                                       { return w.getTitle() == window.getTitle(); });
-//                if (it != loaded.end())
-//                {
-//                    window.setOpen(it->isOpen());
-//                    window.setPosition(it->getPosition());
-//                }
-//            }
-//        }
+        if (config::has("windows")) {
+            auto loaded = config::get<std::vector<gui::Window>>("windows");
+            for (auto &window: windows) {
+                auto it = std::find_if(loaded.begin(), loaded.end(),
+                                       [&window](const gui::Window &w) { return w.getTitle() == window.getTitle(); });
+                if (it != loaded.end()) {
+                    window.setOpen(it->isOpen());
+                    window.setPosition(it->getPosition());
+                }
+            }
+        }
 
         isInitialized = true;
     }

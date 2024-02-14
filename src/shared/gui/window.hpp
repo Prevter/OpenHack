@@ -12,6 +12,9 @@ namespace openhack::gui {
         inline static const ImVec2 MAX_SIZE{220, 1000}; // Maximum window size
 
     public:
+        /// @brief Create new instance of `Window` with default title and draw callback
+        Window() : m_title("Window"), m_isOpen(true), m_position(0, 0), m_drawPosition(0, 0), m_size(MIN_SIZE) {}
+
         /// @brief Create new instance of `Window` with set title and draw callback
         /// @param title Title of the window
         /// @param onDraw Callback which will be called when the window is drawn
