@@ -10,6 +10,8 @@
 #include <shlobj.h>
 #include <shellapi.h>
 
+#include "4gb_patch.hpp"
+
 #include <gd.hpp>
 
 namespace openhack::utils {

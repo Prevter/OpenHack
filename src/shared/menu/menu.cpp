@@ -91,6 +91,23 @@ namespace openhack::menu {
         return isOpened || !moveActions.empty();
     }
 
+#ifdef PLATFORM_WINDOWS
+
+    void patchGame() {
+        bool success = win32::four_gb::patch();
+        L_INFO("Patched the game to use 4GB of memory: {}", success);
+        MessageBox(nullptr, success ? "Patched the game to use 4GB of memory. Please restart the game."
+                                    : "Failed to patch the game",
+                   "4GB Patch", MB_OK | MB_ICONINFORMATION);
+
+        if (success) {
+            // Close the game
+            std::exit(0);
+        }
+    }
+
+#endif
+
     void init() {
         // Make sure to initialize ImGui
         gui::init();
@@ -99,6 +116,12 @@ namespace openhack::menu {
         // Then initialize the windows
         if (isInitialized)
             return;
+
+#ifdef PLATFORM_WINDOWS
+        if (!win32::four_gb::isPatched()) {
+            L_WARN("The game is not patched to use 4GB of memory");
+        }
+#endif
 
         addWindow("OpenHack", []() {
             gui::text("Version: " OPENHACK_VERSION);
@@ -114,6 +137,12 @@ namespace openhack::menu {
 
             if (gui::button("Join Discord server"))
                 utils::openURL("https://discord.gg/QSd4jUyc45");
+
+#ifdef PLATFORM_WINDOWS
+            if (!win32::four_gb::isPatched() && gui::button("Apply 4GB patch")) {
+                patchGame();
+            }
+#endif
         });
 
         addWindow("Interface", []() {
