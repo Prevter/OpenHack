@@ -46,6 +46,37 @@ namespace openhack::utils {
         ShellExecuteA(nullptr, "open", url, nullptr, nullptr, SW_SHOW);
     }
 
+    /// @brief Gets the handle of the module with the given name.
+    /// @param module The name of the module.
+    /// @return The handle of the module.
+    inline uintptr_t getModuleHandle(const char *module = nullptr) {
+        return reinterpret_cast<uintptr_t>(GetModuleHandleA(module));
+    }
+
+    /// @brief Write bytes to the game's memory.
+    /// @param address The address to write to.
+    /// @param bytes The bytes to write.
+    /// @return True if the bytes were successfully written.
+    inline bool patchMemory(uintptr_t address, const std::vector<uint8_t> &bytes) {
+        DWORD oldProtect;
+        if (VirtualProtect((LPVOID) address, bytes.size(), PAGE_EXECUTE_READWRITE, &oldProtect)) {
+            memcpy((void *) address, bytes.data(), bytes.size());
+            VirtualProtect((LPVOID) address, bytes.size(), oldProtect, &oldProtect);
+            return true;
+        }
+        return false;
+    }
+
+    /// @brief Read bytes from the game's memory.
+    /// @param address The address to read from.
+    /// @param size The amount of bytes to read.
+    /// @return The bytes read from the memory.
+    inline std::vector<uint8_t> readMemory(uintptr_t address, size_t size) {
+        std::vector<uint8_t> buffer(size);
+        memcpy(buffer.data(), (void *) address, size);
+        return buffer;
+    }
+
     inline std::string gameVersion;
 
     /// @brief Automatically checks the game version and returns it.

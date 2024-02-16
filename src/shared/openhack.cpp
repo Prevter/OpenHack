@@ -17,6 +17,8 @@ namespace openhack {
 
         config::load();
         config::setDefaults();
+
+        hacks::initialize();
     }
 
     void deinitialize() {

@@ -1,6 +1,7 @@
 #include "menu.hpp"
 #include "../openhack.hpp"
 #include "../config.hpp"
+#include "../hacks/hacks.hpp"
 // #include "blur.hpp"
 
 namespace openhack::menu {
@@ -223,6 +224,11 @@ namespace openhack::menu {
 
             gui::checkbox("Lock Windows", "menu.stackWindows");
         });
+
+        auto hacks = hacks::getWindows();
+        for (auto &hack: hacks) {
+            windows.push_back(hack);
+        }
 
         // Make all windows start outside the screen
         for (auto &window: windows) {
