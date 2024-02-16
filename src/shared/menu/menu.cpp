@@ -97,8 +97,8 @@ namespace openhack::menu {
         bool success = win32::four_gb::patch();
         L_INFO("Patched the game to use 4GB of memory: {}", success);
         MessageBox(nullptr, success ? "Patched the game to use 4GB of memory. Please restart the game."
-                                    : "Failed to patch the game",
-                   "4GB Patch", MB_OK | MB_ICONINFORMATION);
+                                    : "Failed to patch the game. Could not write to the file.",
+                   "4GB Patch", (success ? MB_ICONINFORMATION : MB_ICONERROR) | MB_OK);
 
         if (success) {
             // Close the game
@@ -142,6 +142,15 @@ namespace openhack::menu {
             if (!win32::four_gb::isPatched() && gui::button("Apply 4GB patch")) {
                 patchGame();
             }
+            gui::tooltip("Highly recommended to install.\n"
+                         "Allows the game to use more memory, which resolves some crashes.");
+
+            if (gui::button("Inject DLL")) {
+                win32::promptDllInjection();
+            }
+#ifdef OPENHACK_GEODE
+            gui::tooltip("DLL injection is not recommended when using Geode.");
+#endif
 #endif
         });
 

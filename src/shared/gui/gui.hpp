@@ -4,11 +4,9 @@
 #include "themes/themes.hpp"
 #include "window.hpp"
 
-namespace openhack::gui
-{
+namespace openhack::gui {
     /// @brief Struct containing variants of one font.
-    struct Font
-    {
+    struct Font {
         /// @brief The name of the font.
         std::string name;
         /// @brief The normal variant of the font (16px)
@@ -21,7 +19,7 @@ namespace openhack::gui
         /// @param normal The normal variant of the font.
         /// @param title The larger variant of the font.
         Font(std::string name, ImFont *normal, ImFont *title)
-            : name(std::move(name)), normal(normal), title(title) {}
+                : name(std::move(name)), normal(normal), title(title) {}
     };
 
     /// @brief Get currently selected font.
@@ -47,6 +45,10 @@ namespace openhack::gui
     /// @brief ImGui::PushItemWidth and ImGui::PopItemWidth wrapper.
     /// @param width The width to push. (0.0f for default)
     void width(float width = 0.0f);
+
+    /// @brief Draws a tooltip.
+    /// @param text The text of the tooltip.
+    void tooltip(const char *text);
 
     /// @brief Draws a checkbox.
     /// @param label The label of the checkbox.
@@ -79,7 +81,8 @@ namespace openhack::gui
     /// @param stepFast The fast step of the input.
     /// @return True if the input was changed.
     /// @note Uses the configuration to store the value.
-    bool inputFloat(const char *label, const char *valueKey, float min = -FLT_MAX, float max = FLT_MAX, const char *format = "%.3f");
+    bool inputFloat(const char *label, const char *valueKey, float min = -FLT_MAX, float max = FLT_MAX,
+                    const char *format = "%.3f");
 
     /// @brief Draws a color input.
     /// @param label The label of the input.

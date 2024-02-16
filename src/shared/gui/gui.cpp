@@ -118,6 +118,16 @@ namespace openhack::gui {
         }
     }
 
+    void tooltip(const char *text) {
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
+            ImVec2 pos = ImGui::GetMousePos();
+            pos.x += 10;
+            pos.y += 10;
+            ImGui::SetNextWindowPos(pos);
+            ImGui::SetTooltip("%s", text);
+        }
+    }
+
     bool checkbox(const char *label, const char *valueKey) {
         bool value = config::get<bool>(valueKey, false);
         bool result = gui::checkbox(label, &value);
