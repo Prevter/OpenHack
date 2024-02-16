@@ -10,5 +10,9 @@ namespace openhack::gui {
         void setStyles() override;
 
         void loadPalette() override;
+
+        bool button(const char *label, const ImVec2 &size) override;
+
+        bool checkbox(const char *label, bool *value) override;
     };
 }
