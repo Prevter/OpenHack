@@ -2,9 +2,12 @@
 
 #include <random>
 #include <imgui.h>
+#include "platform/platform.hpp"
 
 #ifdef __clang__
+
 #include <ctime>
+
 #else
 
 #include <time.h>

@@ -28,7 +28,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
             // Install hooks
             openhack::hooks::installHooks();
-            break;
 
             // Load DLL files from the "dll" directory
             auto dllDir = openhack::utils::getModAssetsDirectory() + "/dll";

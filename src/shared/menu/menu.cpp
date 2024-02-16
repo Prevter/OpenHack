@@ -176,11 +176,12 @@ namespace openhack::menu {
             }
             if (gui::combo("Theme", "menu.theme", gui::THEME_NAMES, gui::THEME_COUNT)) {
                 gui::setTheme(config::get<gui::Themes>("menu.theme"));
+                gui::loadPalette();
             }
             gui::width();
 
             gui::popupSettings("Colors", []() {
-                gui::width(70);
+                gui::width(120);
                 gui::colorEdit("Background", "menu.color.background");
                 gui::colorEdit("Accent", "menu.color.accent");
                 gui::colorEdit("Primary", "menu.color.primary");
@@ -226,9 +227,7 @@ namespace openhack::menu {
         // Make all windows start outside the screen
         for (auto &window: windows) {
             auto target = randomWindowPosition(window);
-            auto *action = window.createMoveAction(target, 0, gui::animation::easing::linear);
-            action->update(0);
-            delete action;
+            window.setDrawPosition(target);
         }
 
         // Restore window positions from config
@@ -312,6 +311,26 @@ namespace openhack::menu {
                 positions[&(*it)] = ImVec2(x, y);
                 y += it->getSize().y + snap;
             }
+        }
+
+        // Rest are stacked to take as little space as possible
+        std::vector<float> heights(columns - 1, snap);
+        for (auto &window: windows) {
+            // Skip built-in windows
+            if (std::find(builtInWindows, builtInWindows + builtInCount, window.getTitle()) !=
+                builtInWindows + builtInCount)
+                continue;
+
+            // Find the column with the smallest height
+            auto min = std::min_element(heights.begin(), heights.end());
+            auto index = std::distance(heights.begin(), min);
+
+            // Set the position
+            positions[&window] = ImVec2((float) (index + 1) * (windowWidth + snap) + snap, *min);
+            *min += window.getSize().y + snap;
+
+            // Update the height
+            heights[index] = *min;
         }
 
         return positions;

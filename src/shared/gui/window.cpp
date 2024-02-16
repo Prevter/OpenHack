@@ -21,13 +21,14 @@ namespace openhack::gui {
         ImGuiWindowFlags flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize;
         auto scale = config::get<float>("menu.uiScale");
 
-        ImGui::SetNextWindowSizeConstraints({MIN_SIZE.x * scale, MIN_SIZE.y * scale}, {MAX_SIZE.x * scale, MAX_SIZE.y * scale});
+        ImGui::SetNextWindowSizeConstraints({MIN_SIZE.x * scale, MIN_SIZE.y * scale},
+                                            {MAX_SIZE.x * scale, MAX_SIZE.y * scale});
 
         ImGui::SetNextWindowCollapsed(!m_isOpen, ImGuiCond_Always);
 
-        gui::beginWindow(m_title.c_str(), nullptr, flags);
-
-        m_drawCallback();
+        if (gui::beginWindow(m_title.c_str(), nullptr, flags)) {
+            m_drawCallback();
+        }
 
         // Allow moving the window
         if (ImGui::IsMouseDragging(0) && ImGui::IsWindowHovered()) {
@@ -63,6 +64,10 @@ namespace openhack::gui {
     const ImVec2 &Window::getPosition() const { return m_position; }
 
     void Window::setPosition(const ImVec2 &position) { m_position = position; }
+
+    const ImVec2 &Window::getDrawPosition() const { return m_drawPosition; }
+
+    void Window::setDrawPosition(const ImVec2 &position) { m_drawPosition = position; }
 
     const ImVec2 &Window::getSize() const { return m_size; }
 

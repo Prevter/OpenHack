@@ -43,6 +43,10 @@ namespace openhack::gui {
 
         void setPosition(const ImVec2 &position);
 
+        [[nodiscard]] const ImVec2 &getDrawPosition() const;
+
+        void setDrawPosition(const ImVec2 &position);
+
         [[nodiscard]] const ImVec2 &getSize() const;
 
         void setSize(const ImVec2 &size);
