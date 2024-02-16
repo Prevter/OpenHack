@@ -279,6 +279,10 @@ namespace openhack::menu {
         if (!isVisible())
             return;
 
+        // Show mouse cursor
+        auto *glView = gd::cocos2d::CCEGLView::sharedOpenGLView();
+        gd::cocos2d::CCEGLView::showCursor(glView, true);
+
         // Update theme
         gui::setStyles();
 
@@ -303,7 +307,7 @@ namespace openhack::menu {
         ImVec2 screenSize = ImGui::GetIO().DisplaySize;
 
         float windowWidth = gui::Window::MIN_SIZE.x;
-        size_t columns = (screenSize.x - snap) / (windowWidth + snap);
+        auto columns = (size_t) ((screenSize.x - snap) / (windowWidth + snap));
 
         std::map<gui::Window *, ImVec2> positions;
 
@@ -318,6 +322,9 @@ namespace openhack::menu {
                 y += it->getSize().y + snap;
             }
         }
+
+        if (columns == 0)
+            return positions;
 
         // Rest are stacked to take as little space as possible
         std::vector<float> heights(columns - 1, snap);
