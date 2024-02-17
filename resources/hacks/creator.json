@@ -175,6 +175,50 @@
                     "mask": "*0390*07?*0390"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "Smooth Editor Trail",
+            "description": "Makes the trail in editor playback smoother.",
+            "id": "creator.smoothtrail",
+            "opcodes": [
+                {
+                    "pattern": "0F2F?????^725E8B8F",
+                    "mask": "9090"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Default Song Bypass",
+            "description": "Allows you to use any song in the level editor.",
+            "id": "creator.defsong",
+            "opcodes": [
+                {
+                    "pattern": "83F8?^74?40C6",
+                    "mask": "9090"
+                },
+                {
+                    "pattern": "*01^BA??00003BC2",
+                    "mask": "EB0F*0390"
+                },
+                {
+                    "pattern": "85C0^74?48C6",
+                    "mask": "9090"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Place Over",
+            "description": "Allows you to place objects over other objects.",
+            "id": "creator.placeover",
+            "opcodes": [
+                {
+                    "pattern": "84C0^0F85????85FF",
+                    "mask": "*0690"
+                }
+            ]
         }
     ]
 }
