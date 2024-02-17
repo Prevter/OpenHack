@@ -140,12 +140,13 @@ namespace openhack::menu {
                 utils::openURL("https://discord.gg/QSd4jUyc45");
 
 #ifdef PLATFORM_WINDOWS
-            if (!win32::four_gb::isPatched() && gui::button("Apply 4GB patch")) {
-                patchGame();
+            if (!win32::four_gb::isPatched()) {
+                if (gui::button("Apply 4GB patch")) {
+                    patchGame();
+                }
+                gui::tooltip("Highly recommended to install.\n"
+                             "Allows the game to use more memory, which resolves some crashes.");
             }
-            gui::tooltip("Highly recommended to install.\n"
-                         "Allows the game to use more memory, which resolves some crashes.");
-
             if (gui::button("Inject DLL")) {
                 win32::promptDllInjection();
             }
@@ -157,7 +158,7 @@ namespace openhack::menu {
 
         addWindow("Interface", []() {
             gui::width(70);
-            gui::inputFloat("UI Scale", "menu.uiScale", 0.25f, 3.0f, "%.3f");
+            gui::inputFloat("UI Scale", "menu.uiScale", 0.5f, 3.0f, "%.3f");
             gui::inputFloat("Border Size", "menu.borderSize", 0.0f, 10.0f, "%.3f");
             gui::inputFloat("Window Rounding", "menu.windowRounding", 0.0f, 10.0f, "%.3f");
             gui::inputFloat("Frame Rounding", "menu.frameRounding", 0.0f, 10.0f, "%.3f");
@@ -248,6 +249,11 @@ namespace openhack::menu {
                 }
             }
         }
+
+        // Sort windows by title
+        std::sort(windows.begin(), windows.end(), [](const gui::Window &a, const gui::Window &b) {
+            return a.getTitle() < b.getTitle();
+        });
 
         isInitialized = true;
     }
