@@ -106,6 +106,99 @@ namespace openhack::gui {
         }
     }
 
+    bool Theme::keybind(const char *label, uint32_t *key, bool canDelete) {
+        ImGui::PushID(label);
+        ImGui::PushItemWidth(-1);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+
+        auto availWidth = ImGui::GetContentRegionAvail().x;
+
+        // Truncate label to fit in the width
+        auto labelMaxWidth = availWidth * (canDelete ? 0.5f : 0.6f);
+        auto labelSize = ImGui::CalcTextSize(label);
+
+        if (labelSize.x > labelMaxWidth) {
+            auto labelEnd = label;
+            while (labelEnd != label + strlen(label)) {
+                auto labelStr = std::string(label, labelEnd) + "...";
+                auto newSize = ImGui::CalcTextSize(labelStr.c_str());
+                if (newSize.x > labelMaxWidth - 20)
+                    break;
+                labelEnd++;
+            }
+            auto truncatedLabel = std::string(label, labelEnd) + "...";
+            ImGui::Button(truncatedLabel.c_str(), ImVec2(labelMaxWidth, 0));
+            gui::tooltip(label);
+        } else {
+            ImGui::Button(label, ImVec2(labelMaxWidth, 0));
+        }
+
+        ImGui::SameLine(0, 0);
+
+        ImGui::PopStyleColor(3);
+        ImGui::PopStyleVar(2);
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0.25f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+
+        auto keyName = utils::getKeyName(*key);
+        bool changed = ImGui::Button(keyName.c_str(), ImVec2(availWidth * 0.4f, 0));
+        ImGui::PopStyleColor(3);
+        ImGui::PopStyleVar();
+
+        auto popupName = std::string("##") + label;
+        if (changed)
+            ImGui::OpenPopup(popupName.c_str());
+
+        if (ImGui::BeginPopup(popupName.c_str())) {
+            utils::lockTickInput();
+            gui::text("Press any key to change the keybind...");
+            ImGui::Separator();
+
+            gui::text("Press ESC to clear the cancel.");
+
+            if (utils::isKeyPressed("Esc")) {
+                ImGui::CloseCurrentPopup();
+            } else {
+                for (uint32_t i = 0; i < 256; i++) {
+                    if (utils::isKeyPressed(i)) {
+                        *key = i;
+                        ImGui::CloseCurrentPopup();
+                        break;
+                    }
+                }
+            }
+
+            ImGui::EndPopup();
+        }
+
+        bool deleteClicked = false;
+        if (canDelete) {
+            ImGui::SameLine(0, 0);
+            ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+            deleteClicked = ImGui::Button("X", ImVec2(availWidth * 0.1f, 0));
+            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar();
+            if (deleteClicked) {
+                *key = 0;
+            }
+        }
+
+        ImGui::PopItemWidth();
+        ImGui::PopID();
+        return deleteClicked;
+    }
+
     Theme *currentTheme = nullptr;
 
     Theme *getTheme() { return currentTheme; }
@@ -194,6 +287,12 @@ namespace openhack::gui {
     void popupSettings(const char *label, const std::function<void()> &content, ImVec2 size) {
         if (currentTheme)
             currentTheme->popupSettings(label, content, size);
+    }
+
+    bool keybind(const char *label, uint32_t *key, bool canDelete) {
+        if (currentTheme)
+            return currentTheme->keybind(label, key, canDelete);
+        return false;
     }
 
 }

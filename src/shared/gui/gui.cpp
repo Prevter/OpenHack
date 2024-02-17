@@ -167,4 +167,14 @@ namespace openhack::gui {
             config::set(colorKey, value);
         return result;
     }
+
+    bool keybind(const char *label, const char *keybindKey, bool canDelete) {
+        auto keyName = config::get<std::string>(keybindKey, "...");
+        auto value = utils::getKeyCode(keyName);
+        auto original = value;
+        bool result = gui::keybind(label, &value, canDelete);
+        if (value != original)
+            config::set<std::string>(keybindKey, utils::getKeyName(value));
+        return result;
+    }
 }

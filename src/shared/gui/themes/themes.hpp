@@ -86,6 +86,13 @@ namespace openhack::gui
         /// @param content Callback for the content of the popup.
         /// @param size The size of the popup.
         virtual void popupSettings(const char* label, const std::function<void()> &content, ImVec2 size);
+
+        /// @brief Draws a keybind input.
+        /// @param label The label of the input.
+        /// @param key The key of the input.
+        /// @param canDelete Whether the key can be deleted (show the delete button).
+        /// @return True if delete button was clicked.
+        virtual bool keybind(const char *label, uint32_t *key, bool canDelete);
     };
 
     /* == Meta == */
@@ -207,4 +214,12 @@ namespace openhack::gui
     /// @param size The size of the popup.
     /// @note Calls the `popupSettings` method of the current theme.
     void popupSettings(const char* label, const std::function<void()> &content, ImVec2 size = ImVec2(0, 0));
+
+    /// @brief Draws a keybind input.
+    /// @param label The label of the input.
+    /// @param key The key of the input.
+    /// @param canDelete Whether the key can be deleted (show the delete button).
+    /// @return True if delete button was clicked.
+    /// @note Calls the `keybind` method of the current theme.
+    bool keybind(const char *label, uint32_t *key, bool canDelete = false);
 }

@@ -18,6 +18,8 @@ namespace openhack {
         config::load();
         config::setDefaults();
 
+        menu::keybinds::load();
+
         hacks::initialize();
     }
 

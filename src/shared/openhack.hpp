@@ -2,6 +2,7 @@
 
 #include "gui/gui.hpp"
 #include "menu/menu.hpp"
+#include "menu/keybinds.hpp"
 #include "hacks/hacks.hpp"
 #include "config.hpp"
 #include "utils.hpp"

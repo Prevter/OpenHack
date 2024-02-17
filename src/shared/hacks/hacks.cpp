@@ -7,7 +7,11 @@ namespace openhack::hacks {
         m_enabled = config::get<bool>("hack." + m_id, false);
         if (m_enabled) applyPatch();
 
-        // TODO: Set keybinding
+        // Add keybinding callback
+        menu::keybinds::setKeybindCallback(m_id, [this]() {
+            this->m_enabled = !this->m_enabled;
+            this->toggled();
+        });
     }
 
     void ToggleComponent::onDraw() {
@@ -19,14 +23,19 @@ namespace openhack::hacks {
         if (m_hasWarning) {
             ImGui::EndDisabled();
             gui::tooltip("Your game version is not supported, or you have conflicting mods.");
+            return;
         } else if (!m_description.empty()) {
             gui::tooltip(m_description.c_str());
         }
 
+        menu::keybinds::addMenuKeybind(m_id, m_name, [this]() {
+            this->m_enabled = !this->m_enabled;
+            this->toggled();
+        });
+
         if (pressed) {
             toggled();
         }
-
     }
 
     bool ToggleComponent::applyPatch(bool enable) {

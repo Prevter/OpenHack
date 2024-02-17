@@ -121,6 +121,7 @@ namespace openhack::config {
 #include "gui/themes/themes.hpp"
 #include "gui/window.hpp"
 #include "menu/blur.hpp"
+#include "menu/keybinds.hpp"
 
 void to_json(nlohmann::json &j, const ImVec2 &v);
 
@@ -154,4 +155,14 @@ namespace openhack::menu::blur {
     void to_json(nlohmann::json &j, const State &e);
 
     void from_json(const nlohmann::json &j, State &e);
+}
+
+namespace openhack::menu::keybinds {
+    void to_json(nlohmann::json &j, const Keybind &e);
+
+    void from_json(const nlohmann::json &j, Keybind &e);
+
+    void to_json(nlohmann::json &j, const std::vector<Keybind> &e);
+
+    void from_json(const nlohmann::json &j, std::vector<Keybind> &e);
 }

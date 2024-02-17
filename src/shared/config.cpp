@@ -122,3 +122,34 @@ namespace openhack::menu::blur {
         e = static_cast<State>(j.get<int>());
     }
 }
+
+namespace openhack::menu::keybinds {
+    void to_json(nlohmann::json &j, const Keybind &e) {
+        j = nlohmann::json{{"name",    e.name},
+                           {"id",      e.id},
+                           {"keycode", e.keycode}};
+    }
+
+    void from_json(const nlohmann::json &j, Keybind &e) {
+        e.name = j.at("name").get<std::string>();
+        e.id = j.at("id").get<std::string>();
+        e.keycode = j.at("keycode").get<uint32_t>();
+    }
+
+    void to_json(nlohmann::json &j, const std::vector<Keybind> &e) {
+        j = nlohmann::json::array();
+        for (const auto &keybind: e) {
+            j.push_back(keybind);
+        }
+    }
+
+    void from_json(const nlohmann::json &j, std::vector<Keybind> &e) {
+        e.clear();
+        for (const auto &keybindJ: j) {
+            std::string name = keybindJ.at("name").get<std::string>();
+            std::string id = keybindJ.at("id").get<std::string>();
+            uint32_t keycode = keybindJ.at("keycode").get<uint32_t>();
+            e.emplace_back(name, id, keycode);
+        }
+    }
+}

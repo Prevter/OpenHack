@@ -91,4 +91,12 @@ namespace openhack::gui {
     /// @return True if the input was changed.
     /// @note Uses the configuration to store the value.
     bool colorEdit(const char *label, const char *colorKey);
+
+    /// @brief Draws a keybind input.
+    /// @param label The label of the input.
+    /// @param key The key of the input.
+    /// @param canDelete Whether the key can be deleted (show the delete button).
+    /// @return True if delete button was clicked.
+    /// @note Uses the configuration to store the value.
+    bool keybind(const char *label, const char *keybindKey, bool canDelete = false);
 }

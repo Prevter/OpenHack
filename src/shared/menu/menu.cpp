@@ -258,6 +258,8 @@ namespace openhack::menu {
         if (utils::isKeyPressed(config::get<std::string>("menu.toggleKey", "Tab")))
             toggle();
 
+        keybinds::update();
+
         // Run move actions
         for (auto &action: moveActions) {
             action->update(utils::getDeltaTime());
