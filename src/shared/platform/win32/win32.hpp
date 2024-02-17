@@ -357,6 +357,16 @@ namespace openhack::utils {
     inline std::map<uint32_t, bool> KEY_STATES;
     inline std::map<uint32_t, bool> KEY_STATES_PREVIOUS;
 
+    /// @brief Check whether a key is down.
+    inline bool isKeyDown(uint32_t keycode) {
+        return GetAsyncKeyState(keycode) & 0x8000;
+    }
+
+    /// @brief Check whether a key is down.
+    inline bool isKeyDown(std::string key) {
+        return isKeyDown(getKeyCode(std::move(key)));
+    }
+
     /// @brief Check whether a key was pressed during the current frame.
     /// @param keycode The key code.
     /// @return True if the key was pressed.
@@ -379,6 +389,30 @@ namespace openhack::utils {
     /// @return True if the key was pressed.
     inline bool isKeyPressed(std::string key) {
         return isKeyPressed(getKeyCode(std::move(key)));
+    }
+
+    /// @brief Check whether a key was released during the current frame.
+    /// @param keycode The key code.
+    /// @return True if the key was released.
+    inline bool isKeyReleased(uint32_t keycode) {
+        // if window is not focused
+        if (GetForegroundWindow() != getWindowHandle())
+            return false;
+
+        // if state changed
+        if (KEY_STATES[keycode] ^ KEY_STATES_PREVIOUS[keycode]) {
+            // return current state
+            return !KEY_STATES[keycode];
+        }
+
+        return false;
+    }
+
+    /// @brief Check whether a key was released during the current frame.
+    /// @param key Key name.
+    /// @return True if the key was released.
+    inline bool isKeyReleased(std::string key) {
+        return isKeyReleased(getKeyCode(std::move(key)));
     }
 
     /// @brief Needs to be called every frame to update the key states.
