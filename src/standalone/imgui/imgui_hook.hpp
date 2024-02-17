@@ -27,4 +27,7 @@ namespace ImGuiHook {
 
     /// @brief Check if the ImGui context is initialized.
     bool isInitialized();
+
+    /// @brief Block all input from the game for one tick.
+    void lockTickInput() noexcept;
 }

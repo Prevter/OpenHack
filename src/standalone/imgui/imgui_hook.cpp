@@ -161,4 +161,10 @@ namespace ImGuiHook {
         auto &io = ImGui::GetIO();
         io.ClearInputKeys();
     }
+
+    void lockTickInput() noexcept {
+        auto &io = ImGui::GetIO();
+        io.WantCaptureMouse = true;
+        io.WantCaptureKeyboard = true;
+    }
 }

@@ -291,7 +291,7 @@ namespace openhack::menu {
             window.draw();
         }
 
-        if (config::get<bool>("menu.stackWindows"))
+        if (config::get<bool>("menu.stackWindows") && moveActions.empty())
             stackWindows();
     }
 
@@ -306,7 +306,8 @@ namespace openhack::menu {
 
         ImVec2 screenSize = ImGui::GetIO().DisplaySize;
 
-        float windowWidth = gui::Window::MIN_SIZE.x;
+        const auto scale = config::get<float>("menu.uiScale");
+        float windowWidth = gui::Window::MIN_SIZE.x * scale;
         auto columns = (size_t) ((screenSize.x - snap) / (windowWidth + snap));
 
         std::map<gui::Window *, ImVec2> positions;

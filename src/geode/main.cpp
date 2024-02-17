@@ -5,7 +5,10 @@ $execute {
     openhack::initialize();
     ImGuiCocos::get()
             .setup(openhack::menu::init)
-            .draw(openhack::menu::draw);
+            .draw([](){
+                ImGuiCocos::get().setInputMode(ImGuiCocos::InputMode::Default);
+                openhack::menu::draw();
+            });
 }
 
 $on_mod(Unloaded) {

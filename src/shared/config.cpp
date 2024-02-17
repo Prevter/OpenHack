@@ -15,6 +15,7 @@ namespace openhack::config {
         setIfEmpty("menu.windowSnap", 3.f);
         setIfEmpty("menu.stackWindows", true);
         setIfEmpty("menu.theme", gui::Themes::Classic);
+        setIfEmpty("menu.toggleKey", "Tab");
     }
 
     void load() {
@@ -99,14 +100,14 @@ namespace openhack::gui {
 
     void to_json(nlohmann::json &j, const std::vector<Window> &e) {
         j = nlohmann::json::array();
-        for (const auto &window : e) {
+        for (const auto &window: e) {
             j.push_back(window);
         }
     }
 
     void from_json(const nlohmann::json &j, std::vector<Window> &e) {
         e.clear();
-        for (const auto &windowJ : j) {
+        for (const auto &windowJ: j) {
             e.push_back(windowJ.get<Window>());
         }
     }

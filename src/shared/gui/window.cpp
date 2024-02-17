@@ -7,7 +7,6 @@ namespace openhack::gui {
     Window::Window(const std::string &title, std::function<void()> onDraw) {
         m_title = title;
         m_drawCallback = std::move(onDraw);
-        // TODO: Load default window size and position from config
         m_position = ImVec2(0, 0);
         m_drawPosition = m_position;
         m_size = ImVec2(MIN_SIZE);
@@ -18,7 +17,7 @@ namespace openhack::gui {
         if (!isOnScreen())
             return;
 
-        ImGuiWindowFlags flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize;
+        ImGuiWindowFlags flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar;
         auto scale = config::get<float>("menu.uiScale");
 
         ImGui::SetNextWindowSizeConstraints({MIN_SIZE.x * scale, MIN_SIZE.y * scale},

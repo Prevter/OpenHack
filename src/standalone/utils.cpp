@@ -1,10 +1,11 @@
 #include "utils.hpp"
 #include "pch.hpp"
+#include "imgui/imgui_hook.hpp"
 
 namespace openhack::utils {
     std::string getGameDirectory() noexcept {
         char buffer[MAX_PATH];
-        GetModuleFileNameA(NULL, buffer, MAX_PATH);
+        GetModuleFileNameA(nullptr, buffer, MAX_PATH);
         std::string::size_type pos = std::string(buffer).find_last_of("\\/");
         return std::string(buffer).substr(0, pos);
     }
@@ -23,5 +24,9 @@ namespace openhack::utils {
 
     std::string getModHacksDirectory() noexcept {
         return getModAssetsDirectory() + "/hacks";
+    }
+
+    void lockTickInput() noexcept {
+        ImGuiHook::lockTickInput();
     }
 }

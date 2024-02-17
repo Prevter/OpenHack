@@ -18,4 +18,7 @@ namespace openhack::utils {
     /// @brief Get the directory where all JSON files for hacks are stored.
     /// It's located in "Geometry Dash/openhack/hacks"
     std::string getModHacksDirectory() noexcept;
+
+    /// @brief Block all input from the game for one tick.
+    void lockTickInput() noexcept;
 }

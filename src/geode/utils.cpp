@@ -1,5 +1,6 @@
 #include "utils.hpp"
 #include <Geode/Geode.hpp>
+#include <imgui-cocos.hpp>
 
 namespace openhack::utils {
     std::string getModSaveDirectory() noexcept {
@@ -17,5 +18,9 @@ namespace openhack::utils {
 
     std::string getModHacksDirectory() noexcept {
         return getModAssetsDirectory();
+    }
+
+    void lockTickInput() noexcept {
+        ImGuiCocos::get().setInputMode(ImGuiCocos::InputMode::Blocking);
     }
 }
