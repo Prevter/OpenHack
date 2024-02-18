@@ -8,13 +8,15 @@
 #define LOG_HOOK(class, method)                          \
     auto hook_##method = class::method.hook(method);     \
     if (hook_##method == gd::utils::HookResult::SUCCESS) \
-        L_TRACE("Hooked " #class "::" #method);          \
+        L_TRACE("Hooked " #class "::" #method " at 0x{:x}", class::method.getAddress());          \
     else                                                 \
         L_WARN("Failed to hook " #class "::" #method ": {}", static_cast<int>(hook_##method))
 
 namespace openhack::hooks {
     INSTALL_NAMESPACE(CCEGLView)
     INSTALL_NAMESPACE(AppDelegate)
+    INSTALL_NAMESPACE(CCScheduler)
+    INSTALL_NAMESPACE(ChannelControl)
 
     inline void installHooks() {
         MH_Initialize();
@@ -30,5 +32,9 @@ namespace openhack::hooks {
 
         CCEGLView::installHooks();
         AppDelegate::installHooks();
+        CCScheduler::installHooks();
+        // ChannelControl::installHooks();
+
+        L_TRACE("All hooks installed.");
     }
 }

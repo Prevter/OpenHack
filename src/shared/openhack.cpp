@@ -17,10 +17,13 @@ namespace openhack {
 
         config::load();
         config::setDefaults();
+        L_INFO("Loaded config");
 
         menu::keybinds::load();
+        L_INFO("Loaded keybinds");
 
         hacks::initialize();
+        L_INFO("Initialized hacks");
     }
 
     void deinitialize() {

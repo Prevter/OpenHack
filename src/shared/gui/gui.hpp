@@ -47,6 +47,10 @@ namespace openhack::gui {
     /// @param width The width to push. (0.0f for default)
     void width(float width = 0.0f);
 
+    /// @brief ImGui::PushItemWidth and ImGui::PopItemWidth wrapper. Uses proportions.
+    /// @param factor Value from 0 to 1 to multiply the width by.
+    void widthF(float factor);
+
     /// @brief Draws a tooltip.
     /// @param text The text of the tooltip.
     void tooltip(const char *text);

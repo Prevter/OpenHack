@@ -1,6 +1,9 @@
 #include "hacks.hpp"
 #include "../openhack.hpp"
 
+// Hacks
+#include "speedhack/speedhack.hpp"
+
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
         // Load the initial state from the configuration
@@ -62,6 +65,7 @@ namespace openhack::hacks {
 
     static std::vector<gui::Window> windows;
     static std::vector<Component *> components;
+    static std::vector<EmbeddedHack *> embeddedHacks;
 
     /// @brief Read an opcode from a JSON object
     gd::patterns::Opcode readOpcode(const nlohmann::json &opcode) {
@@ -86,6 +90,13 @@ namespace openhack::hacks {
             L_ERROR("Hacks directory does not exist: {}", hacksDir);
             return;
         }
+
+        // Add the embedded hacks
+        embeddedHacks = {
+            new SpeedHack(),
+        };
+
+        std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;
 
         for (const auto &entry: std::filesystem::directory_iterator(hacksDir)) {
             if (entry.is_regular_file() && entry.path().extension() == ".json") {
@@ -178,7 +189,17 @@ namespace openhack::hacks {
 
                             windowComponents.push_back(toggle);
                         } else if (type == "embedded") {
-                            // TODO: Implement embedded components
+                            auto hack = component.at("hack").get<std::string>();
+                            auto it = std::find_if(embeddedHacks.begin(), embeddedHacks.end(), [hack](const auto &h) {
+                                return h->getId() == hack;
+                            });
+
+                            if (it != embeddedHacks.end()) {
+                                windowComponents.push_back(*it);
+                                embeddedHacks.erase(it);
+                            } else {
+                                L_WARN("Failed to find embedded hack: {}", hack);
+                            }
                         }
                     }
 
@@ -212,6 +233,14 @@ namespace openhack::hacks {
                 }
             }
         }
+
+        // Initialize the embedded hacks
+        for (auto &hack: embeddedHacks) {
+            hack->onInit();
+        }
+
+        // Add the embedded hacks back
+        embeddedHacks = embeddedHacksCopy;
     }
 
     std::vector<gui::Window> &getWindows() {
@@ -220,6 +249,10 @@ namespace openhack::hacks {
 
     std::vector<Component *> &getComponents() {
         return components;
+    }
+
+    std::vector<EmbeddedHack *> &getEmbeddedHacks() {
+        return embeddedHacks;
     }
 
     bool applyOpcode(const gd::patterns::Opcode &opcode, bool enable) {

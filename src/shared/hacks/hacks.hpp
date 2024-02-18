@@ -100,6 +100,23 @@ namespace openhack::hacks {
         bool m_hasWarning = false;
     };
 
+    class EmbeddedHack : public Component {
+    public:
+        EmbeddedHack(std::string name, std::string id) : m_name(std::move(name)), m_id(std::move(id)) {}
+
+        /// @brief Called every frame to update the hack
+        virtual void update() = 0;
+        /// @brief Returns whether the hack is cheating
+        virtual bool isCheating() { return false; }
+
+        const std::string &getId() override { return m_id; }
+        const std::string &getName() override { return m_name; }
+
+    private:
+        std::string m_id;
+        std::string m_name;
+    };
+
     /// @brief Load all hacks from JSON files and set up the components
     void initialize();
 
@@ -108,6 +125,9 @@ namespace openhack::hacks {
 
     /// @brief Get all components
     std::vector<Component *> &getComponents();
+
+    /// @brief Get all embedded hacks
+    std::vector<EmbeddedHack *> &getEmbeddedHacks();
 
     /// @brief Get a component by its ID
     /// @param id The ID of the component

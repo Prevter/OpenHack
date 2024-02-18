@@ -118,6 +118,12 @@ namespace openhack::gui {
         }
     }
 
+    void widthF(float factor) {
+        auto scale = config::get<float>("menu.uiScale");
+        auto availWidth = ImGui::GetContentRegionAvail().x;
+        ImGui::PushItemWidth(availWidth * factor);
+    }
+
     void tooltip(const char *text) {
         if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
             ImVec2 pos = ImGui::GetMousePos();

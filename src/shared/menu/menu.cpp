@@ -271,6 +271,11 @@ namespace openhack::menu {
             action->update(utils::getDeltaTime());
         }
 
+        // Update embedded hacks
+        for (auto &hack: hacks::getEmbeddedHacks()) {
+            hack->update();
+        }
+
         // Remove finished actions
         moveActions.erase(
                 std::remove_if(
