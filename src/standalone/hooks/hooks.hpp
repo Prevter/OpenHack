@@ -17,6 +17,7 @@ namespace openhack::hooks {
     INSTALL_NAMESPACE(AppDelegate)
     INSTALL_NAMESPACE(CCScheduler)
     INSTALL_NAMESPACE(ChannelControl)
+    INSTALL_NAMESPACE(GameStatsManager)
 
     inline void installHooks() {
         MH_Initialize();
@@ -34,6 +35,7 @@ namespace openhack::hooks {
         AppDelegate::installHooks();
         CCScheduler::installHooks();
         // ChannelControl::installHooks();
+        GameStatsManager::installHooks();
 
         L_TRACE("All hooks installed.");
     }
