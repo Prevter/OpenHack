@@ -208,6 +208,34 @@
                     "mask": "*0590"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "Checkpoint Limit Bypass",
+            "description": "Allows you to place more checkpoints than the limit.",
+            "id": "level.checkpointlimit",
+            "opcodes": [
+                {
+                    "pattern": "FFD683?32^76?8B",
+                    "mask": "EB"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Show Triggers",
+            "description": "Renders all triggers in the level like in the editor.",
+            "id": "level.showtriggers",
+            "opcodes": [
+                {
+                    "pattern": "0F94C0^8887????E9????C7",
+                    "mask": "*0690"
+                },
+                {
+                    "pattern": "83?14^75?83BB",
+                    "mask": "EB"
+                }
+            ]
         }
     ]
 }

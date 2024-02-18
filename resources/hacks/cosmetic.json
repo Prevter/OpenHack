@@ -241,6 +241,47 @@
                     "mask": "E9&(01+01)*03$0190"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "No \"Do Not\" Flip",
+            "description": "Removes text flipping, when using the \"Do Not\" option.",
+            "id": "cosmetic.donotflip",
+            "opcodes": [
+                {
+                    "pattern": "84C0^74?8B4C??6A01",
+                    "mask": "EB"
+                },
+                {
+                    "pattern": "74?8B8B????51",
+                    "mask": "EB"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "No Trail",
+            "description": "Removes the trail.",
+            "id": "cosmetic.notrail",
+            "opcodes": [
+                {
+                    "pattern": "80BE????00^0F84????85C0",
+                    "mask": "E9&(01+01)*03$0190",
+                    "lib": "libcocos2d.dll"
+                }
+            ]
+        },
+        {
+            "type": "toggle",
+            "title": "Wave Trail Fix",
+            "description": "Fixes the wave trail.",
+            "id": "cosmetic.wavetrailfix",
+            "opcodes": [
+                {
+                    "pattern": "8844??^74?C644",
+                    "mask": "9090"
+                }
+            ]
         }
     ]
 }
