@@ -299,8 +299,14 @@ namespace openhack::menu {
             window.draw();
         }
 
-        if (config::get<bool>("menu.stackWindows") && moveActions.empty())
+        // Auto reset window positions
+        auto isDragging = config::getGlobal("draggingWindow", false);
+        auto stackEnabled = config::get<bool>("menu.stackWindows");
+        if (moveActions.empty() && !isDragging && stackEnabled)
             stackWindows();
+
+        // Reset dragging state
+        config::setGlobal("draggingWindow", false);
     }
 
     void addWindow(const std::string &title, const std::function<void()> &onDraw) {

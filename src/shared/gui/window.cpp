@@ -34,6 +34,8 @@ namespace openhack::gui {
             m_position = ImGui::GetWindowPos();
 
             m_drawPosition = m_position;
+
+            config::setGlobal("draggingWindow", true);
         }
 
         m_size = ImGui::GetWindowSize();
