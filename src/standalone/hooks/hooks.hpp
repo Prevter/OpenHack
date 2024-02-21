@@ -2,17 +2,20 @@
 
 #include "../pch.hpp"
 #include <MinHook.h>
+#include <dash/hook/hook.hpp>
 
 #define INSTALL_NAMESPACE(class) namespace class { void installHooks(); }
 
 #define LOG_HOOK(class, method)                          \
-    auto hook_##method = class::method.hook(method);     \
-    if (hook_##method == gd::utils::HookResult::SUCCESS) \
-        L_TRACE("Hooked " #class "::" #method " at 0x{:x}", class::method.getAddress());          \
+    auto hook_##method = gd::hook::class::method(method, MH_CreateHook);     \
+    if (hook_##method.status == gd::hook::Status::OK) \
+        L_TRACE("Hooked " #class "::" #method " at 0x{:x}", (uintptr_t)hook_##method.address);          \
     else                                                 \
-        L_WARN("Failed to hook " #class "::" #method ": {}", static_cast<int>(hook_##method))
+        L_WARN("Failed to hook " #class "::" #method ": {}", static_cast<int>(hook_##method.status))
 
 namespace openhack::hooks {
+    using namespace gd;
+
     INSTALL_NAMESPACE(CCEGLView)
     INSTALL_NAMESPACE(AppDelegate)
     INSTALL_NAMESPACE(CCScheduler)
@@ -20,21 +23,15 @@ namespace openhack::hooks {
     INSTALL_NAMESPACE(GameStatsManager)
 
     inline void installHooks() {
+        L_TRACE("Installing hooks...");
         MH_Initialize();
 
-        gd::setHookCreation([](void *target, void *detour, void **original) {
-            MH_CreateHook(target, detour, original);
-            MH_EnableHook(target);
-        });
-        gd::setHookRemoval([](void *target) {
-            MH_DisableHook(target);
-            MH_RemoveHook(target);
-        });
-
         CCEGLView::installHooks();
+        MH_EnableHook(MH_ALL_HOOKS); // Enable CCEGLView hooks first
+
         AppDelegate::installHooks();
         CCScheduler::installHooks();
-        // ChannelControl::installHooks();
+        ChannelControl::installHooks();
         GameStatsManager::installHooks();
 
         L_TRACE("All hooks installed.");

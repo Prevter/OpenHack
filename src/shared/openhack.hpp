@@ -25,6 +25,7 @@
 #else
 
 #include "../standalone/pch.hpp"
+using namespace gd;
 
 #endif
 

@@ -30,9 +30,18 @@ namespace openhack::hacks {
     }
 
     void Shortcuts::restartLevel() {
+        auto *playLayer = gd::PlayLayer::get();
+        if (playLayer) {
+            playLayer->resetLevel();
+        }
     }
 
     void Shortcuts::togglePractice() {
+        auto *playLayer = gd::PlayLayer::get();
+        if (playLayer) {
+            bool isPractice = playLayer->m_isPracticeMode();
+            playLayer->togglePracticeMode(!isPractice);
+        }
     }
 
     void Shortcuts::openResources() {

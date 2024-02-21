@@ -1,5 +1,6 @@
 #include "hacks.hpp"
 #include "../openhack.hpp"
+#include <dash/sigscan.hpp>
 
 // Hacks
 #include "speedhack/speedhack.hpp"
@@ -71,7 +72,7 @@ namespace openhack::hacks {
     static std::vector<EmbeddedHack *> embeddedHacks;
 
     /// @brief Read an opcode from a JSON object
-    gd::patterns::Opcode readOpcode(const nlohmann::json &opcode) {
+    gd::sigscan::Opcode readOpcode(const nlohmann::json &opcode) {
         auto addrStr = opcode.at("addr").get<std::string>();
         auto onStr = opcode.at("on").get<std::string>();
         auto offStr = opcode.at("off").get<std::string>();
@@ -136,7 +137,7 @@ namespace openhack::hacks {
                         } else if (type == "toggle") {
                             auto toggleTitle = component.at("title").get<std::string>();
                             auto id = component.at("id").get<std::string>();
-                            std::vector<gd::patterns::Opcode> opcodes;
+                            std::vector<gd::sigscan::Opcode> opcodes;
                             bool warn = false;
                             for (const auto &opcode: component.at("opcodes")) {
                                 if (opcode.contains("version")) {
@@ -154,7 +155,7 @@ namespace openhack::hacks {
                                         library = opcode.at("lib").get<std::string>();
                                     }
 
-                                    auto opc = gd::patterns::match(pattern, mask, library);
+                                    auto opc = gd::sigscan::match(pattern, mask, library);
                                     if (opc.empty()) {
                                         warn = true;
                                         break;
@@ -265,7 +266,7 @@ namespace openhack::hacks {
         return embeddedHacks;
     }
 
-    bool applyOpcode(const gd::patterns::Opcode &opcode, bool enable) {
+    bool applyOpcode(const gd::sigscan::Opcode &opcode, bool enable) {
         uintptr_t handle;
         if (opcode.library.empty()) {
             handle = utils::getModuleHandle();
@@ -279,7 +280,7 @@ namespace openhack::hacks {
         return utils::patchMemory(address, bytes);
     }
 
-    bool verifyOpcode(const gd::patterns::Opcode &opcode) {
+    bool verifyOpcode(const gd::sigscan::Opcode &opcode) {
         uintptr_t handle;
         if (opcode.library.empty()) {
             handle = utils::getModuleHandle();

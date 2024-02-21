@@ -1,27 +1,29 @@
 #include "hooks.hpp"
 #include "../imgui/imgui_hook.hpp"
+#include <dash/hook/cocos/CCEGLView.hpp>
 
 namespace openhack::hooks::CCEGLView {
 
-    void swapBuffers(gd::cocos2d::CCEGLView *self) {
+    void swapBuffers(cocos2d::CCEGLView *self) {
         ImGuiHook::draw(self);
-        gd::cocos2d::CCEGLView::swapBuffers(self);
+        hook::CCEGLView::swapBuffers(self);
     }
 
-    void pollEvents(gd::cocos2d::CCEGLView *self) {
+    void pollEvents(cocos2d::CCEGLView *self) {
         ImGuiHook::handleEvents();
-        gd::cocos2d::CCEGLView::pollEvents(self);
+        hook::CCEGLView::pollEvents(self);
     }
 
-    void toggleFullScreen(gd::cocos2d::CCEGLView *self, bool fullscreen, bool borderless) {
+    void toggleFullScreen(cocos2d::CCEGLView *self, bool fullscreen, bool borderless) {
+        L_TRACE("toggleFullScreen");
         ImGuiHook::destroy();
-        gd::cocos2d::CCEGLView::toggleFullScreen(self, fullscreen, borderless);
+        hook::CCEGLView::toggleFullScreen(self, fullscreen, borderless);
     }
 
     void installHooks() {
-        LOG_HOOK(gd::cocos2d::CCEGLView, swapBuffers);
-        LOG_HOOK(gd::cocos2d::CCEGLView, pollEvents);
-        LOG_HOOK(gd::cocos2d::CCEGLView, toggleFullScreen);
+        LOG_HOOK(CCEGLView, swapBuffers);
+        LOG_HOOK(CCEGLView, pollEvents);
+        LOG_HOOK(CCEGLView, toggleFullScreen);
     }
 
 }

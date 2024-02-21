@@ -275,8 +275,7 @@ namespace openhack::menu {
             return;
 
         // Show mouse cursor
-        auto *glView = gd::cocos2d::CCEGLView::sharedOpenGLView();
-        gd::cocos2d::CCEGLView::showCursor(glView, true);
+        gd::cocos2d::CCEGLView::sharedOpenGLView()->showCursor(true);
 
         // Update theme
         gui::setStyles();

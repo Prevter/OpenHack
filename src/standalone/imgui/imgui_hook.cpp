@@ -28,7 +28,7 @@ namespace ImGuiHook {
         if (m_initialized)
             return;
 
-        auto *window = gd::cocos2d::CCEGLView::getWindow(view);
+        auto *window = view->getWindow();
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);

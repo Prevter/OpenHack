@@ -343,8 +343,7 @@ namespace openhack::utils {
             return WINDOW_HANDLE;
 
         auto *director = gd::cocos2d::CCDirector::sharedDirector();
-        auto *eglView = gd::cocos2d::CCDirector::getOpenGLView(director);
-        auto *window = gd::cocos2d::CCEGLView::getWindow(eglView);
+        auto *window = director->getOpenGLView()->getWindow();
         WINDOW_HANDLE = WindowFromDC(*reinterpret_cast<HDC *>(reinterpret_cast<uintptr_t>(window) + 0x244));
         return WINDOW_HANDLE;
     }

@@ -1,6 +1,8 @@
 #include "../pch.hpp"
 
 #include <Geode/fmod/fmod.hpp>
+#include <dash/internal.hpp>
+#include <dash/mappings.hpp>
 #include "../../shared/hacks/speedhack/speedhack.hpp"
 
 namespace openhack::hooks::ChannelControl {
@@ -11,12 +13,11 @@ namespace openhack::hooks::ChannelControl {
 }
 
 $execute {
-    auto setVolumeAddr = gd::utils::findExport(
-            (uintptr_t)GetModuleHandleA("fmod.dll"),
-            "?setVolume@ChannelControl@FMOD@@QAG?AW4FMOD_RESULT@@M@Z");
+
     geode::Mod::get()->hook(
-            (void*)setVolumeAddr,
+            (void *) gd::findSignature("FMOD::ChannelControl::setVolume"),
             &openhack::hooks::ChannelControl::setVolume,
             "FMOD::ChannelControl::setVolume",
             tulip::hook::TulipConvention::Stdcall);
+
 }

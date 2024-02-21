@@ -1,13 +1,14 @@
 #include "hooks.hpp"
 #include "../../shared/hacks/speedhack/speedhack.hpp"
+#include <dash/hook/cocos/CCScheduler.hpp>
 
 namespace openhack::hooks::CCScheduler {
-    void update(gd::cocos2d::CCScheduler* self, float dt) {
+    void update(cocos2d::CCScheduler* self, float dt) {
         hacks::SpeedHack::update(&dt);
-        return gd::cocos2d::CCScheduler::update(self, dt);
+        return hook::CCScheduler::update(self, dt);
     }
 
     void installHooks() {
-        LOG_HOOK(gd::cocos2d::CCScheduler, update);
+        LOG_HOOK(CCScheduler, update);
     }
 }
