@@ -67,6 +67,16 @@ namespace openhack::utils {
         return false;
     }
 
+    /// @brief Write a value to the game's memory.
+    /// @tparam T The type of the value.
+    /// @param address The address to write to.
+    /// @param value The value to write.
+    /// @return True if the value was successfully written.
+    template <typename T>
+    inline bool writeMemory(uintptr_t address, T value) {
+        return patchMemory(address, std::vector<uint8_t>((uint8_t *) &value, (uint8_t *) &value + sizeof(T)));
+    }
+
     /// @brief Read bytes from the game's memory.
     /// @param address The address to read from.
     /// @param size The amount of bytes to read.

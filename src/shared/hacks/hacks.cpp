@@ -4,6 +4,7 @@
 
 // Hacks
 #include "speedhack/speedhack.hpp"
+#include "display/display.hpp"
 #include "shortcuts/shortcuts.hpp"
 #include "auto-safemode/auto-safemode.hpp"
 
@@ -98,6 +99,7 @@ namespace openhack::hacks {
         // Add the embedded hacks
         embeddedHacks = {
             new SpeedHack(),
+            new Display(),
             new Shortcuts(),
             new AutoSafemode(),
         };
