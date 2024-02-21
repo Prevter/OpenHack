@@ -38,7 +38,7 @@ namespace openhack::gui {
 
     /// @brief Set the font to use.
     /// @param name The name of the font to use.
-    void setFont(const std::string &name);
+    bool setFont(const std::string &name);
 
     /// @brief Callback for when the GUI is initialized.
     void init();
@@ -47,9 +47,15 @@ namespace openhack::gui {
     /// @param width The width to push. (0.0f for default)
     void width(float width = 0.0f);
 
+    /// @brief Calculate the width using proportional size of an active container.
+    /// @param f The factor to multiply the width by.
+    /// @return The width.
+    float factor(float f);
+
     /// @brief ImGui::PushItemWidth and ImGui::PopItemWidth wrapper. Uses proportions.
-    /// @param factor Value from 0 to 1 to multiply the width by.
-    void widthF(float factor);
+    /// @param f Value from 0 to 1 to multiply the width by.
+    /// @return The width to push.
+    void widthF(float f);
 
     /// @brief Draws a tooltip.
     /// @param text The text of the tooltip.

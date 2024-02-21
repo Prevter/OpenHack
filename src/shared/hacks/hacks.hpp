@@ -104,6 +104,8 @@ namespace openhack::hacks {
     public:
         EmbeddedHack(std::string name, std::string id) : m_name(std::move(name)), m_id(std::move(id)) {}
 
+        /// @brief Called when game is fully loaded (can be used if the hack depends on game state)
+        virtual void onLateInit() {}
         /// @brief Called every frame to update the hack
         virtual void update() = 0;
         /// @brief Returns whether the hack is cheating
@@ -126,6 +128,9 @@ namespace openhack::hacks {
     /// @brief Get all components
     std::vector<Component *> &getComponents();
 
+    /// @brief Get all hacks
+    std::vector<ToggleComponent *> &getHacks();
+
     /// @brief Get all embedded hacks
     std::vector<EmbeddedHack *> &getEmbeddedHacks();
 
@@ -137,6 +142,17 @@ namespace openhack::hacks {
         for (auto &component : getComponents()) {
             if (component->getId() == id)
                 return dynamic_cast<T *>(component);
+        }
+        return nullptr;
+    }
+
+    /// @brief Get a hack by its ID
+    /// @param id The ID of the hack
+    /// @return The hack or nullptr if not found
+    inline ToggleComponent *getHack(const std::string &id) {
+        for (auto &hack : getHacks()) {
+            if (hack->getId() == id)
+                return hack;
         }
         return nullptr;
     }

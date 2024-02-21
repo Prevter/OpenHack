@@ -44,8 +44,11 @@ namespace openhack::win32::four_gb {
     /// @brief Patch the game to use 4GB of memory.
     /// @return Whether the patch was successful.
     inline bool patch() {
-        // Read 'GeometryDash.exe' into memory
+        // Try reading "GeometryDash.exe"
         std::ifstream file("GeometryDash.exe", std::ios::binary);
+        if (!file.is_open()) return false;
+
+        // Read the file into memory
         file.seekg(0, std::ios::end);
         auto size = file.tellg();
         file.seekg(0, std::ios::beg);

@@ -176,6 +176,7 @@ namespace openhack::menu {
                 auto selected = fonts[currentFont].name;
                 gui::setFont(selected);
             }
+            gui::inputFloat("Font Size", "menu.fontSize", 8.0f, 32.0f, "%.1f px");
             if (gui::combo("Theme", "menu.theme", gui::THEME_NAMES, gui::THEME_COUNT)) {
                 gui::setTheme(config::get<gui::Themes>("menu.theme"));
                 gui::loadPalette();
@@ -228,13 +229,21 @@ namespace openhack::menu {
 
             if (gui::button("Reorder Windows"))
                 stackWindows();
+            gui::tooltip("Reorganizes the windows to take as little space as possible");
 
             gui::checkbox("Lock Windows", "menu.stackWindows");
+
         });
 
+        // Get windows for hacks
         auto hacks = hacks::getWindows();
         for (auto &hack: hacks) {
             windows.push_back(hack);
+        }
+
+        // Call late init for embedded hacks
+        for (auto &hack: hacks::getEmbeddedHacks()) {
+            hack->onLateInit();
         }
 
         // Make all windows start outside the screen

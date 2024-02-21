@@ -16,6 +16,8 @@ namespace openhack::config {
         setIfEmpty("menu.stackWindows", true);
         setIfEmpty("menu.theme", gui::Themes::Classic);
         setIfEmpty("menu.toggleKey", "Tab");
+        setIfEmpty("menu.font", "Poppins");
+        setIfEmpty("menu.fontSize", 20.f);
     }
 
     void load() {

@@ -65,6 +65,7 @@ namespace openhack::hacks {
 
     static std::vector<gui::Window> windows;
     static std::vector<Component *> components;
+    static std::vector<ToggleComponent *> hacks;
     static std::vector<EmbeddedHack *> embeddedHacks;
 
     /// @brief Read an opcode from a JSON object
@@ -188,6 +189,7 @@ namespace openhack::hacks {
                             }
 
                             windowComponents.push_back(toggle);
+                            hacks.push_back(toggle);
                         } else if (type == "embedded") {
                             auto hack = component.at("hack").get<std::string>();
                             auto it = std::find_if(embeddedHacks.begin(), embeddedHacks.end(), [hack](const auto &h) {
@@ -249,6 +251,10 @@ namespace openhack::hacks {
 
     std::vector<Component *> &getComponents() {
         return components;
+    }
+
+    std::vector<ToggleComponent *> &getHacks() {
+        return hacks;
     }
 
     std::vector<EmbeddedHack *> &getEmbeddedHacks() {

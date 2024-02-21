@@ -11,14 +11,17 @@ namespace openhack::gui {
         ImGui::GetIO().FontDefault = font->normal;
     }
 
-    void setFont(const std::string &name) {
+    bool setFont(const std::string &name) {
         for (auto &font: fonts) {
             if (font.name == name) {
                 setFont(&font);
-                break;
+                config::set("menu.font", name);
+                return true;
             }
         }
-        config::set("menu.font", name);
+
+        L_ERROR("Font not found: {}", name);
+        return false;
     }
 
     Font &getFont() {
@@ -69,17 +72,18 @@ namespace openhack::gui {
 
         // Scan for fonts
         ImFontConfig font_cfg;
-        font_cfg.OversampleH = 2;
-        font_cfg.OversampleV = 2;
+        font_cfg.OversampleH = 3;
+        font_cfg.OversampleV = 3;
 
         fonts.clear();
+        float fontSize = config::get<float>("menu.fontSize", 16.0f);
         for (const auto &entry: std::filesystem::directory_iterator(fontDir)) {
             if (entry.is_regular_file()) {
                 auto path = entry.path().string();
                 auto ext = path.substr(path.find_last_of('.') + 1);
                 if (ext == "ttf") {
-                    auto fontDefault = io.Fonts->AddFontFromFileTTF(path.c_str(), 16.0f, &font_cfg);
-                    auto fontTitle = io.Fonts->AddFontFromFileTTF(path.c_str(), 20.0f, &font_cfg);
+                    auto fontDefault = io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize, &font_cfg);
+                    auto fontTitle = io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize + 4.0f, &font_cfg);
                     if (fontDefault && fontTitle) {
                         auto name = entry.path().stem().string();
                         name = name.substr(0, name.find_last_of('.'));
@@ -94,9 +98,12 @@ namespace openhack::gui {
 
         // Set default font
         if (!fonts.empty()) {
-            auto first = fonts.front();
-            auto selectedFont = config::get<std::string>("menu.font", first.name);
-            setFont(selectedFont);
+            auto selectedFont = config::get<std::string>("menu.font", "Poppins");
+            if (!setFont(selectedFont)) {
+                auto first = fonts.front();
+                L_TRACE("Setting default font: {}", first.name);
+                setFont(first.name);
+            }
         }
 
         // Set theme
@@ -118,10 +125,13 @@ namespace openhack::gui {
         }
     }
 
-    void widthF(float factor) {
-        auto scale = config::get<float>("menu.uiScale");
+    float factor(float f) {
         auto availWidth = ImGui::GetContentRegionAvail().x;
-        ImGui::PushItemWidth(availWidth * factor);
+        return availWidth * f;
+    }
+
+    void widthF(float f) {
+        ImGui::PushItemWidth(factor(f));
     }
 
     void tooltip(const char *text) {
