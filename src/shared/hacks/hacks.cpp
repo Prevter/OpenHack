@@ -3,6 +3,7 @@
 
 // Hacks
 #include "speedhack/speedhack.hpp"
+#include "auto-safemode/auto-safemode.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -95,6 +96,7 @@ namespace openhack::hacks {
         // Add the embedded hacks
         embeddedHacks = {
             new SpeedHack(),
+            new AutoSafemode(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;
