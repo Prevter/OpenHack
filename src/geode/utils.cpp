@@ -23,4 +23,8 @@ namespace openhack::utils {
     void lockTickInput() noexcept {
         ImGuiCocos::get().setInputMode(ImGuiCocos::InputMode::Blocking);
     }
+
+    void resetUI() {
+        ImGuiCocos::get().reload();
+    }
 }

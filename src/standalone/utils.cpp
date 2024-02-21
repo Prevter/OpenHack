@@ -29,4 +29,8 @@ namespace openhack::utils {
     void lockTickInput() noexcept {
         ImGuiHook::lockTickInput();
     }
+
+    void resetUI() noexcept {
+        ImGuiHook::reload();
+    }
 }

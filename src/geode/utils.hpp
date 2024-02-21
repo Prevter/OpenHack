@@ -21,4 +21,7 @@ namespace openhack::utils {
 
     /// @brief Block all input from the game for one tick.
     void lockTickInput() noexcept;
+
+    /// @brief Reinitialize ImGui and reset the UI.
+    void resetUI();
 }

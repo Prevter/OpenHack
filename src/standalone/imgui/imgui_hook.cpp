@@ -22,6 +22,8 @@ namespace ImGuiHook {
 
     HWND windowHandle = nullptr;
 
+    bool needReload = false;
+
     void setup(gd::cocos2d::CCEGLView *view) {
         if (m_initialized)
             return;
@@ -144,6 +146,11 @@ namespace ImGuiHook {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glFlush();
+
+        if (needReload) {
+            destroy();
+            needReload = false;
+        }
     }
 
     void destroy() {
@@ -160,6 +167,10 @@ namespace ImGuiHook {
     void clearInput() {
         auto &io = ImGui::GetIO();
         io.ClearInputKeys();
+    }
+
+    void reload() {
+        needReload = true;
     }
 
     void lockTickInput() noexcept {

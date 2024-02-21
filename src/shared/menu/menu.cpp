@@ -182,6 +182,12 @@ namespace openhack::menu {
             }
             gui::width();
 
+            if (gui::button("Reload UI")) {
+                config::setGlobal("resetNextFrame", true);
+                return;
+            }
+            gui::tooltip("Reloads the UI to apply changes which require a restart");
+
             gui::popupSettings("Colors", []() {
                 gui::width(120);
                 gui::colorEdit("Background", "menu.color.background");
@@ -312,6 +318,12 @@ namespace openhack::menu {
 
         // Reset dragging state
         config::setGlobal("draggingWindow", false);
+
+        // Reset UI if requested
+        if (config::getGlobal<bool>("resetNextFrame", false)) {
+            config::setGlobal("resetNextFrame", false);
+            utils::resetUI();
+        }
     }
 
     void addWindow(const std::string &title, const std::function<void()> &onDraw) {
