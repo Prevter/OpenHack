@@ -1,4 +1,5 @@
 #include "../pch.hpp"
+#include "../../shared/hacks/instant-complete/instant-complete.hpp"
 #include "../../shared/hacks/display/display.hpp"
 
 #include <Geode/modify/PlayLayer.hpp>
@@ -16,7 +17,12 @@ namespace openhack::hooks {
 
         void resetLevel() {
             PlayLayer::resetLevel();
+            hacks::InstantComplete::resetLevel();
             hacks::Display::playLayerReset();
+        }
+
+        void addObject(GameObject *object) {
+            PlayLayer::addObject(object);
         }
     };
 }

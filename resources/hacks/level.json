@@ -236,6 +236,10 @@
                     "mask": "EB"
                 }
             ]
+        },
+        {
+            "type": "embedded",
+            "hack": "instant_complete"
         }
     ]
 }

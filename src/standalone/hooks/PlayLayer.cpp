@@ -1,4 +1,5 @@
 #include "hooks.hpp"
+#include "../../shared/hacks/instant-complete/instant-complete.hpp"
 #include "../../shared/hacks/display/display.hpp"
 #include <dash/hook/PlayLayer.hpp>
 
@@ -14,6 +15,7 @@ namespace openhack::hooks::PlayLayer {
 
     void resetLevel(gd::PlayLayer *self) {
         hook::PlayLayer::resetLevel(self);
+        hacks::InstantComplete::resetLevel();
         hacks::Display::playLayerReset();
     }
 

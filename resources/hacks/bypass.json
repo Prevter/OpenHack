@@ -282,6 +282,18 @@
                     "mask": "*0690"
                 }
             ]
+        },
+        {
+            "type": "toggle",
+            "title": "Moderator Bypass",
+            "description": "Makes moderator-only buttons visible.",
+            "id": "bypass.modbypass",
+            "opcodes": [
+                {
+                    "pattern": "2B88????83F901^74?83F90275?68",
+                    "mask": "9090???9090"
+                }
+            ]
         }
     ]
 }

@@ -7,6 +7,7 @@
 #include "display/display.hpp"
 #include "shortcuts/shortcuts.hpp"
 #include "auto-safemode/auto-safemode.hpp"
+#include "instant-complete/instant-complete.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -102,6 +103,7 @@ namespace openhack::hacks {
             new Display(),
             new Shortcuts(),
             new AutoSafemode(),
+            new InstantComplete(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;
