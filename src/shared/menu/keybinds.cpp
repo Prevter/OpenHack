@@ -58,6 +58,9 @@ namespace openhack::menu::keybinds {
                 config::set("menu.toggleKey", "Tab");
             }
 
+            gui::checkbox("In-game only", "keybinds.ingame");
+            gui::tooltip("Only allow keybinds to be triggered when you're inside a level.\nUseful, to avoid triggering keybinds while searching for levels.");
+
             if (keybinds.empty())
                 gui::text("Right click any hack and press\n\"Add keybind\" to set it.");
 
@@ -76,6 +79,9 @@ namespace openhack::menu::keybinds {
     }
 
     void update() {
+        if (config::get<bool>("keybinds.ingame") && !gd::PlayLayer::get())
+            return;
+
         for (auto &keybind: keybinds) {
             if (utils::isKeyPressed(keybind.keycode) && keybind.callback) {
                 keybind.callback();
