@@ -253,6 +253,22 @@
                 }
             ],
             "cheat": true
+        },
+        {
+            "type": "toggle",
+            "title": "Anticheat Bypass",
+            "description": "Prevents the game from kicking you out of the level.",
+            "id": "level.anticheat",
+            "opcodes": [
+                {
+                    "pattern": "80BB????00^740C8BCB",
+                    "mask": "EB"
+                },
+                {
+                    "pattern": "E8????80BB????00^0F85????80BB????000F85",
+                    "mask": "*0690"
+                }
+            ]
         }
     ]
 }
