@@ -110,8 +110,7 @@
                     "pattern": "0F85BE050000",
                     "mask": "909090909090"
                 }
-            ],
-            "cheat": true
+            ]
         },
         {
             "type": "toggle",
@@ -235,11 +234,25 @@
                     "pattern": "83?14^75?83BB",
                     "mask": "EB"
                 }
-            ]
+            ],
+            "cheat": true
         },
         {
             "type": "embedded",
             "hack": "instant_complete"
+        },
+        {
+            "type": "toggle",
+            "title": "No Mirror Portal",
+            "description": "Disables the mirror portal effect.",
+            "id": "level.mirrorportal",
+            "opcodes": [
+                {
+                    "pattern": "0F85????56538BCFE8????84C0^0F84????8B068BCEFF50?508D4C",
+                    "mask": "E9&(01+01)*03$0190"
+                }
+            ],
+            "cheat": true
         }
     ]
 }
