@@ -1,6 +1,8 @@
 {
 	"geode": "2.0.0",
-	"gd": "2.204",
+	"gd": {
+		"win": "2.204"
+	},
 	"version": "v2.0.0",
 	"id": "prevter.openhack",
 	"name": "OpenHack",
