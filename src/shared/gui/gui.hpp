@@ -109,4 +109,12 @@ namespace openhack::gui {
     /// @return True if delete button was clicked.
     /// @note Uses the configuration to store the value.
     bool keybind(const char *label, const char *keybindKey, bool canDelete = false);
+
+    /// @brief Draws a checkbox with a popup button.
+    /// @param label The label of the checkbox.
+    /// @param settingKey The key of the value in the configuration.
+    /// @param popupDraw The callback for the content of the popup.
+    /// @return True if the checkbox was clicked.
+    /// @note Uses the configuration to store the value.
+    bool toggleSetting(const char *label, const char *settingKey, std::function<void()> popupDraw, ImVec2 size = ImVec2(0, 0));
 }

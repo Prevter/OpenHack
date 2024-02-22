@@ -93,7 +93,7 @@ namespace openhack::gui {
         ImGui::PopStyleColor(3);
         ImGui::PopStyleVar(2);
         ImGui::SetNextItemWidth(arrowSize.x);
-        bool openPopup = ImGui::ArrowButton("##", ImGuiDir_Right);
+        bool openPopup = ImGui::ArrowButton((std::string("##open_") + label).c_str(), ImGuiDir_Right);
         ImGui::PopItemWidth();
 
         std::string popupName = std::string("##") + label;
@@ -199,6 +199,49 @@ namespace openhack::gui {
         return deleteClicked;
     }
 
+    bool Theme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size) {
+        // 95% is taken by a transparent button with label
+        // 5% is taken by the small button with the arrow
+        ImGui::PushItemWidth(-1);
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+
+        auto availWidth = ImGui::GetContentRegionAvail().x;
+        auto buttonSize = ImVec2(availWidth * 0.9f, 0);
+        auto arrowSize = ImVec2(availWidth * 0.1f, 0);
+
+        if (size.x > 0) {
+            buttonSize.x *= size.x;
+            arrowSize.x *= size.x;
+        }
+
+        bool changed = ImGui::Checkbox(label, value);
+        ImGui::SameLine(0, 0);
+
+        ImGui::PopStyleColor(3);
+        ImGui::PopStyleVar(2);
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - arrowSize.x);
+        ImGui::SetNextItemWidth(arrowSize.x);
+        bool openPopup = ImGui::ArrowButton((std::string("##open_") + label).c_str(), ImGuiDir_Right);
+        ImGui::PopItemWidth();
+
+        std::string popupName = std::string("##") + label;
+        if (openPopup) {
+            ImGui::OpenPopup(popupName.c_str());
+        }
+
+        if (ImGui::BeginPopup(popupName.c_str())) {
+            popupDraw();
+            ImGui::EndPopup();
+        }
+
+        return changed;
+    }
+
     Theme *currentTheme = nullptr;
 
     Theme *getTheme() { return currentTheme; }
@@ -292,6 +335,12 @@ namespace openhack::gui {
     bool keybind(const char *label, uint32_t *key, bool canDelete) {
         if (currentTheme)
             return currentTheme->keybind(label, key, canDelete);
+        return false;
+    }
+
+    bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size) {
+        if (currentTheme)
+            return currentTheme->toggleSetting(label, value, popupDraw, size);
         return false;
     }
 

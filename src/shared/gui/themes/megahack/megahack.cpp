@@ -150,4 +150,112 @@ namespace openhack::gui {
         return clicked;
     }
 
+    void MegaHackTheme::popupSettings(const char* label, const std::function<void()> &content, ImVec2 size) {
+        ImGui::PushItemWidth(-1);
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+
+        auto availWidth = ImGui::GetContentRegionAvail().x;
+        auto buttonSize = ImVec2(availWidth * 0.9f, 0);
+        auto arrowSize = ImVec2(availWidth * 0.1f, 0);
+
+        if (size.x > 0) {
+            buttonSize.x *= size.x;
+            arrowSize.x *= size.x;
+        }
+
+        ImGui::Button(label, buttonSize);
+        ImGui::SameLine(0, 0);
+
+        ImGui::PopStyleColor(2);
+        ImGui::PopStyleVar(2);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+        bool openPopup = ImGui::Button((std::string("##open_") + label).c_str(), arrowSize);
+        ImGui::PopItemWidth();
+        ImGui::PopStyleColor(2);
+
+        auto scale = config::get<float>("menu.uiScale");
+        auto top = ImGui::GetItemRectMin().y + (6 * scale);
+        auto bottom = ImGui::GetItemRectMax().y - (6 * scale);
+        auto right = ImGui::GetItemRectMax().x - (6 * scale);
+        auto side = bottom - top;
+        auto left = right - side;
+        ImGui::GetWindowDrawList()->AddTriangleFilled(
+                ImVec2(right, top),
+                ImVec2(left, bottom),
+                ImVec2(right, bottom),
+                config::get<Color>("menu.color.textDisabled"));
+
+        std::string popupName = std::string("##") + label;
+        if (openPopup)
+            ImGui::OpenPopup(popupName.c_str());
+
+        if (ImGui::BeginPopup(popupName.c_str())) {
+            content();
+            ImGui::EndPopup();
+        }
+    }
+
+    bool MegaHackTheme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size) {
+        ImGui::PushItemWidth(-1);
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
+
+        auto color = *value ? config::get<Color>("menu.color.text") : config::get<Color>("menu.color.textDisabled");
+        ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) color);
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+
+        auto availWidth = ImGui::GetContentRegionAvail().x;
+        auto buttonSize = ImVec2(availWidth * 0.9f, 0);
+        auto arrowSize = ImVec2(availWidth * 0.1f, 0);
+
+        if (size.x > 0) {
+            buttonSize.x *= size.x;
+            arrowSize.x *= size.x;
+        }
+
+        bool toggled = ImGui::Button(label, buttonSize);
+        ImGui::SameLine(0, 0);
+
+        if (toggled) {
+            *value = !*value;
+        }
+
+        ImGui::PopStyleVar(2);
+        bool openPopup = ImGui::Button((std::string("##open_") + label).c_str(), arrowSize);
+        ImGui::PopItemWidth();
+        ImGui::PopStyleColor(4);
+
+        auto scale = config::get<float>("menu.uiScale");
+        auto top = ImGui::GetItemRectMin().y + (6 * scale);
+        auto bottom = ImGui::GetItemRectMax().y - (6 * scale);
+        auto right = ImGui::GetItemRectMax().x - (6 * scale);
+        auto side = bottom - top;
+        auto left = right - side;
+        ImGui::GetWindowDrawList()->AddTriangleFilled(
+                ImVec2(right, top),
+                ImVec2(left, bottom),
+                ImVec2(right, bottom),
+                color);
+
+        std::string popupName = std::string("##") + label;
+        if (openPopup)
+            ImGui::OpenPopup(popupName.c_str());
+
+        if (ImGui::BeginPopup(popupName.c_str())) {
+            popupDraw();
+            ImGui::EndPopup();
+        }
+
+        return toggled;
+    }
+
 }

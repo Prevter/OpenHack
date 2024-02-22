@@ -174,13 +174,16 @@ namespace openhack::menu {
                 }
             });
 
-            // gui::toggleSetting(
-            //     "Rainbow",
-            //     "menu.rainbow",
-            //     []()
-            //     {
-            //         gui::inputFloat("Speed", "menu.rainbowSpeed", 0.0f, 10.0f, "%.3f");
-            //     });
+            gui::toggleSetting(
+                    "Rainbow Menu",
+                    "menu.rainbow.enabled",
+                    []() {
+                        gui::width(110);
+                        gui::inputFloat("Speed", "menu.rainbow.speed");
+                        gui::inputFloat("Saturation", "menu.rainbow.saturation", 0.0f, 100.0f);
+                        gui::inputFloat("Value", "menu.rainbow.value", 0.0f, 100.0f);
+                        gui::width();
+                    });
 
             gui::width(70);
             gui::inputFloat("Animation Time", "menu.animationTime", 0.0f, 10.0f, "%.3f");
@@ -277,8 +280,35 @@ namespace openhack::menu {
         // Show mouse cursor
         gd::cocos2d::CCEGLView::sharedOpenGLView()->showCursor(true);
 
+        // Rainbow menu
+        bool rainbowEnabled = config::get<bool>("menu.rainbow.enabled");
+        gui::Color accentOrig;
+        if (rainbowEnabled) {
+            accentOrig = config::get<gui::Color>("menu.color.accent");
+
+            // Calculate new colors
+            auto speed = config::get<float>("menu.rainbow.speed");
+            auto saturation = config::get<float>("menu.rainbow.saturation");
+            auto value = config::get<float>("menu.rainbow.value");
+
+            float r, g, b;
+            ImGui::ColorConvertHSVtoRGB(
+                (float)ImGui::GetTime() * speed,
+                saturation / 100.0f,
+                value / 100.0f,
+                r, g, b);
+
+            gui::Color primary = {r, g, b, accentOrig.a};
+            config::set("menu.color.accent", primary);
+        }
+
         // Update theme
         gui::setStyles();
+
+        // Revert rainbow menu colors
+        if (rainbowEnabled) {
+            config::set("menu.color.accent", accentOrig);
+        }
 
         // Draw all windows
         for (auto &window: windows) {

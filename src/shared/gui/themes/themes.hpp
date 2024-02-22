@@ -93,6 +93,13 @@ namespace openhack::gui
         /// @param canDelete Whether the key can be deleted (show the delete button).
         /// @return True if delete button was clicked.
         virtual bool keybind(const char *label, uint32_t *key, bool canDelete);
+
+        /// @brief Draws a checkbox with a popup button.
+        /// @param label The label of the checkbox.
+        /// @param value The value of the checkbox.
+        /// @param popupDraw The callback for the content of the popup.
+        /// @return True if the checkbox was clicked.
+        virtual bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size);
     };
 
     /* == Meta == */
@@ -222,4 +229,12 @@ namespace openhack::gui
     /// @return True if delete button was clicked.
     /// @note Calls the `keybind` method of the current theme.
     bool keybind(const char *label, uint32_t *key, bool canDelete = false);
+
+    /// @brief Draws a checkbox with a popup button.
+    /// @param label The label of the checkbox.
+    /// @param value The value of the checkbox.
+    /// @param popupDraw The callback for the content of the popup.
+    /// @return True if the checkbox was clicked.
+    /// @note Calls the `toggleSetting` method of the current theme.
+    bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size = ImVec2(0, 0));
 }

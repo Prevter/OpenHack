@@ -18,6 +18,10 @@ namespace openhack::config {
         setIfEmpty("menu.toggleKey", "Tab");
         setIfEmpty("menu.font", "Poppins");
         setIfEmpty("menu.fontSize", 20.f);
+        setIfEmpty("menu.rainbow.enabled", false);
+        setIfEmpty("menu.rainbow.speed", 0.15f);
+        setIfEmpty("menu.rainbow.saturation", 65.0f);
+        setIfEmpty("menu.rainbow.value", 65.0f);
     }
 
     void load() {
