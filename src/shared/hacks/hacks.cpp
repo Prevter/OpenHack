@@ -8,6 +8,7 @@
 #include "shortcuts/shortcuts.hpp"
 #include "auto-safemode/auto-safemode.hpp"
 #include "instant-complete/instant-complete.hpp"
+#include "auto-pickup-coins/auto-pickup-coins.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -104,6 +105,7 @@ namespace openhack::hacks {
             new Shortcuts(),
             new AutoSafemode(),
             new InstantComplete(),
+            new AutoPickupCoins(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;

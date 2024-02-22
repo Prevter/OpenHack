@@ -139,7 +139,7 @@
             "type": "toggle",
             "title": "No Wave Trail",
             "description": "Removes the wave trail.",
-            "id": "cosmetic.notrail",
+            "id": "cosmetic.nowavetrail",
             "opcodes": [
                 {
                     "pattern": "01FF15????^80BE????0074?8B068BCE",

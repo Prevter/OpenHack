@@ -22,7 +22,7 @@ namespace openhack::hacks {
             gui::width();
 
             gui::widthF(0.35f);
-            needRefresh |= gui::inputFloat("##pfps", "hack.display.pfps", 10.0f, FLT_MAX, "%.0f FPS");
+            needRefresh |= gui::inputFloat("##pfps", "hack.display.pfps", 10.0f, FLT_MAX, "%.0f TPS");
             ImGui::SameLine(0, 2);
             needRefresh |= gui::checkbox("Physics Bypass", "hack.display.physics_bypass");
             menu::keybinds::addMenuKeybind("display.physics_bypass", "Physics Bypass", []() {
