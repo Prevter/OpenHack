@@ -28,14 +28,13 @@ namespace openhack::hooks {
         MH_Initialize();
 
         CCEGLView::installHooks();
-        MH_EnableHook(MH_ALL_HOOKS); // Enable CCEGLView hooks first
-
         AppDelegate::installHooks();
         CCScheduler::installHooks();
         ChannelControl::installHooks();
         GameStatsManager::installHooks();
         PlayLayer::installHooks();
 
+        MH_EnableHook(MH_ALL_HOOKS);
         L_TRACE("All hooks installed.");
     }
 }

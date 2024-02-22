@@ -23,10 +23,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             openhack::initialize();
 
             // Setup ImGui
-            ImGuiHook::setInitCallback([]() {
-                openhack::menu::init();
-                MH_EnableHook(MH_ALL_HOOKS);
-            });
+            ImGuiHook::setInitCallback(openhack::menu::init);
             ImGuiHook::setDrawCallback(openhack::menu::draw);
 
             // Install hooks

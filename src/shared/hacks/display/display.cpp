@@ -62,14 +62,10 @@ namespace openhack::hacks {
     }
 
     void Display::onLateInit() {
-        L_TRACE("Display::onInit");
-        auto *manager = gd::GameManager::sharedState();
-        L_TRACE("GameManager address: 0x{:X}", (uintptr_t) manager);
         // Set default values
+        auto *manager = gd::GameManager::sharedState();
         config::setIfEmpty("hack.display.fps", manager->m_customFPSTarget());
-        L_TRACE("GameManager::m_customFPSTarget: {}", manager->m_customFPSTarget());
         config::setIfEmpty("hack.display.unlock_fps", manager->getGameVariable("0116"));
-        L_TRACE("GameManager::getGameVariable(0116): {}", manager->getGameVariable("0116"));
         config::setIfEmpty("hack.display.pfps", 240.0f);
         config::setIfEmpty("hack.display.physics_bypass", false);
         config::setIfEmpty("hack.display.vsync", manager->getGameVariable("0030"));

@@ -23,5 +23,5 @@ namespace openhack::utils {
     void lockTickInput() noexcept;
 
     /// @brief Reinitialize ImGui and reset the UI.
-    void resetUI();
+    void resetUI() noexcept;
 }
