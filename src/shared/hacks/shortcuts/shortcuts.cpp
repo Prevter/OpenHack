@@ -27,6 +27,11 @@ namespace openhack::hacks {
 #endif
 
     void Shortcuts::openOptions() {
+        auto *options = gd::OptionsLayer::create();
+        auto *scene = gd::cocos2d::CCDirector::sharedDirector()->getRunningScene();
+        scene->addChild(options);
+        options->setZOrder(1000);
+        options->showLayer(false);
     }
 
     void Shortcuts::restartLevel() {
