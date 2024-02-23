@@ -1,11 +1,23 @@
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/prevter/gdopenhack)
-![GitHub all releases](https://img.shields.io/github/downloads/prevter/gdopenhack/total)
-![GitHub latest release](https://img.shields.io/github/downloads/prevter/gdopenhack/latest/total)
-![GitHub](https://img.shields.io/github/license/prevter/gdopenhack)
-![GitHub issues](https://img.shields.io/github/issues/prevter/gdopenhack)
-[![Discord](https://img.shields.io/discord/1195179573122445312?label=discord&logo=discord)](https://discord.gg/HaHn7RSJ4Q)
-[!["Buy Me A Coffee"](https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/prevter)
-
+<div align="center">
+    <a href="https://github.com/prevter/gdopenhack/releases/latest">
+          <img src="https://img.shields.io/github/v/release/prevter/gdopenhack" alt="Release version">
+    </a>
+    <img src="https://img.shields.io/github/downloads/prevter/gdopenhack/total" alt="Total downloads">
+    <img src="https://img.shields.io/github/downloads/prevter/gdopenhack/latest/total" alt="Latest release downloads">
+    <a href="LICENSE">
+      <img src="https://img.shields.io/github/license/prevter/gdopenhack" alt="License">
+    </a>
+    <a href="https://github.com/prevter/gdopenhack/issues">
+      <img src="https://img.shields.io/github/issues/prevter/gdopenhack" alt="Issues">
+    </a>
+    <a href="https://discord.gg/HaHn7RSJ4Q">
+      <img src="https://img.shields.io/discord/1195179573122445312?label=discord&logo=discord" alt="Discord">
+    </a>
+    <a href="https://www.buymeacoffee.com/prevter">
+      <img src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee" alt="Buy Me A Coffee">
+    </a>
+</div>
+<br>
 <div align="center">
    <a href="https://github.com/prevter/gdopenhack">
       <img src="logo.png" alt="Logo" width="80" height="80">
@@ -64,11 +76,12 @@ You can also install the mod manually by downloading the latest `.geode` release
 
 ### Vanilla
 1. Download the latest `.zip` release from the [releases](https://github.com/prevter/gdopenhack/releases) page.
-2. Extract everything from the `.zip` file to your Geometry Dash folder.
+2. Extract everything from the `.zip` file to your Geometry Dash folder. (Right click on Geometry Dash in your Steam library, and select "Manage" -> "Browse local files")
 3. Run the game, and press "Tab" to open the mod menu.
 
 ### Extra steps for Linux
-If you're using Linux, in addition to the above steps, you'll need to add startup parameters to the game's launch options. To do this, right-click on Geometry Dash in your Steam library, click "Properties", and then click "Set Launch Options". Add the following parameters to the launch options:
+If you're using Linux, in addition to the above steps, you'll need to add startup parameters to the game's launch options. 
+To do this, right-click on Geometry Dash in your Steam library, click "Properties", and then enter following parameters to the launch options:
 ```sh
 WINEDLLOVERRIDES="xinput9_1_0=n,b" %command%
 ```
