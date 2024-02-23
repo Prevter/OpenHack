@@ -199,7 +199,7 @@ namespace openhack::gui {
         return deleteClicked;
     }
 
-    bool Theme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size) {
+    bool Theme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size, float minWidth) {
         // 95% is taken by a transparent button with label
         // 5% is taken by the small button with the arrow
         ImGui::PushItemWidth(-1);
@@ -234,6 +234,8 @@ namespace openhack::gui {
             ImGui::OpenPopup(popupName.c_str());
         }
 
+        auto scale = config::get<float>("menu.uiScale");
+        ImGui::SetNextWindowSizeConstraints(ImVec2(minWidth * scale, 0), ImVec2(FLT_MAX, FLT_MAX));
         if (ImGui::BeginPopup(popupName.c_str())) {
             popupDraw();
             ImGui::EndPopup();
@@ -338,9 +340,9 @@ namespace openhack::gui {
         return false;
     }
 
-    bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size) {
+    bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size, float minWidth) {
         if (currentTheme)
-            return currentTheme->toggleSetting(label, value, popupDraw, size);
+            return currentTheme->toggleSetting(label, value, popupDraw, size, minWidth);
         return false;
     }
 

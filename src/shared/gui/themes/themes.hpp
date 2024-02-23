@@ -99,7 +99,7 @@ namespace openhack::gui
         /// @param value The value of the checkbox.
         /// @param popupDraw The callback for the content of the popup.
         /// @return True if the checkbox was clicked.
-        virtual bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size);
+        virtual bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size, float minWidth);
     };
 
     /* == Meta == */
@@ -236,5 +236,5 @@ namespace openhack::gui
     /// @param popupDraw The callback for the content of the popup.
     /// @return True if the checkbox was clicked.
     /// @note Calls the `toggleSetting` method of the current theme.
-    bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size = ImVec2(0, 0));
+    bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size = ImVec2(0, 0), float minWidth = 0.0f);
 }

@@ -114,7 +114,9 @@ namespace openhack::gui {
     /// @param label The label of the checkbox.
     /// @param settingKey The key of the value in the configuration.
     /// @param popupDraw The callback for the content of the popup.
+    /// @param size The size of the toggle button.
+    /// @param minWidth The minimum width of the popup.
     /// @return True if the checkbox was clicked.
     /// @note Uses the configuration to store the value.
-    bool toggleSetting(const char *label, const char *settingKey, std::function<void()> popupDraw, ImVec2 size = ImVec2(0, 0));
+    bool toggleSetting(const char *label, const char *settingKey, std::function<void()> popupDraw, ImVec2 size = ImVec2(0, 0), float minWidth = 0.0f);
 }

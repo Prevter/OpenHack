@@ -194,9 +194,9 @@ namespace openhack::gui {
         return result;
     }
 
-    bool toggleSetting(const char *label, const char *settingKey, std::function<void()> popupDraw, ImVec2 size) {
+    bool toggleSetting(const char *label, const char *settingKey, std::function<void()> popupDraw, ImVec2 size, float minWidth) {
         bool value = config::get<bool>(settingKey, false);
-        bool result = gui::toggleSetting(label, &value, popupDraw, size);
+        bool result = gui::toggleSetting(label, &value, popupDraw, size, minWidth);
         if (result)
             config::set(settingKey, value);
         return result;

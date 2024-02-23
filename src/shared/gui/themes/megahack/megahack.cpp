@@ -201,7 +201,7 @@ namespace openhack::gui {
         }
     }
 
-    bool MegaHackTheme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size) {
+    bool MegaHackTheme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size, float minWidth) {
         ImGui::PushItemWidth(-1);
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
@@ -250,6 +250,7 @@ namespace openhack::gui {
         if (openPopup)
             ImGui::OpenPopup(popupName.c_str());
 
+        ImGui::SetNextWindowSizeConstraints(ImVec2(minWidth * scale, 0), ImVec2(FLT_MAX, FLT_MAX));
         if (ImGui::BeginPopup(popupName.c_str())) {
             popupDraw();
             ImGui::EndPopup();
