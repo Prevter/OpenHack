@@ -19,5 +19,6 @@
 			"resources/hacks/*",
 			"resources/licenses/*"
 		]
-	}
+	},
+	"early-load": true
 }
