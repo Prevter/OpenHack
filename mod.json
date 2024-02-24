@@ -8,6 +8,11 @@
 	"name": "OpenHack",
 	"developer": "Prevter",
 	"description": "A collection of hacks for Geometry Dash",
+	"tags": [
+		"Universal",
+		"Gameplay",
+		"Cheats"
+	],
 	"repository": "https://github.com/Prevter/GDOpenHack",
 	"issues": {
 		"info": "Join the Discord server for support",
