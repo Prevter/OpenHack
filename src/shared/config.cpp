@@ -5,7 +5,7 @@
 
 namespace openhack::config {
     void setDefaults() {
-        setIfEmpty("menu.animationTime", 0.25);
+        setIfEmpty("menu.animationTime", 0.35);
         setIfEmpty("menu.easingType", gui::animation::Easing::Cubic);
         setIfEmpty("menu.easingMode", gui::animation::EasingMode::EaseInOut);
         setIfEmpty("menu.uiScale", 1.f);
@@ -14,7 +14,7 @@ namespace openhack::config {
         setIfEmpty("menu.frameRounding", 4.f);
         setIfEmpty("menu.windowSnap", 3.f);
         setIfEmpty("menu.stackWindows", true);
-        setIfEmpty("menu.theme", gui::Themes::Classic);
+        setIfEmpty("menu.theme", gui::Themes::MegaHack);
         setIfEmpty("menu.toggleKey", "Tab");
         setIfEmpty("menu.font", "Poppins");
         setIfEmpty("menu.fontSize", 20.f);
