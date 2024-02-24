@@ -14,6 +14,20 @@
 
 #endif
 
+#include <chrono>
+
+#if 0
+#define L_BENCHMARK(name, code) do {\
+    auto start = std::chrono::high_resolution_clock::now();\
+    { code }\
+    auto end = std::chrono::high_resolution_clock::now();  \
+    auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();\
+    L_TRACE("Benchmark {}: {}ms", name, time);\
+} while (0)
+#else
+#define L_BENCHMARK(name, code) code
+#endif
+
 namespace openhack::utils {
     /// @brief Generates a random number between min and max.
     /// @param min The minimum value.
@@ -176,4 +190,16 @@ namespace openhack::utils {
         return (uintptr_t) strtol(hexCopy.c_str(), nullptr, 16);
     }
 
+    /// @brief Convert a vector of bytes to a string of hex characters.
+    /// @param bytes The vector of bytes.
+    /// @return The string of hex characters.
+    inline std::string bytesToHex(const std::vector<uint8_t> &bytes) {
+        std::string hex;
+        for (auto &byte: bytes) {
+            char buf[3];
+            sprintf(buf, "%02X", byte);
+            hex += buf;
+        }
+        return hex;
+    }
 }

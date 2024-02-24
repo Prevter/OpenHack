@@ -92,6 +92,121 @@ namespace openhack::hacks {
         return {utils::hexToAddr(addrStr), library, off, on};
     }
 
+    using Opcodes = std::vector<gd::sigscan::Opcode>;
+    using MaskMap = std::unordered_map<std::string, Opcodes>;
+    using PatternMap = std::unordered_map<std::string, MaskMap>;
+
+    /// @brief Used to get cached addresses for patterns and masks
+    /// @param id The ID of the cache (usually the window title)
+    /// @return The cached addresses
+    PatternMap tryGetCache(const std::string &id) {
+        auto filePath = fmt::format("{}/{}.json.cache", utils::getModHacksDirectory(), id);
+        if (!std::filesystem::exists(filePath)) {
+            L_TRACE("Cache file does not exist for {}.", id);
+            return {};
+        }
+
+        std::ifstream file(filePath);
+        if (!file.is_open()) {
+            L_WARN("Failed to open cache file: {}", filePath);
+            return {};
+        }
+
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        file.close();
+
+        try {
+            auto json = nlohmann::json::parse(buffer.str());
+            PatternMap map;
+            for (const auto &[pattern, masks]: json.items()) {
+                MaskMap maskMap;
+                for (const auto &[mask, opcodes]: masks.items()) {
+                    Opcodes opcodeList;
+                    for (const auto &opcode: opcodes) {
+                        opcodeList.push_back(readOpcode(opcode));
+                    }
+                    maskMap[mask] = opcodeList;
+                }
+                map[pattern] = maskMap;
+            }
+            return map;
+        } catch (const std::exception &e) {
+            L_ERROR("Failed to parse file: {}", filePath);
+            L_ERROR("{}", e.what());
+            return {};
+        }
+    }
+
+    /// @brief Used to search for a pattern and mask in the cache
+    /// @param pattern The pattern to search for
+    /// @param mask The mask to search for
+    /// @param map The map to search in
+    /// @param opcodes The opcodes to fill if found
+    /// @return Whether the pattern and mask were found in the cache
+    bool findInCache(const std::string &pattern, const std::string &mask, const PatternMap &map, Opcodes &opcodes) {
+        auto it = map.find(pattern);
+        if (it == map.end()) {
+            return false;
+        }
+
+        auto &maskMap = it->second;
+        auto maskIt = maskMap.find(mask);
+        if (maskIt == maskMap.end()) {
+            return false;
+        }
+
+        opcodes = maskIt->second;
+        return true;
+    }
+
+    /// @brief Used to add a pattern and mask to the cache
+    /// @param map The map to add to
+    /// @param pattern The pattern to add
+    /// @param mask The mask to add
+    /// @param opcodes The opcodes to add
+    void insertIntoCache(PatternMap &map, const std::string &pattern, const std::string &mask, const Opcodes &opcodes) {
+        auto it = map.find(pattern);
+        if (it == map.end()) {
+            map[pattern] = {{mask, opcodes}};
+        } else {
+            it->second[mask] = opcodes;
+        }
+    }
+
+    /// @brief Used to save the cache to a file
+    /// @param id The ID of the cache (usually the window title)
+    /// @param map The map to save
+    void saveCache(const std::string &id, const PatternMap &map) {
+        auto filePath = fmt::format("{}/{}.json.cache", utils::getModHacksDirectory(), id);
+        std::ofstream file(filePath);
+        if (!file.is_open()) {
+            L_ERROR("Failed to open file: {}", filePath);
+            return;
+        }
+
+        nlohmann::json json;
+        for (const auto &[pattern, masks]: map) {
+            nlohmann::json maskMap;
+            for (const auto &[mask, opcodes]: masks) {
+                nlohmann::json opcodeList;
+                for (const auto &opcode: opcodes) {
+                    nlohmann::json opcodeJson;
+                    opcodeJson["addr"] = fmt::format("0x{:X}", opcode.address);
+                    opcodeJson["on"] = utils::bytesToHex(opcode.patched);
+                    opcodeJson["off"] = utils::bytesToHex(opcode.original);
+                    opcodeJson["lib"] = opcode.library;
+                    opcodeList.push_back(opcodeJson);
+                }
+                maskMap[mask] = opcodeList;
+            }
+            json[pattern] = maskMap;
+        }
+
+        file << json.dump(4);
+        file.close();
+    }
+
     void initialize() {
         auto hacksDir = utils::getModHacksDirectory();
         if (!std::filesystem::exists(hacksDir)) {
@@ -131,6 +246,11 @@ namespace openhack::hacks {
                     nlohmann::json json = nlohmann::json::parse(buffer.str());
                     std::string title = json.at("title").get<std::string>();
 
+                    // Load the cached addresses
+                    PatternMap cache = tryGetCache(title);
+                    PatternMap newCache;
+
+                    L_BENCHMARK(title,
                     for (const auto &component: json.at("items")) {
                         if (component.contains("version")) {
                             auto version = component.at("version").get<std::string>();
@@ -163,16 +283,43 @@ namespace openhack::hacks {
                                         library = opcode.at("lib").get<std::string>();
                                     }
 
-                                    auto opc = gd::sigscan::match(pattern, mask, library);
-                                    if (opc.empty()) {
-                                        warn = true;
-                                        break;
+                                    Opcodes opc;
+                                    bool found = findInCache(pattern, mask, cache, opc);
+                                    bool verified = true;
+                                    if (found) {
+                                        // Revalidate the cached addresses
+                                        for (auto &o: opc) {
+                                            if (!verifyOpcode(o)) {
+                                                verified = false;
+                                                break;
+                                            }
+                                        }
+
+                                        if (!verified) {
+                                            L_TRACE("Cached addresses are invalid for: {}", pattern);
+                                        }
                                     }
 
-                                    for (auto &o: opc) {
-                                        if (!verifyOpcode(o))
+                                    if (!found || !verified) {
+                                        // Scan for the addresses
+                                        opc = gd::sigscan::match(pattern, mask, library);
+                                        if (opc.empty()) {
                                             warn = true;
-                                        opcodes.push_back(o);
+                                            break;
+                                        }
+
+                                        // Verify the addresses
+                                        for (auto &o: opc) {
+                                            if (!verifyOpcode(o)) {
+                                                warn = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (!warn) {
+                                        insertIntoCache(newCache, pattern, mask, opc);
+                                        opcodes.insert(opcodes.end(), opc.begin(), opc.end());
                                     }
                                 } else {
                                     auto opc = readOpcode(opcode);
@@ -217,6 +364,7 @@ namespace openhack::hacks {
                             }
                         }
                     }
+                    );
 
                     // Sort the components
                     std::sort(windowComponents.begin(), windowComponents.end(), [](const auto &a, const auto &b) {
@@ -240,6 +388,11 @@ namespace openhack::hacks {
                             component->onDraw();
                         }
                     });
+
+                    // Save the new cache
+                    if (!newCache.empty()) {
+                        saveCache(title, newCache);
+                    }
 
                 } catch (const std::exception &e) {
                     L_ERROR("Failed to parse file: {}", entry.path().string());
