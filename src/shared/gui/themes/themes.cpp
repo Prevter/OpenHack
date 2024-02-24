@@ -244,6 +244,11 @@ namespace openhack::gui {
         return changed;
     }
 
+    void Theme::progressBar(float progress) {
+        auto label = fmt::format("{:.0f}%", progress * 100);
+        ImGui::ProgressBar(progress, ImVec2(-1, 0), label.c_str());
+    }
+
     Theme *currentTheme = nullptr;
 
     Theme *getTheme() { return currentTheme; }
@@ -344,6 +349,11 @@ namespace openhack::gui {
         if (currentTheme)
             return currentTheme->toggleSetting(label, value, popupDraw, size, minWidth);
         return false;
+    }
+
+    void progressBar(float progress) {
+        if (currentTheme)
+            currentTheme->progressBar(progress);
     }
 
 }

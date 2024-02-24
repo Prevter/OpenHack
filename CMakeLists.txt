@@ -140,10 +140,12 @@ add_library(
 add_subdirectory(libs/minhook)
 add_subdirectory(libs/glfw)
 add_subdirectory(libs/spdlog)
+add_subdirectory(libs/curl)
 
 target_include_directories(
     ${PROJECT_NAME}-Standalone
     PRIVATE
+    libs/imgui-markdown
     libs/glew/include
 )
 
@@ -152,6 +154,7 @@ target_link_libraries(
     ${PROJECT_NAME}
     minhook
     spdlog::spdlog
+    libcurl
 )
 
 # Set "OPENHACK_STANDALONE" to 1

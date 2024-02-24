@@ -100,6 +100,10 @@ namespace openhack::gui
         /// @param popupDraw The callback for the content of the popup.
         /// @return True if the checkbox was clicked.
         virtual bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size, float minWidth);
+
+        /// @brief Draws a progress bar.
+        /// @param fraction The fraction of the progress bar.
+        virtual void progressBar(float fraction);
     };
 
     /* == Meta == */
@@ -237,4 +241,9 @@ namespace openhack::gui
     /// @return True if the checkbox was clicked.
     /// @note Calls the `toggleSetting` method of the current theme.
     bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size = ImVec2(0, 0), float minWidth = 0.0f);
+
+    /// @brief Draws a progress bar.
+    /// @param fraction The fraction of the progress bar.
+    /// @note Calls the `progressBar` method of the current theme.
+    void progressBar(float fraction);
 }

@@ -4,6 +4,17 @@
 #include "../hacks/hacks.hpp"
 // #include "blur.hpp"
 
+#ifdef OPENHACK_STANDALONE
+
+#include <imgui_markdown.h>
+#include "../../standalone/updater/updater.hpp"
+
+float *downloadProgress = nullptr;
+
+void markdownOpenLink(ImGui::MarkdownLinkCallbackData data) { openhack::utils::openURL(data.link); }
+
+#endif
+
 namespace openhack::menu {
     bool isOpened = false;
     bool isInitialized = false;
@@ -252,9 +263,61 @@ namespace openhack::menu {
         });
 
         isInitialized = true;
+
     }
 
     void draw() {
+
+#ifdef OPENHACK_STANDALONE
+        // Check for updates
+        if (config::getGlobal<bool>("update.available", false)) {
+            gui::setStyles();
+            ImGui::OpenPopup("Update Available");
+            config::setGlobal("update.available", false);
+        }
+
+        // Update available popup
+        ImGui::SetNextWindowSizeConstraints(ImVec2(400, 0), ImVec2(600, 800));
+        if (ImGui::BeginPopupModal("Update Available", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            gui::text("A new version of OpenHack is available!");
+            gui::text("Current version: " OPENHACK_VERSION);
+            gui::text("Latest version: %s", config::getGlobal<std::string>("update.version").c_str());
+
+            std::string content = "# " + config::getGlobal<std::string>("update.title") + "\n" +
+                                  config::getGlobal<std::string>("update.changelog");
+
+            ImGui::MarkdownConfig mdConfig;
+            mdConfig.linkCallback = markdownOpenLink;
+            mdConfig.tooltipCallback = nullptr;
+            mdConfig.imageCallback = nullptr;
+            mdConfig.userData = nullptr;
+            auto font = gui::getFont();
+            mdConfig.headingFormats[0] = {font.title, true};
+            mdConfig.headingFormats[1] = {font.title, false};
+            mdConfig.headingFormats[2] = {font.normal, false};
+
+            ImGui::Markdown(content.c_str(), content.length(), mdConfig);
+
+            if (downloadProgress) {
+                if (*downloadProgress == 1.0f)
+                    gui::text("Installing update...");
+                else
+                    gui::progressBar(*downloadProgress);
+            } else {
+                if (gui::button("Download", ImVec2(0.5, 0))) {
+                    downloadProgress = new float(0.0f);
+                    updater::install(config::getGlobal<std::string>("update.downloadUrl"), downloadProgress);
+                }
+                ImGui::SameLine();
+                if (gui::button("Close")) {
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
+            ImGui::EndPopup();
+        }
+#endif
+
         utils::resetKeyStates();
 
         if (utils::isKeyPressed(config::get<std::string>("menu.toggleKey", "Tab")))

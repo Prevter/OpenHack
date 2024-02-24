@@ -4,10 +4,13 @@
 #include "debug/crashhandler.hpp"
 #include "imgui/imgui_hook.hpp"
 #include "utils.hpp"
+#include "updater/updater.hpp"
 
 #ifdef PLATFORM_WINDOWS
 
 #include "xinput/injector.hpp"
+
+bool firstInit = true;
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
     switch (ul_reason_for_call) {
@@ -16,14 +19,40 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             xinput::initialize();
 
             // Debugging
-            logger::initialize(true, true, "openhack.log");
+            logger::initialize(false, true, "openhack.log");
             crashhandler::init();
+
+            // TODO: Add support for other versions
+            if (openhack::utils::getGameVersion() != "2.204") {
+                L_ERROR("Unsupported game version");
+                return FALSE;
+            }
 
             // Initialize OpenHack
             openhack::initialize();
 
             // Setup ImGui
-            ImGuiHook::setInitCallback(openhack::menu::init);
+            ImGuiHook::setInitCallback([]() {
+                if (firstInit) {
+                    firstInit = false;
+
+                    // Check for updates
+                    openhack::updater::check([](bool available, const openhack::updater::Version& version) {
+                        if (!available) return;
+                        if (version.version == OPENHACK_VERSION) return;
+                        if (version.downloadUrl.empty()) return;
+
+                        openhack::config::setGlobal("update.available", true);
+                        openhack::config::setGlobal("update.version", version.version);
+                        openhack::config::setGlobal("update.downloadUrl", version.downloadUrl);
+                        openhack::config::setGlobal("update.title", version.title);
+                        openhack::config::setGlobal("update.changelog", version.changelog);
+                    });
+
+                }
+
+                openhack::menu::init();
+            });
             ImGuiHook::setDrawCallback(openhack::menu::draw);
 
             // Install hooks

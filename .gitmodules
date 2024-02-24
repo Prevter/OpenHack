@@ -19,3 +19,6 @@
 [submodule "libs/json"]
 	path = libs/json
 	url = https://github.com/nlohmann/json
+[submodule "libs/imgui-markdown"]
+	path = libs/imgui-markdown
+	url = https://github.com/juliettef/imgui_markdown
