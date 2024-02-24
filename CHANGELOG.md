@@ -1,5 +1,46 @@
 ## v2.0.0
-* Full project rewrite for better stability
+### Full project rewrite for better stability and code quality
+**UI**:
+* Redesigned UI
+* Added theme support
+* Improved menu open/close animations
+* Added font selection
+* More color settings
+
+**Hacks**:
+* Added "Audio Speedhack"
+* Added "Smooth Editor Trail"
+* Added "Default Song Bypass"
+* Added "Place Over"
+* Added "No "Do Not" Flip"
+* Added "No Trail"
+* Added "Wave Trail Fix"
+* Added "Checkpoint Limit Bypass"
+* Added "Show Triggers"
+* Added "Moderator Bypass"
+* Added "Physics Bypass"
+* Added "Instant Complete"
+* Added "No Mirror Portal"
+* Added "Anticheat Bypass"
+
+**Shortcuts**:
+* Added "Apply 4GB patch"
+* Added "Inject DLL"
+* Added "Show Options"
+
+**Other**:
+* Fixed many bugs and crashes
+* Keybinds now have an "In-game only" option
+* Fixed some hacks descriptions (shoutout to @zkayns and @SpeckyYT on GitHub)
+* Added cache for pattern scanner to improve loading times (2nd launch will be faster)
+* Added "Reset Camera" to "StartPos Switcher"
+* Added label options for "StartPos Switcher"
+* [Geode] Mod now uses "early-load", so "Unlock All Icons" should save properly
+
+**Notes**:
+* [Vanilla] Support for other GD versions will be added in the future (hopefully until next game update)
+* [Vanilla] Crash handler contains more information about the crash
+* Discord RPC is temporarily removed for a full rewrite
 
 ## v1.6.1
 * Fixed some issues with Discord RPC
