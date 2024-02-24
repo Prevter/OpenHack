@@ -124,37 +124,44 @@ namespace openhack::menu {
         });
 
         addWindow("Interface", []() {
-            gui::width(70);
-            gui::inputFloat("UI Scale", "menu.uiScale", 0.5f, 3.0f, "%.3f");
-            gui::inputFloat("Border Size", "menu.borderSize", 0.0f, 10.0f, "%.3f");
-            gui::inputFloat("Window Rounding", "menu.windowRounding", 0.0f, 10.0f, "%.3f");
-            gui::inputFloat("Frame Rounding", "menu.frameRounding", 0.0f, 10.0f, "%.3f");
-            gui::inputFloat("Window Margin", "menu.windowSnap", 0.0f, 10.0f, "%.3f");
-            gui::width();
+            gui::popupSettings("Sizes", []() {
+                gui::width(70);
+                gui::inputFloat("UI Scale", "menu.uiScale", 0.5f, 3.0f, "%.3f");
+                gui::inputFloat("Border Size", "menu.borderSize", 0.0f, 10.0f, "%.3f");
+                gui::inputFloat("Window Rounding", "menu.windowRounding", 0.0f, 10.0f, "%.3f");
+                gui::inputFloat("Frame Rounding", "menu.frameRounding", 0.0f, 10.0f, "%.3f");
+                gui::inputFloat("Window Margin", "menu.windowSnap", 0.0f, 10.0f, "%.3f");
+                gui::width();
+            });
+
+            gui::popupSettings("Fonts", []() {
+                gui::width(120);
+                auto fonts = gui::getFonts();
+                std::string fontsLine; // Create null-delimited string with all font names
+                for (auto &font: fonts)
+                    fontsLine += font.name + '\0';
+                fontsLine += '\0';
+                int32_t currentFont = gui::getFontIndex();
+                if (gui::combo("Font", &currentFont, fontsLine.c_str())) {
+                    auto selected = fonts[currentFont].name;
+                    gui::setFont(selected);
+                }
+                gui::inputFloat("Font Size", "menu.fontSize", 8.0f, 32.0f, "%.1f px");
+                gui::width();
+
+                if (gui::button("Reload Fonts")) {
+                    config::setGlobal("resetNextFrame", true);
+                    return;
+                }
+                gui::tooltip("Reloads the UI to apply changes which require a restart");
+            });
 
             gui::width(120);
-            auto fonts = gui::getFonts();
-            std::string fontsLine; // Create null-delimited string with all font names
-            for (auto &font: fonts)
-                fontsLine += font.name + '\0';
-            fontsLine += '\0';
-            int32_t currentFont = gui::getFontIndex();
-            if (gui::combo("Font", &currentFont, fontsLine.c_str())) {
-                auto selected = fonts[currentFont].name;
-                gui::setFont(selected);
-            }
-            gui::inputFloat("Font Size", "menu.fontSize", 8.0f, 32.0f, "%.1f px");
             if (gui::combo("Theme", "menu.theme", gui::THEME_NAMES, gui::THEME_COUNT)) {
                 gui::setTheme(config::get<gui::Themes>("menu.theme"));
                 gui::loadPalette();
             }
             gui::width();
-
-            if (gui::button("Reload UI")) {
-                config::setGlobal("resetNextFrame", true);
-                return;
-            }
-            gui::tooltip("Reloads the UI to apply changes which require a restart");
 
             gui::popupSettings("Colors", []() {
                 gui::width(120);
@@ -174,6 +181,22 @@ namespace openhack::menu {
                 }
             });
 
+            gui::popupSettings("Animations", []() {
+                gui::width(70);
+                gui::inputFloat("Animation Time", "menu.animationTime", 0.0f, 10.0f, "%.3f");
+                gui::width();
+                gui::width(110);
+                gui::combo("Easing Type", "menu.easingType", gui::animation::EASING_NAMES,
+                           gui::animation::EASING_COUNT);
+                gui::combo("Easing Mode", "menu.easingMode", gui::animation::EASING_MODE_NAMES, 3);
+                gui::width();
+            });
+
+            // TODO: Implement blur properly
+            // if (gui::combo("Blur", "menu.blur", "Off\0Windows\0Screen\0\0")) {
+            //     blur::setState(config::get<blur::State>("menu.blur"));
+            // }
+
             gui::toggleSetting(
                     "Rainbow Menu",
                     "menu.rainbow.enabled",
@@ -184,18 +207,6 @@ namespace openhack::menu {
                         gui::inputFloat("Value", "menu.rainbow.value", 0.0f, 100.0f);
                         gui::width();
                     });
-
-            gui::width(70);
-            gui::inputFloat("Animation Time", "menu.animationTime", 0.0f, 10.0f, "%.3f");
-            gui::width();
-            gui::width(110);
-            gui::combo("Easing Type", "menu.easingType", gui::animation::EASING_NAMES, gui::animation::EASING_COUNT);
-            gui::combo("Easing Mode", "menu.easingMode", gui::animation::EASING_MODE_NAMES, 3);
-            // TODO: Implement blur properly
-            // if (gui::combo("Blur", "menu.blur", "Off\0Windows\0Screen\0\0")) {
-            //     blur::setState(config::get<blur::State>("menu.blur"));
-            // }
-            gui::width();
 
             if (gui::button("Reorder Windows"))
                 stackWindows();
@@ -293,10 +304,10 @@ namespace openhack::menu {
 
             float r, g, b;
             ImGui::ColorConvertHSVtoRGB(
-                (float)ImGui::GetTime() * speed,
-                saturation / 100.0f,
-                value / 100.0f,
-                r, g, b);
+                    (float) ImGui::GetTime() * speed,
+                    saturation / 100.0f,
+                    value / 100.0f,
+                    r, g, b);
 
             gui::Color primary = {r, g, b, accentOrig.a};
             config::set("menu.color.accent", primary);
