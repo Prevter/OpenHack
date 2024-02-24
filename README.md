@@ -59,7 +59,6 @@ Please visit the [issues](https://github.com/prevter/gdopenhack/issues) page for
 - Customizable keybinds
 - Discord Rich Presence
 - Automatic updates
-- Backwards/Forwards compatibility with different versions of Geometry Dash (2.200, 2.201, 2.202, 2.203, 2.204+) (vanilla only)
 - And more!
 
 ## Installation
