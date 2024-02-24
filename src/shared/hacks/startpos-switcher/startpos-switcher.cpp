@@ -66,9 +66,11 @@ namespace openhack::hacks {
     void StartPosSwitcher::update() {
         // Get PlayLayer
         auto *playLayer = gd::PlayLayer::get();
-        if (playLayer == nullptr && m_label != nullptr) {
-            delete m_label;
-            m_label = nullptr;
+        if (playLayer == nullptr) {
+            if (m_label != nullptr) {
+                delete m_label;
+                m_label = nullptr;
+            }
             return;
         }
 
