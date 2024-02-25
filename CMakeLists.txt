@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(
     OpenHack 
-    VERSION 2.0.0
+    VERSION 2.0.1
     HOMEPAGE_URL "https://github.com/Prevter/GDOpenHack"
     LANGUAGES C CXX
 )

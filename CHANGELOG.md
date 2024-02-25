@@ -1,3 +1,6 @@
+## v.2.0.1
+* [Hotfix] Fixed a crash during the game launch if you've unfocused the game window
+
 ## v2.0.0
 ### Full project rewrite for better stability and code quality
 **UI**:
