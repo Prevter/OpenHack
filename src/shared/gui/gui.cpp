@@ -137,8 +137,19 @@ namespace openhack::gui {
     void tooltip(const char *text) {
         if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
             ImVec2 pos = ImGui::GetMousePos();
-            pos.x += 10;
-            pos.y += 10;
+
+            auto size = ImGui::CalcTextSize(text);
+            auto screenSize = ImGui::GetIO().DisplaySize;
+
+            const float padding = 10.0f;
+            pos.x += padding;
+            pos.y += padding;
+
+            if (pos.x + size.x > screenSize.x)
+                pos.x = screenSize.x - size.x - padding;
+            if (pos.y + size.y > screenSize.y)
+                pos.y = screenSize.y - size.y - padding;
+
             ImGui::SetNextWindowPos(pos);
             ImGui::SetTooltip("%s", text);
         }
