@@ -4,7 +4,7 @@
 
 namespace openhack::hacks {
 
-    /// @brief Allows to change the game's refresh rate and bypass physics.
+    /// @brief Instantly completes the level when you start it
     class InstantComplete : public EmbeddedHack {
     public:
         InstantComplete() : EmbeddedHack("Instant Complete", "instant_complete") {}

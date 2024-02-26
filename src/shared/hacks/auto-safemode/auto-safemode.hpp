@@ -4,7 +4,7 @@
 
 namespace openhack::hacks {
 
-    /// @brief Allows to change the game's refresh rate and bypass physics.
+    /// @brief Automatically enables "Safe Mode" if you have cheats enabled
     class AutoSafemode : public EmbeddedHack {
     public:
         AutoSafemode() : EmbeddedHack("Auto Safe Mode", "autosafemode") {}

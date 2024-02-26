@@ -5,7 +5,7 @@
 
 namespace openhack::hacks {
 
-    /// @brief Allows to change the game's refresh rate and bypass physics.
+    /// @brief Automatically picks up coins when they are spawned
     class AutoPickupCoins : public EmbeddedHack {
     public:
         AutoPickupCoins() : EmbeddedHack("Auto Pickup Coins", "auto_pickup_coins") {}

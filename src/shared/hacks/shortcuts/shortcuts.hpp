@@ -4,7 +4,7 @@
 
 namespace openhack::hacks {
 
-    /// @brief Hack for changing the game's speed.
+    /// @brief Window with shortcuts to various game options
     class Shortcuts : public EmbeddedHack {
     public:
         Shortcuts() : EmbeddedHack("Shortcuts", "shortcuts") {}

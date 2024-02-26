@@ -5,7 +5,7 @@
 
 namespace openhack::hacks {
 
-    /// @brief Allows to change the game's refresh rate and bypass physics.
+    /// @brief Hack for switching between StartPos objects in the level
     class StartPosSwitcher : public EmbeddedHack {
     public:
         StartPosSwitcher() : EmbeddedHack("StartPos Switcher", "startpos_switch") {}
