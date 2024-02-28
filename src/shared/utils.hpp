@@ -4,6 +4,10 @@
 #include <imgui.h>
 #include "platform/platform.hpp"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #ifdef __clang__
 
 #include <ctime>
@@ -46,6 +50,39 @@ namespace openhack::utils {
     /// @return Time since the last frame in seconds.
     inline double getDeltaTime() {
         return ImGui::GetIO().DeltaTime;
+    }
+
+    /// @brief Convert degrees to radians.
+    /// @param deg The degrees.
+    /// @return The radians.
+    inline double degToRad(double deg) {
+        return deg * M_PI / 180.0;
+    }
+
+    /// @brief Rotate a vector by an angle.
+    /// @param vector The vector to rotate.
+    /// @param angle The angle in degrees.
+    /// @return The rotated vector.
+    inline ImVec2 rotateVector(const ImVec2 &vector, double angle) {
+        auto rad = degToRad(angle);
+        return {
+                static_cast<float>(vector.x * cos(rad) - vector.y * sin(rad)),
+                static_cast<float>(vector.x * sin(rad) + vector.y * cos(rad))
+        };
+    }
+
+    /// @brief Converts a screen position to a frame position.
+    /// @param pos The screen position.
+    /// @return The frame position.
+    inline ImVec2 screenToFrame(const ImVec2& pos) {
+        auto *director = gd::cocos2d::CCDirector::sharedDirector();
+        const auto frameSize = director->getOpenGLView()->getFrameSize();
+        const auto winSize = director->getWinSize();
+
+        return {
+            pos.x / frameSize.width * winSize.width,
+            (1.f - pos.y / frameSize.height) * winSize.height
+        };
     }
 
     /// @brief Compare the version of the game with the given version.

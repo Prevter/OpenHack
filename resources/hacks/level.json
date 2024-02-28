@@ -269,6 +269,10 @@
                     "mask": "*0690"
                 }
             ]
+        },
+        {
+            "type": "embedded",
+            "hack": "click_tp"
         }
     ]
 }

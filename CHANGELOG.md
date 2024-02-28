@@ -1,4 +1,9 @@
-## v.2.0.1
+## v2.1.0
+* Reimplemented "Discord RPC" with x4 more features
+* Added "Click Teleport"
+* Fixed tooltips going off the screen
+
+## v2.0.1
 * Fixed a crash during the game launch if you've unfocused the game window
 * Fixed a crash for GDPS users, if executable name is not "GeometryDash.exe"
 

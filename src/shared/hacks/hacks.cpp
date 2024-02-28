@@ -11,6 +11,7 @@
 #include "auto-pickup-coins/auto-pickup-coins.hpp"
 #include "startpos-switcher/startpos-switcher.hpp"
 #include "discord-rpc/discord-rpc.hpp"
+#include "click-tp/click-tp.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -225,6 +226,7 @@ namespace openhack::hacks {
             new AutoPickupCoins(),
             new StartPosSwitcher(),
             new DiscordRPC(),
+            new ClickTeleport(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;
