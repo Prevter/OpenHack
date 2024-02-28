@@ -63,6 +63,20 @@ namespace openhack::gui {
         return changed;
     }
 
+    bool Theme::inputText(const char *label, std::string *value, int bufferSize, const char *placeholder) {
+        char buffer[256];
+        std::copy(value->begin(), value->end(), buffer);
+        buffer[value->size()] = '\0';
+        bool changed;
+        if (placeholder != nullptr) {
+            changed = ImGui::InputTextWithHint(label, placeholder, buffer, bufferSize);
+        } else {
+            changed = ImGui::InputText(label, buffer, bufferSize);
+        }
+        *value = buffer;
+        return changed;
+    }
+
     bool Theme::colorEdit(const char *label, Color *color, ImGuiColorEditFlags flags) {
         return ImGui::ColorEdit4(label, color->data(), flags);
     }
@@ -199,7 +213,8 @@ namespace openhack::gui {
         return deleteClicked;
     }
 
-    bool Theme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size, float minWidth) {
+    bool Theme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size,
+                              float minWidth) {
         // 95% is taken by a transparent button with label
         // 5% is taken by the small button with the arrow
         ImGui::PushItemWidth(-1);
@@ -328,6 +343,12 @@ namespace openhack::gui {
         return false;
     }
 
+    bool inputText(const char *label, std::string *buffer, int bufferSize, const char *placeholder) {
+        if (currentTheme)
+            return currentTheme->inputText(label, buffer, bufferSize, placeholder);
+        return false;
+    }
+
     bool colorEdit(const char *label, Color *color, ImGuiColorEditFlags flags) {
         if (currentTheme)
             return currentTheme->colorEdit(label, color, flags);
@@ -345,7 +366,8 @@ namespace openhack::gui {
         return false;
     }
 
-    bool toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size, float minWidth) {
+    bool
+    toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size, float minWidth) {
         if (currentTheme)
             return currentTheme->toggleSetting(label, value, popupDraw, size, minWidth);
         return false;

@@ -75,6 +75,14 @@ namespace openhack::gui
         /// @return True if the input was changed.
         virtual bool inputFloat(const char *label, float *value, float min, float max, const char *format);
 
+        /// @brief Draws a text input.
+        /// @param label The label of the input.
+        /// @param value The value of the input.
+        /// @param bufferSize The size of the buffer.
+        /// @param placeholder The placeholder of the input.
+        /// @return True if the input was changed.
+        virtual bool inputText(const char *label, std::string *value, int bufferSize, const char *placeholder);
+
         /// @brief Draws a color input.
         /// @param label The label of the input.
         /// @param color The color of the input.
@@ -211,6 +219,15 @@ namespace openhack::gui
     /// @return True if the input was changed.
     /// @note Calls the `inputFloat` method of the current theme.
     bool inputFloat(const char *label, float *value, float min = -FLT_MAX, float max = FLT_MAX, const char *format = "%.3f");
+
+    /// @brief Draws a text input.
+    /// @param label The label of the input.
+    /// @param value The value of the input.
+    /// @param bufferSize The size of the buffer.
+    /// @param placeholder The placeholder of the input.
+    /// @return True if the input was changed.
+    /// @note Calls the `inputText` method of the current theme.
+    bool inputText(const char *label, std::string *value, int bufferSize = 64, const char *placeholder = "");
 
     /// @brief Draws a color input.
     /// @param label The label of the input.

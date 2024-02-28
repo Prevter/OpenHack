@@ -95,6 +95,15 @@ namespace openhack::gui {
     bool inputFloat(const char *label, const char *valueKey, float min = -FLT_MAX, float max = FLT_MAX,
                     const char *format = "%.3f");
 
+    /// @brief Draws a text input.
+    /// @param label The label of the input.
+    /// @param valueKey The key of the value in the configuration.
+    /// @param bufferSize The size of the buffer.
+    /// @param placeholder The placeholder of the input.
+    /// @return True if the input was changed.
+    /// @note Uses the configuration to store the value.
+    bool inputText(const char *label, const char *valueKey, int bufferSize = 64, const char *placeholder = "");
+
     /// @brief Draws a color input.
     /// @param label The label of the input.
     /// @param color The key of the color in the configuration.
@@ -118,5 +127,6 @@ namespace openhack::gui {
     /// @param minWidth The minimum width of the popup.
     /// @return True if the checkbox was clicked.
     /// @note Uses the configuration to store the value.
-    bool toggleSetting(const char *label, const char *settingKey, std::function<void()> popupDraw, ImVec2 size = ImVec2(0, 0), float minWidth = 0.0f);
+    bool toggleSetting(const char *label, const char *settingKey, std::function<void()> popupDraw,
+                       ImVec2 size = ImVec2(0, 0), float minWidth = 0.0f);
 }

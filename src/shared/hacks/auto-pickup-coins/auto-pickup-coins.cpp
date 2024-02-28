@@ -51,7 +51,7 @@ namespace openhack::hacks {
             if (coin == nullptr) continue;
 
             // Pickup the coin
-            playLayer->pickupCoin(coin);
+            playLayer->pickupItem(coin);
             playLayer->destroyObject(coin);
         }
     }

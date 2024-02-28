@@ -187,6 +187,14 @@ namespace openhack::gui {
         return result;
     }
 
+    bool inputText(const char *label, const char *valueKey, int bufferSize, const char *placeholder) {
+        auto value = config::get<std::string>(valueKey, "");
+        bool result = gui::inputText(label, &value, bufferSize, placeholder);
+        if (result)
+            config::set(valueKey, value);
+        return result;
+    }
+
     bool colorEdit(const char *label, const char *colorKey) {
         auto value = config::get<Color>(colorKey, Color());
         bool result = gui::colorEdit(label, &value);
