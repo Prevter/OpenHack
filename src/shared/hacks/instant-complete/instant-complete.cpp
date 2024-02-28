@@ -16,7 +16,7 @@ namespace openhack::hacks {
 
     void InstantComplete::onDraw() {
         gui::checkbox("Instant Complete", "hack.instant_complete.enabled");
-        gui::tooltip("Completes the level when the level starts.");
+        gui::tooltip("Completes the level when the level starts.\nWarning! Using this hack on online levels can get your account leaderboard banned.");
         menu::keybinds::addMenuKeybind("instant_complete.enabled", "Instant Complete", []() {
             bool enabled = !config::get<bool>("hack.instant_complete.enabled", false);
             config::set("hack.instant_complete.enabled", enabled);
