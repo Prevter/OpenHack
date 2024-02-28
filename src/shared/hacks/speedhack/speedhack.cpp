@@ -5,7 +5,8 @@ namespace openhack::hacks {
 
     void SpeedHack::onInit() {
         // Set default values
-        config::setIfEmpty("hack.speedhack.enabled", false);
+        // We're disabling speedhack by default, so the game actually loads
+        config::set("hack.speedhack.enabled", false);
         config::setIfEmpty("hack.speedhack.speed", 1.0f);
         config::setIfEmpty("hack.speedhack.music", false);
 
