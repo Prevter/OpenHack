@@ -10,6 +10,7 @@
 #include "instant-complete/instant-complete.hpp"
 #include "auto-pickup-coins/auto-pickup-coins.hpp"
 #include "startpos-switcher/startpos-switcher.hpp"
+#include "discord-rpc/discord-rpc.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -223,6 +224,7 @@ namespace openhack::hacks {
             new InstantComplete(),
             new AutoPickupCoins(),
             new StartPosSwitcher(),
+            new DiscordRPC(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;

@@ -17,7 +17,7 @@ namespace openhack::hooks {
                 return false;
 
             hacks::StartPosSwitcher::lateInitLevel();
-
+            config::setGlobal("discord_rpc.levelTime", std::time(nullptr));
             return true;
         }
 
