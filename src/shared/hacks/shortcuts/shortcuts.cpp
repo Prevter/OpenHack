@@ -26,6 +26,42 @@ namespace openhack::hacks {
 
 #endif
 
+    void Shortcuts::uncompleteLevel() {
+        if (gd::PlayLayer *playLayer = gd::PlayLayer::get()) {
+            auto *level = playLayer->m_level();
+            auto *statsManager = gd::GameStatsManager::sharedState();
+            statsManager->uncompleteLevel(level);
+
+            // Clear progress
+            level->m_practicePercent() = 0;
+            level->m_normalPercent() = 0;
+            level->m_newNormalPercent2() = 0;
+            level->m_orbCompletion() = 0;
+            level->m_54() = 0;
+            level->m_k111() = 0;
+            level->m_bestPoints() = 0;
+            level->m_bestTime() = 0;
+
+            // Remove coins
+            // TODO: Fix cocos2d::CCDictionary for vanilla
+#ifdef OPENHACK_GEODE
+            auto *coinDict = statsManager->m_verifiedUserCoins();
+            if (!coinDict) {
+                L_WARN("coinDict is null");
+                return;
+            }
+            auto coins = level->m_coins();
+            for (auto i = 0; i < coins; i++) {
+                auto *key = level->getCoinKey(i + 1);
+                reinterpret_cast<cocos2d::CCDictionary *>(coinDict)->removeObjectForKey(key);
+            }
+#endif
+
+            // Save the level
+            gd::GameLevelManager::sharedState()->saveLevel(level);
+        }
+    }
+
     void Shortcuts::openOptions() {
         auto *options = gd::OptionsLayer::create();
         auto *scene = gd::cocos2d::CCDirector::sharedDirector()->getRunningScene();
@@ -70,6 +106,13 @@ namespace openhack::hacks {
                 openOptions();
             });
 
+            if (gui::button("Uncomplete Level"))
+                uncompleteLevel();
+            gui::tooltip("Clears all progress from the level. (You need to be in the level to use this.)");
+            menu::keybinds::addMenuKeybind("shortcuts.uncomplete_level", "Uncomplete Level", []() {
+                uncompleteLevel();
+            });
+
             if (gui::button("Restart Level"))
                 restartLevel();
             gui::tooltip("Restarts the current level.");
@@ -97,6 +140,8 @@ namespace openhack::hacks {
             }
 #ifdef OPENHACK_GEODE
             gui::tooltip("DLL injection is not recommended when using Geode.");
+#else
+            gui::tooltip("Injects a DLL into the game process. Useful for debugging and modding.");
 #endif
 #endif
 
@@ -120,6 +165,10 @@ namespace openhack::hacks {
         // Initialize keybinds
         menu::keybinds::setKeybindCallback("shortcuts.options", []() {
             openOptions();
+        });
+
+        menu::keybinds::setKeybindCallback("shortcuts.uncomplete_level", []() {
+            uncompleteLevel();
         });
 
         menu::keybinds::setKeybindCallback("shortcuts.restart_level", []() {

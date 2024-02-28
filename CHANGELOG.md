@@ -1,6 +1,7 @@
 ## v2.1.0
 * Reimplemented "Discord RPC" with x4 more features
 * Added "Click Teleport"
+* Added "Uncomplete Level"
 * Fixed tooltips going off the screen
 
 ## v2.0.1

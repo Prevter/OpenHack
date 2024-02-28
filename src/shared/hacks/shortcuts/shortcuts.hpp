@@ -16,6 +16,7 @@ namespace openhack::hacks {
 
     private:
         static void patchGame();
+        static void uncompleteLevel();
         static void openOptions();
         static void restartLevel();
         static void togglePractice();

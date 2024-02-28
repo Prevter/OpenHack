@@ -255,7 +255,9 @@ namespace openhack::hacks {
                 }},
                 {"{progress}",   [playLayer]() {
                     if (!playLayer) return std::string("");
-                    return std::to_string(playLayer->getCurrentPercentInt());
+                    auto progress = playLayer->getCurrentPercentInt();
+                    if (progress < 0) progress = 0;
+                    return std::to_string(progress);
                 }},
                 {"{best}",       [playLayer]() {
                     if (!playLayer) return std::string("");
