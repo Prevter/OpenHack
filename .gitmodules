@@ -24,4 +24,4 @@
 	url = https://github.com/juliettef/imgui_markdown
 [submodule "libs/discord-rpc"]
 	path = libs/discord-rpc
-	url = https://github.com/Prevter/discord-rpc
+	url = https://github.com/prevter/discord-rpc
