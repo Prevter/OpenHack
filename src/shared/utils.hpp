@@ -240,6 +240,29 @@ namespace openhack::utils {
         return hex;
     }
 
+    /// @brief Check whether user is searching for something.
+    /// @return True if search value is not empty
+    inline bool isSearching() {
+        return !config::getGlobal<std::string>("searchValue", "").empty();
+    }
+
+    /// @brief Check if the value is searched.
+    /// @param value The value to check
+    /// @return True if the value is searched
+    inline bool isSearched(const std::string &value) {
+        auto search = config::getGlobal<std::string>("searchValue", "");
+        if (search.empty())
+            return true;
+
+        // Convert both to lower case
+        std::string lowerValue = value;
+        std::transform(lowerValue.begin(), lowerValue.end(), lowerValue.begin(), ::tolower);
+        std::string lowerSearch = search;
+        std::transform(lowerSearch.begin(), lowerSearch.end(), lowerSearch.begin(), ::tolower);
+
+        return lowerValue.find(lowerSearch) != std::string::npos;
+    }
+
     /// @brief Get the current time in milliseconds.
     /// @return The current time in milliseconds.
     inline time_t getTime() {

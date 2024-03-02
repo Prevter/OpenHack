@@ -132,6 +132,10 @@ namespace openhack::menu {
 
             if (gui::button("Join Discord server"))
                 utils::openURL("https://discord.gg/QSd4jUyc45");
+
+            auto searchValue = config::getGlobal<std::string>("searchValue", "");
+            gui::inputText("##Search", &searchValue, 64, "Search");
+            config::setGlobal("searchValue", searchValue);
         });
 
         addWindow("Interface", []() {

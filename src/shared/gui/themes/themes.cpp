@@ -43,7 +43,19 @@ namespace openhack::gui {
     }
 
     bool Theme::checkbox(const char *label, bool *value) {
-        return ImGui::Checkbox(label, value);
+        if (utils::isSearching()) {
+            if (utils::isSearched(label)) {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+            } else {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
+            }
+        } else {
+            auto &style = ImGui::GetStyle();
+            ImGui::PushStyleColor(ImGuiCol_Text, style.Colors[ImGuiCol_Text]);
+        }
+        bool changed = ImGui::Checkbox(label, value);
+        ImGui::PopStyleColor(4);
+        return changed;
     }
 
     bool Theme::combo(const char *label, int *current, const char *const items[], int itemsCount) {
@@ -221,9 +233,25 @@ namespace openhack::gui {
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
 
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+        if (utils::isSearching()) {
+            if (utils::isSearched(label)) {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.1f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.3f, 0.3f, 0.3f, 0.5f));
+            } else {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+            }
+        } else {
+            auto &style = ImGui::GetStyle();
+            ImGui::PushStyleColor(ImGuiCol_Text, style.Colors[ImGuiCol_Text]);
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+        }
 
         auto availWidth = ImGui::GetContentRegionAvail().x;
         auto buttonSize = ImVec2(availWidth * 0.9f, 0);
@@ -237,7 +265,7 @@ namespace openhack::gui {
         bool changed = ImGui::Checkbox(label, value);
         ImGui::SameLine(0, 0);
 
-        ImGui::PopStyleColor(3);
+        ImGui::PopStyleColor(4);
         ImGui::PopStyleVar(2);
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - arrowSize.x);
         ImGui::SetNextItemWidth(arrowSize.x);

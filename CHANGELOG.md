@@ -3,6 +3,7 @@
 * Added "Click Teleport"
 * Added "Uncomplete Level"
 * Fixed tooltips going off the screen
+* Re-added search bar
 
 ## v2.0.1
 * Fixed a crash during the game launch if you've unfocused the game window

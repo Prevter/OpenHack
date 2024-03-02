@@ -124,13 +124,31 @@ namespace openhack::gui {
     bool MegaHackTheme::checkbox(const char *label, bool *value) {
         ImGui::PushItemWidth(-1.0f);
 
+        if (utils::isSearching()) {
+            if (utils::isSearched(label)) {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+            } else {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+            }
+        } else {
+            auto &style = ImGui::GetStyle();
+            ImGui::PushStyleColor(ImGuiCol_Text, style.Colors[ImGuiCol_Text]);
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+        }
+
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
 
         auto textColor = *value ? config::get<Color>("menu.color.text") : config::get<Color>("menu.color.textDisabled");
-        ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) textColor);
+        if (!utils::isSearching())
+            ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) textColor);
 
         bool clicked = ImGui::Button(label, ImVec2(ImGui::GetContentRegionAvail().x, 0));
         ImGui::PopStyleColor(4);
@@ -150,7 +168,7 @@ namespace openhack::gui {
         return clicked;
     }
 
-    void MegaHackTheme::popupSettings(const char* label, const std::function<void()> &content, ImVec2 size) {
+    void MegaHackTheme::popupSettings(const char *label, const std::function<void()> &content, ImVec2 size) {
         ImGui::PushItemWidth(-1);
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
@@ -201,17 +219,33 @@ namespace openhack::gui {
         }
     }
 
-    bool MegaHackTheme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size, float minWidth) {
+    bool
+    MegaHackTheme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size,
+                                 float minWidth) {
         ImGui::PushItemWidth(-1);
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
 
         auto color = *value ? config::get<Color>("menu.color.text") : config::get<Color>("menu.color.textDisabled");
-        ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) color);
 
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+        if (utils::isSearching()) {
+            if (utils::isSearched(label)) {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+            } else {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+            }
+        } else {
+            ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) color);
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
+        }
 
         auto availWidth = ImGui::GetContentRegionAvail().x;
         auto buttonSize = ImVec2(availWidth * 0.9f, 0);
