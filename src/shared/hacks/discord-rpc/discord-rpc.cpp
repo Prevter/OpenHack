@@ -158,11 +158,11 @@ namespace openhack::hacks {
 
     void DiscordRPC::update() {
         // Update presence every X seconds
-        static double lastUpdate = 0.0f;
+        static time_t lastUpdate = 0.0f;
         if (config::get<bool>("hack.discord_rpc.enabled") &&
-            ImGui::GetTime() - lastUpdate >= config::get<float>("hack.discord_rpc.update_interval")) {
+            (float) (utils::getTime() - lastUpdate) >= config::get<float>("hack.discord_rpc.update_interval")) {
             updatePresence();
-            lastUpdate = ImGui::GetTime();
+            lastUpdate = utils::getTime();
         }
     }
 

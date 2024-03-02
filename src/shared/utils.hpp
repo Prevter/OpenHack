@@ -239,4 +239,12 @@ namespace openhack::utils {
         }
         return hex;
     }
+
+    /// @brief Get the current time in milliseconds.
+    /// @return The current time in milliseconds.
+    inline time_t getTime() {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::high_resolution_clock::now().time_since_epoch()
+        ).count();
+    }
 }
