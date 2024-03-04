@@ -19,6 +19,9 @@
 		"url": "https://discord.gg/HaHn7RSJ4Q"
 	},
 	"resources": {
+		"sprites": [
+			"screenshot-res.png"
+		],
 		"files": [
 			"resources/fonts/*",
 			"resources/hacks/*",
