@@ -3,6 +3,8 @@
 
 #include <fstream>
 
+#include "hacks/labels/labels.hpp"
+
 namespace openhack::config {
     void setDefaults() {
         setIfEmpty("menu.animationTime", 0.35);
@@ -41,6 +43,8 @@ namespace openhack::config {
     }
 
     void save() {
+        hacks::Labels::save();
+
         auto path = utils::getModSaveDirectory() / "config.json";
         std::ofstream file(path);
         file << storage.dump(4);

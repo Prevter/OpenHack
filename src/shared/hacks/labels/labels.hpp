@@ -136,6 +136,12 @@ namespace openhack::hacks {
         static std::string
         replaceTokens(const std::string &text, gd::PlayLayer *playLayer, gd::LevelEditorLayer *editorLayer);
 
+        /// @brief Save the labels to the config
+        static void save();
+
+        /// @brief Load the labels from the config
+        static void load();
+
     public:
         /// @brief PlayLayer::init hook
         static void playLayerInit();

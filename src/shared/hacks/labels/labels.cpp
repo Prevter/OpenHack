@@ -322,7 +322,7 @@ namespace openhack::hacks {
         }
 
         // Load the labels from the config
-        s_labels.clear();
+        load();
     }
 
     void Labels::update() {
@@ -440,6 +440,12 @@ namespace openhack::hacks {
         // {stars} - stars of the level
         // {attempts} - attempts in the level
         // {star_emoji} - places ⭐ or 🌙 depending on the level
+        // {clock} - current time
+        // {fps} - current FPS
+        // {cps} - clicks per second
+        // {noclip_acc} - noclip accuracy
+        // {from} - last respawn %
+        // {best_run} - current best run %
         std::unordered_map<std::string, std::function<std::string()>> tokens = {
                 {"{username}",   []() {
                     auto *gameManager = gd::GameManager::sharedState();
@@ -524,12 +530,18 @@ namespace openhack::hacks {
                     return std::to_string(static_cast<int>(ImGui::GetIO().Framerate));
                 }},
                 {"{cps}",        []() {
-
                     return std::string("0/0");
                 }},
                 {"{noclip_acc}", []() {
-
                     return std::string("0.00");
+                }},
+                {"{from}",       [playLayer]() {
+                    if (!playLayer) return std::string("");
+                    return std::string("0");
+                }},
+                {"{best_run}",   [playLayer]() {
+                    if (!playLayer) return std::string("");
+                    return std::string("0");
                 }},
         };
 
@@ -544,4 +556,43 @@ namespace openhack::hacks {
         return result;
     }
 
+    void saveLabel(const LabelConfig &label, nlohmann::json &j) {
+        j = nlohmann::json{{"caption",  label.caption},
+                           {"text",     label.text},
+                           {"font",     label.font},
+                           {"visible",  label.visible},
+                           {"color",    label.color},
+                           {"scale",    label.scale},
+                           {"position", static_cast<int32_t>(label.position)}};
+    }
+
+    void loadLabel(const nlohmann::json &j, LabelConfig &label) {
+        label.caption = j.at("caption").get<std::string>();
+        label.text = j.at("text").get<std::string>();
+        label.font = j.at("font").get<std::string>();
+        label.visible = j.at("visible").get<bool>();
+        label.color = j.at("color").get<gui::Color>();
+        label.scale = j.at("scale").get<float>();
+        label.position = static_cast<ContainerPosition>(j.at("position").get<int32_t>());
+    }
+
+    void Labels::save() {
+        auto j = nlohmann::json::array();
+        for (const auto &label: s_labels) {
+            nlohmann::json labelJ;
+            saveLabel(label, labelJ);
+            j.push_back(labelJ);
+        }
+        config::set("labels", j);
+    }
+
+    void Labels::load() {
+        auto j = config::get<nlohmann::json>("labels", nlohmann::json::array());
+        s_labels.clear();
+        for (const auto &labelJ: j) {
+            LabelConfig label;
+            loadLabel(labelJ, label);
+            s_labels.push_back(label);
+        }
+    }
 }
