@@ -30,7 +30,7 @@ namespace openhack::hooks::PlayLayer {
         hacks::Display::playLayerReset();
         hacks::AutoPickupCoins::resetLevel();
         hacks::StartPosSwitcher::resetLevel();
-        config::setGlobal("fromPercent", getCurrentPercentInt());
+        config::setGlobal("fromPercent", self->getCurrentPercentInt());
     }
 
     void addObject(gd::PlayLayer *self, gd::GameObject *object) {
