@@ -124,6 +124,8 @@ namespace openhack::gui {
     bool MegaHackTheme::checkbox(const char *label, bool *value) {
         ImGui::PushItemWidth(-1.0f);
 
+        auto textColor = *value ? config::get<Color>("menu.color.text") : config::get<Color>("menu.color.textDisabled");
+
         if (utils::isSearching()) {
             if (utils::isSearched(label)) {
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
@@ -138,17 +140,13 @@ namespace openhack::gui {
             }
         } else {
             auto &style = ImGui::GetStyle();
-            ImGui::PushStyleColor(ImGuiCol_Text, style.Colors[ImGuiCol_Text]);
+            ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) textColor);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.07f, 0.07f, 0.07f, 0.5f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
         }
 
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
-
-        auto textColor = *value ? config::get<Color>("menu.color.text") : config::get<Color>("menu.color.textDisabled");
-        if (!utils::isSearching())
-            ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) textColor);
 
         bool clicked = ImGui::Button(label, ImVec2(ImGui::GetContentRegionAvail().x, 0));
         ImGui::PopStyleColor(4);
@@ -195,7 +193,7 @@ namespace openhack::gui {
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.04f, 0.04f, 0.04f, 0.5f));
         bool openPopup = ImGui::Button((std::string("##open_") + label).c_str(), arrowSize);
         ImGui::PopItemWidth();
-        ImGui::PopStyleColor(2);
+        ImGui::PopStyleColor(3);
 
         auto scale = config::get<float>("menu.uiScale");
         auto top = ImGui::GetItemRectMin().y + (6 * scale);
