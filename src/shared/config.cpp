@@ -27,7 +27,7 @@ namespace openhack::config {
     }
 
     void load() {
-        auto path = utils::getModSaveDirectory() + "/config.json";
+        auto path = utils::getModSaveDirectory() / "config.json";
         std::ifstream file(path);
 
         if (!file.is_open()) {
@@ -41,7 +41,7 @@ namespace openhack::config {
     }
 
     void save() {
-        auto path = utils::getModSaveDirectory() + "/config.json";
+        auto path = utils::getModSaveDirectory() / "config.json";
         std::ofstream file(path);
         file << storage.dump(4);
         file.close();

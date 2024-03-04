@@ -3,27 +3,28 @@
 #include "imgui/imgui_hook.hpp"
 
 namespace openhack::utils {
-    std::string getGameDirectory() noexcept {
-        char buffer[MAX_PATH];
-        GetModuleFileNameA(nullptr, buffer, MAX_PATH);
-        std::string::size_type pos = std::string(buffer).find_last_of("\\/");
-        return std::string(buffer).substr(0, pos);
+    std::filesystem::path getGameDirectory() noexcept {
+        wchar_t path[MAX_PATH];
+        GetModuleFileNameW(nullptr, path, MAX_PATH);
+        std::filesystem::path fsPath = path;
+        fsPath = fsPath.parent_path();
+        return fsPath;
     }
 
-    std::string getModSaveDirectory() noexcept {
-        return getGameDirectory() + "/openhack";
+    std::filesystem::path getModSaveDirectory() noexcept {
+        return getGameDirectory() / "openhack";
     }
 
-    std::string getModAssetsDirectory() noexcept {
-        return getGameDirectory() + "/openhack";
+    std::filesystem::path getModAssetsDirectory() noexcept {
+        return getGameDirectory() / "openhack";
     }
 
-    std::string getModFontsDirectory() noexcept {
-        return getModAssetsDirectory() + "/fonts";
+    std::filesystem::path getModFontsDirectory() noexcept {
+        return getModAssetsDirectory() / "fonts";
     }
 
-    std::string getModHacksDirectory() noexcept {
-        return getModAssetsDirectory() + "/hacks";
+    std::filesystem::path getModHacksDirectory() noexcept {
+        return getModAssetsDirectory() / "hacks";
     }
 
     void lockTickInput() noexcept {

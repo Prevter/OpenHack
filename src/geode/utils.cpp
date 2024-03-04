@@ -3,20 +3,20 @@
 #include <imgui-cocos.hpp>
 
 namespace openhack::utils {
-    std::string getModSaveDirectory() noexcept {
-        return geode::Mod::get()->getSaveDir().string();
+    std::filesystem::path getModSaveDirectory() noexcept {
+        return static_cast<std::filesystem::path::string_type &&>(geode::Mod::get()->getSaveDir());
     }
 
-    std::string getModAssetsDirectory() noexcept {
-        return geode::Mod::get()->getResourcesDir().string();
+    std::filesystem::path getModAssetsDirectory() noexcept {
+        return static_cast<std::filesystem::path::string_type &&>(geode::Mod::get()->getResourcesDir());
     }
 
-    std::string getModFontsDirectory() noexcept {
+    std::filesystem::path getModFontsDirectory() noexcept {
         // geode packs all files into a single directory
         return getModAssetsDirectory();
     }
 
-    std::string getModHacksDirectory() noexcept {
+    std::filesystem::path getModHacksDirectory() noexcept {
         return getModAssetsDirectory();
     }
 

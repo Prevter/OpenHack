@@ -3,10 +3,12 @@
 * Reimplemented "Discord RPC" with x4 more features
 * Added "Click Teleport"
 * Added "Uncomplete Level"
+* Added "Labels"
 * Re-added search bar
 
 **Fixes**:
 * Fixed tooltips going off the screen
+* Fixed saving settings for non-English languages
 * Disabled "Speedhack" on game launch to prevent softlocks
 * Various bug fixes
 * *[Vanilla]* Fixed label colors for "StartPos Switcher"
