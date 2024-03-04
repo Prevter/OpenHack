@@ -81,7 +81,7 @@ namespace openhack::gui
         /// @param bufferSize The size of the buffer.
         /// @param placeholder The placeholder of the input.
         /// @return True if the input was changed.
-        virtual bool inputText(const char *label, std::string *value, int bufferSize, const char *placeholder);
+        virtual bool inputText(const char *label, std::string *value, int bufferSize, const char *placeholder, ImGuiTextFlags flags);
 
         /// @brief Draws a color input.
         /// @param label The label of the input.
@@ -227,7 +227,7 @@ namespace openhack::gui
     /// @param placeholder The placeholder of the input.
     /// @return True if the input was changed.
     /// @note Calls the `inputText` method of the current theme.
-    bool inputText(const char *label, std::string *value, int bufferSize = 64, const char *placeholder = "");
+    bool inputText(const char *label, std::string *value, int bufferSize = 64, const char *placeholder = "", ImGuiTextFlags flags = 0);
 
     /// @brief Draws a color input.
     /// @param label The label of the input.

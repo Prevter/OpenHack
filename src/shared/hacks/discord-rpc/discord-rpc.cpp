@@ -13,7 +13,7 @@ namespace openhack::hacks {
         // Set defaults
         // General
         config::setIfEmpty("hack.discord_rpc.enabled", false);
-        config::setIfEmpty("hack.discord_rpc.update_interval", 1.0f);
+        config::setIfEmpty("hack.discord_rpc.update_interval", 1000.0f);
         config::setIfEmpty("hack.discord_rpc.show_time", true);
         config::setIfEmpty("hack.discord_rpc.level_time", false);
         // Buttons
@@ -62,7 +62,7 @@ namespace openhack::hacks {
             gui::width(200);
 
             // Update interval
-            gui::inputFloat("Update interval", "hack.discord_rpc.update_interval", 0.5f, FLT_MAX, "%.1f sec");
+            gui::inputFloat("Update interval", "hack.discord_rpc.update_interval", 500.f, FLT_MAX, "%.1f ms");
             gui::tooltip("How often presence should be updated");
 
             ImGui::Separator();

@@ -75,15 +75,15 @@ namespace openhack::gui {
         return changed;
     }
 
-    bool Theme::inputText(const char *label, std::string *value, int bufferSize, const char *placeholder) {
+    bool Theme::inputText(const char *label, std::string *value, int bufferSize, const char *placeholder, ImGuiTextFlags flags) {
         char buffer[256];
         std::copy(value->begin(), value->end(), buffer);
         buffer[value->size()] = '\0';
         bool changed;
         if (placeholder != nullptr) {
-            changed = ImGui::InputTextWithHint(label, placeholder, buffer, bufferSize);
+            changed = ImGui::InputTextWithHint(label, placeholder, buffer, bufferSize, flags);
         } else {
-            changed = ImGui::InputText(label, buffer, bufferSize);
+            changed = ImGui::InputText(label, buffer, bufferSize, flags);
         }
         *value = buffer;
         return changed;
@@ -371,9 +371,9 @@ namespace openhack::gui {
         return false;
     }
 
-    bool inputText(const char *label, std::string *buffer, int bufferSize, const char *placeholder) {
+    bool inputText(const char *label, std::string *buffer, int bufferSize, const char *placeholder, ImGuiTextFlags flags) {
         if (currentTheme)
-            return currentTheme->inputText(label, buffer, bufferSize, placeholder);
+            return currentTheme->inputText(label, buffer, bufferSize, placeholder, flags);
         return false;
     }
 

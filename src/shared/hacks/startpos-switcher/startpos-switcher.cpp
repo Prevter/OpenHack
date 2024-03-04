@@ -23,7 +23,8 @@ namespace openhack::hacks {
         m_label->setVisible(show);
         m_label->setTextColor(config::get<gui::Color>("hack.startpos_switch.label.color"));
         m_label->setScale(config::get<float>("hack.startpos_switch.label.scale"));
-        m_label->setOffset({284.5f, 2.0f});
+        auto winSize = gd::cocos2d::CCDirector::sharedDirector()->getWinSize();
+        m_label->setPosition({winSize.width / 2.f, 2.0f});
         m_label->setAnchor({0.5f, 0.0f});
         auto text = fmt::format("{}/{}", m_currentIndex + 1, m_startposes.size());
         m_label->setText(text);
@@ -48,7 +49,6 @@ namespace openhack::hacks {
             gui::keybind("Previous", "hack.startpos_switch.prevKey");
             gui::keybind("Next", "hack.startpos_switch.nextKey");
             ImGui::Separator();
-            gui::text("Label settings");
             gui::width(120);
             if (gui::checkbox("Show label", "hack.startpos_switch.label.show"))
                 updateLabel();

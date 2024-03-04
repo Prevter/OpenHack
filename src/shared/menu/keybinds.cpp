@@ -62,7 +62,7 @@ namespace openhack::menu::keybinds {
             gui::tooltip("Only allow keybinds to be triggered when you're inside a level.\nUseful, to avoid triggering keybinds while searching for levels.");
 
             if (keybinds.empty())
-                gui::text("Right click any hack and press\n\"Add keybind\" to set it.");
+                gui::text("Right click any hack and\npress \"Add keybind\" to set it.");
 
             for (auto &keybind: keybinds) {
                 uint32_t originalKeycode = keybind.keycode;
