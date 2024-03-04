@@ -52,10 +52,8 @@ namespace openhack::hacks {
             gui::width(120);
             if (gui::checkbox("Show label", "hack.startpos_switch.label.show"))
                 updateLabel();
-#ifdef OPENHACK_GEODE
             if (gui::colorEdit("Label color", "hack.startpos_switch.label.color"))
                 updateLabel();
-#endif
             if (gui::inputFloat("Label scale", "hack.startpos_switch.label.scale", 0.1f, 1.0f))
                 updateLabel();
             gui::width();

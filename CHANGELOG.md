@@ -1,9 +1,15 @@
 ## v2.1.0
+**New**:
 * Reimplemented "Discord RPC" with x4 more features
 * Added "Click Teleport"
 * Added "Uncomplete Level"
-* Fixed tooltips going off the screen
 * Re-added search bar
+
+**Fixes**:
+* Fixed tooltips going off the screen
+* Disabled "Speedhack" on game launch to prevent softlocks
+* Various bug fixes
+* *[Vanilla]* Fixed label colors for "StartPos Switcher"
 
 ## v2.0.1
 * Fixed a crash during the game launch if you've unfocused the game window

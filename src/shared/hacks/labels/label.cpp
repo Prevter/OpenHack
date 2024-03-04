@@ -1,53 +1,105 @@
 #include "label.hpp"
 
+#include <utility>
+
+#ifndef OPENHACK_GEODE
+
+#include <cocos2d.h>
+
+#endif
+
 namespace openhack::hacks {
 
-    Label::Label(const std::string &text, const std::string &font) {
-        m_label = gd::cocos2d::CCLabelBMFont::create(text.c_str(), font.c_str());
-        m_label->setZOrder(1000);
-    }
+    Label::Label(std::string text, std::string font) : m_text(std::move(text)), m_font(std::move(font)) {}
 
     void Label::setId(const std::string &id) {
-#ifdef OPENHACK_GEODE
-        reinterpret_cast<cocos2d::CCLabelBMFont*>(m_label)->setID(id);
-#endif
+        m_id = id;
     }
 
-    void Label::setText(const std::string &text) {
-        m_label->setString(text);
+    void Label::setText(const std::string &text, bool callUpdate) {
+        m_text = text;
+        if (callUpdate) update();
     }
 
-    void Label::setTextColor(const gui::Color &color) {
-        // TODO: Fix this for vanilla
-#ifdef OPENHACK_GEODE
-         auto *label = reinterpret_cast<cocos2d::CCLabelBMFont*>(m_label);
-         label->setColor({static_cast<uint8_t>(color.r * 255), static_cast<uint8_t>(color.g * 255), static_cast<uint8_t>(color.b * 255)});
-         label->setOpacity(static_cast<uint8_t>(color.a * 255));
-#endif
+    void Label::setFont(const std::string &font, bool callUpdate) {
+        m_font = font;
+        if (callUpdate) update();
     }
 
-    void Label::setAnchor(const ImVec2 &anchor) {
-        m_label->setAnchorPoint({anchor.x, anchor.y});
+    void Label::setTextColor(const gui::Color &color, bool callUpdate) {
+        m_color = color;
+        if (callUpdate) update();
     }
 
-    void Label::setOffset(const ImVec2 &offset) {
-        m_label->setPosition({offset.x, offset.y});
+    void Label::setAnchor(const ImVec2 &anchor, bool callUpdate) {
+        m_anchor = anchor;
+        if (callUpdate) update();
     }
 
-    void Label::setScale(float scale) {
-        m_label->setScale(scale);
+    void Label::setPosition(const ImVec2 &offset, bool callUpdate) {
+        m_position = offset;
+        if (callUpdate) update();
     }
 
-    void Label::setVisible(bool visible) {
-        m_label->setVisible(visible);
+    void Label::setScale(float scale, bool callUpdate) {
+        m_scale = scale;
+        if (callUpdate) update();
+    }
+
+    void Label::setVisible(bool visible, bool callUpdate) {
+        m_visible = visible;
+        if (callUpdate) update();
+    }
+
+    float Label::getHeight() {
+        if (m_label == nullptr) return 0;
+        auto *label = reinterpret_cast<cocos2d::CCLabelBMFont *>(m_label);
+        return label->getContentSize().height * m_heightMultiply;
+    }
+
+    void Label::multiplyHeight(float multiplier) {
+        m_heightMultiply = multiplier;
     }
 
     void Label::addToLayer(gd::cocos2d::CCLayer *layer) {
+        m_label = gd::cocos2d::CCLabelBMFont::create(m_text.c_str(), m_font.c_str());
+        m_label->setZOrder(1000);
         layer->addChild(m_label);
+        update();
+
+#ifdef OPENHACK_GEODE
+        reinterpret_cast<cocos2d::CCLabelBMFont *>(m_label)->setID(m_id);
+#endif
     }
 
     void Label::remove(gd::cocos2d::CCLayer *layer) {
         layer->removeChild(m_label);
+        delete m_label;
+        m_label = nullptr;
+    }
+
+    void Label::update() {
+        if (m_label == nullptr) return;
+        auto *label = reinterpret_cast<cocos2d::CCLabelBMFont *>(m_label);
+        label->setFntFile(m_font.c_str());
+        label->setCString(m_text.c_str());
+        label->setVisible(m_visible);
+        label->setScale(m_scale);
+
+        if (m_heightMultiply != 1.0f && m_anchor.y == 1.0f) {
+            // Calculate the offset to keep the label in the same position
+            auto offset = label->getContentSize().height - getHeight();
+            label->setPosition({m_position.x, m_position.y + offset});
+        } else {
+            label->setPosition({m_position.x, m_position.y});
+        }
+        label->setAnchorPoint({m_anchor.x, m_anchor.y});
+        auto opacity = static_cast<uint8_t>(m_color.a * 255);
+        cocos2d::_ccColor3B col = {static_cast<uint8_t>(m_color.r * 255),
+                                   static_cast<uint8_t>(m_color.g * 255),
+                                   static_cast<uint8_t>(m_color.b * 255)};
+        label->setColor(col);
+        label->setOpacity(opacity);
     }
 
 }

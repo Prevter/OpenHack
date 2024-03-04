@@ -1,6 +1,12 @@
 #include "shortcuts.hpp"
 #include "../../menu/menu.hpp"
 
+#ifndef OPENHACK_GEODE
+
+#include <cocos2d.h>
+
+#endif
+
 namespace openhack::hacks {
 
 #ifdef PLATFORM_WINDOWS
@@ -43,9 +49,7 @@ namespace openhack::hacks {
             level->m_bestTime() = 0;
 
             // Remove coins
-            // TODO: Fix cocos2d::CCDictionary for vanilla
-#ifdef OPENHACK_GEODE
-            auto *coinDict = statsManager->m_verifiedUserCoins();
+            auto *coinDict = reinterpret_cast<cocos2d::CCDictionary *>(statsManager->m_verifiedUserCoins());
             if (!coinDict) {
                 L_WARN("coinDict is null");
                 return;
@@ -53,9 +57,8 @@ namespace openhack::hacks {
             auto coins = level->m_coins();
             for (auto i = 0; i < coins; i++) {
                 auto *key = level->getCoinKey(i + 1);
-                reinterpret_cast<cocos2d::CCDictionary *>(coinDict)->removeObjectForKey(key);
+                coinDict->removeObjectForKey(key);
             }
-#endif
 
             // Save the level
             gd::GameLevelManager::sharedState()->saveLevel(level);
@@ -128,13 +131,13 @@ namespace openhack::hacks {
             });
 
 #ifdef PLATFORM_WINDOWS
-                if (!win32::four_gb::isPatched()) {
-                    if (gui::button("Apply 4GB patch")) {
-                        patchGame();
-                    }
-                    gui::tooltip("Highly recommended to install.\n"
-                                 "Allows the game to use more memory, which resolves some crashes.");
+            if (!win32::four_gb::isPatched()) {
+                if (gui::button("Apply 4GB patch")) {
+                    patchGame();
                 }
+                gui::tooltip("Highly recommended to install.\n"
+                             "Allows the game to use more memory, which resolves some crashes.");
+            }
             if (gui::button("Inject DLL")) {
                 win32::promptDllInjection();
             }

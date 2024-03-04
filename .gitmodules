@@ -25,3 +25,6 @@
 [submodule "libs/discord-rpc"]
 	path = libs/discord-rpc
 	url = https://github.com/prevter/discord-rpc
+[submodule "libs/cocos-headers"]
+	path = libs/cocos-headers
+	url = https://github.com/prevter/cocos-headers

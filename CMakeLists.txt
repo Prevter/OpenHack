@@ -141,6 +141,7 @@ add_subdirectory(libs/minhook)
 add_subdirectory(libs/glfw)
 add_subdirectory(libs/spdlog)
 add_subdirectory(libs/curl)
+add_subdirectory(libs/cocos-headers)
 
 target_include_directories(
     ${PROJECT_NAME}-Standalone
@@ -155,6 +156,7 @@ target_link_libraries(
     minhook
     spdlog::spdlog
     libcurl
+    cocos2d
 )
 
 # Set "OPENHACK_STANDALONE" to 1
