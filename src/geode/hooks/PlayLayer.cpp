@@ -3,6 +3,7 @@
 #include "../../shared/hacks/display/display.hpp"
 #include "../../shared/hacks/auto-pickup-coins/auto-pickup-coins.hpp"
 #include "../../shared/hacks/startpos-switcher/startpos-switcher.hpp"
+#include "../../shared/hacks/labels/labels.hpp"
 
 #include <Geode/modify/PlayLayer.hpp>
 
@@ -12,11 +13,13 @@ namespace openhack::hooks {
             hacks::Display::playLayerInit(reinterpret_cast<gd::GJGameLevel *>(level));
             hacks::AutoPickupCoins::initLevel();
             hacks::StartPosSwitcher::initLevel();
+            hacks::Labels::playLayerInit();
 
             if (!PlayLayer::init(level, useReplay, dontCreateObjects))
                 return false;
 
             hacks::StartPosSwitcher::lateInitLevel();
+            hacks::Labels::playLayerLateInit();
             config::setGlobal("discord_rpc.levelTime", std::time(nullptr));
             return true;
         }

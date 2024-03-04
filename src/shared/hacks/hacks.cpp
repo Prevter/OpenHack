@@ -12,6 +12,7 @@
 #include "startpos-switcher/startpos-switcher.hpp"
 #include "discord-rpc/discord-rpc.hpp"
 #include "click-tp/click-tp.hpp"
+#include "labels/labels.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -227,6 +228,7 @@ namespace openhack::hacks {
             new StartPosSwitcher(),
             new DiscordRPC(),
             new ClickTeleport(),
+            new Labels(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;

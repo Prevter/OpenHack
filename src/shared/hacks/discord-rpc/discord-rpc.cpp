@@ -1,5 +1,6 @@
 #include "discord-rpc.hpp"
 #include "../../menu/menu.hpp"
+#include "../labels/labels.hpp"
 
 #include <discord_rpc.h>
 
@@ -166,150 +167,9 @@ namespace openhack::hacks {
         }
     }
 
-    inline bool isRobTopLevel(gd::GJGameLevel *level) {
-        int id = level->m_levelID().value();
-        return (id > 0 && id < 100) || (id >= 3001 && id <= 6000);
-    }
-
-    inline std::string getDifficultyAsset(gd::GJGameLevel *level) {
-        if (level->m_autoLevel()) return "auto";
-
-        if (level->m_ratingsSum() != 0)
-            level->m_difficulty(static_cast<gd::GJDifficulty>(level->m_ratingsSum() / 10));
-
-        if (level->isDemon()) {
-            switch (level->m_demonDifficulty()) {
-                case 3:
-                    return "easy_demon";
-                case 4:
-                    return "medium_demon";
-                case 5:
-                    return "insane_demon";
-                case 6:
-                    return "extreme_demon";
-                default:
-                    return "hard_demon";
-            }
-        }
-
-        switch (level->m_difficulty()) {
-            case gd::GJDifficulty::Easy:
-                return "easy";
-            case gd::GJDifficulty::Normal:
-                return "normal";
-            case gd::GJDifficulty::Hard:
-                return "hard";
-            case gd::GJDifficulty::Harder:
-                return "harder";
-            case gd::GJDifficulty::Insane:
-                return "insane";
-            case gd::GJDifficulty::Demon:
-                return "hard_demon";
-            default:
-                return "na";
-        }
-    }
-
     std::string DiscordRPC::replaceTokens(const char *id, gd::PlayLayer *playLayer, gd::LevelEditorLayer *editorLayer) {
         auto str = config::get<std::string>(id);
-
-        // Replace tokens
-        // {username} - username of the player
-        // {id} - level id
-        // {name} - level name
-        // {author} - level author
-        // {difficulty} - difficulty name (also for image key)
-        // {progress} - current progress in the level
-        // {best} - best progress in the level
-        // {objects} - number of objects in the level
-        // {stars} - stars of the level
-        // {attempts} - attempts in the level
-        // {star_emoji} - places ⭐ or 🌙 depending on the level
-        std::unordered_map<std::string, std::function<std::string()>> tokens = {
-                {"{username}",   []() {
-                    auto *gameManager = gd::GameManager::sharedState();
-                    return gameManager->m_playerName();
-                }},
-                {"{id}",         [playLayer, editorLayer]() {
-                    gd::GJBaseGameLayer *layer = playLayer ? (gd::GJBaseGameLayer *) playLayer
-                                                           : (gd::GJBaseGameLayer *) editorLayer;
-                    if (!layer) return std::string("");
-                    return std::to_string(layer->m_level()->m_levelID().value());
-                }},
-                {"{name}",       [playLayer, editorLayer]() {
-                    gd::GJBaseGameLayer *layer = playLayer ? (gd::GJBaseGameLayer *) playLayer
-                                                           : (gd::GJBaseGameLayer *) editorLayer;
-                    if (!layer) return std::string("Unknown");
-                    return layer->m_level()->m_levelName();
-                }},
-                {"{author}",     [playLayer, editorLayer]() {
-                    gd::GJBaseGameLayer *layer = playLayer ? (gd::GJBaseGameLayer *) playLayer
-                                                           : (gd::GJBaseGameLayer *) editorLayer;
-                    if (!layer) return std::string("Unknown");
-                    if (isRobTopLevel(layer->m_level())) return std::string("RobTop");
-                    return layer->m_level()->m_creatorName();
-                }},
-                {"{difficulty}", [playLayer]() {
-                    if (!playLayer) return std::string("");
-                    return getDifficultyAsset(playLayer->m_level());
-                }},
-                {"{progress}",   [playLayer]() {
-                    if (!playLayer) return std::string("");
-                    auto progress = playLayer->getCurrentPercentInt();
-                    if (progress < 0) progress = 0;
-                    return std::to_string(progress);
-                }},
-                {"{best}",       [playLayer]() {
-                    if (!playLayer) return std::string("");
-                    if (playLayer->m_level()->isPlatformer()) {
-                        int millis = playLayer->m_level()->m_bestTime();
-                        if (millis == 0) return std::string("No Best Time");
-                        double seconds = millis / 1000.0;
-                        if (seconds < 60.0)
-                            return fmt::format("{:.3f}", seconds);
-                        int minutes = (int) (seconds / 60.0);
-                        seconds -= minutes * 60;
-                        return fmt::format("{:02d}:{:06.3f}", minutes, seconds);
-                    }
-                    return std::to_string(playLayer->m_level()->m_normalPercent().value());
-                }},
-                {"{objects}",    [playLayer, editorLayer]() {
-                    if (playLayer) {
-                        return std::to_string(playLayer->m_level()->m_objectCount().value());
-                    } else if (editorLayer) {
-                        return std::to_string(editorLayer->m_objects()->count());
-                    }
-                    return std::string("");
-                }},
-                {"{stars}",      [playLayer]() {
-                    if (playLayer) {
-                        return std::to_string(playLayer->m_level()->m_stars().value());
-                    }
-                    return std::string("");
-                }},
-                {"{attempts}",   [playLayer]() {
-                    if (!playLayer) return std::string("");
-                    return std::to_string(playLayer->m_attempts());
-                }},
-                {"{rating}",     [playLayer]() {
-                    if (!playLayer) return std::string("");
-                    return std::to_string(playLayer->m_level()->m_ratingsSum());
-                }},
-                {"{star_emoji}", [playLayer]() {
-                    if (!playLayer) return std::string("");
-                    return std::string(playLayer->m_level()->isPlatformer() ? "🌙" : "⭐");
-                }},
-        };
-
-        for (auto &token: tokens) {
-            auto pos = str.find(token.first);
-            while (pos != std::string::npos) {
-                str.replace(pos, token.first.size(), token.second());
-                pos = str.find(token.first);
-            }
-        }
-
-        return str;
+        return Labels::replaceTokens(str, playLayer, editorLayer);
     }
 
     /// @brief Get the current state of the game and return corresponding strings
