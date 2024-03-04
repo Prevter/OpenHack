@@ -140,6 +140,10 @@ namespace openhack::hacks {
                     .text = "Accuracy: {noclip_acc}%",
             },
             {
+                    .caption = "Noclip Deaths",
+                    .text = "Deaths: {noclip_death}",
+            },
+            {
                     .caption = "Attempts",
                     .text = "Attempt {attempts}",
             },
@@ -156,7 +160,15 @@ namespace openhack::hacks {
                     .text = "Best: {best}%",
             },
             {
-                    .caption = "Empty",
+                    .caption = "From%",
+                    .text = "From: {from}%",
+            },
+            {
+                    .caption = "Best Run",
+                    .text = "Best Run: {best_run}%",
+            },
+            {
+                    .caption = "Custom Message",
                     .text = "",
             }
     };
@@ -165,11 +177,14 @@ namespace openhack::hacks {
             "FPS",
             "CPS",
             "Noclip Accuracy",
+            "Noclip Deaths",
             "Attempts",
             "Progress",
             "Clock",
             "Best",
-            "Empty"
+            "From%",
+            "Best Run",
+            "Custom Message"
     };
 
     const size_t PRESET_COUNT = sizeof(PRESETS) / sizeof(LabelConfig);
@@ -337,6 +352,9 @@ namespace openhack::hacks {
         for (auto &container: CONTAINERS) {
             container.clear();
         }
+
+        config::setGlobal("bestRun", 0);
+        config::setGlobal("fromPercent", 0);
     }
 
     void Labels::playLayerLateInit() {
@@ -529,19 +547,25 @@ namespace openhack::hacks {
                 {"{fps}",        []() {
                     return std::to_string(static_cast<int>(ImGui::GetIO().Framerate));
                 }},
-                {"{cps}",        []() {
+                {"{cps}",        [playLayer]() {
+                    if (!playLayer) return std::string("");
                     return std::string("0/0");
                 }},
-                {"{noclip_acc}", []() {
+                {"{noclip_acc}", [playLayer]() {
+                    if (!playLayer) return std::string("");
                     return std::string("0.00");
+                }},
+                {"{noclip_death}", [playLayer]() {
+                    if (!playLayer) return std::string("");
+                    return std::string("0");
                 }},
                 {"{from}",       [playLayer]() {
                     if (!playLayer) return std::string("");
-                    return std::string("0");
+                    return std::to_string(config::getGlobal<int>("fromPercent", 0));
                 }},
                 {"{best_run}",   [playLayer]() {
                     if (!playLayer) return std::string("");
-                    return std::string("0");
+                    return std::to_string(config::getGlobal<int>("bestRun", 0));
                 }},
         };
 
@@ -593,6 +617,16 @@ namespace openhack::hacks {
             LabelConfig label;
             loadLabel(labelJ, label);
             s_labels.push_back(label);
+        }
+    }
+
+    void Labels::beforeResetLevel() {
+        // Calculate "Best%"
+        auto *playLayer = gd::PlayLayer::get();
+        auto progress = playLayer->getCurrentPercentInt();
+        auto currentBest = config::getGlobal<int>("bestRun", 0);
+        if (progress > currentBest) {
+            config::setGlobal("bestRun", progress);
         }
     }
 }

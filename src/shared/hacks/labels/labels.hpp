@@ -148,6 +148,9 @@ namespace openhack::hacks {
 
         /// @brief PlayLayer::init hook (called after the original function)
         static void playLayerLateInit();
+
+        /// @brief PlayLayer::resetLevel hook
+        static void beforeResetLevel();
     };
 
 }

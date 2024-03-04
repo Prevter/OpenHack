@@ -25,11 +25,13 @@ namespace openhack::hooks {
         }
 
         void resetLevel() {
+            hacks::Labels::beforeResetLevel();
             PlayLayer::resetLevel();
             hacks::InstantComplete::resetLevel();
             hacks::Display::playLayerReset();
             hacks::AutoPickupCoins::resetLevel();
             hacks::StartPosSwitcher::resetLevel();
+            config::setGlobal("fromPercent", getCurrentPercentInt());
         }
 
         void addObject(GameObject *object) {
