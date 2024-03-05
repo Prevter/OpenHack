@@ -14,6 +14,7 @@
 #include "click-tp/click-tp.hpp"
 #include "labels/labels.hpp"
 #include "noclip-limit/noclip-limit.hpp"
+#include "rgb-icons/rgb-icons.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -231,6 +232,7 @@ namespace openhack::hacks {
             new ClickTeleport(),
             new Labels(),
             new NoclipLimit(),
+            new RGBIcons(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;

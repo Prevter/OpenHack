@@ -4,6 +4,8 @@
 * Added "Click Teleport"
 * Added "Uncomplete Level"
 * Added "Labels"
+* Added "Noclip Limit"
+* Added "RGB Icons"
 * Re-added search bar
 
 **Fixes**:

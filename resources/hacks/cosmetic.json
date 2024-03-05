@@ -282,6 +282,10 @@
                     "mask": "9090"
                 }
             ]
+        },
+        {
+            "type": "embedded",
+            "hack": "rgb_icons"
         }
     ]
 }
