@@ -17,7 +17,7 @@ namespace openhack::hacks {
         if (gd::PlayLayer::get() == nullptr) return;
 
         auto *playLayer = gd::PlayLayer::get();
-        auto winSize = cocos2d::CCDirector::sharedDirector()->getWinSize();
+        auto winSize = gd::cocos2d::CCDirector::sharedDirector()->getWinSize();
         auto padding = config::get<float>("hack.labels.padding");
         ImVec2 anchor = {0, 0};
         ImVec2 offset = {0, 0};

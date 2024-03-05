@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <filesystem>
 
 namespace openhack::utils {
     /// @brief Get the directory where all save files are stored.

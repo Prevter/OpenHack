@@ -37,18 +37,19 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                     firstInit = false;
 
                     // Check for updates
-                    openhack::updater::check([](bool available, const openhack::updater::Version& version) {
-                        if (!available) return;
-                        if (version.version == OPENHACK_VERSION) return;
-                        if (version.downloadUrl.empty()) return;
+                    if (config::get<bool>("menu.checkForUpdates", true)) {
+                        openhack::updater::check([](bool available, const openhack::updater::Version& version) {
+                            if (!available) return;
+                            if (version.version == OPENHACK_VERSION) return;
+                            if (version.downloadUrl.empty()) return;
 
-                        openhack::config::setGlobal("update.available", true);
-                        openhack::config::setGlobal("update.version", version.version);
-                        openhack::config::setGlobal("update.downloadUrl", version.downloadUrl);
-                        openhack::config::setGlobal("update.title", version.title);
-                        openhack::config::setGlobal("update.changelog", version.changelog);
-                    });
-
+                            openhack::config::setGlobal("update.available", true);
+                            openhack::config::setGlobal("update.version", version.version);
+                            openhack::config::setGlobal("update.downloadUrl", version.downloadUrl);
+                            openhack::config::setGlobal("update.title", version.title);
+                            openhack::config::setGlobal("update.changelog", version.changelog);
+                        });
+                    }
                 }
 
                 openhack::menu::init();
@@ -59,7 +60,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             openhack::hooks::installHooks();
 
             // Load DLL files from the "dll" directory
-            auto dllDir = openhack::utils::getModAssetsDirectory() + "/dll";
+            auto dllDir = openhack::utils::getModAssetsDirectory() / "dll";
 
             // Make sure the directory exists
             if (!std::filesystem::exists(dllDir)) {

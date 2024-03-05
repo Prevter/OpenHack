@@ -62,7 +62,7 @@ namespace openhack::gui {
 
         // Check if the directory exists
         if (!std::filesystem::exists(fontDir)) {
-            L_ERROR("Font directory does not exist: {}", fontDir);
+            L_ERROR("Font directory does not exist: {}", fontDir.string());
             return;
         }
 
@@ -76,7 +76,7 @@ namespace openhack::gui {
         font_cfg.OversampleV = 3;
 
         fonts.clear();
-        float fontSize = config::get<float>("menu.fontSize", 16.0f);
+        auto fontSize = config::get<float>("menu.fontSize", 16.0f);
         for (const auto &entry: std::filesystem::directory_iterator(fontDir)) {
             if (entry.is_regular_file()) {
                 auto path = entry.path().string();

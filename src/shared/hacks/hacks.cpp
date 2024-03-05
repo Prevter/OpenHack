@@ -103,7 +103,7 @@ namespace openhack::hacks {
     /// @param id The ID of the cache (usually the window title)
     /// @return The cached addresses
     PatternMap tryGetCache(const std::string &id) {
-        auto filePath = fmt::format("{}/{}.json.cache", utils::getModHacksDirectory(), id);
+        auto filePath = utils::getModHacksDirectory() / fmt::format("{}.json.cache", id);
         if (!std::filesystem::exists(filePath)) {
             L_TRACE("Cache file does not exist for {}.", id);
             return {};
@@ -111,7 +111,7 @@ namespace openhack::hacks {
 
         std::ifstream file(filePath);
         if (!file.is_open()) {
-            L_WARN("Failed to open cache file: {}", filePath);
+            L_WARN("Failed to open cache file: {}", filePath.string());
             return {};
         }
 
@@ -135,7 +135,7 @@ namespace openhack::hacks {
             }
             return map;
         } catch (const std::exception &e) {
-            L_ERROR("Failed to parse file: {}", filePath);
+            L_ERROR("Failed to parse file: {}", filePath.string());
             L_ERROR("{}", e.what());
             return {};
         }
@@ -181,10 +181,10 @@ namespace openhack::hacks {
     /// @param id The ID of the cache (usually the window title)
     /// @param map The map to save
     void saveCache(const std::string &id, const PatternMap &map) {
-        auto filePath = fmt::format("{}/{}.json.cache", utils::getModHacksDirectory(), id);
+        auto filePath = utils::getModHacksDirectory() / fmt::format("{}.json.cache", id);
         std::ofstream file(filePath);
         if (!file.is_open()) {
-            L_ERROR("Failed to open file: {}", filePath);
+            L_ERROR("Failed to open file: {}", filePath.string());
             return;
         }
 
@@ -213,7 +213,7 @@ namespace openhack::hacks {
     void initialize() {
         auto hacksDir = utils::getModHacksDirectory();
         if (!std::filesystem::exists(hacksDir)) {
-            L_ERROR("Hacks directory does not exist: {}", hacksDir);
+            L_ERROR("Hacks directory does not exist: {}", hacksDir.string());
             return;
         }
 
