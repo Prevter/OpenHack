@@ -37,7 +37,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                     firstInit = false;
 
                     // Check for updates
-                    if (config::get<bool>("menu.checkForUpdates", true)) {
+                    if (openhack::config::get<bool>("menu.checkForUpdates", true)) {
                         openhack::updater::check([](bool available, const openhack::updater::Version& version) {
                             if (!available) return;
                             if (version.version == OPENHACK_VERSION) return;
