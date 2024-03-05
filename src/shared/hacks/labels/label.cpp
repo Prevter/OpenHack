@@ -89,7 +89,7 @@ namespace openhack::hacks {
         if (m_heightMultiply != 1.0f && m_anchor.y == 1.0f) {
             // Calculate the offset to keep the label in the same position
             auto offset = label->getContentSize().height - getHeight();
-            label->setPosition({m_position.x, m_position.y + offset});
+            label->setPosition({m_position.x, m_position.y + offset * m_scale});
         } else {
             label->setPosition({m_position.x, m_position.y});
         }
