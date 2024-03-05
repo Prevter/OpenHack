@@ -21,6 +21,7 @@ namespace openhack::hooks {
     INSTALL_NAMESPACE(CCScheduler)
     INSTALL_NAMESPACE(ChannelControl)
     INSTALL_NAMESPACE(GameStatsManager)
+    INSTALL_NAMESPACE(GJBaseGameLayer)
     INSTALL_NAMESPACE(PlayLayer)
 
     inline void installHooks() {
@@ -32,6 +33,7 @@ namespace openhack::hooks {
         CCScheduler::installHooks();
         ChannelControl::installHooks();
         GameStatsManager::installHooks();
+        GJBaseGameLayer::installHooks();
         PlayLayer::installHooks();
 
         MH_EnableHook(MH_ALL_HOOKS);

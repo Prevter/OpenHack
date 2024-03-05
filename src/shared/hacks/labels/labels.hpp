@@ -151,6 +151,15 @@ namespace openhack::hacks {
 
         /// @brief PlayLayer::resetLevel hook
         static void beforeResetLevel();
+
+        /// @brief PlayerObject::pushButton hook
+        static void pushButton(gd::PlayerObject *player);
+
+        /// @brief PlayerObject::releaseButton hook
+        static void releaseButton(gd::PlayerObject *player);
+
+        /// @brief GJBaseGameLayer::update hook
+        static void gameUpdate();
     };
 
 }
