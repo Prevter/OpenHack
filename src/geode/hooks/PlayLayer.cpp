@@ -4,6 +4,7 @@
 #include "../../shared/hacks/auto-pickup-coins/auto-pickup-coins.hpp"
 #include "../../shared/hacks/startpos-switcher/startpos-switcher.hpp"
 #include "../../shared/hacks/labels/labels.hpp"
+#include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
 
 #include <Geode/modify/PlayLayer.hpp>
 
@@ -25,6 +26,7 @@ namespace openhack::hooks {
         }
 
         void resetLevel() {
+            hacks::NoclipLimit::resetLevel();
             hacks::Labels::beforeResetLevel();
             PlayLayer::resetLevel();
             hacks::InstantComplete::resetLevel();
@@ -38,6 +40,12 @@ namespace openhack::hooks {
             PlayLayer::addObject(object);
             hacks::AutoPickupCoins::addObject(reinterpret_cast<gd::GameObject *>(object));
             hacks::StartPosSwitcher::addObject(reinterpret_cast<gd::GameObject *>(object));
+        }
+
+        void destroyPlayer(PlayerObject* player, GameObject* object) {
+            hacks::NoclipLimit::destroyPlayer(reinterpret_cast<gd::GameObject *>(object));
+            PlayLayer::destroyPlayer(player, object);
+            hacks::NoclipLimit::postDestroyPlayer();
         }
     };
 }

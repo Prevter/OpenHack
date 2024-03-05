@@ -136,6 +136,10 @@ namespace openhack::hacks {
                     .text = "{cps} CPS",
             },
             {
+                    .caption = "Total Clicks",
+                    .text = "Clicks: {clicks}",
+            },
+            {
                     .caption = "Noclip Accuracy",
                     .text = "Accuracy: {noclip_acc}%",
             },
@@ -176,6 +180,7 @@ namespace openhack::hacks {
     const char *const PRESET_NAMES[]{
             "FPS",
             "CPS",
+            "Total Clicks",
             "Noclip Accuracy",
             "Noclip Deaths",
             "Attempts",
@@ -465,7 +470,7 @@ namespace openhack::hacks {
         // {objects} - number of objects in the level
         // {stars} - stars of the level
         // {attempts} - attempts in the level
-        // {star_emoji} - places ⭐ or 🌙 depending on the level
+        // {star_emoji} - places ⭐ or 🌙 depending on whether the level is platformer or not
         // {clock} - current time
         // {fps} - current FPS
         // {cps} - clicks per second
@@ -474,6 +479,7 @@ namespace openhack::hacks {
         // {noclip_death} - noclip deaths
         // {from} - last respawn %
         // {best_run} - current best run %
+        // {frame} - current frame
         std::unordered_map<std::string, std::function<std::string()>> tokens = {
                 {"{username}",     []() {
                     auto *gameManager = gd::GameManager::sharedState();
@@ -567,21 +573,25 @@ namespace openhack::hacks {
                 }},
                 {"{noclip_acc}",   [playLayer]() {
                     if (!playLayer) return std::string("");
-                    return std::string("0.00");
+                    auto noclipAcc = config::getGlobal<float>("noclipAcc", 0);
+                    return fmt::format("{:.2f}", noclipAcc);
                 }},
                 {"{noclip_death}", [playLayer]() {
                     if (!playLayer) return std::string("");
-                    return std::string("0");
+                    auto noclipDeath = config::getGlobal<int>("noclipDeath", 0);
+                    return std::to_string(noclipDeath);
                 }},
                 {"{from}",         [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto from = config::getGlobal<int>("fromPercent", 0);
                     return std::to_string(from < 0 ? 0 : from);
-
                 }},
                 {"{best_run}",     [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(config::getGlobal<int>("bestRun", 0));
+                }},
+                {"{frame}",        []() {
+                    return std::to_string(config::getGlobal<uint32_t>("frame", 0));
                 }},
         };
 

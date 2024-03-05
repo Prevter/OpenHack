@@ -4,6 +4,7 @@
 #include "../../shared/hacks/auto-pickup-coins/auto-pickup-coins.hpp"
 #include "../../shared/hacks/startpos-switcher/startpos-switcher.hpp"
 #include "../../shared/hacks/labels/labels.hpp"
+#include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
 
 #include <dash/hook/PlayLayer.hpp>
 
@@ -24,6 +25,7 @@ namespace openhack::hooks::PlayLayer {
     }
 
     void resetLevel(gd::PlayLayer *self) {
+        hacks::NoclipLimit::resetLevel();
         hacks::Labels::beforeResetLevel();
         hook::PlayLayer::resetLevel(self);
         hacks::InstantComplete::resetLevel();
@@ -39,9 +41,16 @@ namespace openhack::hooks::PlayLayer {
         hacks::StartPosSwitcher::addObject(object);
     }
 
+    void destroyPlayer(gd::PlayLayer *self, gd::PlayerObject* player, gd::GameObject *object) {
+        hacks::NoclipLimit::destroyPlayer(object);
+        hook::PlayLayer::destroyPlayer(self, player, object);
+        hacks::NoclipLimit::postDestroyPlayer();
+    }
+
     void installHooks() {
         LOG_HOOK(PlayLayer, init);
         LOG_HOOK(PlayLayer, resetLevel);
         LOG_HOOK(PlayLayer, addObject);
+        LOG_HOOK(PlayLayer, destroyPlayer);
     }
 }

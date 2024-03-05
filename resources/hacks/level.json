@@ -15,6 +15,10 @@
             "cheat": true
         },
         {
+            "type": "embedded",
+            "hack": "noclip_limit"
+        },
+        {
             "type": "toggle",
             "title": "Music Unlocker",
             "description": "Unlocks practice music, and allows setting main menu music.",

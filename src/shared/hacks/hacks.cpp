@@ -13,6 +13,7 @@
 #include "discord-rpc/discord-rpc.hpp"
 #include "click-tp/click-tp.hpp"
 #include "labels/labels.hpp"
+#include "noclip-limit/noclip-limit.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -229,6 +230,7 @@ namespace openhack::hacks {
             new DiscordRPC(),
             new ClickTeleport(),
             new Labels(),
+            new NoclipLimit(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;
