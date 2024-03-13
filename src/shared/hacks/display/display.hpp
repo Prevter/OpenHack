@@ -27,6 +27,9 @@ namespace openhack::hacks {
 
         /// @brief PlayLayer::resetLevel hook
         static void playLayerReset();
+
+        /// @brief CCScheduler::update hook
+        static void schedulerUpdate(float dt, const std::function<void(float)>& original);
     };
 
 }

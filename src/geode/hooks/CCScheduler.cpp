@@ -2,12 +2,15 @@
 
 #include <Geode/modify/CCScheduler.hpp>
 #include "../../shared/hacks/speedhack/speedhack.hpp"
+#include "../../shared/hacks/display/display.hpp"
 
 namespace openhack::hooks {
     struct CCSchedulerHook : geode::Modify<CCSchedulerHook, cocos2d::CCScheduler> {
         void update(float dt) {
             hacks::SpeedHack::update(&dt);
-            return cocos2d::CCScheduler::update(dt);
+            hacks::Display::schedulerUpdate(dt, [&](float dt) {
+                cocos2d::CCScheduler::update(dt);
+            });
         }
     };
 }

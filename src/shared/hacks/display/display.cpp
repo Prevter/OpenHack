@@ -5,17 +5,32 @@ namespace openhack::hacks {
 
     void Display::onInit() {
         config::setGlobal("physicsTickAddr", gd::sigscan::findPattern("8988883B"));
+        config::setIfEmpty("hack.display.tps", 240.0f);
+        config::setIfEmpty("hack.display.tps_bypass", false);
 
         // Create window
         menu::addWindow("Display", [&]() {
             bool needRefresh = false;
 
             gui::widthF(0.35f);
-            needRefresh |= gui::inputFloat("##fps", "hack.display.fps", 10.0f, FLT_MAX, "%.0f FPS");
+            needRefresh |= gui::inputFloat("##fps", "hack.display.fps", 60.0f, FLT_MAX, "%.0f FPS");
             ImGui::SameLine(0, 2);
             needRefresh |= gui::checkbox("Unlock FPS", "hack.display.unlock_fps");
+            gui::tooltip("Allows to set custom FPS target.");
             menu::keybinds::addMenuKeybind("display.unlock_fps", "Unlock FPS", []() {
                 config::set("hack.display.unlock_fps", !config::get<bool>("hack.display.unlock_fps"));
+                refreshRate();
+                refreshPhysics();
+            });
+            gui::width();
+
+            gui::widthF(0.35f);
+            needRefresh |= gui::inputFloat("##tps", "hack.display.tps", 60.0f, FLT_MAX, "%.0f TPS");
+            ImGui::SameLine(0, 2);
+            needRefresh |= gui::checkbox("TPS Bypass", "hack.display.tps_bypass");
+            gui::tooltip("Makes the game render less frames, but keep the physics updates at target TPS.\nUseful for low-end devices and macros.");
+            menu::keybinds::addMenuKeybind("display.tps_bypass", "TPS Bypass", []() {
+                config::set("hack.display.tps_bypass", !config::get<bool>("hack.display.tps_bypass"));
                 refreshRate();
                 refreshPhysics();
             });
@@ -25,6 +40,7 @@ namespace openhack::hacks {
             needRefresh |= gui::inputFloat("##pfps", "hack.display.pfps", 10.0f, FLT_MAX, "%.0f TPS");
             ImGui::SameLine(0, 2);
             needRefresh |= gui::checkbox("Physics Bypass", "hack.display.physics_bypass");
+            gui::tooltip("Allows to set custom physics TPS.\nNote that this setting might break percentage counter and other game mechanics.");
             menu::keybinds::addMenuKeybind("display.physics_bypass", "Physics Bypass", []() {
                 config::set("hack.display.physics_bypass", !config::get<bool>("hack.display.physics_bypass"));
                 refreshRate();
@@ -128,6 +144,35 @@ namespace openhack::hacks {
 
     void Display::playLayerReset() {
         refreshPhysics();
+    }
+
+    static double s_extraDeltaTime = 0;
+
+    void Display::schedulerUpdate(float dt, const std::function<void(float)>& original) {
+        if (!config::get<bool>("hack.display.tps_bypass")) {
+            original(dt);
+            return;
+        }
+
+        auto newDelta = 1.0f / config::get<float>("hack.display.tps");
+
+        // Calculate number of steps
+        auto steps = static_cast<int32_t>(dt / newDelta);
+        double remainder = fmod(dt, newDelta);
+
+        // Update the game
+        for (int i = 0; i < steps; i++) {
+            original(newDelta);
+        }
+
+        // Update the remainder
+        s_extraDeltaTime += remainder;
+
+        // If we have enough time, update the game
+        if (s_extraDeltaTime >= newDelta) {
+            original(newDelta);
+            s_extraDeltaTime -= newDelta;
+        }
     }
 
 }
