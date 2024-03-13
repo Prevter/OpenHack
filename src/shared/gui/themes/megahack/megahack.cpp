@@ -19,6 +19,7 @@ namespace openhack::gui {
         style.GrabRounding = 3.0f;
         style.WindowBorderSize = config::get<float>("menu.borderSize");
         style.WindowMinSize = ImVec2(32, 32);
+        style.DisplayWindowPadding = ImVec2(0, 0);
         style.ScaleAllSizes(config::get<float>("menu.uiScale"));
 
         auto &colors = style.Colors;
