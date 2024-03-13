@@ -41,20 +41,37 @@ namespace openhack::gui {
         /// @return New color
         static Color fromHSV(float h, float s, float v, float a = 1.0f) {
             float c = v * s;
-            float x = c * (1 - std::abs(fmod(h / 60.0, 2) - 1));
+            float x = c * (1 - std::abs(fmod(h / 60.0f, 2) - 1));
             float m = v - c;
 
-            if (h < 60)
-                return {c + m, x + m, m, a};
-            if (h < 120)
-                return {x + m, c + m, m, a};
-            if (h < 180)
-                return {m, c + m, x + m, a};
-            if (h < 240)
-                return {m, x + m, c + m, a};
-            if (h < 300)
-                return {x + m, m, c + m, a};
-            return {c + m, m, x + m, a};
+            float r, g, b;
+            if (h < 60) {
+                r = c;
+                g = x;
+                b = 0;
+            } else if (h < 120) {
+                r = x;
+                g = c;
+                b = 0;
+            } else if (h < 180) {
+                r = 0;
+                g = c;
+                b = x;
+            } else if (h < 240) {
+                r = 0;
+                g = x;
+                b = c;
+            } else if (h < 300) {
+                r = x;
+                g = 0;
+                b = c;
+            } else {
+                r = c;
+                g = 0;
+                b = x;
+            }
+
+            return {r + m, g + m, b + m, a};
         }
 
         /// @brief Creates a new color from HSV values
