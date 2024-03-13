@@ -590,8 +590,9 @@ namespace openhack::hacks {
                     if (!playLayer) return std::string("");
                     return std::to_string(config::getGlobal<int>("bestRun", 0));
                 }},
-                {"{frame}",        []() {
-                    return std::to_string(config::getGlobal<uint32_t>("frame", 0));
+                {"{frame}",        [playLayer]() {
+                    if (!playLayer) return std::string("0");
+                    return std::to_string(static_cast<uint32_t>(playLayer->m_dTime() * 240.0f));
                 }},
         };
 

@@ -277,6 +277,10 @@
         {
             "type": "embedded",
             "hack": "click_tp"
+        },
+        {
+            "type": "embedded",
+            "hack": "frame_stepper"
         }
     ]
 }
