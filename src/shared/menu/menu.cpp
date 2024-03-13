@@ -139,6 +139,13 @@ namespace openhack::menu {
         });
 
         addWindow("Interface", []() {
+            gui::width(120);
+            if (gui::combo("Theme", "menu.theme", gui::THEME_NAMES, gui::THEME_COUNT)) {
+                gui::setTheme(config::get<gui::Themes>("menu.theme"));
+                gui::loadPalette();
+            }
+            gui::width();
+
             gui::popupSettings("Sizes", []() {
                 gui::width(70);
                 gui::inputFloat("UI Scale", "menu.uiScale", 0.5f, 3.0f, "%.3f");
@@ -170,13 +177,6 @@ namespace openhack::menu {
                 }
                 gui::tooltip("Reloads the UI to apply changes which require a restart");
             });
-
-            gui::width(120);
-            if (gui::combo("Theme", "menu.theme", gui::THEME_NAMES, gui::THEME_COUNT)) {
-                gui::setTheme(config::get<gui::Themes>("menu.theme"));
-                gui::loadPalette();
-            }
-            gui::width();
 
             gui::popupSettings("Colors", []() {
                 gui::width(120);
@@ -312,7 +312,7 @@ namespace openhack::menu {
                     downloadProgress = new float(0.0f);
                     updater::install(config::getGlobal<std::string>("update.downloadUrl"), downloadProgress);
                 }
-                ImGui::SameLine();
+                ImGui::SameLine(0, 0);
                 if (gui::button("Close")) {
                     ImGui::CloseCurrentPopup();
                 }

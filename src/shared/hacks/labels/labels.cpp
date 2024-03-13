@@ -203,7 +203,7 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.cheat-indicator.enabled", true);
         config::setIfEmpty("hack.cheat-indicator.position", 0);
         config::setIfEmpty("hack.cheat-indicator.opacity", 0.5f);
-        config::setIfEmpty("hack.cheat-indicator.scale", 0.4f);
+        config::setIfEmpty("hack.cheat-indicator.scale", 1.f);
 
         // Create a window
         menu::addWindow("Labels", [&]() {
