@@ -95,6 +95,10 @@ else()
         ${GEODE_SOURCE_FILES}
     )
 
+    if (PROJECT_IS_TOP_LEVEL)
+        target_compile_definitions(${PROJECT_NAME}-Geode PRIVATE OPENHACK_EXPORT)
+    endif()
+
     add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
     set(HAS_IMGUI ON)
     add_subdirectory(libs/imgui-cocos)

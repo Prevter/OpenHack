@@ -28,5 +28,10 @@
 			"resources/licenses/*"
 		]
 	},
-	"early-load": true
+	"early-load": true,
+	"api": {
+		"include": [
+			"api/*.hpp"
+		]
+	}
 }
