@@ -74,19 +74,18 @@ namespace openhack::menu::blur {
         // Get the display size
         auto displaySize = ImGui::GetIO().DisplaySize;
 
-        // Create a new texture
-        glGenTextures(1, &currentFrame);
-        glBindTexture(GL_TEXTURE_2D, currentFrame);
+        size_t pixelArraySize = displaySize.x * displaySize.y * 3;
+        std::vector<unsigned char> pixels(pixelArraySize);
+        glReadPixels(0, 0, displaySize.x, displaySize.y, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
 
-        // Set the texture parameters
+        if (currentFrame == 0)
+            glGenTextures(1, &currentFrame);
+
+        glBindTexture(GL_TEXTURE_2D, currentFrame);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        // Create the texture
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei) displaySize.x, (GLsizei) displaySize.y, 0, GL_RGBA,
-                     GL_UNSIGNED_BYTE, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, displaySize.x, displaySize.y, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels.data());
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         // Return the texture handle
         return currentFrame;
