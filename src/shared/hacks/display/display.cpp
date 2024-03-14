@@ -70,8 +70,20 @@ namespace openhack::hacks {
             refreshPhysics();
         });
 
+        menu::keybinds::setKeybindCallback("display.tps_bypass", []() {
+            config::set("hack.display.tps_bypass", !config::get<bool>("hack.display.tps_bypass"));
+            refreshRate();
+            refreshPhysics();
+        });
+
         menu::keybinds::setKeybindCallback("display.physics_bypass", []() {
             config::set("hack.display.physics_bypass", !config::get<bool>("hack.display.physics_bypass"));
+            refreshRate();
+            refreshPhysics();
+        });
+
+        menu::keybinds::setKeybindCallback("display.vsync", []() {
+            config::set("hack.display.vsync", !config::get<bool>("hack.display.vsync"));
             refreshRate();
             refreshPhysics();
         });
