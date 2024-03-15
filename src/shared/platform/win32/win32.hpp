@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <shlobj.h>
 #include <shellapi.h>
+#include <filesystem>
 
 #include "4gb_patch.hpp"
 #include "dll_inject.hpp"
