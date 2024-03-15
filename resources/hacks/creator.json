@@ -1,224 +1,224 @@
 {
-    "title": "Creator",
-    "items": [
+  "title": "Creator",
+  "items": [
+    {
+      "type": "toggle",
+      "title": "Custom Object Bypass",
+      "description": "Allows you to save custom objects with more than 1000 objects in them.",
+      "id": "creator.custom_object",
+      "opcodes": [
         {
-            "type": "toggle",
-            "title": "Custom Object Bypass",
-            "description": "Allows you to save custom objects with more than 1000 objects in them.",
-            "id": "creator.custom_object",
-            "opcodes": [
-                {
-                    "pattern": "3DE8030000^0F86????68",
-                    "mask": "E9&(01+01)$01"
-                },
-                {
-                    "pattern": "3DE8030000^773A",
-                    "mask": "9090"
-                }
-            ]
+          "pattern": "3DE8030000^0F86????68",
+          "mask": "E9&(01+01)$01"
         },
         {
-            "type": "toggle",
-            "title": "Copy Hack",
-            "description": "Allows you to copy any level.",
-            "id": "creator.copy",
-            "opcodes": [
-                {
-                    "pattern": "0F^8F????8B8D",
-                    "mask": "8E"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Level Edit",
-            "description": "Allows you to access the level editor from the pause menu in any level.",
-            "id": "creator.level_edit",
-            "opcodes": [
-                {
-                    "pattern": "83B9????020F85????68",
-                    "mask": "*0D90"
-                },
-                {
-                    "pattern": "83B8????020F44CA",
-                    "mask": "*07908BCA90"
-                },
-                {
-                    "pattern": "8B80????^83B8????020F85",
-                    "mask": "*0D90"
-                },
-                {
-                    "pattern": "8AC35B5DC3",
-                    "mask": "B001"
-                },
-                {
-                    "addr": "0x2B4E15",
-                    "on": "0xEB",
-                    "off": "0x74",
-                    "version": "=2.200"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Slider Limit",
-            "description": "Removes the min/max limit on sliders.",
-            "id": "creator.slider",
-            "opcodes": [
-                {
-                    "pattern": "*76?0F57?84C0",
-                    "mask": "EB"
-                },
-                {
-                    "pattern": "75?0F2FCA76",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Testmode Bypass",
-            "description": "Removes the \"Testmode\" label when using startpos",
-            "id": "creator.testmode",
-            "version": "<=2.200",
-            "opcodes": [
-                {
-                    "pattern": "E8????80BB????00^0F84????68????68",
-                    "mask": "E9&(01+01)*03$0190"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Verify Hack",
-            "description": "Allows you to publish levels without verifying them.",
-            "id": "creator.verify",
-            "opcodes": [
-                {
-                    "pattern": "83F801^74?80B9????00",
-                    "mask": "75"
-                },
-                {
-                    "pattern": "8B81????BA^????2B81",
-                    "mask": "*04$0B"
-                },
-                {
-                    "pattern": "83F801^75?6A08",
-                    "mask": "9090"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Editor Extension",
-            "description": "Allows levels to be longer.",
-            "id": "creator.editorext",
-            "opcodes": [
-                {
-                    "pattern": "C70424^80676A48",
-                    "mask": "0F60EA4B"
-                },
-                {
-                    "pattern": "0060^6A4800",
-                    "mask": "EA4B"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Free Scroll",
-            "description": "Unlocks horizontal scroll in the editor.",
-            "id": "creator.freescroll",
-            "opcodes": [
-                {
-                    "pattern": "*F30F???F30F?45?F30F???0F2F?^77?[0F28C8]F30F11",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "No (C) Mark",
-            "description": "Removes the \"(C)\" mark from copied levels.",
-            "id": "creator.nocmark",
-            "opcodes": [
-                {
-                    "pattern": "74268B82??0000",
-                    "mask": "EB"
-                },
-                {
-                    "pattern": "2B87^??00008BBF",
-                    "mask": "*04$(-06)"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Hide UI",
-            "description": "Hides the UI in the editor.",
-            "id": "creator.hideui",
-            "opcodes": [
-                {
-                    "pattern": "B901000000^0F44D98B",
-                    "mask": "B30090"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Z Order Bypass",
-            "description": "Removes the -100 to 100 Z order range limit.",
-            "id": "creator.zorder",
-            "opcodes": [
-                {
-                    "pattern": "0F4CC1B9640000003B?0F4FC1",
-                    "mask": "*0390*07?*0390"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Smooth Editor Trail",
-            "description": "Makes the trail in editor playback smoother.",
-            "id": "creator.smoothtrail",
-            "opcodes": [
-                {
-                    "pattern": "0F2F?????^725E8B8F",
-                    "mask": "9090"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Default Song Bypass",
-            "description": "Allows you to use any song in the level editor.",
-            "id": "creator.defsong",
-            "opcodes": [
-                {
-                    "pattern": "83F8?^74?40C6",
-                    "mask": "9090"
-                },
-                {
-                    "pattern": "*01^BA??00003BC2",
-                    "mask": "EB0F*0390"
-                },
-                {
-                    "pattern": "85C0^74?48C6",
-                    "mask": "9090"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Place Over",
-            "description": "Allows you to place objects over other objects.",
-            "id": "creator.placeover",
-            "opcodes": [
-                {
-                    "pattern": "84C0^0F85????85FF",
-                    "mask": "*0690"
-                }
-            ]
+          "pattern": "3DE8030000^773A",
+          "mask": "9090"
         }
-    ]
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Copy Hack",
+      "description": "Allows you to copy any level.",
+      "id": "creator.copy",
+      "opcodes": [
+        {
+          "pattern": "0F^8F????8B8D",
+          "mask": "8E"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Level Edit",
+      "description": "Allows you to access the level editor from the pause menu in any level.",
+      "id": "creator.level_edit",
+      "opcodes": [
+        {
+          "pattern": "83B9????020F85????68",
+          "mask": "*0D90"
+        },
+        {
+          "pattern": "83B8????020F44CA",
+          "mask": "*07908BCA90"
+        },
+        {
+          "pattern": "8B80????^83B8????020F85",
+          "mask": "*0D90"
+        },
+        {
+          "pattern": "8AC35B5DC3",
+          "mask": "B001"
+        },
+        {
+          "addr": "0x2B4E15",
+          "on": "0xEB",
+          "off": "0x74",
+          "version": "=2.200"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Slider Limit",
+      "description": "Removes the min/max limit on sliders.",
+      "id": "creator.slider",
+      "opcodes": [
+        {
+          "pattern": "*76?0F57?84C0",
+          "mask": "EB"
+        },
+        {
+          "pattern": "75?0F2FCA76",
+          "mask": "EB"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Testmode Bypass",
+      "description": "Removes the \"Testmode\" label when using startpos",
+      "id": "creator.testmode",
+      "version": "<=2.200",
+      "opcodes": [
+        {
+          "pattern": "E8????80BB????00^0F84????68????68",
+          "mask": "E9&(01+01)*03$0190"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Verify Hack",
+      "description": "Allows you to publish levels without verifying them.",
+      "id": "creator.verify",
+      "opcodes": [
+        {
+          "pattern": "83F801^74?80B9????00",
+          "mask": "75"
+        },
+        {
+          "pattern": "8B81????BA^????2B81",
+          "mask": "*04$0B"
+        },
+        {
+          "pattern": "83F801^75?6A08",
+          "mask": "9090"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Editor Extension",
+      "description": "Allows levels to be longer.",
+      "id": "creator.editorext",
+      "opcodes": [
+        {
+          "pattern": "C70424^80676A48",
+          "mask": "0F60EA4B"
+        },
+        {
+          "pattern": "0060^6A4800",
+          "mask": "EA4B"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Free Scroll",
+      "description": "Unlocks horizontal scroll in the editor.",
+      "id": "creator.freescroll",
+      "opcodes": [
+        {
+          "pattern": "*F30F???F30F?45?F30F???0F2F?^77?[0F28C8]F30F11",
+          "mask": "EB"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "No (C) Mark",
+      "description": "Removes the \"(C)\" mark from copied levels.",
+      "id": "creator.nocmark",
+      "opcodes": [
+        {
+          "pattern": "74268B82??0000",
+          "mask": "EB"
+        },
+        {
+          "pattern": "2B87^??00008BBF",
+          "mask": "*04$(-06)"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Hide UI",
+      "description": "Hides the UI in the editor.",
+      "id": "creator.hideui",
+      "opcodes": [
+        {
+          "pattern": "B901000000^0F44D98B",
+          "mask": "B30090"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Z Order Bypass",
+      "description": "Removes the -100 to 100 Z order range limit.",
+      "id": "creator.zorder",
+      "opcodes": [
+        {
+          "pattern": "0F4CC1B9640000003B?0F4FC1",
+          "mask": "*0390*07?*0390"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Smooth Editor Trail",
+      "description": "Makes the trail in editor playback smoother.",
+      "id": "creator.smoothtrail",
+      "opcodes": [
+        {
+          "pattern": "0F2F?????^725E8B8F",
+          "mask": "9090"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Default Song Bypass",
+      "description": "Allows you to use any song in the level editor.",
+      "id": "creator.defsong",
+      "opcodes": [
+        {
+          "pattern": "83F8?^74?40C6",
+          "mask": "9090"
+        },
+        {
+          "pattern": "*01^BA??00003BC2",
+          "mask": "EB0F*0390"
+        },
+        {
+          "pattern": "85C0^74?48C6",
+          "mask": "9090"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Place Over",
+      "description": "Allows you to place objects over other objects.",
+      "id": "creator.placeover",
+      "opcodes": [
+        {
+          "pattern": "84C0^0F85????85FF",
+          "mask": "*0690"
+        }
+      ]
+    }
+  ]
 }

@@ -1,290 +1,290 @@
 {
-    "title": "Level",
-    "items": [
+  "title": "Level",
+  "items": [
+    {
+      "type": "toggle",
+      "title": "Noclip",
+      "description": "Disables dying.",
+      "id": "level.noclip",
+      "opcodes": [
         {
-            "type": "toggle",
-            "title": "Noclip",
-            "description": "Disables dying.",
-            "id": "level.noclip",
-            "opcodes": [
-                {
-                    "pattern": "6A148BCBFF15",
-                    "mask": "E9@4(8BCBFF15????^8B4C24?64890D00000000595F5E)"
-                }
-            ],
-            "cheat": true
-        },
-        {
-            "type": "embedded",
-            "hack": "noclip_limit"
-        },
-        {
-            "type": "toggle",
-            "title": "Music Unlocker",
-            "description": "Unlocks practice music, and allows setting main menu music.",
-            "id": "level.music",
-            "version": ">=2.200",
-            "opcodes": [
-                {
-                    "pattern": "*6A106A0CE8????84C0^750B8BCE",
-                    "mask": "EB"
-                },
-                {
-                    "pattern": "6A106A0CE8????84C0^0F85????8BCE",
-                    "mask": "E9&(01+01)*03$0190"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Practice Coins",
-            "description": "Allows you to collect coins in practice mode.",
-            "id": "level.coins",
-            "opcodes": [
-                {
-                    "pattern": "80BF????00^0F85????8B8F????6A00FFB6",
-                    "mask": "*0690"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Freeze Jumps Counter",
-            "description": "Freezes the global jump counter (the one in stats menu).",
-            "id": "level.jumps",
-            "opcodes": [
-                {
-                    "pattern": "FF81??0000FF81??000056578BB9??0000",
-                    "mask": "909090909090*21?90"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Freeze Attempts Counter",
-            "description": "Freezes the global attempt counter (the one in stats menu).",
-            "id": "level.attempts",
-            "opcodes": [
-                {
-                    "pattern": "8B?????6A^01????????????????????????????46",
-                    "mask": "00*1C?90"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "No Camera Move",
-            "description": "Disables all camera move triggers.",
-            "id": "level.cameramove",
-            "version": ">=2.200",
-            "opcodes": [
-                {
-                    "pattern": "558BEC83E4F883EC0C568BF18B8684030000",
-                    "mask": "C20C00"
-                }
-            ],
-            "cheat": true
-        },
-        {
-            "type": "toggle",
-            "title": "No Camera Zoom",
-            "description": "Disables all camera zoom triggers.",
-            "id": "level.camerazoom",
-            "version": ">=2.200",
-            "opcodes": [
-                {
-                    "pattern": "FFB7E0050000F30F108734050000",
-                    "mask": "EB4490909090"
-                }
-            ],
-            "cheat": true
-        },
-        {
-            "type": "toggle",
-            "title": "All Modes Platformer",
-            "description": "Allows for all modes to be played in platformer mode.",
-            "id": "level.platformermodes",
-            "version": ">=2.200",
-            "opcodes": [
-                {
-                    "pattern": "0F851F060000",
-                    "mask": "909090909090"
-                },
-                {
-                    "pattern": "0F85BE050000",
-                    "mask": "909090909090"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Force Platformer",
-            "description": "Forces the level to be played in platformer mode.",
-            "id": "level.platformerforce",
-            "version": ">=2.200",
-            "opcodes": [
-                {
-                    "pattern": "8A9019010000",
-                    "mask": "B20190909090*2A?EB"
-                }
-            ],
-            "cheat": true
-        },
-        {
-            "type": "toggle",
-            "title": "No Rotation",
-            "description": "Locks the rotation of all objects at 0 degrees.",
-            "id": "level.rotation",
-            "opcodes": [
-                {
-                    "pattern": "F30F1149?F30F1149",
-                    "mask": "*0A90",
-                    "lib": "libcocos2d.dll"
-                }
-            ],
-            "cheat": true
-        },
-        {
-            "type": "toggle",
-            "title": "Force Visibility",
-            "description": "Forces all objects to be visible.",
-            "id": "level.visibility",
-            "opcodes": [
-                {
-                    "pattern": "558BEC^8A45088881EE000000",
-                    "mask": "B00190",
-                    "lib": "libcocos2d.dll"
-                },
-                {
-                    "pattern": "0F84????E8????8B8B",
-                    "mask": "*0690",
-                    "lib": "libcocos2d.dll"
-                }
-            ],
-            "cheat": true
-        },
-        {
-            "type": "toggle",
-            "title": "No Shaders",
-            "description": "Disables all shaders.",
-            "id": "level.shaders",
-            "opcodes": [
-                {
-                    "pattern": "660F2EC19FF6C444^0F8B????8B8E",
-                    "mask": "E9&(01+01)*03$0190"
-                },
-                {
-                    "pattern": "8B01FF90????8BC8^FF15????8B8F",
-                    "mask": "*0690"
-                }
-            ],
-            "cheat": true
-        },
-        {
-            "type": "toggle",
-            "title": "Pause During Complete",
-            "description": "Allows you to pause during the level complete cutscene.",
-            "id": "level.completepause",
-            "opcodes": [
-                {
-                    "pattern": "56578BF9^80BF????000F85????80BF????000F85????FF15",
-                    "mask": "*0D90"
-                }
-            ]
-        },
-        {
-            "type": "embedded",
-            "hack": "startpos_switch"
-        },
-        {
-            "type": "embedded",
-            "hack": "auto_pickup_coins"
-        },
-        {
-            "type": "toggle",
-            "title": "No Shake",
-            "description": "Disables shake triggers.",
-            "id": "level.shake",
-            "opcodes": [
-                {
-                    "pattern": "F30F109F200500008B4D08^E8",
-                    "mask": "*0590"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Checkpoint Limit Bypass",
-            "description": "Allows you to place more checkpoints than the limit.",
-            "id": "level.checkpointlimit",
-            "opcodes": [
-                {
-                    "pattern": "FFD683?32^76?8B",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Show Triggers",
-            "description": "Renders all triggers in the level like in the editor.",
-            "id": "level.showtriggers",
-            "opcodes": [
-                {
-                    "pattern": "0F94C0^8887????E9????C7",
-                    "mask": "*0690"
-                },
-                {
-                    "pattern": "83?14^75?83BB",
-                    "mask": "EB"
-                }
-            ],
-            "cheat": true
-        },
-        {
-            "type": "embedded",
-            "hack": "instant_complete"
-        },
-        {
-            "type": "toggle",
-            "title": "No Mirror Portal",
-            "description": "Disables the mirror portal effect.",
-            "id": "level.mirrorportal",
-            "opcodes": [
-                {
-                    "pattern": "0F85????56538BCFE8????84C0^0F84????8B068BCEFF50?508D4C",
-                    "mask": "E9&(01+01)*03$0190"
-                }
-            ],
-            "cheat": true
-        },
-        {
-            "type": "toggle",
-            "title": "Anticheat Bypass",
-            "description": "Prevents the game from kicking you out of the level.",
-            "id": "level.anticheat",
-            "opcodes": [
-                {
-                    "pattern": "80BB????00^740C8BCB",
-                    "mask": "EB"
-                },
-                {
-                    "pattern": "E8????80BB????00^0F85????80BB????000F85",
-                    "mask": "*0690"
-                }
-            ]
-        },
-        {
-            "type": "embedded",
-            "hack": "click_tp"
-        },
-        {
-            "type": "embedded",
-            "hack": "frame_stepper"
-        },
-        {
-            "type": "embedded",
-            "hack": "random_seed"
+          "pattern": "6A148BCBFF15",
+          "mask": "E9@4(8BCBFF15????^8B4C24?64890D00000000595F5E)"
         }
-    ]
+      ],
+      "cheat": true
+    },
+    {
+      "type": "embedded",
+      "hack": "noclip_limit"
+    },
+    {
+      "type": "toggle",
+      "title": "Music Unlocker",
+      "description": "Unlocks practice music, and allows setting main menu music.",
+      "id": "level.music",
+      "version": ">=2.200",
+      "opcodes": [
+        {
+          "pattern": "*6A106A0CE8????84C0^750B8BCE",
+          "mask": "EB"
+        },
+        {
+          "pattern": "6A106A0CE8????84C0^0F85????8BCE",
+          "mask": "E9&(01+01)*03$0190"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Practice Coins",
+      "description": "Allows you to collect coins in practice mode.",
+      "id": "level.coins",
+      "opcodes": [
+        {
+          "pattern": "80BF????00^0F85????8B8F????6A00FFB6",
+          "mask": "*0690"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Freeze Jumps Counter",
+      "description": "Freezes the global jump counter (the one in stats menu).",
+      "id": "level.jumps",
+      "opcodes": [
+        {
+          "pattern": "FF81??0000FF81??000056578BB9??0000",
+          "mask": "909090909090*21?90"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Freeze Attempts Counter",
+      "description": "Freezes the global attempt counter (the one in stats menu).",
+      "id": "level.attempts",
+      "opcodes": [
+        {
+          "pattern": "8B?????6A^01????????????????????????????46",
+          "mask": "00*1C?90"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "No Camera Move",
+      "description": "Disables all camera move triggers.",
+      "id": "level.cameramove",
+      "version": ">=2.200",
+      "opcodes": [
+        {
+          "pattern": "558BEC83E4F883EC0C568BF18B8684030000",
+          "mask": "C20C00"
+        }
+      ],
+      "cheat": true
+    },
+    {
+      "type": "toggle",
+      "title": "No Camera Zoom",
+      "description": "Disables all camera zoom triggers.",
+      "id": "level.camerazoom",
+      "version": ">=2.200",
+      "opcodes": [
+        {
+          "pattern": "FFB7E0050000F30F108734050000",
+          "mask": "EB4490909090"
+        }
+      ],
+      "cheat": true
+    },
+    {
+      "type": "toggle",
+      "title": "All Modes Platformer",
+      "description": "Allows for all modes to be played in platformer mode.",
+      "id": "level.platformermodes",
+      "version": ">=2.200",
+      "opcodes": [
+        {
+          "pattern": "0F851F060000",
+          "mask": "909090909090"
+        },
+        {
+          "pattern": "0F85BE050000",
+          "mask": "909090909090"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Force Platformer",
+      "description": "Forces the level to be played in platformer mode.",
+      "id": "level.platformerforce",
+      "version": ">=2.200",
+      "opcodes": [
+        {
+          "pattern": "8A9019010000",
+          "mask": "B20190909090*2A?EB"
+        }
+      ],
+      "cheat": true
+    },
+    {
+      "type": "toggle",
+      "title": "No Rotation",
+      "description": "Locks the rotation of all objects at 0 degrees.",
+      "id": "level.rotation",
+      "opcodes": [
+        {
+          "pattern": "F30F1149?F30F1149",
+          "mask": "*0A90",
+          "lib": "libcocos2d.dll"
+        }
+      ],
+      "cheat": true
+    },
+    {
+      "type": "toggle",
+      "title": "Force Visibility",
+      "description": "Forces all objects to be visible.",
+      "id": "level.visibility",
+      "opcodes": [
+        {
+          "pattern": "558BEC^8A45088881EE000000",
+          "mask": "B00190",
+          "lib": "libcocos2d.dll"
+        },
+        {
+          "pattern": "0F84????E8????8B8B",
+          "mask": "*0690",
+          "lib": "libcocos2d.dll"
+        }
+      ],
+      "cheat": true
+    },
+    {
+      "type": "toggle",
+      "title": "No Shaders",
+      "description": "Disables all shaders.",
+      "id": "level.shaders",
+      "opcodes": [
+        {
+          "pattern": "660F2EC19FF6C444^0F8B????8B8E",
+          "mask": "E9&(01+01)*03$0190"
+        },
+        {
+          "pattern": "8B01FF90????8BC8^FF15????8B8F",
+          "mask": "*0690"
+        }
+      ],
+      "cheat": true
+    },
+    {
+      "type": "toggle",
+      "title": "Pause During Complete",
+      "description": "Allows you to pause during the level complete cutscene.",
+      "id": "level.completepause",
+      "opcodes": [
+        {
+          "pattern": "56578BF9^80BF????000F85????80BF????000F85????FF15",
+          "mask": "*0D90"
+        }
+      ]
+    },
+    {
+      "type": "embedded",
+      "hack": "startpos_switch"
+    },
+    {
+      "type": "embedded",
+      "hack": "auto_pickup_coins"
+    },
+    {
+      "type": "toggle",
+      "title": "No Shake",
+      "description": "Disables shake triggers.",
+      "id": "level.shake",
+      "opcodes": [
+        {
+          "pattern": "F30F109F200500008B4D08^E8",
+          "mask": "*0590"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Checkpoint Limit Bypass",
+      "description": "Allows you to place more checkpoints than the limit.",
+      "id": "level.checkpointlimit",
+      "opcodes": [
+        {
+          "pattern": "FFD683?32^76?8B",
+          "mask": "EB"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Show Triggers",
+      "description": "Renders all triggers in the level like in the editor.",
+      "id": "level.showtriggers",
+      "opcodes": [
+        {
+          "pattern": "0F94C0^8887????E9????C7",
+          "mask": "*0690"
+        },
+        {
+          "pattern": "83?14^75?83BB",
+          "mask": "EB"
+        }
+      ],
+      "cheat": true
+    },
+    {
+      "type": "embedded",
+      "hack": "instant_complete"
+    },
+    {
+      "type": "toggle",
+      "title": "No Mirror Portal",
+      "description": "Disables the mirror portal effect.",
+      "id": "level.mirrorportal",
+      "opcodes": [
+        {
+          "pattern": "0F85????56538BCFE8????84C0^0F84????8B068BCEFF50?508D4C",
+          "mask": "E9&(01+01)*03$0190"
+        }
+      ],
+      "cheat": true
+    },
+    {
+      "type": "toggle",
+      "title": "Anticheat Bypass",
+      "description": "Prevents the game from kicking you out of the level.",
+      "id": "level.anticheat",
+      "opcodes": [
+        {
+          "pattern": "80BB????00^740C8BCB",
+          "mask": "EB"
+        },
+        {
+          "pattern": "E8????80BB????00^0F85????80BB????000F85",
+          "mask": "*0690"
+        }
+      ]
+    },
+    {
+      "type": "embedded",
+      "hack": "click_tp"
+    },
+    {
+      "type": "embedded",
+      "hack": "frame_stepper"
+    },
+    {
+      "type": "embedded",
+      "hack": "frame_stepper"
+    }
+  ]
 }

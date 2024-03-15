@@ -1,299 +1,299 @@
 {
-    "title": "Bypass",
-    "items": [
+  "title": "Bypass",
+  "items": [
+    {
+      "type": "toggle",
+      "title": "Text Bypass",
+      "description": "Remove character count limit on text inputs.",
+      "id": "bypass.text",
+      "opcodes": [
         {
-            "type": "toggle",
-            "title": "Text Bypass",
-            "description": "Remove character count limit on text inputs.",
-            "id": "bypass.text",
-            "opcodes": [
-                {
-                    "pattern": "398858020000^7C04",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Character Filter",
-            "description": "Allows entering special characters in text inputs.",
-            "id": "bypass.filter",
-            "opcodes": [
-                {
-                    "pattern": "803F00^750433C9EB0F",
-                    "mask": "74"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Diamond Shopkeeper",
-            "description": "Access the Diamond Shopkeeper without having to collect 1000 diamonds.",
-            "id": "bypass.diamond",
-            "version": ">=2.200",
-            "opcodes": [
-                {
-                    "pattern": "84C0^750F8BCE",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Mechanic Shop",
-            "description": "Access the Mechanic shop without having to collect 2000 diamonds.",
-            "id": "bypass.mechanic",
-            "version": ">=2.200",
-            "opcodes": [
-                {
-                    "pattern": "84C0^75338BCE",
-                    "mask": "74"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Potbor Shop",
-            "description": "Access the community shop without having to collect 200 diamonds.",
-            "id": "bypass.potbor",
-            "opcodes": [
-                {
-                    "pattern": "84C0^75578BCE",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Scratch Shop",
-            "description": "Access Scratch shop without having to collect 500 diamonds.",
-            "id": "bypass.scratch",
-            "opcodes": [
-                {
-                    "pattern": "84C0^757B8BCE",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Keymaster Vault",
-            "description": "Access the Vault of Secrets without having to collect 50 diamonds.",
-            "id": "bypass.vault1",
-            "opcodes": [
-                {
-                    "pattern": "0F9DC084C0^74?FF",
-                    "mask": "75"
-                },
-                {
-                    "pattern": "8BC8E8????84C0^74?FF?????8BF0FF",
-                    "mask": "75"
-                },
-                {
-                    "pattern": "0F9DC184C9",
-                    "mask": "*0390"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Basement Key Bypass",
-            "description": "Unlocks the basement without having to collect the three keys.",
-            "id": "bypass.vault2",
-            "opcodes": [
-                {
-                    "pattern": "*6A0CE8????84C00F^85????0FB705????518BCCC64424?00",
-                    "mask": "84"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Treasure Room",
-            "description": "Access the Treasure Room without having to collect 5 keys.",
-            "id": "bypass.treasure",
-            "opcodes": [
-                {
-                    "pattern": "0F9DC184C0^74?FF15????8BF0",
-                    "mask": "9090"
-                },
-                {
-                    "pattern": "84C0BA????B9????^0F44CA51FF15????83C4048987",
-                    "mask": "*0390"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Unlock All Icons",
-            "description": "Unlocks all icons, colors and trails.",
-            "id": "bypass.icons",
-            "opcodes": [
-                {
-                    "pattern": "8BD98B7D0C8B750885FF",
-                    "mask": "E9@4(EB028AC3^8B4DF464890D00000000)"
-                },
-                {
-                    "pattern": "8BD98B75088B7D0C",
-                    "mask": "EB@1(8AD88AC3^8B4DF4)"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Main Levels",
-            "description": "Unlocks official demons, without having to collect coins.",
-            "id": "bypass.levels",
-            "opcodes": [
-                {
-                    "pattern": "8B81??????^7E7A",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Free Shops",
-            "description": "Buy anything from the shops for free.\n(Gets undone on restart)",
-            "id": "bypass.shops",
-            "opcodes": [
-                {
-                    "pattern": "5250E8????568B35",
-                    "mask": "*0790"
-                },
-                {
-                    "pattern": "84DB^74?578BCE",
-                    "mask": "EB"
-                },
-                {
-                    "pattern": "3BD1^7D?32DB",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Free Chests",
-            "description": "Open chests in the treasure room without keys.",
-            "id": "bypass.chests",
-            "opcodes": [
-                {
-                    "pattern": "*81F9????^7E?B864000000",
-                    "mask": "9090B800"
-                },
-                {
-                    "pattern": "7E?BB64000000",
-                    "mask": "9090B800"
-                },
-                {
-                    "pattern": "3BC7^0F8D????FF15",
-                    "mask": "E9&(01+01)*03$0190"
-                },
-                {
-                    "pattern": "3BFB^0F8D????6A00",
-                    "mask": "E9&(01+01)*03$0190"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Allow Low Volume",
-            "description": "Allow setting volume to lower values, without it snapping to 0%.",
-            "id": "bypass.lowvol",
-            "opcodes": [
-                {
-                    "pattern": "*F30F11?08^76080F57C0",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Quick Chests",
-            "description": "Makes chest's opening animation almost instant.",
-            "id": "bypass.fastchest",
-            "opcodes": [
-                {
-                    "pattern": "FFD751C70424^9A99993FFF15",
-                    "mask": "*0400"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Backup Stars Limit",
-            "description": "Allows you to save your account with less than 10 stars.",
-            "id": "bypass.backupstars",
-            "opcodes": [
-                {
-                    "pattern": "E8???0083F80A^7D",
-                    "mask": "EB"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Demon Gauntlet",
-            "description": "Access Demon Gauntlet without unlocking it.",
-            "id": "bypass.demongauntlet",
-            "opcodes": [
-                {
-                    "pattern": "6A0CE8????84C0^0F85????FF15",
-                    "mask": "E9&(01+01)*03$0190"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Challenge Bypass",
-            "description": "Unlocks \"The Challenge\" level.",
-            "id": "bypass.challenge",
-            "opcodes": [
-                {
-                    "pattern": "0F9DC084C0^0F84",
-                    "mask": "*0690"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Guard Vault",
-            "description": "Unlocks the Vault, without having to collect 10 user coins.",
-            "id": "bypass.vault3",
-            "opcodes": [
-                {
-                    "pattern": "E8????83F80A^7C?FF15",
-                    "mask": "9090"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Gatekeeper Vault",
-            "description": "Unlocks Chamber of Time, without having to buy the Master Emblem.",
-            "id": "bypass.vault4",
-            "opcodes": [
-                {
-                    "pattern": "E8????84C0^74?C605",
-                    "mask": "9090"
-                },
-                {
-                    "pattern": "8BC8E8????84C0^0F84????68????E8",
-                    "mask": "*0690"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Moderator Bypass",
-            "description": "Makes moderator-only buttons visible.",
-            "id": "bypass.modbypass",
-            "opcodes": [
-                {
-                    "pattern": "2B88????83F901^74?83F90275?68",
-                    "mask": "9090???9090"
-                }
-            ]
+          "pattern": "398858020000^7C04",
+          "mask": "EB"
         }
-    ]
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Character Filter",
+      "description": "Allows entering special characters in text inputs.",
+      "id": "bypass.filter",
+      "opcodes": [
+        {
+          "pattern": "803F00^750433C9EB0F",
+          "mask": "74"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Diamond Shopkeeper",
+      "description": "Access the Diamond Shopkeeper without having to collect 1000 diamonds.",
+      "id": "bypass.diamond",
+      "version": ">=2.200",
+      "opcodes": [
+        {
+          "pattern": "84C0^750F8BCE",
+          "mask": "EB"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Mechanic Shop",
+      "description": "Access the Mechanic shop without having to collect 2000 diamonds.",
+      "id": "bypass.mechanic",
+      "version": ">=2.200",
+      "opcodes": [
+        {
+          "pattern": "84C0^75338BCE",
+          "mask": "74"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Potbor Shop",
+      "description": "Access the community shop without having to collect 200 diamonds.",
+      "id": "bypass.potbor",
+      "opcodes": [
+        {
+          "pattern": "84C0^75578BCE",
+          "mask": "EB"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Scratch Shop",
+      "description": "Access Scratch shop without having to collect 500 diamonds.",
+      "id": "bypass.scratch",
+      "opcodes": [
+        {
+          "pattern": "84C0^757B8BCE",
+          "mask": "EB"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Keymaster Vault",
+      "description": "Access the Vault of Secrets without having to collect 50 diamonds.",
+      "id": "bypass.vault1",
+      "opcodes": [
+        {
+          "pattern": "0F9DC084C0^74?FF",
+          "mask": "75"
+        },
+        {
+          "pattern": "8BC8E8????84C0^74?FF?????8BF0FF",
+          "mask": "75"
+        },
+        {
+          "pattern": "0F9DC184C9",
+          "mask": "*0390"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Basement Key Bypass",
+      "description": "Unlocks the basement without having to collect the three keys.",
+      "id": "bypass.vault2",
+      "opcodes": [
+        {
+          "pattern": "*6A0CE8????84C00F^85????0FB705????518BCCC64424?00",
+          "mask": "84"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Treasure Room",
+      "description": "Access the Treasure Room without having to collect 5 keys.",
+      "id": "bypass.treasure",
+      "opcodes": [
+        {
+          "pattern": "0F9DC184C0^74?FF15????8BF0",
+          "mask": "9090"
+        },
+        {
+          "pattern": "84C0BA????B9????^0F44CA51FF15????83C4048987",
+          "mask": "*0390"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Unlock All Icons",
+      "description": "Unlocks all icons, colors and trails.",
+      "id": "bypass.icons",
+      "opcodes": [
+        {
+          "pattern": "8BD98B7D0C8B750885FF",
+          "mask": "E9@4(EB028AC3^8B4DF464890D00000000)"
+        },
+        {
+          "pattern": "8BD98B75088B7D0C",
+          "mask": "EB@1(8AD88AC3^8B4DF4)"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Main Levels",
+      "description": "Unlocks official demons, without having to collect coins.",
+      "id": "bypass.levels",
+      "opcodes": [
+        {
+          "pattern": "8B81??????^7E7A",
+          "mask": "EB"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Free Shops",
+      "description": "Buy anything from the shops for free.\n(Gets undone on restart)",
+      "id": "bypass.shops",
+      "opcodes": [
+        {
+          "pattern": "5250E8????568B35",
+          "mask": "*0790"
+        },
+        {
+          "pattern": "84DB^74?578BCE",
+          "mask": "EB"
+        },
+        {
+          "pattern": "3BD1^7D?32DB",
+          "mask": "EB"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Free Chests",
+      "description": "Open chests in the treasure room without keys.",
+      "id": "bypass.chests",
+      "opcodes": [
+        {
+          "pattern": "*81F9????^7E?B864000000",
+          "mask": "9090B800"
+        },
+        {
+          "pattern": "7E?BB64000000",
+          "mask": "9090B800"
+        },
+        {
+          "pattern": "3BC7^0F8D????FF15",
+          "mask": "E9&(01+01)*03$0190"
+        },
+        {
+          "pattern": "3BFB^0F8D????6A00",
+          "mask": "E9&(01+01)*03$0190"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Allow Low Volume",
+      "description": "Allow setting volume to lower values, without it snapping to 0%.",
+      "id": "bypass.lowvol",
+      "opcodes": [
+        {
+          "pattern": "*F30F11?08^76080F57C0",
+          "mask": "EB"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Quick Chests",
+      "description": "Makes chest's opening animation almost instant.",
+      "id": "bypass.fastchest",
+      "opcodes": [
+        {
+          "pattern": "FFD751C70424^9A99993FFF15",
+          "mask": "*0400"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Backup Stars Limit",
+      "description": "Allows you to save your account with less than 10 stars.",
+      "id": "bypass.backupstars",
+      "opcodes": [
+        {
+          "pattern": "E8???0083F80A^7D",
+          "mask": "EB"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Demon Gauntlet",
+      "description": "Access Demon Gauntlet without unlocking it.",
+      "id": "bypass.demongauntlet",
+      "opcodes": [
+        {
+          "pattern": "6A0CE8????84C0^0F85????FF15",
+          "mask": "E9&(01+01)*03$0190"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Challenge Bypass",
+      "description": "Unlocks \"The Challenge\" level.",
+      "id": "bypass.challenge",
+      "opcodes": [
+        {
+          "pattern": "0F9DC084C0^0F84",
+          "mask": "*0690"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Guard Vault",
+      "description": "Unlocks the Vault, without having to collect 10 user coins.",
+      "id": "bypass.vault3",
+      "opcodes": [
+        {
+          "pattern": "E8????83F80A^7C?FF15",
+          "mask": "9090"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Gatekeeper Vault",
+      "description": "Unlocks Chamber of Time, without having to buy the Master Emblem.",
+      "id": "bypass.vault4",
+      "opcodes": [
+        {
+          "pattern": "E8????84C0^74?C605",
+          "mask": "9090"
+        },
+        {
+          "pattern": "8BC8E8????84C0^0F84????68????E8",
+          "mask": "*0690"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Moderator Bypass",
+      "description": "Makes moderator-only buttons visible.",
+      "id": "bypass.modbypass",
+      "opcodes": [
+        {
+          "pattern": "2B88????83F901^74?83F90275?68",
+          "mask": "9090???9090"
+        }
+      ]
+    }
+  ]
 }

@@ -1,84 +1,84 @@
 {
-    "title": "Universal",
-    "items": [
+  "title": "Universal",
+  "items": [
+    {
+      "type": "embedded",
+      "hack": "discord_rpc"
+    },
+    {
+      "type": "toggle",
+      "title": "No Transition",
+      "description": "Makes all transitions instant.",
+      "id": "universal.transition",
+      "opcodes": [
         {
-            "type": "embedded",
-            "hack": "discord_rpc"
-        },
-        {
-            "type": "toggle",
-            "title": "No Transition",
-            "description": "Makes all transitions instant.",
-            "id": "universal.transition",
-            "opcodes": [
-                {
-                    "pattern": "8B16^F30F10450868",
-                    "mask": "*0590",
-                    "lib": "libcocos2d.dll"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Ignore ESC",
-            "description": "Disables ability to exit the level from the pause menu.\n(You should use \"Confirm Exit\" in the game settings instead.)",
-            "id": "universal.ignoreesc",
-            "opcodes": [
-                {
-                    "pattern": "8B88????^E8????83EC188BCC8965F0",
-                    "mask": "*0590"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "No Short Numbers",
-            "description": "All numbers are displayed in full.\n(For example, \"1.5M\" becomes \"1500000\".)",
-            "id": "universal.noshortnumbers",
-            "version": ">=2.200",
-            "opcodes": [
-                {
-                    "pattern": "81FE????^7D?568D8D",
-                    "mask": "9090"
-                }
-            ]
-        },
-        {
-            "type": "toggle",
-            "title": "Safe Mode",
-            "description": "Disables progress saving if you don't want to beat the level.",
-            "id": "universal.safemode",
-            "opcodes": [
-                {
-                    "pattern": "0F4FF8^80BB????000F85????80BB????000F85",
-                    "mask": "*1490E9&(01+01)*03$0190"
-                },
-                {
-                    "pattern": "E9????80BB????00^0F85????80BB????000F85",
-                    "mask": "90E9"
-                },
-                {
-                    "pattern": "80BB????00^0F85????8D4424?50FF15",
-                    "mask": "90E9"
-                }
-            ]
-        },
-        {
-            "type": "embedded",
-            "hack": "autosafemode"
-        },
-        {
-            "type": "toggle",
-            "title": "Free Window Resize",
-            "description": "Allows you to resize the window freely.",
-            "id": "universal.resize",
-            "opcodes": [
-                {
-                    "pattern": "FF75E85657^E8????83C40C",
-                    "mask": "*0590",
-                    "lib": "libcocos2d.dll"
-                }
-            ]
+          "pattern": "8B16^F30F10450868",
+          "mask": "*0590",
+          "lib": "libcocos2d.dll"
         }
-    ]
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Ignore ESC",
+      "description": "Disables ability to exit the level from the pause menu.\n(You should use \"Confirm Exit\" in the game settings instead.)",
+      "id": "universal.ignoreesc",
+      "opcodes": [
+        {
+          "pattern": "8B88????^E8????83EC188BCC8965F0",
+          "mask": "*0590"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "No Short Numbers",
+      "description": "All numbers are displayed in full.\n(For example, \"1.5M\" becomes \"1500000\".)",
+      "id": "universal.noshortnumbers",
+      "version": ">=2.200",
+      "opcodes": [
+        {
+          "pattern": "81FE????^7D?568D8D",
+          "mask": "9090"
+        }
+      ]
+    },
+    {
+      "type": "toggle",
+      "title": "Safe Mode",
+      "description": "Disables progress saving if you don't want to beat the level.",
+      "id": "universal.safemode",
+      "opcodes": [
+        {
+          "pattern": "0F4FF8^80BB????000F85????80BB????000F85",
+          "mask": "*1490E9&(01+01)*03$0190"
+        },
+        {
+          "pattern": "E9????80BB????00^0F85????80BB????000F85",
+          "mask": "90E9"
+        },
+        {
+          "pattern": "80BB????00^0F85????8D4424?50FF15",
+          "mask": "90E9"
+        }
+      ]
+    },
+    {
+      "type": "embedded",
+      "hack": "autosafemode"
+    },
+    {
+      "type": "toggle",
+      "title": "Free Window Resize",
+      "description": "Allows you to resize the window freely.",
+      "id": "universal.resize",
+      "opcodes": [
+        {
+          "pattern": "FF75E85657^E8????83C40C",
+          "mask": "*0590",
+          "lib": "libcocos2d.dll"
+        }
+      ]
+    }
+  ]
 }
