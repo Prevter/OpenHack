@@ -22,45 +22,27 @@ namespace openhack::menu {
     std::vector<gui::animation::MoveAction *> moveActions;
 
     ImVec2 randomWindowPosition(gui::Window &window) {
-        auto start = window.getPosition();
-
         // Calculate target position randomly to be outside the screen
-        // Choose random direction
-        auto direction = utils::random(0, 7);
         auto screenSize = ImGui::GetIO().DisplaySize;
+        auto windowSize = window.getSize();
         ImVec2 target;
 
-        switch (direction) {
-            case 0: // Top
-                target = ImVec2(start.x, -window.getSize().y);
-                break;
-            case 1: // Right
-                target = ImVec2(screenSize.x, start.y);
-                break;
-            case 2: // Bottom
-                target = ImVec2(start.x, screenSize.y);
-                break;
-            case 3: // Left
-                target = ImVec2(-window.getSize().x, start.y);
-                break;
-            case 4: // Top-Left
-                target = ImVec2(-window.getSize().x, -window.getSize().y);
-                break;
-            case 5: // Top-Right
-                target = ImVec2(screenSize.x, -window.getSize().y);
-                break;
-            case 6: // Bottom-Right
-                target = ImVec2(screenSize.x, screenSize.y);
-                break;
-            default: // Bottom-Left
-                target = ImVec2(-window.getSize().x, screenSize.y);
-                break;
-        }
-
-        // If the window is collapsed, multiply the target position by 1.5
-        if (!window.isOpen()) {
-            target.x *= 1.5;
-            target.y *= 1.5;
+        // Pick a random side of the screen
+        auto side = utils::random(3);
+        switch (side) {
+        case 0:
+            target = ImVec2(utils::random(screenSize.x - windowSize.x), -windowSize.y);
+            break;
+        case 1:
+            target = ImVec2(utils::random(screenSize.x - windowSize.x), screenSize.y);
+            break;
+        case 2:
+            target = ImVec2(-windowSize.x, utils::random(screenSize.y - windowSize.y));
+            break;
+        case 3:
+        default:
+            target = ImVec2(screenSize.x, utils::random(screenSize.y - windowSize.y));
+            break;
         }
 
         return target;
@@ -106,7 +88,6 @@ namespace openhack::menu {
     void init() {
         // Make sure to initialize ImGui
         gui::init();
-        // blur::compileShader();
 
         // Then initialize the windows
         if (isInitialized)

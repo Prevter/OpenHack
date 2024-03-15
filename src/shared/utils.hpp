@@ -41,6 +41,43 @@ namespace openhack::utils {
         return min + (rand() % (max - min + 1));
     }
 
+    /// @brief Generates a random number between min and max.
+    /// @param min The minimum value.
+    /// @param max The maximum value.
+    /// @return Random number between min and max.
+    inline float random(float min, float max) {
+        return min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+    }
+
+    /// @brief Generates a random number between min and max.
+    /// @param min The minimum value.
+    /// @param max The maximum value.
+    /// @return Random number between min and max.
+    inline double random(double min, double max) {
+        return min + static_cast <double> (rand()) / (static_cast <double> (RAND_MAX / (max - min)));
+    }
+
+    /// @brief Generates a random number between 0 and max.
+    /// @param max The maximum value.
+    /// @return Random number between 0 and max.
+    inline int random(int max) {
+        return random(0, max);
+    }
+
+    /// @brief Generates a random number between 0 and max.
+    /// @param max The maximum value.
+    /// @return Random number between 0 and max.
+    inline float random(float max) {
+        return random(0.f, max);
+    }
+
+    /// @brief Generates a random number between 0 and max.
+    /// @param max The maximum value.
+    /// @return Random number between 0 and max.
+    inline double random(double max) {
+        return random(0.0, max);
+    }
+
     /// @brief Initializes the random number generator.
     inline void initRandom() {
         srand(time(nullptr));
