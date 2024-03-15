@@ -17,6 +17,7 @@
 #include "rgb-icons/rgb-icons.hpp"
 #include "zephyrus/replays.hpp"
 #include "frame-stepper/frame-stepper.hpp"
+#include "random-seed/random-seed.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -237,6 +238,7 @@ namespace openhack::hacks {
             new RGBIcons(),
             new Zephyrus(),
             new FrameStepper(),
+            new RandomSeed(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;

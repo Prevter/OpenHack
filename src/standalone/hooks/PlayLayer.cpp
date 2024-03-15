@@ -6,6 +6,7 @@
 #include "../../shared/hacks/labels/labels.hpp"
 #include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
 #include "../../shared/hacks/zephyrus/replays.hpp"
+#include "../../shared/hacks/random-seed/random-seed.hpp"
 
 #include <dash/hook/PlayLayer.hpp>
 
@@ -35,6 +36,7 @@ namespace openhack::hooks::PlayLayer {
         hacks::StartPosSwitcher::resetLevel();
         config::setGlobal("fromPercent", self->getCurrentPercentInt());
         hacks::Zephyrus::PlayLayerResetLevel();
+        hacks::RandomSeed::resetLevel();
     }
 
     void addObject(gd::PlayLayer *self, gd::GameObject *object) {

@@ -281,6 +281,10 @@
         {
             "type": "embedded",
             "hack": "frame_stepper"
+        },
+        {
+            "type": "embedded",
+            "hack": "random_seed"
         }
     ]
 }
