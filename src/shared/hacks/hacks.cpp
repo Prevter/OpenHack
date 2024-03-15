@@ -15,6 +15,7 @@
 #include "labels/labels.hpp"
 #include "noclip-limit/noclip-limit.hpp"
 #include "rgb-icons/rgb-icons.hpp"
+#include "frame-stepper/frame-stepper.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -233,6 +234,7 @@ namespace openhack::hacks {
             new Labels(),
             new NoclipLimit(),
             new RGBIcons(),
+            new FrameStepper(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;
