@@ -15,6 +15,7 @@
 #include "labels/labels.hpp"
 #include "noclip-limit/noclip-limit.hpp"
 #include "rgb-icons/rgb-icons.hpp"
+#include "zephyrus/replays.hpp"
 #include "frame-stepper/frame-stepper.hpp"
 
 namespace openhack::hacks {
@@ -234,6 +235,7 @@ namespace openhack::hacks {
             new Labels(),
             new NoclipLimit(),
             new RGBIcons(),
+            new Zephyrus(),
             new FrameStepper(),
         };
 

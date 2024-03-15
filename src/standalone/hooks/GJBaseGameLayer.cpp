@@ -4,6 +4,7 @@
 #include "../../shared/hacks/labels/labels.hpp"
 #include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
 #include "../../shared/hacks/frame-stepper/frame-stepper.hpp"
+#include "../../shared/hacks/zephyrus/replays.hpp"
 
 namespace openhack::hooks::GJBaseGameLayer {
     void processCommands(gd::GJBaseGameLayer *self) {
@@ -15,6 +16,7 @@ namespace openhack::hooks::GJBaseGameLayer {
     void update(gd::GJBaseGameLayer *self, float dt) {
         hacks::FrameStepper::gameUpdate(&dt);
         gd::hook::GJBaseGameLayer::update(self, dt);
+        hacks::Zephyrus::GJBaseGameLayerProcessCommands();
     }
 
     void installHooks() {

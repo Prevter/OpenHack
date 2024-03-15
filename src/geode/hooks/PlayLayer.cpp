@@ -5,6 +5,7 @@
 #include "../../shared/hacks/startpos-switcher/startpos-switcher.hpp"
 #include "../../shared/hacks/labels/labels.hpp"
 #include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
+#include "../../shared/hacks/zephyrus/replays.hpp"
 
 #include <Geode/modify/PlayLayer.hpp>
 
@@ -34,6 +35,7 @@ namespace openhack::hooks {
             hacks::AutoPickupCoins::resetLevel();
             hacks::StartPosSwitcher::resetLevel();
             config::setGlobal("fromPercent", getCurrentPercentInt());
+            hacks::Zephyrus::PlayLayerResetLevel();
         }
 
         void addObject(GameObject *object) {

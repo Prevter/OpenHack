@@ -31,6 +31,7 @@ target_link_libraries(
 add_subdirectory(gd.hpp)
 add_subdirectory(json)
 add_subdirectory(discord-rpc)
+add_subdirectory(zephyrus)
 
 # Link all external libraries
 target_link_libraries(
@@ -39,4 +40,5 @@ target_link_libraries(
     gd.hpp
     nlohmann_json::nlohmann_json
     discord-rpc
+    Zephyrus
 )

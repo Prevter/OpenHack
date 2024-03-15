@@ -436,4 +436,44 @@ namespace openhack::utils {
             KEY_STATES[i] = GetAsyncKeyState(i) & 0x8000;
         }
     }
+
+    /// @brief Open a file dialog to select a file.
+    inline std::filesystem::path filePickerDialog(const char *filter, const char *title) {
+        OPENFILENAME ofn;
+        char szFile[260] = {0};
+        ZeroMemory(&ofn, sizeof(ofn));
+        ofn.lStructSize = sizeof(ofn);
+        ofn.hwndOwner = nullptr;
+        ofn.lpstrFile = szFile;
+        ofn.nMaxFile = sizeof(szFile);
+        ofn.lpstrFilter = filter;
+        ofn.nFilterIndex = 1;
+        ofn.lpstrFileTitle = nullptr;
+        ofn.nMaxFileTitle = 0;
+        ofn.lpstrInitialDir = nullptr;
+        ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+        ofn.lpstrTitle = title;
+        GetOpenFileName(&ofn);
+        return ofn.lpstrFile;
+    }
+
+    /// @brief Open a file dialog to save a file.
+    inline std::filesystem::path fileSaveDialog(const char *filter, const char *title) {
+        OPENFILENAME ofn;
+        char szFile[260] = {0};
+        ZeroMemory(&ofn, sizeof(ofn));
+        ofn.lStructSize = sizeof(ofn);
+        ofn.hwndOwner = nullptr;
+        ofn.lpstrFile = szFile;
+        ofn.nMaxFile = sizeof(szFile);
+        ofn.lpstrFilter = filter;
+        ofn.nFilterIndex = 1;
+        ofn.lpstrFileTitle = nullptr;
+        ofn.nMaxFileTitle = 0;
+        ofn.lpstrInitialDir = nullptr;
+        ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+        ofn.lpstrTitle = title;
+        GetSaveFileName(&ofn);
+        return ofn.lpstrFile;
+    }
 }

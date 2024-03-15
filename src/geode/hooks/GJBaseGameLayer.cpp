@@ -1,6 +1,7 @@
 #include "../pch.hpp"
 #include "../../shared/hacks/labels/labels.hpp"
 #include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
+#include "../../shared/hacks/zephyrus/replays.hpp"
 #include "../../shared/hacks/frame-stepper/frame-stepper.hpp"
 
 #include <Geode/modify/GJBaseGameLayer.hpp>
@@ -18,6 +19,7 @@ namespace openhack::hooks {
         void update(float dt) {
             hacks::FrameStepper::gameUpdate(&dt);
             GJBaseGameLayer::update(dt);
+            hacks::Zephyrus::GJBaseGameLayerProcessCommands();
         }
     };
 }

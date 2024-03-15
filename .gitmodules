@@ -28,3 +28,6 @@
 [submodule "libs/cocos-headers"]
 	path = libs/cocos-headers
 	url = https://github.com/prevter/cocos-headers
+[submodule "libs/zephyrus"]
+	path = libs/zephyrus
+	url = https://github.com/Prevter/Zephyrus
