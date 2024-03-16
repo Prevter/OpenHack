@@ -1,6 +1,8 @@
 #include "labels.hpp"
 #include "../../menu/menu.hpp"
 
+#include "../random-seed/random-seed.hpp"
+
 namespace openhack::hacks {
 
     void LabelsContainer::addLabel(Label *label, const std::function<void(Label *)> &update) {
@@ -479,6 +481,7 @@ namespace openhack::hacks {
         // {noclip_death} - noclip deaths
         // {from} - last respawn %
         // {best_run} - current best run %
+        // {random_seed} - current random seed
         // {frame} - current frame
         std::unordered_map<std::string, std::function<std::string()>> tokens = {
                 {"{username}",     []() {
@@ -589,6 +592,9 @@ namespace openhack::hacks {
                 {"{best_run}",     [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(config::getGlobal<int>("bestRun", 0));
+                }},
+                {"{random_seed}",     []() {
+                    return std::to_string(RandomSeed::getCurrentSeed());
                 }},
                 {"{frame}",        [playLayer]() {
                     if (!playLayer) return std::string("0");
