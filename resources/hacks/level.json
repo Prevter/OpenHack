@@ -284,7 +284,7 @@
     },
     {
       "type": "embedded",
-      "hack": "frame_stepper"
+      "hack": "random_seed"
     }
   ]
 }

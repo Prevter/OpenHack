@@ -21,11 +21,9 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.random_seed.freeze", false);
 
         // Find the seed address from "mov [DWORD PTR ds:?], eax"
-        uintptr_t movToSeedAddr = gd::sigscan::findPattern("A3^???00C783??000000000000C6");
+        uintptr_t movToSeedAddr = gd::sigscan::findPattern("A3^????C783??000000000000C6");
         if (movToSeedAddr != 0) {
-            L_TRACE("Found mov to seed address at 0x{:x}", movToSeedAddr);
             s_seedAddr = *reinterpret_cast<uint32_t*>(movToSeedAddr);
-            L_TRACE("Found seed address at 0x{:x}", s_seedAddr);
         } else {
             L_WARN("Failed to find seed address");
             return;

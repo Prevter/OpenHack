@@ -161,7 +161,7 @@ namespace openhack::hacks {
     static double s_extraDeltaTime = 0;
 
     void Display::schedulerUpdate(float dt, const std::function<void(float)>& original) {
-        if (!config::get<bool>("hack.display.tps_bypass")) {
+        if (!config::get<bool>("hack.display.tps_bypass") || !gd::PlayLayer::get()) {
             original(dt);
             return;
         }

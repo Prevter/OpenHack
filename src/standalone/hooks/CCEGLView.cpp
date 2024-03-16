@@ -15,7 +15,6 @@ namespace openhack::hooks::CCEGLView {
     }
 
     void toggleFullScreen(cocos2d::CCEGLView *self, bool fullscreen, bool borderless) {
-        L_TRACE("toggleFullScreen");
         ImGuiHook::destroy();
         hook::CCEGLView::toggleFullScreen(self, fullscreen, borderless);
     }
