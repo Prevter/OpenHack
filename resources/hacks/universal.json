@@ -79,6 +79,10 @@
           "lib": "libcocos2d.dll"
         }
       ]
+    },
+    {
+      "type": "embedded",
+      "hack": "menu_gameplay"
     }
   ]
 }

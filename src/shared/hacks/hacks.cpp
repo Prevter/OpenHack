@@ -18,6 +18,7 @@
 #include "zephyrus/replays.hpp"
 #include "frame-stepper/frame-stepper.hpp"
 #include "random-seed/random-seed.hpp"
+#include "menu-gameplay/menu-gameplay.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -239,6 +240,7 @@ namespace openhack::hacks {
             new Zephyrus(),
             new FrameStepper(),
             new RandomSeed(),
+            new MenuGameplay(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;

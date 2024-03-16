@@ -24,6 +24,7 @@ namespace openhack::hooks {
     INSTALL_NAMESPACE(GJBaseGameLayer)
     INSTALL_NAMESPACE(PlayLayer)
     INSTALL_NAMESPACE(PlayerObject)
+    INSTALL_NAMESPACE(MenuGameLayer)
 
     inline void installHooks() {
         L_TRACE("Installing hooks...");
@@ -37,6 +38,7 @@ namespace openhack::hooks {
         GJBaseGameLayer::installHooks();
         PlayLayer::installHooks();
         PlayerObject::installHooks();
+        MenuGameLayer::installHooks();
 
         MH_EnableHook(MH_ALL_HOOKS);
         L_TRACE("All hooks installed.");

@@ -1,5 +1,7 @@
 #include "blur.hpp"
 
+#include <vector>
+
 #include <GL/glew.h>
 #include <GL/gl.h>
 
