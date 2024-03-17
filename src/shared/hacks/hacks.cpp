@@ -19,6 +19,7 @@
 #include "frame-stepper/frame-stepper.hpp"
 #include "random-seed/random-seed.hpp"
 #include "menu-gameplay/menu-gameplay.hpp"
+#include "hitboxes/hitboxes.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -241,6 +242,7 @@ namespace openhack::hacks {
             new FrameStepper(),
             new RandomSeed(),
             new MenuGameplay(),
+            new Hitboxes(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;

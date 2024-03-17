@@ -3,6 +3,7 @@
 #include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
 #include "../../shared/hacks/zephyrus/replays.hpp"
 #include "../../shared/hacks/frame-stepper/frame-stepper.hpp"
+#include "../../shared/hacks/hitboxes/hitboxes.hpp"
 
 #include <Geode/modify/GJBaseGameLayer.hpp>
 
@@ -11,6 +12,7 @@ namespace openhack::hooks::GJBaseGameLayerHook {
         hacks::Labels::gameUpdate();
         hacks::NoclipLimit::processCommands();
         reinterpret_cast<gd::GJBaseGameLayer *>(self)->processCommands();
+        hacks::Hitboxes::processCommands();
     }
 }
 

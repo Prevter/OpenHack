@@ -7,6 +7,7 @@
 #include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
 #include "../../shared/hacks/zephyrus/replays.hpp"
 #include "../../shared/hacks/random-seed/random-seed.hpp"
+#include "../../shared/hacks/hitboxes/hitboxes.hpp"
 
 #include <Geode/modify/PlayLayer.hpp>
 
@@ -31,6 +32,7 @@ namespace openhack::hooks {
             hacks::NoclipLimit::resetLevel();
             hacks::Labels::beforeResetLevel();
             PlayLayer::resetLevel();
+            hacks::Hitboxes::resetLevel();
             hacks::InstantComplete::resetLevel();
             hacks::Display::playLayerReset();
             hacks::AutoPickupCoins::resetLevel();
@@ -50,6 +52,17 @@ namespace openhack::hooks {
             hacks::NoclipLimit::destroyPlayer(reinterpret_cast<gd::GameObject *>(object));
             PlayLayer::destroyPlayer(player, object);
             hacks::NoclipLimit::postDestroyPlayer();
+            hacks::Hitboxes::destroyPlayer();
+        }
+
+        void postUpdate(float dt) {
+            PlayLayer::postUpdate(dt);
+            hacks::Hitboxes::postUpdate();
+        }
+
+        void fullReset() {
+            PlayLayer::fullReset();
+            hacks::Hitboxes::fullReset();
         }
     };
 }
