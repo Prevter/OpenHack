@@ -21,12 +21,6 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Setup sccache
-      uses: chirag-droid/ccache-action@main
-      with:
-        variant: sccache
-        key: ${{runner.os}}-sccache-v1
-
     - name: Install Ninja
       shell: bash
       run: |
