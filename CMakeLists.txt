@@ -67,7 +67,6 @@ target_link_libraries(
     ${PROJECT_NAME}
     INTERFACE
     external_libs
-    glfw
     opengl32
     ${CMAKE_SOURCE_DIR}/libs/glew/lib/Release/Win32/glew32.lib
 )
@@ -142,7 +141,6 @@ add_library(
 )
 
 add_subdirectory(libs/minhook)
-add_subdirectory(libs/glfw)
 add_subdirectory(libs/spdlog)
 add_subdirectory(libs/curl)
 add_subdirectory(libs/cocos-headers)

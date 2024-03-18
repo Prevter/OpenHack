@@ -30,6 +30,7 @@ target_link_libraries(
 # Other libraries
 add_subdirectory(gd.hpp)
 add_subdirectory(json)
+add_subdirectory(glfw)
 add_subdirectory(discord-rpc)
 add_subdirectory(zephyrus)
 
@@ -37,6 +38,7 @@ add_subdirectory(zephyrus)
 target_link_libraries(
     external_libs INTERFACE
     imgui
+    glfw
     gd.hpp
     nlohmann_json::nlohmann_json
     discord-rpc
