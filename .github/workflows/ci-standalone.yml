@@ -1,16 +1,19 @@
-name: Standalone build
+name: Build Vanilla Mod
 
 on:
   push:
-    branches: [ "lemonade" ]
+    branches:
+      - "**"
   pull_request:
-    branches: [ "lemonade" ]
+    branches:
+      - "**"
 
 env:
   BUILD_TYPE: RelWithDebInfo
 
 jobs:
   build:
+    name: Vanilla OpenHack
     runs-on: windows-latest
 
     steps:
@@ -42,7 +45,7 @@ jobs:
       id: build
       shell: bash
       run: |
-        mkdir -p $HOME/.cache
+        mkdir -p $HOME/.sccache
         export CFLAGS="--target=i686-windows-msvc"
         export CXXFLAGS="--target=i686-windows-msvc"
         export LDFLAGS="--target=i686-windows-msvc"
@@ -53,4 +56,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: OpenHack-Standalone
-        path: ${{github.workspace}}/bin/${{env.BUILD_TYPE}}
+        path: ${{github.workspace}}/bin
