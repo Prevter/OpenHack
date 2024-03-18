@@ -430,31 +430,31 @@ namespace openhack::hacks {
         if (level->isDemon()) {
             switch (level->m_demonDifficulty()) {
                 case 3:
-                    return "easy_demon";
+                    return "Easy_demon";
                 case 4:
-                    return "medium_demon";
+                    return "Medium_demon";
                 case 5:
-                    return "insane_demon";
+                    return "Insane_demon";
                 case 6:
-                    return "extreme_demon";
+                    return "Extreme_demon";
                 default:
-                    return "hard_demon";
+                    return "Hard_demon";
             }
         }
 
         switch (level->m_difficulty()) {
             case gd::GJDifficulty::Easy:
-                return "easy";
+                return "Easy";
             case gd::GJDifficulty::Normal:
-                return "normal";
+                return "Normal";
             case gd::GJDifficulty::Hard:
-                return "hard";
+                return "Hard";
             case gd::GJDifficulty::Harder:
-                return "harder";
+                return "Harder";
             case gd::GJDifficulty::Insane:
-                return "insane";
+                return "Insane";
             case gd::GJDifficulty::Demon:
-                return "hard_demon";
+                return "Hard_demon";
             default:
                 return "na";
         }
