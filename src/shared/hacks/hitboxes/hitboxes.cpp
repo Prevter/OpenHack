@@ -1,6 +1,8 @@
 #include "hitboxes.hpp"
 #include "../../menu/menu.hpp"
 
+#include <deque>
+
 namespace openhack::hacks {
 
     static ToggleComponent *s_hitboxesToggle = nullptr;
@@ -151,14 +153,14 @@ namespace openhack::hacks {
     inline void
     drawRect(gd::cocos2d::CCDrawNode *node, const gd::cocos2d::CCRect &rect, const gui::Color &color, float borderWidth,
              const gui::Color &borderColor) {
-        std::vector<cocos2d::CCPoint> vertices = {
-                cocos2d::CCPoint(rect.getMinX(), rect.getMinY()),
-                cocos2d::CCPoint(rect.getMinX(), rect.getMaxY()),
-                cocos2d::CCPoint(rect.getMaxX(), rect.getMaxY()),
-                cocos2d::CCPoint(rect.getMaxX(), rect.getMinY())
+        std::vector<gd::cocos2d::CCPoint> vertices = {
+                gd::cocos2d::CCPoint(rect.getMinX(), rect.getMinY()),
+                gd::cocos2d::CCPoint(rect.getMinX(), rect.getMaxY()),
+                gd::cocos2d::CCPoint(rect.getMaxX(), rect.getMaxY()),
+                gd::cocos2d::CCPoint(rect.getMaxX(), rect.getMinY())
         };
         s_skipDrawHook = true;
-        node->drawPolygon(reinterpret_cast<gd::cocos2d::CCPoint *>(vertices.data()), vertices.size(),
+        node->drawPolygon(vertices.data(), vertices.size(),
                           (const gd::cocos2d::_ccColor4F &) color, borderWidth,
                           (const gd::cocos2d::_ccColor4F &) borderColor);
     }
