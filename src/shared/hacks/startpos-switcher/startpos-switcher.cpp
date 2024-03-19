@@ -93,8 +93,9 @@ namespace openhack::hacks {
             return a->m_startPosition().x < b->m_startPosition().x;
         });
 
+        auto *playLayer = gd::PlayLayer::get();
         size_t count = m_startposes.size();
-        m_currentIndex = count - 1;
+        m_currentIndex = playLayer->m_isTestMode() ? count - 1 : -1;
 
         // Setup label
         m_label = new Label("", "bigFont.fnt");
