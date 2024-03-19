@@ -16,7 +16,7 @@ namespace openhack::config {
         setIfEmpty("menu.frameRounding", 4.f);
         setIfEmpty("menu.windowSnap", 3.f);
         setIfEmpty("menu.stackWindows", true);
-        setIfEmpty("menu.theme", gui::Themes::MegaHack);
+        setIfEmpty("menu.theme", gui::Themes::Modern);
         setIfEmpty("menu.toggleKey", "Tab");
         setIfEmpty("menu.font", "Poppins");
         setIfEmpty("menu.fontSize", 20.f);

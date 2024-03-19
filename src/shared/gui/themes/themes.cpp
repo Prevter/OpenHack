@@ -2,7 +2,7 @@
 
 #include "classic/classic.hpp"
 #include "megahack/megahack.hpp"
-// #include "modern/modern.hpp"
+#include "modern/modern.hpp"
 // #include "steam2000/steam2000.hpp"
 
 namespace openhack::gui {
@@ -307,6 +307,9 @@ namespace openhack::gui {
         switch (theme) {
             case Themes::Classic:
                 setTheme(new ClassicTheme());
+                break;
+            case Themes::Modern:
+                setTheme(new ModernTheme());
                 break;
             case Themes::MegaHack:
                 setTheme(new MegaHackTheme());

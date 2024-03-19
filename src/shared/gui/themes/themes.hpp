@@ -120,20 +120,17 @@ namespace openhack::gui
     {
         /// @brief Classic ImGui theme.
         Classic = 0,
-        /// @brief Theme based on the MegaHack v8
-        MegaHack = 1,
         /// @brief Modern UI theme.
-        // Modern = 2,
-        /// @brief Theme based on the old Steam UI.
-        // Steam2000 = 3,
+        Modern = 1,
+        /// @brief Theme based on the MegaHack v8
+        MegaHack = 2,
     };
 
     /// @brief The names of the themes.
     const char *const THEME_NAMES[] = {
         "Classic",
+        "Modern",
         "MegaHack",
-        // "Modern",
-        // "Steam2000",
     };
 
     /// @brief The count of the themes.
