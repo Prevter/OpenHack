@@ -11,7 +11,7 @@ namespace openhack::gui {
         ImGui::PushFont(font.title);
         bool opened = ImGui::Begin(name, open, flags);
         ImGui::PushFont(font.normal);
-        auto scale = config::get<float>("menu.uiScale");
+        auto scale = config::getGlobal<float>("UIScale");
         ImGui::SetWindowFontScale(scale);
         return opened;
     }
@@ -277,7 +277,7 @@ namespace openhack::gui {
             ImGui::OpenPopup(popupName.c_str());
         }
 
-        auto scale = config::get<float>("menu.uiScale");
+        auto scale = config::getGlobal<float>("UIScale");
         ImGui::SetNextWindowSizeConstraints(ImVec2(minWidth * scale, 0), ImVec2(FLT_MAX, FLT_MAX));
         if (ImGui::BeginPopup(popupName.c_str())) {
             popupDraw();

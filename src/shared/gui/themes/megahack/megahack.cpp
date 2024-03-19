@@ -20,7 +20,7 @@ namespace openhack::gui {
         style.WindowBorderSize = config::get<float>("menu.borderSize");
         style.WindowMinSize = ImVec2(32, 32);
         style.DisplayWindowPadding = ImVec2(0, 0);
-        style.ScaleAllSizes(config::get<float>("menu.uiScale"));
+        style.ScaleAllSizes(config::getGlobal<float>("UIScale"));
 
         auto &colors = style.Colors;
         colors[ImGuiCol_Text] = config::get<Color>("menu.color.text");
@@ -102,7 +102,7 @@ namespace openhack::gui {
             color = config::get<Color>("menu.color.primary");
         }
 
-        auto scale = config::get<float>("menu.uiScale");
+        auto scale = config::getGlobal<float>("UIScale");
 
         ImGui::GetWindowDrawList()->AddLine(
                 ImVec2(ImGui::GetItemRectMin().x + 1, ImGui::GetItemRectMin().y + 1),
@@ -153,7 +153,7 @@ namespace openhack::gui {
         ImGui::PopStyleColor(4);
         ImGui::PopStyleVar();
 
-        auto scale = config::get<float>("menu.uiScale");
+        auto scale = config::getGlobal<float>("UIScale");
 
         ImGui::GetWindowDrawList()->AddRectFilled(
                 ImVec2(ImGui::GetItemRectMax().x - 5 * scale, ImGui::GetItemRectMin().y + 1 * scale),
@@ -196,7 +196,7 @@ namespace openhack::gui {
         ImGui::PopItemWidth();
         ImGui::PopStyleColor(3);
 
-        auto scale = config::get<float>("menu.uiScale");
+        auto scale = config::getGlobal<float>("UIScale");
         auto top = ImGui::GetItemRectMin().y + (6 * scale);
         auto bottom = ImGui::GetItemRectMax().y - (6 * scale);
         auto right = ImGui::GetItemRectMax().x - (6 * scale);
@@ -267,7 +267,7 @@ namespace openhack::gui {
         ImGui::PopItemWidth();
         ImGui::PopStyleColor(4);
 
-        auto scale = config::get<float>("menu.uiScale");
+        auto scale = config::getGlobal<float>("UIScale");
         auto top = ImGui::GetItemRectMin().y + (6 * scale);
         auto bottom = ImGui::GetItemRectMax().y - (6 * scale);
         auto right = ImGui::GetItemRectMax().x - (6 * scale);

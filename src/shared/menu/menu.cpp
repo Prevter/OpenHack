@@ -30,19 +30,19 @@ namespace openhack::menu {
         // Pick a random side of the screen
         auto side = utils::random(3);
         switch (side) {
-        case 0:
-            target = ImVec2(utils::random(screenSize.x - windowSize.x), -windowSize.y);
-            break;
-        case 1:
-            target = ImVec2(utils::random(screenSize.x - windowSize.x), screenSize.y);
-            break;
-        case 2:
-            target = ImVec2(-windowSize.x, utils::random(screenSize.y - windowSize.y));
-            break;
-        case 3:
-        default:
-            target = ImVec2(screenSize.x, utils::random(screenSize.y - windowSize.y));
-            break;
+            case 0:
+                target = ImVec2(utils::random(screenSize.x - windowSize.x), -windowSize.y);
+                break;
+            case 1:
+                target = ImVec2(utils::random(screenSize.x - windowSize.x), screenSize.y);
+                break;
+            case 2:
+                target = ImVec2(-windowSize.x, utils::random(screenSize.y - windowSize.y));
+                break;
+            case 3:
+            default:
+                target = ImVec2(screenSize.x, utils::random(screenSize.y - windowSize.y));
+                break;
         }
 
         return target;
@@ -252,6 +252,12 @@ namespace openhack::menu {
     }
 
     void draw() {
+        // Calculate relative UI scale against 1080p
+        auto resW = ImGui::GetIO().DisplaySize.x;
+        auto ratio = resW / 1920.0f;
+        auto currentScale = config::get<float>("menu.uiScale");
+        config::setGlobal("UIScale", ratio * currentScale);
+
 
 #ifdef OPENHACK_STANDALONE
         // Check for updates
@@ -401,7 +407,7 @@ namespace openhack::menu {
 
         ImVec2 screenSize = ImGui::GetIO().DisplaySize;
 
-        const auto scale = config::get<float>("menu.uiScale");
+        const auto scale = config::getGlobal<float>("UIScale");
         float windowWidth = gui::Window::MIN_SIZE.x * scale;
         auto columns = (size_t) ((screenSize.x - snap) / (windowWidth + snap));
 

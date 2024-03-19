@@ -20,7 +20,7 @@ namespace openhack::gui {
         style.WindowBorderSize = config::get<float>("menu.borderSize");
         style.WindowMinSize = ImVec2(32, 32);
         style.DisplayWindowPadding = ImVec2(0, 0);
-        style.ScaleAllSizes(config::get<float>("menu.uiScale"));
+        style.ScaleAllSizes(config::getGlobal<float>("UIScale"));
 
         auto &colors = style.Colors;
         colors[ImGuiCol_Text] = config::get<Color>("menu.color.text");
