@@ -264,6 +264,15 @@ namespace openhack::utils {
         return (uintptr_t) strtol(hexCopy.c_str(), nullptr, 16);
     }
 
+    /// @brief Convert a value to a vector of bytes.
+    /// @tparam T The type of the value.
+    /// @param value The value.
+    /// @return The vector of bytes.
+    template <typename T>
+    inline std::vector<uint8_t> getBytes(T value) {
+        return std::vector<uint8_t>((uint8_t *) &value, (uint8_t *) &value + sizeof(T));
+    }
+
     /// @brief Convert a vector of bytes to a string of hex characters.
     /// @param bytes The vector of bytes.
     /// @return The string of hex characters.

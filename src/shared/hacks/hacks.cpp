@@ -20,6 +20,7 @@
 #include "random-seed/random-seed.hpp"
 #include "menu-gameplay/menu-gameplay.hpp"
 #include "hitboxes/hitboxes.hpp"
+#include "respawn-delay/respawn-delay.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -243,6 +244,7 @@ namespace openhack::hacks {
             new RandomSeed(),
             new MenuGameplay(),
             new Hitboxes(),
+            new RespawnDelay(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;
