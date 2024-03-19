@@ -20,7 +20,7 @@ namespace openhack::hacks {
             gui::width(90);
             gui::keybind("Step key", "hack.framestep.step_key");
             gui::width();
-        });
+        }, ImVec2(0, 0), 150);
 
     }
 
