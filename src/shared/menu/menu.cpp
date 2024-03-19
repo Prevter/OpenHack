@@ -195,6 +195,9 @@ namespace openhack::menu {
             //     blur::setState(config::get<blur::State>("menu.blur"));
             // }
 
+            gui::callback([](){
+               gui::tooltip("Makes the title bar change colors.");
+            });
             gui::toggleSetting(
                     "Rainbow Menu",
                     "menu.rainbow.enabled",

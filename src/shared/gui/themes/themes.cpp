@@ -263,10 +263,12 @@ namespace openhack::gui {
         }
 
         bool changed = ImGui::Checkbox(label, value);
-        ImGui::SameLine(0, 0);
 
         ImGui::PopStyleColor(4);
         ImGui::PopStyleVar(2);
+        gui::callback();
+
+        ImGui::SameLine(0, 0);
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - arrowSize.x);
         ImGui::SetNextItemWidth(arrowSize.x);
         bool openPopup = ImGui::ArrowButton((std::string("##open_") + label).c_str(), ImGuiDir_Right);

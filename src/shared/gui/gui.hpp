@@ -129,4 +129,10 @@ namespace openhack::gui {
     /// @note Uses the configuration to store the value.
     bool toggleSetting(const char *label, const char *settingKey, std::function<void()> popupDraw,
                        ImVec2 size = ImVec2(0, 0), float minWidth = 0.0f);
+
+    /// @brief Allows to set a callback, which will be called for some GUI elements, which have more than one ImGui call.
+    /// Can be used to add keybinds/tooltips to the elements.
+    /// @param callback The callback to set. (nullptr is used to call the callback and reset it)
+    /// @note This is currently only used for the toggleSetting function.
+    void callback(const std::function<void()> &callback = nullptr);
 }

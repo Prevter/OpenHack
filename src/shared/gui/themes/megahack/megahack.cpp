@@ -256,13 +256,16 @@ namespace openhack::gui {
         }
 
         bool toggled = ImGui::Button(label, buttonSize);
-        ImGui::SameLine(0, 0);
 
         if (toggled) {
             *value = !*value;
         }
 
         ImGui::PopStyleVar(2);
+        ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) config::get<Color>("menu.color.text"));
+        gui::callback();
+        ImGui::PopStyleColor();
+        ImGui::SameLine(0, 0);
         bool openPopup = ImGui::Button((std::string("##open_") + label).c_str(), arrowSize);
         ImGui::PopItemWidth();
         ImGui::PopStyleColor(4);

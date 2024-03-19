@@ -139,6 +139,7 @@ namespace openhack::gui {
             ImVec2 pos = ImGui::GetMousePos();
 
             auto size = ImGui::CalcTextSize(text);
+            size.x /= config::getGlobal<float>("UIScale");
             auto screenSize = ImGui::GetIO().DisplaySize;
 
             const float padding = 10.0f;
@@ -219,5 +220,16 @@ namespace openhack::gui {
         if (result)
             config::set(settingKey, value);
         return result;
+    }
+
+    static std::function<void()> s_currentCallback = nullptr;
+
+    void callback(const std::function<void()> &callback) {
+        if (callback == nullptr && s_currentCallback != nullptr) {
+            s_currentCallback();
+            s_currentCallback = nullptr;
+        } else {
+            s_currentCallback = callback;
+        }
     }
 }
