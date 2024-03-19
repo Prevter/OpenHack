@@ -115,7 +115,9 @@ namespace openhack::menu {
                 utils::openURL("https://discord.gg/QSd4jUyc45");
 
             auto searchValue = config::getGlobal<std::string>("searchValue", "");
+            gui::widthF(1.0);
             gui::inputText("##Search", &searchValue, 64, "Search");
+            gui::width();
             config::setGlobal("searchValue", searchValue);
         });
 
