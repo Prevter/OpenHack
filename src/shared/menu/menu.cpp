@@ -223,12 +223,6 @@ namespace openhack::menu {
             hack->onLateInit();
         }
 
-        // Make all windows start outside the screen
-        for (auto &window: windows) {
-            auto target = randomWindowPosition(window);
-            window.setDrawPosition(target);
-        }
-
         // Restore window positions from config
         if (config::has("windows")) {
             auto loaded = config::get<std::vector<gui::Window>>("windows");
@@ -236,8 +230,11 @@ namespace openhack::menu {
                 auto it = std::find_if(loaded.begin(), loaded.end(),
                                        [&window](const gui::Window &w) { return w.getTitle() == window.getTitle(); });
                 if (it != loaded.end()) {
-                    window.setOpen(it->isOpen());
-                    window.setPosition(it->getPosition());
+                    auto opened = it->isOpen();
+                    auto position = it->getPosition();
+                    window.setOpen(opened);
+                    window.setPosition(position);
+                    window.setDrawPosition(position);
                 }
             }
         }
@@ -251,12 +248,39 @@ namespace openhack::menu {
 
     }
 
+    uint8_t firstRunState = 0;
+
     void draw() {
         // Calculate relative UI scale against 1080p
         auto resW = ImGui::GetIO().DisplaySize.x;
         auto ratio = resW / 1920.0f;
         auto currentScale = config::get<float>("menu.uiScale");
         config::setGlobal("UIScale", ratio * currentScale);
+
+        // Get the window sizes for the first run
+        // TODO: This is a bit of a hack, because windows are drawn for one frame on boot.
+        //       I should at least make the windows invisible for this frame.
+        switch (firstRunState) {
+            case 0:
+                gui::setStyles();
+                for (auto &window: windows) {
+                    window.draw();
+                }
+                firstRunState = 1;
+                break;
+            case 1:
+                // Make all windows start outside the screen
+                for (auto &window: windows) {
+                    // Render the window once to get the size
+                    window.draw();
+                    auto target = randomWindowPosition(window);
+                    window.setDrawPosition(target);
+                }
+                firstRunState = 2;
+                return;
+            default:
+                break;
+        }
 
 
 #ifdef OPENHACK_STANDALONE
