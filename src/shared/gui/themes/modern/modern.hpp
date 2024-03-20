@@ -11,6 +11,8 @@ namespace openhack::gui {
 
         void loadPalette() override;
 
+        bool inputText(const char *label, std::string *value, int bufferSize, const char *placeholder, ImGuiTextFlags flags) override;
+
         bool inputFloat(const char *label, float *value, float min, float max, const char *format) override;
 
         bool button(const char *label, const ImVec2 &size) override;

@@ -70,7 +70,6 @@ namespace openhack::gui {
     }
 
     bool ModernTheme::inputFloat(const char *label, float *value, float min, float max, const char *format) {
-        // Transparent background with a line border on the bottom
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
         ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0, 0, 0, 0));
         ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0, 0, 0, 0));
@@ -82,15 +81,30 @@ namespace openhack::gui {
 
         auto color = config::get<Color>("menu.color.primary");
         color.a = 0.4f;
-        drawList->AddLine(ImVec2(cursorPos.x, cursorPos.y + 20), ImVec2(cursorPos.x + availWidth, cursorPos.y + 20), color);
-        bool changed = ImGui::InputFloat(label, value, 0.0f, 0.0f, format);
-
+        auto scale = config::getGlobal<float>("UIScale");
+        drawList->AddLine(ImVec2(cursorPos.x, cursorPos.y + 24 * scale), ImVec2(cursorPos.x + availWidth, cursorPos.y + 24 * scale), color);
+        bool changed = Theme::inputFloat(label, value, min, max, format);
         ImGui::PopStyleColor(3);
+        return changed;
+    }
 
-        if (*value < min)
-            *value = min;
-        if (*value > max)
-            *value = max;
+    bool ModernTheme::inputText(const char *label, std::string *value, int bufferSize, const char *placeholder, ImGuiTextFlags flags) {
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0, 0, 0, 0));
+
+        // Add a line border on the bottom
+        auto drawList = ImGui::GetWindowDrawList();
+        auto cursorPos = ImGui::GetCursorScreenPos();
+        auto availWidth = ImGui::CalcItemWidth();
+
+        auto color = config::get<Color>("menu.color.primary");
+        color.a = 0.4f;
+        auto scale = config::getGlobal<float>("UIScale");
+        drawList->AddLine(ImVec2(cursorPos.x, cursorPos.y + 24 * scale), ImVec2(cursorPos.x + availWidth, cursorPos.y + 24 * scale), color);
+        bool changed = Theme::inputText(label, value, bufferSize, placeholder, flags);
+        ImGui::PopStyleColor(5);
+        ImGui::PopStyleVar();
         return changed;
     }
 
