@@ -16,12 +16,18 @@ namespace openhack::hacks {
     }
 
     void FrameStepper::onDraw() {
+        gui::callback([](){
+            gui::tooltip("Allows you to step through the game frame by frame");
+            menu::keybinds::addMenuKeybind("framestep.enabled", "Frame Stepper", [](){
+                bool enabled = !config::get<bool>("hack.framestep.enabled");
+                config::set("hack.framestep.enabled", enabled);
+            });
+        });
         gui::toggleSetting("Frame Stepper", "hack.framestep.enabled", [](){
             gui::width(90);
             gui::keybind("Step key", "hack.framestep.step_key");
             gui::width();
         }, ImVec2(0, 0), 150);
-
     }
 
     bool FrameStepper::isCheating() {

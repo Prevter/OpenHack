@@ -32,11 +32,23 @@ namespace openhack::hacks {
         opcodes.push_back(customBypass[0]);
         s_respawnDelay = new ToggleComponent("", "", opcodes);
         togglePatch();
+
+        // Initialize keybind
+        menu::keybinds::setKeybindCallback("respawn_delay.enabled", []() {
+            bool enabled = !config::get<bool>("hack.respawn_delay.enabled");
+            config::set("hack.respawn_delay.enabled", enabled);
+            togglePatch();
+        });
     }
 
     void RespawnDelay::onDraw() {
         gui::callback([](){
             gui::tooltip("Allows you to change the default respawn time");
+            menu::keybinds::addMenuKeybind("respawn_delay.enabled", "Respawn Delay", [](){
+                bool enabled = !config::get<bool>("hack.respawn_delay.enabled");
+                config::set("hack.respawn_delay.enabled", enabled);
+                togglePatch();
+            });
         });
         if (gui::toggleSetting("Respawn Delay", "hack.respawn_delay.enabled", []() {
             gui::width(100);

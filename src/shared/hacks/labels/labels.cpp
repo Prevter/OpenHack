@@ -230,6 +230,9 @@ namespace openhack::hacks {
 
             ImGui::Separator();
 
+            gui::callback([](){
+                gui::tooltip("Shows a red indicator if you have any cheats enabled.");
+            });
             gui::toggleSetting("Cheat Indicator", "hack.cheat-indicator.enabled", [&]() {
                 if (gui::combo("Position", "hack.cheat-indicator.position", CONTAINER_POSITIONS, 6))
                     respawnLabels();

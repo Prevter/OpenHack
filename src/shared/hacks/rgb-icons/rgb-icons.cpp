@@ -19,9 +19,22 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.rgb_icons.playerOffset", 5000.0f);
         config::setIfEmpty("hack.rgb_icons.applyPrimary", true);
         config::setIfEmpty("hack.rgb_icons.applySecondary", true);
+
+        // Initialize keybind
+        menu::keybinds::setKeybindCallback("rgb_icons.enabled", []() {
+            bool enabled = !config::get<bool>("hack.rgb_icons.enabled");
+            config::set("hack.rgb_icons.enabled", enabled);
+        });
     }
 
     void RGBIcons::onDraw() {
+        gui::callback([](){
+            gui::tooltip("Makes the player icon have a rainbow effect");
+            menu::keybinds::addMenuKeybind("rgb_icons.enabled", "RGB Icons", [](){
+                bool enabled = !config::get<bool>("hack.rgb_icons.enabled");
+                config::set("hack.rgb_icons.enabled", enabled);
+            });
+        });
         gui::toggleSetting("RGB Icons", "hack.rgb_icons.enabled", []() {
             gui::width(100);
             gui::inputFloat("Speed", "hack.rgb_icons.speed", 0.0f, FLT_MAX, "%.2f");

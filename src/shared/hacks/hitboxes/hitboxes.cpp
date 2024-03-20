@@ -84,9 +84,26 @@ namespace openhack::hacks {
         if (!success) return;
         s_hitboxesToggle = new ToggleComponent("", "", opcodes);
         togglePatch();
+
+        // Initialize keybind
+        menu::keybinds::setKeybindCallback("hitboxes.death", []() {
+            bool enabled = !config::get<bool>("hack.hitboxes.death");
+            config::set("hack.hitboxes.death", enabled);
+            togglePatch();
+            toggleOffIfNeeded();
+        });
     }
 
     void Hitboxes::onDraw() {
+        gui::callback([](){
+            gui::tooltip("Shows hitboxes for objects in the game");
+            menu::keybinds::addMenuKeybind("hitboxes.death", "Show Hitboxes on Death", []() {
+                bool enabled = !config::get<bool>("hack.hitboxes.death");
+                config::set("hack.hitboxes.death", enabled);
+                togglePatch();
+                toggleOffIfNeeded();
+            });
+        });
         if (gui::toggleSetting("Show Hitboxes", "hack.hitboxes.enabled", []() {
             gui::checkbox("Accurate Player Hitbox", "hack.hitboxes.accurate_player");
             gui::tooltip("Makes the player hitbox more accurate.");

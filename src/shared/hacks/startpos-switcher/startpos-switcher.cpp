@@ -39,9 +39,24 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.startpos_switch.label.show", true);
         config::setIfEmpty("hack.startpos_switch.label.color", gui::Color(1.0f, 1.0f, 1.0f, 0.5f));
         config::setIfEmpty("hack.startpos_switch.label.scale", 0.3f);
+
+        // Initialize keybind
+        menu::keybinds::setKeybindCallback("startpos_switch.enabled", []() {
+            bool enabled = !config::get<bool>("hack.startpos_switch.enabled");
+            config::set("hack.startpos_switch.enabled", enabled);
+            updateLabel();
+        });
     }
 
     void StartPosSwitcher::onDraw() {
+        gui::callback([](){
+            gui::tooltip("Allows you to switch between StartPos objects");
+            menu::keybinds::addMenuKeybind("startpos_switch.enabled", "StartPos Switcher", [](){
+                bool enabled = !config::get<bool>("hack.startpos_switch.enabled");
+                config::set("hack.startpos_switch.enabled", enabled);
+                updateLabel();
+            });
+        });
         if (gui::toggleSetting("StartPos Switcher", "hack.startpos_switch.enabled", []() {
             gui::checkbox("Reset camera", "hack.startpos_switch.resetCamera");
             gui::tooltip("Resets the camera position, scale and rotation to the StartPos object.\n"

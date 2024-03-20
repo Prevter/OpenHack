@@ -28,9 +28,22 @@ namespace openhack::hacks {
             L_WARN("Failed to find seed address");
             return;
         }
+
+        // Initialize keybind
+        menu::keybinds::setKeybindCallback("random_seed.enabled", []() {
+            bool enabled = !config::get<bool>("hack.random_seed.enabled");
+            config::set("hack.random_seed.enabled", enabled);
+        });
     }
 
     void RandomSeed::onDraw() {
+        gui::callback([](){
+            gui::tooltip("Allows you to set the random seed, which is used by random triggers");
+            menu::keybinds::addMenuKeybind("random_seed.enabled", "Random Seed", [](){
+                bool enabled = !config::get<bool>("hack.random_seed.enabled");
+                config::set("hack.random_seed.enabled", enabled);
+            });
+        });
         gui::toggleSetting("Random Seed", "hack.random_seed.enabled", []() {
             gui::width(80);
             gui::inputFloat("Seed", "hack.random_seed.seed", 0, FLT_MAX, "%.0f");

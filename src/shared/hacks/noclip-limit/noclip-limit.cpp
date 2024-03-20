@@ -16,9 +16,22 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.noclip_limit.killOnDeaths", false);
         config::setIfEmpty("hack.noclip_limit.accuracy", 75.0f);
         config::setIfEmpty("hack.noclip_limit.killOnAccuracy", true);
+
+        // Initialize keybind
+        menu::keybinds::setKeybindCallback("noclip_limit.enabled", []() {
+            bool enabled = !config::get<bool>("hack.noclip_limit.enabled");
+            config::set("hack.noclip_limit.enabled", enabled);
+        });
     }
 
     void NoclipLimit::onDraw() {
+        gui::callback([](){
+            gui::tooltip("Automatically kills the player when you reach the death limit or accuracy limit");
+            menu::keybinds::addMenuKeybind("noclip_limit.enabled", "Noclip Limit", [](){
+                bool enabled = !config::get<bool>("hack.noclip_limit.enabled");
+                config::set("hack.noclip_limit.enabled", enabled);
+            });
+        });
         gui::toggleSetting("Noclip Limit", "hack.noclip_limit.enabled", []() {
             gui::width(150);
             gui::checkbox("Deaths Limit", "hack.noclip_limit.killOnDeaths");

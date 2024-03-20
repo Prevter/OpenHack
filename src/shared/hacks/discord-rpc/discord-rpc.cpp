@@ -56,9 +56,36 @@ namespace openhack::hacks {
 
         config::setGlobal("discord_rpc.startTime", std::time(nullptr));
         config::setGlobal("discord_rpc.levelTime", std::time(nullptr));
+
+        // Initialize keybinds
+        menu::keybinds::setKeybindCallback("discord_rpc.enabled", []() {
+            bool enabled = !config::get<bool>("hack.discord_rpc.enabled");
+            config::set("hack.discord_rpc.enabled", enabled);
+
+            // Clear/Update presence
+            if (config::get<bool>("hack.discord_rpc.enabled")) {
+                updatePresence();
+            } else {
+                Discord_ClearPresence();
+            }
+        });
     }
 
     void DiscordRPC::onDraw() {
+        gui::callback([](){
+            gui::tooltip("Display your current status in Discord");
+            menu::keybinds::addMenuKeybind("discord_rpc.enabled", "Discord RPC", [](){
+                bool enabled = !config::get<bool>("hack.discord_rpc.enabled");
+                config::set("hack.discord_rpc.enabled", enabled);
+
+                // Clear/Update presence
+                if (config::get<bool>("hack.discord_rpc.enabled")) {
+                    updatePresence();
+                } else {
+                    Discord_ClearPresence();
+                }
+            });
+        });
         if (gui::toggleSetting("Discord RPC", "hack.discord_rpc.enabled", [&]() {
             gui::width(200);
 
