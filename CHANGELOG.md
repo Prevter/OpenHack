@@ -1,3 +1,30 @@
+## v2.2.0
+**New**:
+* Added "TPS Bypass"
+* Added "Zephyrus" (replays)
+* Added "Show Hitboxes" + "on Death"
+* Added "Frame Stepper"
+* Added "Random Seed"
+* Added "Respawn Delay"
+* Added "Main Menu Gameplay"
+* Added API for mod developers
+* Added new themes
+
+**Fixes**:
+* Fixed StartPos Switcher default index being maxed out
+* Fixed rare crash when loading a corrupted config file
+* Fixed windows getting stuck at the edge of the screen while animating
+* Fixed windows spawning in the same spot on the first open
+* Fixed search bar width being too big
+* Fixed RGB Icons not working properly sometimes
+* Fixed missing keybind initializer for VSync
+* Fixed build errors when building the project with "BUILD_STANDALONE=OFF"
+
+**Other**:
+* Improved menu close/open animations
+* Added keybind/tooltip for toggles with settings
+* Added UI scaling for different display resolutions
+
 ## v2.1.0
 **New**:
 * Reimplemented "Discord RPC" with x4 more features
