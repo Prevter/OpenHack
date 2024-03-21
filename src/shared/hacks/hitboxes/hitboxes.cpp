@@ -86,6 +86,13 @@ namespace openhack::hacks {
         togglePatch();
 
         // Initialize keybind
+        menu::keybinds::setKeybindCallback("hitboxes.enabled", []() {
+            bool enabled = !config::get<bool>("hack.hitboxes.enabled");
+            config::set("hack.hitboxes.enabled", enabled);
+            togglePatch();
+            toggleOffIfNeeded();
+        });
+        
         menu::keybinds::setKeybindCallback("hitboxes.death", []() {
             bool enabled = !config::get<bool>("hack.hitboxes.death");
             config::set("hack.hitboxes.death", enabled);
@@ -97,9 +104,9 @@ namespace openhack::hacks {
     void Hitboxes::onDraw() {
         gui::callback([](){
             gui::tooltip("Shows hitboxes for objects in the game");
-            menu::keybinds::addMenuKeybind("hitboxes.death", "Show Hitboxes on Death", []() {
-                bool enabled = !config::get<bool>("hack.hitboxes.death");
-                config::set("hack.hitboxes.death", enabled);
+            menu::keybinds::addMenuKeybind("hitboxes.enabled", "Show Hitboxes", []() {
+                bool enabled = !config::get<bool>("hack.hitboxes.enabled");
+                config::set("hack.hitboxes.enabled", enabled);
                 togglePatch();
                 toggleOffIfNeeded();
             });
