@@ -48,6 +48,19 @@ namespace openhack::menu {
         return target;
     }
 
+    inline void updateCursorState() {
+        bool canShowInLevel = true;
+        if (auto *playLayer = gd::PlayLayer::get()) {
+            canShowInLevel = playLayer->m_hasCompletedLevel() ||
+                             playLayer->m_isPaused() ||
+                             gd::GameManager::sharedState()->getGameVariable("0024");
+
+            // "Click Teleport" enables cursor, so we need to check if it's enabled
+            if (config::get<bool>("hack.click_tp.enabled", false)) return;
+        }
+        gd::cocos2d::CCEGLView::sharedOpenGLView()->showCursor(isOpened || canShowInLevel);
+    }
+
     void toggle() {
         isOpened = !isOpened;
 
@@ -74,6 +87,9 @@ namespace openhack::menu {
                 moveActions.push_back(window.createMoveAction(target, animationTime, easing));
             }
         }
+
+        // Update cursor state
+        updateCursorState();
     }
 
     bool isOpen() { return isOpened; }
@@ -195,8 +211,8 @@ namespace openhack::menu {
             //     blur::setState(config::get<blur::State>("menu.blur"));
             // }
 
-            gui::callback([](){
-               gui::tooltip("Makes the title bar change colors.");
+            gui::callback([]() {
+                gui::tooltip("Makes the title bar change colors.");
             });
             gui::toggleSetting(
                     "Rainbow Menu",
@@ -371,8 +387,8 @@ namespace openhack::menu {
         if (!isVisible())
             return;
 
-        // Show mouse cursor
-        gd::cocos2d::CCEGLView::sharedOpenGLView()->showCursor(true);
+        // Show mouse cursor if the menu is open
+        updateCursorState();
 
         // Rainbow menu
         bool rainbowEnabled = config::get<bool>("menu.rainbow.enabled");

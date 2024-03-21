@@ -92,7 +92,7 @@ namespace openhack::hacks {
             togglePatch();
             toggleOffIfNeeded();
         });
-        
+
         menu::keybinds::setKeybindCallback("hitboxes.death", []() {
             bool enabled = !config::get<bool>("hack.hitboxes.death");
             config::set("hack.hitboxes.death", enabled);
