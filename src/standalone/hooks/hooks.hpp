@@ -16,8 +16,10 @@
 namespace openhack::hooks {
     using namespace gd;
 
-    INSTALL_NAMESPACE(CCEGLView)
+
     INSTALL_NAMESPACE(AppDelegate)
+    INSTALL_NAMESPACE(CCDrawNode)
+    INSTALL_NAMESPACE(CCEGLView)
     INSTALL_NAMESPACE(CCScheduler)
     INSTALL_NAMESPACE(ChannelControl)
     INSTALL_NAMESPACE(GameStatsManager)
@@ -30,8 +32,9 @@ namespace openhack::hooks {
         L_TRACE("Installing hooks...");
         MH_Initialize();
 
-        CCEGLView::installHooks();
         AppDelegate::installHooks();
+        CCDrawNode::installHooks();
+        CCEGLView::installHooks();
         CCScheduler::installHooks();
         ChannelControl::installHooks();
         GameStatsManager::installHooks();

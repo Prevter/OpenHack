@@ -7,6 +7,7 @@
 #include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
 #include "../../shared/hacks/zephyrus/replays.hpp"
 #include "../../shared/hacks/random-seed/random-seed.hpp"
+#include "../../shared/hacks/hitboxes/hitboxes.hpp"
 
 #include <dash/hook/PlayLayer.hpp>
 
@@ -30,6 +31,7 @@ namespace openhack::hooks::PlayLayer {
         hacks::NoclipLimit::resetLevel();
         hacks::Labels::beforeResetLevel();
         hook::PlayLayer::resetLevel(self);
+        hacks::Hitboxes::resetLevel();
         hacks::InstantComplete::resetLevel();
         hacks::Display::playLayerReset();
         hacks::AutoPickupCoins::resetLevel();
@@ -49,6 +51,17 @@ namespace openhack::hooks::PlayLayer {
         hacks::NoclipLimit::destroyPlayer(object);
         hook::PlayLayer::destroyPlayer(self, player, object);
         hacks::NoclipLimit::postDestroyPlayer();
+        hacks::Hitboxes::destroyPlayer();
+    }
+
+    void postUpdate(gd::PlayLayer *self, float dt) {
+        hook::PlayLayer::postUpdate(self, dt);
+        hacks::Hitboxes::postUpdate();
+    }
+
+    void fullReset(gd::PlayLayer *self) {
+        hook::PlayLayer::fullReset(self);
+        hacks::Hitboxes::fullReset();
     }
 
     void installHooks() {
@@ -56,5 +69,7 @@ namespace openhack::hooks::PlayLayer {
         LOG_HOOK(PlayLayer, resetLevel);
         LOG_HOOK(PlayLayer, addObject);
         LOG_HOOK(PlayLayer, destroyPlayer);
+        LOG_HOOK(PlayLayer, postUpdate);
+        LOG_HOOK(PlayLayer, fullReset);
     }
 }
