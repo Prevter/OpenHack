@@ -438,6 +438,19 @@ namespace openhack::utils {
         }
     }
 
+    /// @brief Simulates a key press.
+    /// @param keycode The key code.
+    inline void pressKey(uint32_t keycode) {
+        keybd_event(keycode, 0, 0, 0);
+        keybd_event(keycode, 0, KEYEVENTF_KEYUP, 0);
+    }
+
+    /// @brief Simulates a key press.
+    /// @param key The key name.
+    inline void pressKey(std::string key) {
+        pressKey(getKeyCode(std::move(key)));
+    }
+
     /// @brief Open a file dialog to select a file.
     inline std::filesystem::path filePickerDialog(const char *filter, const char *title) {
         OPENFILENAME ofn;

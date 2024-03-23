@@ -21,6 +21,7 @@
 #include "menu-gameplay/menu-gameplay.hpp"
 #include "hitboxes/hitboxes.hpp"
 #include "respawn-delay/respawn-delay.hpp"
+#include "auto-deafen/auto-deafen.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -245,6 +246,7 @@ namespace openhack::hacks {
             new MenuGameplay(),
             new Hitboxes(),
             new RespawnDelay(),
+            new AutoDeafen(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;

@@ -83,6 +83,10 @@
     {
       "type": "embedded",
       "hack": "menu_gameplay"
+    },
+    {
+      "type": "embedded",
+      "hack": "auto_deafen"
     }
   ]
 }
