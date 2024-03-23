@@ -95,16 +95,8 @@
       "id": "creator.verify",
       "opcodes": [
         {
-          "pattern": "83F801^74?80B9????00",
-          "mask": "75"
-        },
-        {
-          "pattern": "8B81????BA^????2B81",
-          "mask": "*04$0B"
-        },
-        {
-          "pattern": "83F801^75?6A08",
-          "mask": "9090"
+          "pattern": "74?80B9????00^75?83EC",
+          "mask": "EB"
         }
       ]
     },
