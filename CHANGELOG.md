@@ -7,6 +7,7 @@
 * Added "Random Seed"
 * Added "Respawn Delay"
 * Added "Main Menu Gameplay"
+* Added "Auto Deafen"
 * Added API for mod developers
 * Added new themes
 
@@ -19,11 +20,13 @@
 * Fixed RGB Icons not working properly sometimes
 * Fixed missing keybind initializer for VSync
 * Fixed build errors when building the project with "BUILD_STANDALONE=OFF"
+* Fixed Noclip Accuracy counting after death/level completion
 
 **Other**:
 * Improved menu close/open animations
 * Added keybind/tooltip for toggles with settings
 * Added UI scaling for different display resolutions
+* Mouse cursor now hides while playing a level
 
 ## v2.1.0
 **New**:
