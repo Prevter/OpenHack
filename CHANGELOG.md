@@ -12,15 +12,16 @@
 * Added new themes
 
 **Fixes**:
-* Fixed StartPos Switcher default index being maxed out
+* Fixed "StartPos Switcher" default index being maxed out
 * Fixed rare crash when loading a corrupted config file
 * Fixed windows getting stuck at the edge of the screen while animating
 * Fixed windows spawning in the same spot on the first open
 * Fixed search bar width being too big
-* Fixed RGB Icons not working properly sometimes
+* Fixed "RGB Icons" not working properly sometimes
 * Fixed missing keybind initializer for VSync
 * Fixed build errors when building the project with "BUILD_STANDALONE=OFF"
-* Fixed Noclip Accuracy counting after death/level completion
+* Fixed "Noclip Accuracy" counting after death/level completion
+* Fixed "Verify Hack" not working properly in some cases
 
 **Other**:
 * Improved menu close/open animations
