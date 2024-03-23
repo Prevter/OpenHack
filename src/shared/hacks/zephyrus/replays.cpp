@@ -14,7 +14,8 @@ namespace openhack::hacks {
     void Zephyrus::onInit() {
         // Set the default value
         config::setIfEmpty("zephyrus.state", 0);
-        config::setIfEmpty("zephyrus.fixMode", 1);
+        config::setIfEmpty("zephyrus.fixFrames", true);
+        // config::setIfEmpty("zephyrus.fixMode", 2);
 
         // Initialize Zephyrus
         s_replayEngine = zephyrus::Zephyrus();
@@ -48,8 +49,8 @@ namespace openhack::hacks {
             playerObj->m_position().x = data.x;
             playerObj->m_position().y = data.y;
             playerObj->m_yAccel(data.ySpeed);
-            // playerSpr->setPosition({data.x, data.y});
-            playerSpr->setRotation(data.rotation);
+            playerSpr->setPosition({data.x, data.y});
+            // playerSpr->setRotation(data.rotation);
         });
 
         s_replayEngine.setRequestMacroFixMethod([]() -> zephyrus::Macro::FrameFix {
@@ -81,23 +82,33 @@ namespace openhack::hacks {
         });
 
         s_replayEngine.setState(static_cast<zephyrus::BotState>(config::get<int>("zephyrus.state")));
-        s_replayEngine.setFixMode(static_cast<zephyrus::BotFixMode>(config::get<int>("zephyrus.fixMode")));
+        //s_replayEngine.setFixMode(static_cast<zephyrus::BotFixMode>(config::get<int>("zephyrus.fixMode")));
+        s_replayEngine.setFixMode(config::get<bool>("zephyrus.fixFrames") ? zephyrus::BotFixMode::EveryFrame : zephyrus::BotFixMode::None);
 
         // Create window
-        menu::addWindow("Zephyrus", [&]() {
+        menu::addWindow("Replays (beta)", [&]() {
             gui::width(120);
             if (gui::combo("State", "zephyrus.state", "Disabled\0Playing\0Recording\0\0")) {
                 s_replayEngine.setState(static_cast<zephyrus::BotState>(config::get<int>("zephyrus.state")));
             }
+            gui::tooltip("Disabled: The bot is disabled\n"
+                         "Playing: The bot is playing a macro\n"
+                         "Recording: The bot is recording a macro");
 
-            if (gui::combo("Fix Mode", "zephyrus.fixMode", "None\0Every Action\0Every Frame\0\0")) {
-                s_replayEngine.setFixMode(static_cast<zephyrus::BotFixMode>(config::get<int>("zephyrus.fixMode")));
-            }
+//            if (gui::combo("Fix Mode", "zephyrus.fixMode", "None\0Every Action\0Every Frame\0\0")) {
+//                s_replayEngine.setFixMode(static_cast<zephyrus::BotFixMode>(config::get<int>("zephyrus.fixMode")));
+//            }
             gui::width();
+
+            if (gui::checkbox("Fix Frames", "zephyrus.fixFrames")) {
+                s_replayEngine.setFixMode(config::get<bool>("zephyrus.fixFrames") ? zephyrus::BotFixMode::EveryFrame : zephyrus::BotFixMode::None);
+            }
+            gui::tooltip("Fixes the player's position every frame, resulting in a more accurate replay.");
 
             if (gui::button("Clear")) {
                 s_replayEngine.setMacro(zephyrus::Macro());
             }
+            gui::tooltip("Clear current macro buffer.");
 
             if (gui::button("Load", ImVec2(0.5f, 0))) {
                 zephyrus::Macro macro;
@@ -111,6 +122,7 @@ namespace openhack::hacks {
                     }
                 }
             }
+            gui::tooltip("Load a macro from a file.\n\nNote: This will overwrite the current macro.");
 
             ImGui::SameLine(0, 2);
 
@@ -118,17 +130,18 @@ namespace openhack::hacks {
                 if (s_replayEngine.getMacro().getFrames().empty()) return;
                 auto result = utils::fileSaveDialog("Zephyrus Macro (*.zr)\0*.zr\0\0", "Save Macro");
                 if (!result.empty()) {
+                    if (!utils::endsWith(result.string(), ".zr")) result += ".zr";
                     zephyrus::writeToFile(s_replayEngine.getMacro(), result);
                 }
             }
+            gui::tooltip("Save the current macro to a file.");
 
             ImGui::Text("Macro actions: %d", s_replayEngine.getMacro().getFrames().size());
             ImGui::Text("Frame: %d", s_replayEngine.getFrame());
         });
     }
 
-    void Zephyrus::update() {
-    }
+    void Zephyrus::update() {}
 
     bool Zephyrus::isCheating() {
         if (s_replayEngine.getState() == zephyrus::BotState::Idle) return false;

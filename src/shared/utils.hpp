@@ -316,4 +316,12 @@ namespace openhack::utils {
                 std::chrono::high_resolution_clock::now().time_since_epoch()
         ).count();
     }
+
+    /// @brief Check if a string ends with a suffix.
+    /// @param str The string.
+    /// @param suffix The suffix.
+    /// @return True if the string ends with the suffix.
+    inline bool endsWith(const std::string &str, const std::string &suffix) {
+        return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
+    }
 }
