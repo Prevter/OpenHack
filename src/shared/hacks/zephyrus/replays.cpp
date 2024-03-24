@@ -112,7 +112,7 @@ namespace openhack::hacks {
 
             if (gui::button("Load", ImVec2(0.5f, 0))) {
                 zephyrus::Macro macro;
-                auto result = utils::filePickerDialog("Zephyrus Macro (*.zr)\0*.zr\0\0", "Load Macro");
+                auto result = utils::filePickerDialog("Macro files (*.zr, *.gdr)\0*.zr;*.gdr\0\0", "Load Macro");
                 if (!result.empty()) {
                     if (zephyrus::readFromFile(result, macro)) {
                         s_replayEngine.setMacro(macro);
@@ -134,7 +134,14 @@ namespace openhack::hacks {
                     zephyrus::writeToFile(s_replayEngine.getMacro(), result);
                 }
             }
-            gui::tooltip("Save the current macro to a file.");
+            gui::tooltip("Save the current macro to a file.\nRight click to export as .gdr.");
+            if (ImGui::IsItemClicked(1)) {
+                auto result = utils::fileSaveDialog("GDReplay (*.gdr)\0*.gdr\0\0", "Export Macro");
+                if (!result.empty()) {
+                    if (!utils::endsWith(result.string(), ".gdr")) result += ".gdr";
+                    zephyrus::writeToFile(s_replayEngine.getMacro(), result);
+                }
+            }
 
             ImGui::Text("Macro actions: %d", s_replayEngine.getMacro().getFrames().size());
             ImGui::Text("Frame: %d", s_replayEngine.getFrame());
