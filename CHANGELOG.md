@@ -25,6 +25,7 @@
 
 **Other**:
 * Improved menu close/open animations
+* You can now add custom `.ttf` fonts to `geode/config/prevter.openhack/fonts` folder
 * Added keybind/tooltip for toggles with settings
 * Added UI scaling for different display resolutions
 * Mouse cursor now hides while playing a level
