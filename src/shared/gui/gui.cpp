@@ -77,24 +77,38 @@ namespace openhack::gui {
 
         fonts.clear();
         auto fontSize = config::get<float>("menu.fontSize", 16.0f);
-        for (const auto &entry: std::filesystem::directory_iterator(fontDir)) {
-            if (entry.is_regular_file()) {
-                auto path = entry.path().string();
-                auto ext = path.substr(path.find_last_of('.') + 1);
-                if (ext == "ttf") {
-                    auto fontDefault = io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize, &font_cfg);
-                    auto fontTitle = io.Fonts->AddFontFromFileTTF(path.c_str(), fontSize + 4.0f, &font_cfg);
-                    if (fontDefault && fontTitle) {
-                        auto name = entry.path().stem().string();
-                        name = name.substr(0, name.find_last_of('.'));
-                        auto font = Font(name, fontDefault, fontTitle);
-                        fonts.push_back(font);
-                    } else {
-                        L_ERROR("Failed to load font: {}", path);
+        auto readFontDir = [&](const std::filesystem::path& path) {
+            // if directory does not exist, create
+            if (!std::filesystem::exists(path)) {
+                std::filesystem::create_directory(path);
+                return;
+            }
+
+            for (const auto &entry: std::filesystem::directory_iterator(path)) {
+                if (entry.is_regular_file()) {
+                    auto pathStr = entry.path().string();
+                    auto ext = pathStr.substr(pathStr.find_last_of('.') + 1);
+                    if (ext == "ttf") {
+                        auto fontDefault = io.Fonts->AddFontFromFileTTF(pathStr.c_str(), fontSize, &font_cfg);
+                        auto fontTitle = io.Fonts->AddFontFromFileTTF(pathStr.c_str(), fontSize + 4.0f, &font_cfg);
+                        if (fontDefault && fontTitle) {
+                            auto name = entry.path().stem().string();
+                            name = name.substr(0, name.find_last_of('.'));
+                            auto font = Font(name, fontDefault, fontTitle);
+                            fonts.push_back(font);
+                        } else {
+                            L_ERROR("Failed to load font: {}", pathStr);
+                        }
                     }
                 }
             }
-        }
+        };
+
+        readFontDir(fontDir);
+#ifdef OPENHACK_GEODE
+        std::filesystem::path configDir = static_cast<std::filesystem::path::string_type &&>(geode::Mod::get()->getConfigDir());
+        readFontDir(configDir / "fonts");
+#endif
 
         // Set default font
         if (!fonts.empty()) {
