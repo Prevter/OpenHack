@@ -373,7 +373,9 @@ namespace openhack::menu {
         }
 
         // Change opacity of the menu to the latest action progress
-        if (isAnimating && !moveActions.empty() && config::get<bool>("menu.animateOpacity", false)) {
+        if (isAnimating && !moveActions.empty() &&
+            config::get<float>("menu.animationTime") > 0 &&
+            config::get<bool>("menu.animateOpacity", false)) {
             auto lastAction = moveActions.back();
             auto progress = std::clamp(lastAction->getProgress(), 0.0, 1.0);
             if (!isOpened) progress = 1.0 - progress;
