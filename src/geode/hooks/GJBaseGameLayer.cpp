@@ -4,6 +4,7 @@
 #include "../../shared/hacks/zephyrus/replays.hpp"
 #include "../../shared/hacks/frame-stepper/frame-stepper.hpp"
 #include "../../shared/hacks/hitboxes/hitboxes.hpp"
+#include "../../shared/hacks/display/display.hpp"
 
 #include <Geode/modify/GJBaseGameLayer.hpp>
 
@@ -20,8 +21,10 @@ namespace openhack::hooks {
     struct GJBaseGameLayerHook2 : geode::Modify<GJBaseGameLayerHook2, GJBaseGameLayer> {
         void update(float dt) {
             hacks::FrameStepper::gameUpdate(&dt);
-            GJBaseGameLayer::update(dt);
             hacks::Zephyrus::GJBaseGameLayerProcessCommands();
+            hacks::Display::schedulerUpdate(dt, [&](float dt) {
+                GJBaseGameLayer::update(dt);
+            });
         }
     };
 }

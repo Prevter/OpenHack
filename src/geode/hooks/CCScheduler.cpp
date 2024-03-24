@@ -8,9 +8,7 @@ namespace openhack::hooks {
     struct CCSchedulerHook : geode::Modify<CCSchedulerHook, cocos2d::CCScheduler> {
         void update(float dt) {
             hacks::SpeedHack::update(&dt);
-            hacks::Display::schedulerUpdate(dt, [&](float dt) {
-                cocos2d::CCScheduler::update(dt);
-            });
+            cocos2d::CCScheduler::update(dt);
         }
     };
 }
