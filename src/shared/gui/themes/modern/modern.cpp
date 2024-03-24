@@ -21,6 +21,7 @@ namespace openhack::gui {
         style.WindowMinSize = ImVec2(32, 32);
         style.DisplayWindowPadding = ImVec2(0, 0);
         style.ScaleAllSizes(config::getGlobal<float>("UIScale"));
+        style.WindowMenuButtonPosition = ImGuiDir_Right;
 
         auto &colors = style.Colors;
         colors[ImGuiCol_Text] = config::get<Color>("menu.color.text");
