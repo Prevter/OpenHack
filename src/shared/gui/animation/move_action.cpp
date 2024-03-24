@@ -40,6 +40,10 @@ namespace openhack::gui::animation {
         m_target->y = m_start.y + current.y;
     }
 
+    double MoveAction::getProgress() {
+        return m_easing(m_totalTime / m_duration);
+    }
+
     bool MoveAction::isFinished() const {
         return m_totalTime >= m_duration;
     }

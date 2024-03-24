@@ -21,6 +21,10 @@ namespace openhack::gui::animation {
         /// @param deltaTime How much time passed since last update in seconds
         void update(double deltaTime);
 
+        /// @brief Get current progress of the animation
+        /// @return Progress in range [0, 1] (note that it can be out of this range if the animation is overshooting)
+        [[nodiscard]] double getProgress();
+
         /// @brief Check whether animation has finished
         /// @return True if it has finished
         [[nodiscard]] bool isFinished() const;

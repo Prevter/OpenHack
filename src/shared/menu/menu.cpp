@@ -18,6 +18,7 @@ void markdownOpenLink(ImGui::MarkdownLinkCallbackData data) { openhack::utils::o
 namespace openhack::menu {
     bool isOpened = false;
     bool isInitialized = false;
+    bool isAnimating = false;
     std::vector<gui::Window> windows;
     std::vector<gui::animation::MoveAction *> moveActions;
 
@@ -90,6 +91,8 @@ namespace openhack::menu {
 
         // Update cursor state
         updateCursorState();
+
+        isAnimating = true;
     }
 
     bool isOpen() { return isOpened; }
@@ -204,6 +207,7 @@ namespace openhack::menu {
                            gui::animation::EASING_COUNT);
                 gui::combo("Easing Mode", "menu.easingMode", gui::animation::EASING_MODE_NAMES, 3);
                 gui::width();
+                gui::checkbox("Animate Opacity", "menu.animateOpacity");
             });
 
             // TODO: Implement blur properly
@@ -284,6 +288,7 @@ namespace openhack::menu {
         switch (firstRunState) {
             case 0:
                 gui::setStyles();
+                ImGui::GetStyle().Alpha = 0.0f;
                 for (auto &window: windows) {
                     window.draw();
                 }
@@ -297,6 +302,7 @@ namespace openhack::menu {
                     auto target = randomWindowPosition(window);
                     window.setDrawPosition(target);
                 }
+                ImGui::GetStyle().Alpha = 1.0f;
                 firstRunState = 2;
                 return;
             default:
@@ -366,6 +372,14 @@ namespace openhack::menu {
             action->update(utils::getDeltaTime());
         }
 
+        // Change opacity of the menu to the latest action progress
+        if (isAnimating && !moveActions.empty() && config::get<bool>("menu.animateOpacity", false)) {
+            auto lastAction = moveActions.back();
+            auto progress = std::clamp(lastAction->getProgress(), 0.0, 1.0);
+            if (!isOpened) progress = 1.0 - progress;
+            ImGui::GetStyle().Alpha = static_cast<float>(progress);
+        }
+
         // Update embedded hacks
         for (auto &hack: hacks::getEmbeddedHacks()) {
             hack->update();
@@ -383,6 +397,11 @@ namespace openhack::menu {
                             return false;
                         }),
                 moveActions.end());
+
+        // Reset animation flag if there are no more actions
+        if (moveActions.empty()) {
+            isAnimating = false;
+        }
 
         if (!isVisible())
             return;

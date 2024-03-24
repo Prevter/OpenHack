@@ -25,6 +25,7 @@ namespace openhack::config {
         setIfEmpty("menu.rainbow.saturation", 65.0f);
         setIfEmpty("menu.rainbow.value", 65.0f);
         setIfEmpty("menu.checkForUpdates", true);
+        setIfEmpty("menu.animateOpacity", false);
         setIfEmpty("keybinds.ingame", false);
     }
 

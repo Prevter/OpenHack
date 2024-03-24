@@ -103,6 +103,7 @@ namespace openhack::gui {
             color = config::get<Color>("menu.color.primary");
         }
 
+        color.a *= ImGui::GetStyle().Alpha;
         auto scale = config::getGlobal<float>("UIScale");
 
         ImGui::GetWindowDrawList()->AddLine(
@@ -156,6 +157,7 @@ namespace openhack::gui {
 
         auto scale = config::getGlobal<float>("UIScale");
 
+        textColor.a *= ImGui::GetStyle().Alpha;
         ImGui::GetWindowDrawList()->AddRectFilled(
                 ImVec2(ImGui::GetItemRectMax().x - 5 * scale, ImGui::GetItemRectMin().y + 1 * scale),
                 ImVec2(ImGui::GetItemRectMax().x - 2 * scale, ImGui::GetItemRectMax().y - 1 * scale),
@@ -203,11 +205,13 @@ namespace openhack::gui {
         auto right = ImGui::GetItemRectMax().x - (6 * scale);
         auto side = bottom - top;
         auto left = right - side;
+        auto triangleColor = config::get<Color>("menu.color.textDisabled");
+        triangleColor.a *= ImGui::GetStyle().Alpha;
         ImGui::GetWindowDrawList()->AddTriangleFilled(
                 ImVec2(right, top),
                 ImVec2(left, bottom),
                 ImVec2(right, bottom),
-                config::get<Color>("menu.color.textDisabled"));
+                triangleColor);
 
         std::string popupName = std::string("##") + label;
         if (openPopup)
@@ -277,6 +281,7 @@ namespace openhack::gui {
         auto right = ImGui::GetItemRectMax().x - (6 * scale);
         auto side = bottom - top;
         auto left = right - side;
+        color.a *= ImGui::GetStyle().Alpha;
         ImGui::GetWindowDrawList()->AddTriangleFilled(
                 ImVec2(right, top),
                 ImVec2(left, bottom),
