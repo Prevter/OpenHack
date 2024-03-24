@@ -53,6 +53,23 @@ namespace openhack::config {
         storage[key] = value;
     }
 
+    /// @brief Check if the value is of the specified type.
+    /// @tparam T Type to check.
+    /// @param key Key to check.
+    /// @return True if the value is of the specified type.
+    template<typename T>
+    inline bool is(const std::string &key) {
+        if (!has(key))
+            return false;
+
+        try {
+            storage.at(key).get<T>();
+            return true;
+        } catch (const nlohmann::json::exception &e) {
+            return false;
+        }
+    }
+
     /// @brief Set a value by key in the configuration if the key does not exist.
     /// @tparam T Type of the value to set.
     /// @param key Key to set the value to.
