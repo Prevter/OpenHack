@@ -14,6 +14,7 @@ namespace openhack::hooks::GJBaseGameLayerHook {
         hacks::NoclipLimit::processCommands();
         reinterpret_cast<gd::GJBaseGameLayer *>(self)->processCommands();
         hacks::Hitboxes::processCommands();
+        hacks::Zephyrus::GJBaseGameLayerProcessCommands();
     }
 }
 
@@ -21,7 +22,6 @@ namespace openhack::hooks {
     struct GJBaseGameLayerHook2 : geode::Modify<GJBaseGameLayerHook2, GJBaseGameLayer> {
         void update(float dt) {
             hacks::FrameStepper::gameUpdate(&dt);
-            hacks::Zephyrus::GJBaseGameLayerProcessCommands();
             hacks::Display::schedulerUpdate(dt, [&](float dt) {
                 GJBaseGameLayer::update(dt);
             });
