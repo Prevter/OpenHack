@@ -3,7 +3,7 @@
 #include "classic/classic.hpp"
 #include "megahack/megahack.hpp"
 #include "modern/modern.hpp"
-// #include "steam2000/steam2000.hpp"
+#include "gruvbox/gruvbox.hpp"
 
 namespace openhack::gui {
     bool Theme::beginWindow(const char *name, bool *open, ImGuiWindowFlags flags) {
@@ -94,8 +94,8 @@ namespace openhack::gui {
     }
 
     void Theme::popupSettings(const char *label, const std::function<void()> &content, ImVec2 size) {
-        // 95% is taken by a transparent button with label
-        // 5% is taken by the small button with the arrow
+        // 88% is taken by a transparent button with label
+        // 12% is taken by the small button with the arrow
         ImGui::PushItemWidth(-1);
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
@@ -105,8 +105,8 @@ namespace openhack::gui {
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
 
         auto availWidth = ImGui::GetContentRegionAvail().x;
-        auto buttonSize = ImVec2(availWidth * 0.9f, 0);
-        auto arrowSize = ImVec2(availWidth * 0.1f, 0);
+        auto buttonSize = ImVec2(availWidth * 0.885f, 0);
+        auto arrowSize = ImVec2(availWidth * 0.115f, 0);
 
         if (size.x > 0) {
             buttonSize.x *= size.x;
@@ -227,8 +227,8 @@ namespace openhack::gui {
 
     bool Theme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size,
                               float minWidth) {
-        // 95% is taken by a transparent button with label
-        // 5% is taken by the small button with the arrow
+        // 88% is taken by a transparent button with label
+        // 12% is taken by the small button with the arrow
         ImGui::PushItemWidth(-1);
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
@@ -254,8 +254,8 @@ namespace openhack::gui {
         }
 
         auto availWidth = ImGui::GetContentRegionAvail().x;
-        auto buttonSize = ImVec2(availWidth * 0.9f, 0);
-        auto arrowSize = ImVec2(availWidth * 0.1f, 0);
+        auto buttonSize = ImVec2(availWidth * 0.885f, 0);
+        auto arrowSize = ImVec2(availWidth * 0.115f, 0);
 
         if (size.x > 0) {
             buttonSize.x *= size.x;
@@ -308,11 +308,15 @@ namespace openhack::gui {
             case Themes::Classic:
                 setTheme(new ClassicTheme());
                 break;
+            default:
             case Themes::Modern:
                 setTheme(new ModernTheme());
                 break;
             case Themes::MegaHack:
                 setTheme(new MegaHackTheme());
+                break;
+            case Themes::Gruvbox:
+                setTheme(new GruvboxTheme());
                 break;
         }
     }

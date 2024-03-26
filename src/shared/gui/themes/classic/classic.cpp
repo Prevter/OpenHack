@@ -68,6 +68,9 @@ namespace openhack::gui {
         config::set("menu.color.border", Color(0.0f, 0.0f, 0.0f, 1.0f)); // Border color
         config::set("menu.color.hovered", Color(0.12f, 0.43f, 0.65f, 1.00f)); // Item hovered
         config::set("menu.color.clicked", Color(0.11f, 0.36f, 0.55f, 1.00f)); // Item clicked
+
+        config::set("menu.windowRounding", 0.0f);
+        config::set("menu.frameRounding", 0.0f);
     }
 
 }

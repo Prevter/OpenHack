@@ -124,6 +124,8 @@ namespace openhack::gui
         MegaHack = 1,
         /// @brief Modern UI theme.
         Modern = 2,
+        /// @brief Gruvbox theme.
+        Gruvbox = 3,
     };
 
     /// @brief The names of the themes.
@@ -131,6 +133,7 @@ namespace openhack::gui
         "Classic",
         "MegaHack",
         "Modern",
+        "Gruvbox",
     };
 
     /// @brief The count of the themes.

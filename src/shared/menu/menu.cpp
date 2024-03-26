@@ -283,8 +283,6 @@ namespace openhack::menu {
         config::setGlobal("UIScale", ratio * currentScale);
 
         // Get the window sizes for the first run
-        // TODO: This is a bit of a hack, because windows are drawn for one frame on boot.
-        //       I should at least make the windows invisible for this frame.
         switch (firstRunState) {
             case 0:
                 gui::setStyles();

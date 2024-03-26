@@ -1,17 +1,17 @@
-#include "modern.hpp"
+#include "gruvbox.hpp"
 
 namespace openhack::gui {
 
-    void ModernTheme::setStyles() {
+    void GruvboxTheme::setStyles() {
         auto &style = ImGui::GetStyle();
-        style.WindowPadding = ImVec2(5, 4);
+        style.WindowPadding = ImVec2(4, 4);
         style.WindowRounding = config::get<float>("menu.windowRounding");
-        style.FramePadding = ImVec2(4, 3);
+        style.FramePadding = ImVec2(4, 2);
         style.FrameRounding = config::get<float>("menu.frameRounding");
         style.PopupRounding = config::get<float>("menu.frameRounding");
-        style.ItemSpacing = ImVec2(12, 3);
+        style.ItemSpacing = ImVec2(12, 2);
         style.ItemInnerSpacing = ImVec2(8, 6);
-        style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
+        style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
         style.IndentSpacing = 25.0f;
         style.ScrollbarSize = 15.0f;
         style.ScrollbarRounding = 9.0f;
@@ -32,7 +32,8 @@ namespace openhack::gui {
         colors[ImGuiCol_TitleBg] =
         colors[ImGuiCol_TitleBgActive] =
         colors[ImGuiCol_TitleBgCollapsed] =
-                config::get<Color>("menu.color.accent");
+                config::get<Color>(config::get<bool>("menu.rainbow.enabled", false) ? "menu.color.accent"
+                                                                                    : "menu.color.background");
 
         colors[ImGuiCol_Button] = config::get<Color>("menu.color.primary");
         colors[ImGuiCol_ButtonHovered] = config::get<Color>("menu.color.hovered");
@@ -58,143 +59,114 @@ namespace openhack::gui {
         colors[ImGuiCol_HeaderActive] = config::get<Color>("menu.color.clicked");
     }
 
-    void ModernTheme::loadPalette() {
-        config::set("menu.color.text", Color(1.0f, 1.0f, 1.0f, 1.0f)); // Text color
-        config::set("menu.color.textDisabled", Color(0.5f, 0.5f, 0.5f, 0.95f)); // Disabled text color
-        config::set("menu.color.background", Color(0.07f, 0.07f, 0.07f, 0.9f)); // Window background
-        config::set("menu.color.accent", Color(0.12f, 0.12f, 0.12f, 1.0f)); // Title background
-        config::set("menu.color.primary", Color(0.73f, 0.53f, 0.99f, 1.00f)); // Buttons, etc.
-        config::set("menu.color.secondary", Color(0.12f, 0.12f, 0.12f, 0.95f)); // Frame background
-        config::set("menu.color.border", Color(0.0f, 0.0f, 0.0f, 1.0f)); // Border color
-        config::set("menu.color.hovered", Color(0.58f, 0.42f, 0.79f, 1.00f)); // Item hovered
-        config::set("menu.color.clicked", Color(0.44f, 0.31f, 0.58f, 1.00f)); // Item clicked
+    void GruvboxTheme::loadPalette() {
+        config::set("menu.color.text", Color(0.92f, 0.86f, 0.7f, 1.0f)); // Text color
+        config::set("menu.color.textDisabled", Color(0.51f, 0.65f, 0.6f, 0.95f)); // Disabled text color
+        config::set("menu.color.background", Color(0.24f, 0.22f, 0.21f, 0.999f)); // Window background
+        config::set("menu.color.accent", Color(0.4f, 0.62f, 0.41f, 1.0f)); // Title background
+        config::set("menu.color.primary", Color(0.98f, 0.29f, 0.20f, 1.0f)); // Button color
+        config::set("menu.color.secondary", Color(0.18f, 0.16f, 0.15f, 0.95f)); // Frame background
+        config::set("menu.color.border", Color(0.66f, 0.6f, 0.52f, 1.0f)); // Border color
+        config::set("menu.color.hovered", Color(0.961f, 0.357f, 0.282f, 1.0f)); // Hovered color
+        config::set("menu.color.clicked", Color(0.95f, 0.42f, 0.36f, 1.0f)); // Clicked color
 
-        config::set("menu.windowRounding", 4.0f);
-        config::set("menu.frameRounding", 4.0f);
-        config::set("menu.borderSize", 0.0f);
+        config::set("menu.windowRounding", 0.0f);
+        config::set("menu.frameRounding", 7.0f);
+        config::set("menu.borderSize", 1.0f);
     }
 
-    bool ModernTheme::inputFloat(const char *label, float *value, float min, float max, const char *format) {
-        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0, 0, 0, 0));
-
-        // Add a line border on the bottom
-        auto drawList = ImGui::GetWindowDrawList();
-        auto cursorPos = ImGui::GetCursorScreenPos();
-        auto availWidth = ImGui::CalcItemWidth();
-
-        auto color = config::get<Color>("menu.color.primary");
-        color.a = 0.4f;
+    bool GruvboxCheckbox(const char *label, bool value, float width = -1.0f) {
+        auto *drawList = ImGui::GetWindowDrawList();
+        auto pos = ImGui::GetCursorScreenPos();
         auto scale = config::getGlobal<float>("UIScale");
-        drawList->AddLine(ImVec2(cursorPos.x, cursorPos.y + 24 * scale), ImVec2(cursorPos.x + availWidth, cursorPos.y + 24 * scale), color);
-        bool changed = Theme::inputFloat(label, value, min, max, format);
-        ImGui::PopStyleColor(3);
-        return changed;
-    }
+        auto padding = scale * 3;
+        auto size = ImGui::GetFrameHeight() - padding * 2;
+        auto frameColor = ImGui::GetColorU32(ImGuiCol_FrameBg);
 
-    bool ModernTheme::inputText(const char *label, std::string *value, int bufferSize, const char *placeholder, ImGuiTextFlags flags) {
-        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0, 0, 0, 0));
+        auto start = ImVec2(pos.x + padding, pos.y + padding);
+        auto end = ImVec2(start.x + size, start.y + size);
 
-        // Add a line border on the bottom
-        auto drawList = ImGui::GetWindowDrawList();
-        auto cursorPos = ImGui::GetCursorScreenPos();
-        auto availWidth = ImGui::CalcItemWidth();
+        drawList->AddRectFilled(start, end, frameColor, scale * 6);
+        if (value) {
+            auto checkColor = ImGui::GetColorU32(ImGuiCol_CheckMark);
+            auto checkStart = ImVec2(start.x + 3, start.y + 3);
+            auto checkEnd = ImVec2(end.x - 3, end.y - 3);
+            drawList->AddRectFilled(checkStart, checkEnd, checkColor, scale * 3);
+        }
 
-        auto color = config::get<Color>("menu.color.primary");
-        color.a = 0.4f;
-        auto scale = config::getGlobal<float>("UIScale");
-        drawList->AddLine(ImVec2(cursorPos.x, cursorPos.y + 24 * scale), ImVec2(cursorPos.x + availWidth, cursorPos.y + 24 * scale), color);
-        bool changed = Theme::inputText(label, value, bufferSize, placeholder, flags);
-        ImGui::PopStyleColor(5);
-        ImGui::PopStyleVar();
-        return changed;
-    }
-
-    bool ModernTheme::button(const char *label, const ImVec2 &size) {
-        auto textColor = config::get<Color>("menu.color.text");
-        auto buttonColor = config::get<Color>("menu.color.primary");
-        auto hoveredColor = config::get<Color>("menu.color.hovered");
-        auto clickedColor = config::get<Color>("menu.color.clicked");
-        ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) textColor);
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(buttonColor.r, buttonColor.g, buttonColor.b, 0.4f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(hoveredColor.r, hoveredColor.g, hoveredColor.b, 0.4f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(clickedColor.r, clickedColor.g, clickedColor.b, 0.6f));
-        ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4) buttonColor);
-        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.f);
-
-        if (size.x == 0)
-            ImGui::PushItemWidth(-1);
-
-        auto availWidth = ImGui::GetContentRegionAvail().x;
-        if (size.x > 0)
-            availWidth *= size.x;
-        bool clicked = ImGui::Button(label, ImVec2(availWidth, size.y));
-
-        if (size.x == 0)
-            ImGui::PopItemWidth();
-
-        ImGui::PopStyleColor(5);
-        ImGui::PopStyleVar();
+        auto leftMargin = size + padding * 2;
+        auto btnWidth = width > 0 ? width : ImGui::GetContentRegionAvail().x;
+        bool clicked = ImGui::Button(fmt::format("##{}", label).c_str(), ImVec2(btnWidth, 0));
+        auto buttonPos = ImGui::GetItemRectMin();
+        // get the text before ## if it exists
+        auto text = std::string(label);
+        auto hashPos = text.find("##");
+        if (hashPos != std::string::npos)
+            text = text.substr(0, hashPos);
+        drawList->AddText(ImVec2(buttonPos.x + leftMargin, buttonPos.y + padding / 2),
+                          ImGui::GetColorU32(ImGuiCol_Text), text.c_str());
 
         return clicked;
     }
 
-    bool ModernTheme::checkbox(const char *label, bool *value) {
+    bool GruvboxTheme::checkbox(const char *label, bool *value) {
         ImGui::PushItemWidth(-1.0f);
-        auto textColor = *value ? config::get<Color>("menu.color.primary") : config::get<Color>(
+        auto textColor = *value ? config::get<Color>("menu.color.accent") : config::get<Color>(
                 "menu.color.textDisabled");
 
         if (utils::isSearching()) {
             if (utils::isSearched(label)) {
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+                ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4) config::get<Color>("menu.color.primary"));
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0.1f));
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0.2f));
             } else {
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_CheckMark, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
             }
         } else {
             ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) textColor);
+            ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4) textColor);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0.1f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0.2f));
         }
 
-        bool clicked = ImGui::Button(label, ImVec2(ImGui::GetContentRegionAvail().x, 0));
-
-        ImGui::PopStyleColor(4);
+        bool clicked = GruvboxCheckbox(label, *value);
+        ImGui::PopStyleColor(5);
 
         if (clicked) *value = !*value;
         ImGui::PopItemWidth();
         return clicked;
     }
 
-    bool ModernTheme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size,
+    bool GruvboxTheme::toggleSetting(const char *label, bool *value, const std::function<void()> &popupDraw, ImVec2 size,
                                     float minWidth) {
         ImGui::PushItemWidth(-1.0f);
-        auto textColor = *value ? config::get<Color>("menu.color.primary") : config::get<Color>(
+        auto textColor = *value ? config::get<Color>("menu.color.accent") : config::get<Color>(
                 "menu.color.textDisabled");
 
         if (utils::isSearching()) {
             if (utils::isSearched(label)) {
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
+                ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4) config::get<Color>("menu.color.primary"));
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0.1f));
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0.2f));
             } else {
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
+                ImGui::PushStyleColor(ImGuiCol_CheckMark, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
             }
         } else {
             ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) textColor);
+            ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4) textColor);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0.1f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0.2f));
@@ -209,19 +181,17 @@ namespace openhack::gui {
             arrowSize.x *= size.x;
         }
 
-        bool clicked = ImGui::Button(label, buttonSize);
-        ImGui::PopStyleColor(3);
+        bool clicked = GruvboxCheckbox(label, *value, buttonSize.x);
+        ImGui::PopStyleColor(4);
         ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) config::get<Color>("menu.color.text"));
         gui::callback();
         ImGui::PopStyleColor();
         ImGui::SameLine(0, 0);
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0.1f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0.2f));
         ImGui::SetNextItemWidth(arrowSize.x);
+        ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4) config::get<Color>("menu.color.text"));
         bool openPopup = ImGui::ArrowButton((std::string("##open_") + label).c_str(), ImGuiDir_Right);
         ImGui::PopItemWidth();
-        ImGui::PopStyleColor(4);
+        ImGui::PopStyleColor(2);
         ImGui::PopItemWidth();
 
         if (clicked) *value = !*value;
@@ -240,37 +210,31 @@ namespace openhack::gui {
         return clicked;
     }
 
-    void ModernTheme::popupSettings(const char *label, const std::function<void()> &content, ImVec2 size) {
-        ImGui::PushItemWidth(-1.0f);
+    void GruvboxTheme::popupSettings(const char *label, const std::function<void()> &content, ImVec2 size) {
+        ImGui::PushItemWidth(-1);
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 0.5f));
 
-        if (utils::isSearching() && !utils::isSearched(label)) {
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
-        } else {
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 1, 1, 1));
-        }
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
 
         auto availWidth = ImGui::GetContentRegionAvail().x;
-        auto buttonSize = ImVec2(availWidth * 0.88f, 0);
-        auto arrowSize = ImVec2(availWidth * 0.12f, 0);
+        auto buttonSize = ImVec2(availWidth * 0.885f, 0);
+        auto arrowSize = ImVec2(availWidth * 0.115f, 0);
 
         if (size.x > 0) {
             buttonSize.x *= size.x;
             arrowSize.x *= size.x;
         }
 
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
         ImGui::Button(label, buttonSize);
-        ImGui::PopStyleColor(4);
         ImGui::SameLine(0, 0);
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0.1f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0.2f));
+
+        ImGui::PopStyleColor(3);
+        ImGui::PopStyleVar(2);
         ImGui::SetNextItemWidth(arrowSize.x);
         bool openPopup = ImGui::ArrowButton((std::string("##open_") + label).c_str(), ImGuiDir_Right);
-        ImGui::PopItemWidth();
-        ImGui::PopStyleColor(3);
         ImGui::PopItemWidth();
 
         std::string popupName = std::string("##") + label;
@@ -281,7 +245,6 @@ namespace openhack::gui {
             content();
             ImGui::EndPopup();
         }
-
     }
 
 }

@@ -68,6 +68,10 @@ namespace openhack::gui {
         config::set("menu.color.border", Color(0.0f, 0.0f, 0.0f, 1.0f)); // Border color
         config::set("menu.color.hovered", Color(0.3f, 0.76f, 0.6f, 1.0f)); // Item hovered
         config::set("menu.color.clicked", Color(0.22f, 0.55f, 0.44f, 1.0f)); // Item clicked
+
+        config::set("menu.windowRounding", 0.0f);
+        config::set("menu.frameRounding", 0.0f);
+        config::set("menu.borderSize", 0.0f);
     }
 
     bool MegaHackTheme::button(const char *label, const ImVec2 &size) {
