@@ -20,7 +20,7 @@ namespace openhack::hacks {
 
         // Initialize toggle
         std::vector<gd::sigscan::Opcode> opcodes = gd::sigscan::match(
-                "F30F1005^????68????C6",
+                "E9????F30F1005^????68????C683",
                 utils::bytesToHex(utils::getBytes((uintptr_t)&delay)));
         auto customBypass = gd::sigscan::match("84C0^7410F30F10", "EB");
 
