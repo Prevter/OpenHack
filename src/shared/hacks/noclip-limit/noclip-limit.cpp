@@ -112,7 +112,7 @@ namespace openhack::hacks {
 
     void NoclipLimit::processCommands() {
         auto* playlayer = gd::PlayLayer::get();
-        if (!playlayer || playlayer->m_hasCompletedLevel() || playlayer->m_isDead()) return;
+        if (!playlayer || playlayer->m_hasCompletedLevel() || playlayer->m_player1()->m_isDead()) return;
 
         if (isDead) {
             deathCount++;
