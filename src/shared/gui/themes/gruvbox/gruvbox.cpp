@@ -98,7 +98,6 @@ namespace openhack::gui {
         auto btnWidth = width > 0 ? width : ImGui::GetContentRegionAvail().x;
         bool clicked = ImGui::Button(fmt::format("##{}", label).c_str(), ImVec2(btnWidth, 0));
         auto buttonPos = ImGui::GetItemRectMin();
-        // get the text before ## if it exists
         auto text = std::string(label);
         auto hashPos = text.find("##");
         if (hashPos != std::string::npos)

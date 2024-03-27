@@ -74,6 +74,7 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.hitboxes.solid_color", gui::Color(0, 0.247, 1));
         config::setIfEmpty("hack.hitboxes.danger_color", gui::Color(1, 0, 0));
         config::setIfEmpty("hack.hitboxes.player_color", gui::Color(1, 1, 0));
+        config::setIfEmpty("hack.hitboxes.inner_player_color", gui::Color(1, 0, 0.5f));
         config::setIfEmpty("hack.hitboxes.other_color", gui::Color(0, 1, 0));
 
         // Initialize the toggle component
@@ -147,6 +148,9 @@ namespace openhack::hacks {
             gui::colorEdit("Player Color", "hack.hitboxes.player_color");
             gui::tooltip("Color for the player hitbox.");
 
+            gui::colorEdit("Inner Player Color", "hack.hitboxes.inner_player_color");
+            gui::tooltip("Color for the inner player hitbox.\n(Only visible when accurate player hitbox is enabled.)");
+
             gui::colorEdit("Other Color", "hack.hitboxes.other_color");
             gui::tooltip("Color for other hitboxes (e.g. portals).");
         }, ImVec2(0, 0), 140)) {
@@ -187,6 +191,14 @@ namespace openhack::hacks {
         node->drawPolygon(vertices.data(), vertices.size(),
                           (const gd::cocos2d::_ccColor4F &) color, borderWidth,
                           (const gd::cocos2d::_ccColor4F &) borderColor);
+    }
+
+    inline gd::cocos2d::CCRect scaleHitbox(const gd::cocos2d::CCRect &rect, float scale) {
+        auto width = rect.size.width * scale;
+        auto height = rect.size.height * scale;
+        auto x = rect.origin.x + (rect.size.width - width) / 2;
+        auto y = rect.origin.y + (rect.size.height - height) / 2;
+        return {x, y, width, height};
     }
 
     enum HitboxType {
@@ -263,20 +275,26 @@ namespace openhack::hacks {
             auto fill = config::get<bool>("hack.hitboxes.fill", false);
             auto fillAlpha = config::get<float>("hack.hitboxes.fill_alpha", 0.5f);
             auto scale = config::get<float>("hack.hitboxes.scale", 1.0f);
+            auto innerColor = config::get<gui::Color>("hack.hitboxes.inner_player_color");
             gui::Color borderColor = color;
             gui::Color fillColor(color.r, color.g, color.b, fill ? fillAlpha : 0.f);
+            gui::Color innerFillColor(innerColor.r, innerColor.g, innerColor.b, fill ? fillAlpha : 0.f);
             float borderWidth = 0.25f * scale;
 
             auto *player1 = playLayer->m_player1();
             if (player1) {
                 auto hitbox = getPlayerHitbox(player1);
                 drawRect(debugDrawNode, hitbox, fillColor, borderWidth, borderColor);
+                auto tinyHitbox = scaleHitbox(hitbox, player1->m_vehicleSize() >= 1.f ? 0.25f : 0.4f);
+                drawRect(debugDrawNode, tinyHitbox, innerFillColor, borderWidth, innerColor);
             }
 
             auto *player2 = playLayer->m_player2();
             if (player2) {
                 auto hitbox = getPlayerHitbox(player2);
                 drawRect(debugDrawNode, hitbox, fillColor, borderWidth, borderColor);
+                auto tinyHitbox = scaleHitbox(hitbox, player2->m_vehicleSize() >= 1.f ? 0.25f : 0.4f);
+                drawRect(debugDrawNode, tinyHitbox, innerFillColor, borderWidth, innerColor);
             }
         }
 
