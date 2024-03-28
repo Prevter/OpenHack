@@ -8,8 +8,9 @@
 * Added "Respawn Delay"
 * Added "Main Menu Gameplay"
 * Added "Auto Deafen"
+* Added "Smart StartPos"
 * Added API for mod developers
-* Added new themes
+* Added 2 new themes (Modern and Gruvbox)
 
 **Fixes**:
 * Fixed "StartPos Switcher" default index being maxed out
@@ -22,6 +23,8 @@
 * Fixed build errors when building the project with "BUILD_STANDALONE=OFF"
 * Fixed "Noclip Accuracy" counting after death/level completion
 * Fixed "Verify Hack" not working properly in some cases
+* Fixed "Force Platformer" saving level type
+* Fixed incompatibility with "Separate Dual Icons" mod when using "Unlock All Icons"
 
 **Other**:
 * Improved menu close/open animations
