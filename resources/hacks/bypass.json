@@ -130,12 +130,16 @@
       "id": "bypass.icons",
       "opcodes": [
         {
-          "pattern": "8BD98B7D0C8B750885FF",
-          "mask": "E9@4(EB028AC3^8B4DF464890D00000000)"
+          "pattern": "83FE04^7D04B001",
+          "mask": "9090"
         },
         {
-          "pattern": "8BD98B75088B7D0C",
-          "mask": "EB@1(8AD88AC3^8B4DF4)"
+          "pattern": "85FF^750C83FE05",
+          "mask": "EB"
+        },
+        {
+          "pattern": "83FE02^7D07B001",
+          "mask": "9090"
         }
       ]
     },
