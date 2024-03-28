@@ -125,7 +125,11 @@
       "opcodes": [
         {
           "pattern": "8A9019010000",
-          "mask": "B20190909090*2A?EB"
+          "mask": "B20190909090"
+        },
+        {
+          "pattern": "80BF????00^74108B87",
+          "mask": "EB"
         }
       ],
       "cheat": true
