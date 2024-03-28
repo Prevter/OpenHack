@@ -473,7 +473,7 @@ namespace openhack::menu {
 
         const auto scale = config::getGlobal<float>("UIScale");
         float windowWidth = gui::Window::MIN_SIZE.x * scale;
-        auto columns = (size_t) ((screenSize.x - snap) / (windowWidth + snap));
+        auto columns = (int) ((screenSize.x - snap) / (windowWidth + snap));
 
         std::map<gui::Window *, ImVec2> positions;
 
@@ -489,7 +489,7 @@ namespace openhack::menu {
             }
         }
 
-        if (columns == 0)
+        if (columns <= 0)
             return positions;
 
         // Rest are stacked to take as little space as possible
