@@ -293,6 +293,10 @@
     {
       "type": "embedded",
       "hack": "respawn_delay"
+    },
+    {
+      "type": "embedded",
+      "hack": "smart_startpos"
     }
   ]
 }

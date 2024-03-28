@@ -8,6 +8,7 @@
 #include "../../shared/hacks/zephyrus/replays.hpp"
 #include "../../shared/hacks/random-seed/random-seed.hpp"
 #include "../../shared/hacks/hitboxes/hitboxes.hpp"
+#include "../../shared/hacks/smart-startpos/smart-startpos.hpp"
 
 #include <Geode/modify/PlayLayer.hpp>
 
@@ -18,6 +19,7 @@ namespace openhack::hooks {
             hacks::AutoPickupCoins::initLevel();
             hacks::StartPosSwitcher::initLevel();
             hacks::Labels::playLayerInit();
+            hacks::SmartStartPos::initLevel();
 
             if (!PlayLayer::init(level, useReplay, dontCreateObjects))
                 return false;
@@ -46,6 +48,7 @@ namespace openhack::hooks {
             PlayLayer::addObject(object);
             hacks::AutoPickupCoins::addObject(reinterpret_cast<gd::GameObject *>(object));
             hacks::StartPosSwitcher::addObject(reinterpret_cast<gd::GameObject *>(object));
+            hacks::SmartStartPos::addObject(reinterpret_cast<gd::GameObject *>(object));
         }
 
         void destroyPlayer(PlayerObject* player, GameObject* object) {

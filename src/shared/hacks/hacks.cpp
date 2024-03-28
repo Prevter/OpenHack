@@ -22,6 +22,7 @@
 #include "hitboxes/hitboxes.hpp"
 #include "respawn-delay/respawn-delay.hpp"
 #include "auto-deafen/auto-deafen.hpp"
+#include "smart-startpos/smart-startpos.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -247,6 +248,7 @@ namespace openhack::hacks {
             new Hitboxes(),
             new RespawnDelay(),
             new AutoDeafen(),
+            new SmartStartPos(),
         };
 
         std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;
