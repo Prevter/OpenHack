@@ -5,9 +5,14 @@
 
 namespace openhack::hacks {
 
+    struct PlayerHitbox {
+        gd::cocos2d::CCRect hitbox;
+        gd::cocos2d::CCRect tinyHitbox;
+    };
+
     static ToggleComponent *s_hitboxesToggle = nullptr;
     static bool s_isDead = false, s_skipDrawHook = false;
-    static std::deque<gd::cocos2d::CCRect> s_playerTrail1, s_playerTrail2;
+    static std::deque<PlayerHitbox> s_playerTrail1, s_playerTrail2;
 
     inline void togglePatch() {
         if (!s_hitboxesToggle) return;
@@ -304,14 +309,20 @@ namespace openhack::hacks {
             auto fill = config::get<bool>("hack.hitboxes.fill", false);
             auto fillAlpha = config::get<float>("hack.hitboxes.fill_alpha", 0.5f);
             auto scale = config::get<float>("hack.hitboxes.scale", 1.0f);
+            auto innerColor = config::get<gui::Color>("hack.hitboxes.inner_player_color");
             gui::Color borderColor = color;
             gui::Color fillColor(color.r, color.g, color.b, fill ? fillAlpha : 0.f);
+            gui::Color innerFillColor(innerColor.r, innerColor.g, innerColor.b, fill ? fillAlpha : 0.f);
             float borderWidth = 0.25f * scale;
 
-            for (auto &hitbox: s_playerTrail1)
-                drawRect(debugDrawNode, hitbox, fillColor, borderWidth, borderColor);
-            for (auto &hitbox: s_playerTrail2)
-                drawRect(debugDrawNode, hitbox, fillColor, borderWidth, borderColor);
+            for (auto &hitbox: s_playerTrail1) {
+                drawRect(debugDrawNode, hitbox.hitbox, fillColor, borderWidth, borderColor);
+                drawRect(debugDrawNode, hitbox.tinyHitbox, innerFillColor, borderWidth, innerColor);
+            }
+            for (auto &hitbox: s_playerTrail2) {
+                drawRect(debugDrawNode, hitbox.hitbox, fillColor, borderWidth, borderColor);
+                drawRect(debugDrawNode, hitbox.tinyHitbox, innerFillColor, borderWidth, innerColor);
+            }
         }
     }
 
@@ -346,12 +357,12 @@ namespace openhack::hacks {
 
         if (player1 && !player1->m_isDead()) {
             auto hitbox = getPlayerHitbox(player1);
-            s_playerTrail1.push_back(hitbox);
+            s_playerTrail1.emplace_back(hitbox, scaleHitbox(hitbox, player1->m_vehicleSize() >= 1.f ? 0.25f : 0.4f));
         }
 
         if (player2 && !player2->m_isDead()) {
             auto hitbox = getPlayerHitbox(player2);
-            s_playerTrail2.push_back(hitbox);
+            s_playerTrail2.emplace_back(hitbox, scaleHitbox(hitbox, player2->m_vehicleSize() >= 1.f ? 0.25f : 0.4f));
         }
 
         // Remove old player trail

@@ -1,3 +1,7 @@
+## v.2.2.1
+* Fixed crash with corrupted config files (again)
+* Added inner hitbox for hitbox trail
+
 ## v2.2.0
 **New**:
 * Added "TPS Bypass"
