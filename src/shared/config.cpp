@@ -39,13 +39,14 @@ namespace openhack::config {
             return;
         }
 
-        try {
-            file >> storage;
+        storage = nlohmann::json::parse(file, nullptr, false);
+        if (storage.is_discarded()) {
             file.close();
-        } catch (const nlohmann::json::parse_error &e) {
-            file.close();
-            L_WARN("Failed to parse config file: {}", e.what());
+            L_WARN("Failed to parse config file, creating a new one");
+            storage = nlohmann::json();
             save();
+        } else {
+            file.close();
         }
     }
 
