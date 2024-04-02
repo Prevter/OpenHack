@@ -47,7 +47,7 @@ namespace openhack::hacks {
     inline bool robtopHitboxCheck() {
         auto *playLayer = gd::PlayLayer::get();
         if (!playLayer) return false;
-        return playLayer->m_isPracticeMode() && gd::GameManager::sharedState()->getGameVariable("0045");
+        return playLayer->m_isPracticeMode() && gd::GameManager::sharedState()->getGameVariable("0166");
     }
 
     /// @brief Clears the hitboxes if the feature is disabled.
