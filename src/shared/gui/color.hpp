@@ -7,6 +7,8 @@
 
 #ifdef OPENHACK_STANDALONE
 #include <spdlog/fmt/fmt.h>
+#else
+#include <fmt/format.h>
 #endif
 
 namespace openhack::gui {
