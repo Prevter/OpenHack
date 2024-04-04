@@ -33,5 +33,13 @@
 		"include": [
 			"api/*.hpp"
 		]
+	},
+	"settings": {
+		"legacy-render": {
+			"name": "Use Legacy rendering",
+			"description": "Use OpenGL 2.0 instead of OpenGL 3.0 for rendering, which can solve some rendering issues on older hardware",
+			"type": "bool",
+			"default": false
+		}
 	}
 }
