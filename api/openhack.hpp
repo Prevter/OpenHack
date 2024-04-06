@@ -18,7 +18,11 @@
 
 #ifdef OPENHACK_OPTIONAL
 // Call the methods directly from the DLL.
+#ifdef GEODE_IS_WINDOWS
 #define OPENHACK_DLL_NAME "prevter.openhack.dll"
+#else
+#define OPENHACK_DLL_NAME "xinput9_1_0.dll"
+#endif
 
 #define CREATE_OPENHACK_DLL_METHOD(signature, callingConvention, methodBody)  \
     auto library = GetModuleHandleA(OPENHACK_DLL_NAME);           \
