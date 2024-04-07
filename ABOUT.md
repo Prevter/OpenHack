@@ -13,9 +13,11 @@ OpenHack is a free and open source collection of hacks for Geometry Dash version
 Please visit the [issues](https://github.com/prevter/gdopenhack/issues) page for known issues and planned features (and feel free to leave your own suggestions).
 
 ## Features
-- 70+ hacks (including noclip, speedhack, etc.)
+- 100+ hacks (including noclip, speedhack, etc.)
 - Customizable menu with animations
 - StartPos Switcher
+- Show Hitboxes
+- Replay Bot
 - Keybinds
 - Discord RPC
 

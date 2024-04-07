@@ -56,6 +56,8 @@ Please visit the [issues](https://github.com/prevter/gdopenhack/issues) page for
 - Customizable GUI with a variety of settings and themes.
 - Noclip, speedhack, and other popular hacks.
 - StartPos Switcher
+- Show Hitboxes
+- Replay Bot 
 - Customizable keybinds
 - Discord Rich Presence
 - Automatic updates
