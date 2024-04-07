@@ -67,14 +67,14 @@ namespace openhack::hooks::PlayLayer {
         hacks::Hitboxes::fullReset();
     }
 
-    void playEndAnimationToPos(cocos2d::CCPoint pos) {
+    void playEndAnimationToPos(gd::PlayLayer *self, cocos2d::CCPoint pos) {
         hacks::Zephyrus::endAnimation();
-        hook::PlayLayer::playEndAnimationToPos(pos);
+        hook::PlayLayer::playEndAnimationToPos(self, pos);
     }
 
-    void playPlatformerEndAnimationToPos(cocos2d::CCPoint pos, bool unk) {
+    void playPlatformerEndAnimationToPos(gd::PlayLayer *self, cocos2d::CCPoint pos, bool unk) {
         hacks::Zephyrus::endAnimation();
-        hook::PlayLayer::playPlatformerEndAnimationToPos(pos, unk);
+        hook::PlayLayer::playPlatformerEndAnimationToPos(self, pos, unk);
     }
 
     void installHooks() {
