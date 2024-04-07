@@ -1,3 +1,14 @@
+## v.2.2.2
+* Fixed hitboxes showing up in practice mode when they shouldn't
+* Fixed hitboxes not working with mirror portals 
+* Fixed player getting stuck in the air on level complete in replays
+* Added a toggle to fix player rotation in replays
+* Fixed issues with macOS (Wine) and older hardware (OpenGL 2.1)
+* Added a toggle into mod settings to enable legacy OpenGL support
+
+**Other**:
+* Added symbols export to help with debugging
+
 ## v.2.2.1
 * Fixed crash with corrupted config files (again)
 * Added inner hitbox for hitbox trail
