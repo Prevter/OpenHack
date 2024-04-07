@@ -67,6 +67,16 @@ namespace openhack::hooks {
             PlayLayer::fullReset();
             hacks::Hitboxes::fullReset();
         }
+
+        void playEndAnimationToPos(cocos2d::CCPoint pos) {
+            hacks::Zephyrus::endAnimation();
+            PlayLayer::playEndAnimationToPos(pos);
+        }
+
+        void playPlatformerEndAnimationToPos(cocos2d::CCPoint pos, bool unk) {
+            hacks::Zephyrus::endAnimation();
+            PlayLayer::playPlatformerEndAnimationToPos(pos, unk);
+        }
     };
 }
 

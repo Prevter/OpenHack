@@ -16,6 +16,7 @@ namespace openhack::hacks {
         // Set the default value
         config::setIfEmpty("zephyrus.state", 0);
         config::setIfEmpty("zephyrus.fixFrames", true);
+        config::setIfEmpty("zephyrus.rotationFix", true);
         // config::setIfEmpty("zephyrus.fixMode", 2);
 
         // Initialize Zephyrus
@@ -51,7 +52,10 @@ namespace openhack::hacks {
             playerObj->m_position().y = data.y;
             playerObj->m_yAccel(data.ySpeed);
             playerSpr->setPosition({data.x, data.y});
-            // playerSpr->setRotation(data.rotation);
+
+            if (config::get<bool>("zephyrus.rotationFix", true)) {
+                playerSpr->setRotation(data.rotation);
+            }
         });
 
         s_replayEngine.setRequestMacroFixMethod([]() -> zephyrus::Macro::FrameFix {
@@ -105,6 +109,9 @@ namespace openhack::hacks {
                 s_replayEngine.setFixMode(config::get<bool>("zephyrus.fixFrames") ? zephyrus::BotFixMode::EveryFrame : zephyrus::BotFixMode::None);
             }
             gui::tooltip("Fixes the player's position every frame, resulting in a more accurate replay.");
+
+            gui::checkbox("Rotation Fix", "zephyrus.rotationFix");
+            gui::tooltip("Attempts to fix the player's rotation during replays.");
 
             if (gui::button("Clear")) {
                 s_replayEngine.setMacro(zephyrus::Macro());
