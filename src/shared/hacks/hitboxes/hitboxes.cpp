@@ -87,6 +87,13 @@ namespace openhack::hacks {
         bool success = true;
         success &= appendPatch(opcodes, "000000740D^80BB??000000", "*0790");
         success &= appendPatch(opcodes, "000000^741380BE??000000740A", "9090???????9090");
+        if (openhack::debugMode) {
+            // Log the addresses of the patches
+            L_INFO("Hitboxes patch addresses:");
+            for (auto &opcode: opcodes) {
+                L_TRACE("0x{:X}", opcode.address);
+            }
+        }
         if (!success) return;
         s_hitboxesToggle = new ToggleComponent("", "", opcodes);
         togglePatch();
@@ -108,7 +115,7 @@ namespace openhack::hacks {
     }
 
     void Hitboxes::onDraw() {
-        gui::callback([](){
+        gui::callback([]() {
             gui::tooltip("Shows hitboxes for objects in the game");
             menu::keybinds::addMenuKeybind("hitboxes.enabled", "Show Hitboxes", []() {
                 bool enabled = !config::get<bool>("hack.hitboxes.enabled");
@@ -173,7 +180,7 @@ namespace openhack::hacks {
             config::set("hack.hitboxes.death", enabled);
         });
     }
-    
+
     bool Hitboxes::isCheating() {
         return config::get<bool>("hack.hitboxes.enabled", false);
     }
@@ -183,9 +190,8 @@ namespace openhack::hacks {
         return {rect->origin.x, rect->origin.y, rect->size.width, rect->size.height};
     }
 
-    inline void
-    drawRect(gd::cocos2d::CCDrawNode *node, const gd::cocos2d::CCRect &rect, const gui::Color &color, float borderWidth,
-             const gui::Color &borderColor) {
+    inline void drawRect(gd::cocos2d::CCDrawNode *node, const gd::cocos2d::CCRect &rect, const gui::Color &color,
+                         float borderWidth, const gui::Color &borderColor) {
         std::vector<gd::cocos2d::CCPoint> vertices = {
                 gd::cocos2d::CCPoint(rect.getMinX(), rect.getMinY()),
                 gd::cocos2d::CCPoint(rect.getMinX(), rect.getMaxY()),
@@ -226,6 +232,7 @@ namespace openhack::hacks {
             s_skipDrawHook = false;
             return;
         }
+
         if (!gd::PlayLayer::get()) return;
         if (!shouldDrawHitboxes()) return;
 

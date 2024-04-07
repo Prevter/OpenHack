@@ -24,6 +24,16 @@ namespace openhack::hacks {
                 utils::bytesToHex(utils::getBytes((uintptr_t)&delay)));
         auto customBypass = gd::sigscan::match("84C0^7410F30F10", "EB");
 
+        if (openhack::debugMode) {
+            L_INFO("Respawn Delay patch addresses:");
+            for (auto& opcode : opcodes) {
+                L_TRACE("[Set custom time] 0x{:x}", opcode.address);
+            }
+            for (auto& opcode : customBypass) {
+                L_TRACE("[Bypass 0.5s restart] 0x{:x}", opcode.address);
+            }
+        }
+
         if (opcodes.empty() || customBypass.empty()) {
             L_WARN("Failed to find signature for RespawnDelay");
             return;

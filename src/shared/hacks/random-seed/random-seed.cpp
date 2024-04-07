@@ -24,6 +24,9 @@ namespace openhack::hacks {
         uintptr_t movToSeedAddr = gd::sigscan::findPattern("A3^????C783??000000000000C6");
         if (movToSeedAddr != 0) {
             s_seedAddr = *reinterpret_cast<uint32_t*>(movToSeedAddr);
+            if (openhack::debugMode) {
+                L_INFO("Found random seed address: 0x{:X}", s_seedAddr);
+            }
         } else {
             L_WARN("Failed to find seed address");
             return;

@@ -1,7 +1,11 @@
 #include "openhack.hpp"
 
 namespace openhack {
+    bool debugMode = false;
+
     void initialize() {
+        debugMode = utils::isKeyDown("Alt");
+
         utils::initRandom();
 
         L_INFO("Initializing OpenHack v" OPENHACK_VERSION "...");

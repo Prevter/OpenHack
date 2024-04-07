@@ -36,4 +36,6 @@ namespace openhack {
 
     /// @brief Unloads everything.
     void deinitialize();
+
+    extern bool debugMode;
 }

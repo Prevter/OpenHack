@@ -19,7 +19,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             xinput::initialize();
 
             // Debugging
-            logger::initialize(false, true, "openhack.log");
+            bool altPressed = openhack::utils::isKeyDown("Alt");
+            logger::initialize(altPressed, true, "openhack.log");
             crashhandler::init();
 
             // TODO: Add support for other versions
