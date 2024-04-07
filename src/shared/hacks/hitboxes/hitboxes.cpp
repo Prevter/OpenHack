@@ -278,8 +278,10 @@ namespace openhack::hacks {
         bool enabled = shouldDrawHitboxes();
         debugDrawNode->setVisible(enabled || robtopHitboxCheck());
 
-        if (playLayer->m_isFlipped())
-            playLayer->updateDebugDraw();
+        // Was used as an attempt to fix hitboxes in mirrored portal
+        // But the problem was actually due to borderWidth being negative
+        // if (playLayer->m_isFlipped())
+        //     playLayer->updateDebugDraw();
 
         // Accurate player hitbox
         if (config::get<bool>("hack.hitboxes.accurate_player", true)) {
