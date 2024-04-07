@@ -10,6 +10,7 @@
 namespace openhack::hacks {
 
     static zephyrus::Zephyrus s_replayEngine;
+    static bool s_levelFinished = false;
 
     void Zephyrus::onInit() {
         // Set the default value
@@ -42,7 +43,7 @@ namespace openhack::hacks {
             auto *playerObj = player == 0 ?
                               playLayer->m_player1() : playLayer->m_player2();
 
-            if (playerObj == nullptr) return;
+            if (playerObj == nullptr || s_levelFinished) return;
 
             // set position
             auto*playerSpr = reinterpret_cast<cocos2d::CCSprite*>(playerObj);
@@ -180,7 +181,12 @@ namespace openhack::hacks {
     void Zephyrus::PlayLayerResetLevel() {
         auto *playLayer = gd::PlayLayer::get();
         if (playLayer == nullptr) return;
+        s_levelFinished = false;
         s_replayEngine.PlayLayerResetLevel();
+    }
+
+    void Zephyrus::endAnimation() {
+        s_levelFinished = true;
     }
 
 }

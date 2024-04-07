@@ -24,6 +24,8 @@ namespace openhack::hacks {
         static void GJBaseGameLayerProcessCommands();
         /// @brief PlayLayer::resetLevel hook
         static void PlayLayerResetLevel();
+        /// @brief PlayLayer::playEndAnimationToPos hook
+        static void endAnimation();
     };
 
 }

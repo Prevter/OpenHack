@@ -67,6 +67,16 @@ namespace openhack::hooks::PlayLayer {
         hacks::Hitboxes::fullReset();
     }
 
+    void playEndAnimationToPos(cocos2d::CCPoint pos) {
+        hacks::Zephyrus::endAnimation();
+        hook::PlayLayer::playEndAnimationToPos(pos);
+    }
+
+    void playPlatformerEndAnimationToPos(cocos2d::CCPoint pos, bool unk) {
+        hacks::Zephyrus::endAnimation();
+        hook::PlayLayer::playPlatformerEndAnimationToPos(pos, unk);
+    }
+
     void installHooks() {
         LOG_HOOK(PlayLayer, init);
         LOG_HOOK(PlayLayer, resetLevel);
@@ -74,5 +84,7 @@ namespace openhack::hooks::PlayLayer {
         LOG_HOOK(PlayLayer, destroyPlayer);
         LOG_HOOK(PlayLayer, postUpdate);
         LOG_HOOK(PlayLayer, fullReset);
+        LOG_HOOK(PlayLayer, playEndAnimationToPos);
+        LOG_HOOK(PlayLayer, playPlatformerEndAnimationToPos);
     }
 }
