@@ -11,9 +11,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-# Export symbols for better debugging
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 # Enable C++ exceptions for Clang-cl
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Xclang -fcxx-exceptions)
@@ -93,6 +90,9 @@ else()
         ${CMAKE_CURRENT_LIST_DIR}/src/geode/*.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/geode/*.hpp
     )
+
+    # Export symbols for better debugging
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
     add_library(
         ${PROJECT_NAME}-Geode
