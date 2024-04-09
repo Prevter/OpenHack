@@ -211,6 +211,26 @@
           "mask": "*0690"
         }
       ]
+    },
+    {
+      "type": "toggle",
+      "title": "Objects Scale Bypass",
+      "description": "Removes the 0.5-2.0 limit, when scaling multiple objects at once.\nWorks in pair with \"Slider Limit\" hack.",
+      "id": "creator.scalebypass",
+      "opcodes": [
+        {
+          "pattern": "8B4424?^F30F100D????F30F1005????8B",
+          "mask": "0F57C9*0590"
+        },
+        {
+          "pattern": "*0F2FC10F^87????0F2F4C24",
+          "mask": "84"
+        },
+        {
+          "pattern": "*0F2F4C24?0F87????",
+          "mask": "*0B90"
+        }
+      ]
     }
   ]
 }
