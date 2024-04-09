@@ -3,17 +3,26 @@
 
 namespace openhack::hacks {
 
+    static ToggleComponent* s_fpsLimitBypass = nullptr;
+
     void Display::onInit() {
         config::setGlobal("physicsTickAddr", gd::sigscan::findPattern("8988883B"));
         config::setIfEmpty("hack.display.tps", 240.0f);
         config::setIfEmpty("hack.display.tps_bypass", false);
+
+        // Patch to remove minimum 60 FPS limit
+        auto match = gd::sigscan::match("0F2F05????^762AFF15", "9090");
+        if (match.empty())
+            L_WARN("Failed to find signature for Display");
+        else
+            s_fpsLimitBypass = new ToggleComponent("", "", match);
 
         // Create window
         menu::addWindow("Display", [&]() {
             bool needRefresh = false;
 
             gui::widthF(0.35f);
-            needRefresh |= gui::inputFloat("##fps", "hack.display.fps", 60.0f, FLT_MAX, "%.0f FPS");
+            needRefresh |= gui::inputFloat("##fps", "hack.display.fps", 5.f, 100000.f, "%.0f FPS");
             ImGui::SameLine(0, 2);
             needRefresh |= gui::checkbox("Unlock FPS", "hack.display.unlock_fps");
             gui::tooltip("Allows to set custom FPS target.");
@@ -25,7 +34,7 @@ namespace openhack::hacks {
             gui::width();
 
             gui::widthF(0.35f);
-            needRefresh |= gui::inputFloat("##tps", "hack.display.tps", 60.0f, FLT_MAX, "%.0f TPS");
+            needRefresh |= gui::inputFloat("##tps", "hack.display.tps", 0.f, 100000.f, "%.0f TPS");
             ImGui::SameLine(0, 2);
             needRefresh |= gui::checkbox("TPS Bypass", "hack.display.tps_bypass");
             gui::tooltip("Makes the game render less frames, but keep the physics updates at target TPS.\nUseful for low-end devices and macros.");
@@ -37,7 +46,7 @@ namespace openhack::hacks {
             gui::width();
 
             gui::widthF(0.35f);
-            needRefresh |= gui::inputFloat("##pfps", "hack.display.pfps", 10.0f, FLT_MAX, "%.0f TPS");
+            needRefresh |= gui::inputFloat("##pfps", "hack.display.pfps", 1.0f, FLT_MAX, "%.0f TPS");
             ImGui::SameLine(0, 2);
             needRefresh |= gui::checkbox("Physics Bypass", "hack.display.physics_bypass");
             gui::tooltip("Allows to set custom physics TPS.\nNote that this setting might break percentage counter and other game mechanics.");
@@ -99,6 +108,9 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.display.vsync", manager->getGameVariable("0030"));
         config::setIfEmpty("hack.display.fullscreen", false);
         config::setIfEmpty("hack.display.borderless", false);
+
+        if (s_fpsLimitBypass)
+            s_fpsLimitBypass->applyPatch(config::get<bool>("hack.display.unlock_fps"));
     }
 
     void Display::refreshRate() {
@@ -112,6 +124,10 @@ namespace openhack::hacks {
         // Save settings
         manager->setGameVariable("0030", vsync);
         manager->setGameVariable("0116", unlockFps);
+
+        // Apply FPS limit bypass
+        if (s_fpsLimitBypass)
+            s_fpsLimitBypass->applyPatch(unlockFps);
 
         // Set Vertical Sync
         application->toggleVerticalSync(vsync);
@@ -130,13 +146,13 @@ namespace openhack::hacks {
         bool bypass = config::get<bool>("hack.display.physics_bypass");
         float pfps = bypass ? config::get<float>("hack.display.pfps") : 240.0f;
 
-        utils::writeMemory<float>(config::getGlobal<uintptr_t>("physicsTickAddr"), 1.0 / pfps);
+        utils::writeMemory<float>(config::getGlobal<uintptr_t>("physicsTickAddr"), 1.f / pfps);
         if (pfps == 240.0f)
             return;
 
         auto *playLayer = gd::PlayLayer::get();
         if (playLayer && playLayer->m_level()->m_timestamp() > 0) {
-            float startTimestamp = config::getGlobal<float>("startTimestamp");
+            auto startTimestamp = config::getGlobal<float>("startTimestamp");
             float timeMultiplier = pfps / 240.0f;
             float stepsMultiplier = (startTimestamp * timeMultiplier) / playLayer->m_level()->m_timestamp();
             float originalValue = playLayer->m_gameState().m_stepSpeed();
