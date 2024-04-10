@@ -1,0 +1,67 @@
+name: Build OpenHack
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Standalone
+            ci-file: ci-standalone.yml
+          - name: Geode
+            ci-file: ci-geode.yml
+
+    name: OpenHack Build
+    steps:
+      - uses: ./.github/workflows/${{ matrix.config.ci-file }}
+        with:
+          target: ${{ matrix.config.name }}
+
+  package:
+    name: Create nigtly release
+    runs-on: ubuntu-latest
+    needs: ['build']
+
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: OpenHack-Standalone
+          path: ${{ github.workspace }}/bin
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: OpenHack-Geode
+          path: ${{ github.workspace }}/bin
+
+      - name: Prepare standalone zip
+        run: |
+          mkdir -p ${{ github.workspace }}/bin/standalone
+          cp -r ${{ github.workspace }}/bin/openhack ${{ github.workspace }}/bin/standalone/openhack
+          cp ${{ github.workspace }}/bin/xinput9_1_0.dll ${{ github.workspace }}/bin/standalone/xinput9_1_0.dll
+
+      - name: Package standalone
+        run: |
+          7z a -tzip ${{ github.workspace }}/bin/OpenHack-Nightly.zip ${{ github.workspace }}/bin/standalone
+
+      - name: Create nightly release
+        uses: andelf/nightly-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: nightly
+          name: 'Development Release'
+          body: |
+            This is a nightly build of OpenHack for commit ${{ github.sha }}.\nYou can use this build to test the latest features and changes.
+          files: |
+            ${{ github.workspace }}/bin/OpenHack-Nightly.zip
+            ${{ github.workspace }}/bin/prevter.openhack.geode
+            ${{ github.workspace }}/bin/prevter.openhack.pdb
+            ${{ github.workspace }}/bin/xinput9_1_0.dll
