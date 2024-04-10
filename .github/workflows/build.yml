@@ -15,16 +15,16 @@ jobs:
       matrix:
         config:
           - name: Standalone
-            ci: ci-standalone.yml
             os: windows-latest
           - name: Geode
-            ci: ci-geode.yml
             os: windows-latest
 
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     steps:
-      - uses: prevter/openhack/.github/actions/${{ matrix.config.ci }}@lemonade
+      - uses: prevter/openhack/.github/actions/ci-build.yml@lemonade
+        with:
+          target: ${{ matrix.config.name }}
 
   package:
     name: Create nigtly release

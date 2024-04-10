@@ -1,0 +1,26 @@
+# Calls the appropriate build script based on the target configuration.
+
+name: Build OpenHack
+
+on: 
+  workflow_call:
+    inputs:
+      target:
+        description: 'The target configuration to build'
+        required: true
+        default: 'Geode'
+
+jobs:
+  geode:
+    name: Build Geode Mod
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.target == 'Geode' }}
+    steps:
+      - uses: prevter/openhack/.github/actions/ci-geode.yml@lemonade
+
+  standalone:
+    name: Vanilla OpenHack
+    runs-on: windows-latest
+    if: ${{ github.event.inputs.target == 'Standalone' }}
+    steps:
+      - uses: prevter/openhack/.github/actions/ci-standalone.yml@lemonade
