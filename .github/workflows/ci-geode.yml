@@ -1,11 +1,5 @@
 name: Build Geode Mod
 
-on:
-  workflow_run:
-    workflows: ["Build OpenHack"]
-    types:
-      - completed
-
 jobs:
   build:
     strategy:

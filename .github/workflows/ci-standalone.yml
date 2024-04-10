@@ -1,11 +1,5 @@
 name: Build Vanilla Mod
 
-on:
-  workflow_run:
-    workflows: ["Build OpenHack"]
-    types:
-      - completed
-
 env:
   BUILD_TYPE: RelWithDebInfo
 
