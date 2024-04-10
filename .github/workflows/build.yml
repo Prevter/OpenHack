@@ -56,7 +56,7 @@ jobs:
     name: Vanilla OpenHack
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -86,7 +86,7 @@ jobs:
         cmake --build build --config ${{env.BUILD_TYPE}}
 
     - name: Save artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: OpenHack-Standalone
         path: ${{github.workspace}}/bin
@@ -97,15 +97,10 @@ jobs:
     needs: ['standalone', 'package-geode']
 
     steps:
-      - uses: actions/download-artifact@v3
+      - name: actions/download-artifact@v4
         with:
-          name: OpenHack-Standalone
           path: ${{ github.workspace }}/bin
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: OpenHack-Geode
-          path: ${{ github.workspace }}/bin
+          merge-multiple: true
 
       - name: Prepare standalone zip
         run: |
