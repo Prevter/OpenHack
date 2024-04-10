@@ -24,7 +24,7 @@ jobs:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     steps:
-      - uses: prevter/openhack/.github/workflows/${{ matrix.config.ci }}@lemonade
+      - uses: prevter/openhack/.github/actions/${{ matrix.config.ci }}@lemonade
 
   package:
     name: Create nigtly release
