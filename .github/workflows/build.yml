@@ -15,26 +15,16 @@ jobs:
       matrix:
         config:
           - name: Standalone
+            ci: ci-standalone.yml
             os: windows-latest
           - name: Geode
+            ci: ci-geode.yml
             os: windows-latest
 
-    name: OpenHack Build
+    name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Standalone
-        if: matrix.config.name == 'Standalone'
-        uses: ./.github/workflows/ci-standalone.yml
-
-      - name: Geode
-        if: matrix.config.name == 'Geode'
-        uses: ./.github/workflows/ci-geode.yml
-      
+      - uses: prevter/openhack/.github/workflows/${{ matrix.config.ci }}@lemonade
 
   package:
     name: Create nigtly release
