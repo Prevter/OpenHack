@@ -22,12 +22,12 @@ jobs:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     steps:
-      - uses: prevter/openhack/.github/actions/ci-build.yml@lemonade
+      - uses: prevter/openhack/.github/build@lemonade
         with:
           target: ${{ matrix.config.name }}
 
   package:
-    name: Create nigtly release
+    name: Create Nightly Release
     runs-on: ubuntu-latest
     needs: ['build']
 
