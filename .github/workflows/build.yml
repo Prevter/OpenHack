@@ -111,7 +111,7 @@ jobs:
 
       - name: Package standalone
         run: |
-          7z a -tzip ${{ github.workspace }}/bin/OpenHack-Nightly.zip ${{ github.workspace }}/bin/standalone
+          7z a -tzip ${{ github.workspace }}/bin/OpenHack-Nightly.zip ${{ github.workspace }}/bin/standalone/*
 
       - name: Create nightly release
         uses: andelf/nightly-release@main
@@ -126,4 +126,4 @@ jobs:
             ${{ github.workspace }}/bin/OpenHack-Nightly.zip
             ${{ github.workspace }}/bin/prevter.openhack.geode
             ${{ github.workspace }}/bin/prevter.openhack.pdb
-            ${{ github.workspace }}/bin/xinput9_1_0.dll
+            ${{ github.workspace }}/bin/xinput9_1_0.pdb
