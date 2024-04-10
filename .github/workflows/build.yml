@@ -10,12 +10,12 @@ on:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - name: Standalone
-          # - name: Geode
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     config:
+    #       - name: Standalone
+    #       - name: Geode
 
     name: OpenHack Build
     steps:
