@@ -97,7 +97,8 @@ jobs:
     needs: ['standalone', 'package-geode']
 
     steps:
-      - name: actions/download-artifact@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
           path: ${{ github.workspace }}/bin
           merge-multiple: true
