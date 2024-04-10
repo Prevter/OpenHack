@@ -21,7 +21,8 @@ jobs:
 
     name: OpenHack Build
     steps:
-      - uses: ./.github/workflows/${{ matrix.config.ci-file }}
+      - name: Build OpenHack
+        uses: ./.github/workflows/${{ matrix.config.ci-file }}
         with:
           target: ${{ matrix.config.name }}
 
