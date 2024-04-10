@@ -26,10 +26,12 @@ jobs:
           submodules: recursive
 
       - name: Build the mod
-        uses: geode-sdk/build-geode-mod@main
+        uses: prevter/build-geode-mod@main
         with:
           combine: true
           ccache-variant: ''
+          export-pdb: true
+          build-config: RelWithDebInfo
           configure-args: "-DBUILD_STANDALONE=OFF"
           target: ${{ matrix.config.target }}
 
@@ -39,7 +41,7 @@ jobs:
     needs: ['build']
 
     steps:
-      - uses: geode-sdk/build-geode-mod/combine@main
+      - uses: prevter/build-geode-mod/combine@main
         id: build
 
       - uses: actions/upload-artifact@v4
