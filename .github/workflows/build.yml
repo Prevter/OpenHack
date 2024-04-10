@@ -10,21 +10,24 @@ on:
 
 jobs:
   build:
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     config:
-    #       - name: Standalone
-    #       - name: Geode
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Standalone
+            os: windows-latest
+          - name: Geode
+            os: windows-latest
 
     name: OpenHack Build
+    runs-on: ${{ matrix.config.os }}
     steps:
       - name: Standalone
-        # if: matrix.config.name == 'Standalone'
+        if: matrix.config.name == 'Standalone'
         uses: ./.github/workflows/ci-standalone.yml
 
       - name: Geode
-        # if: matrix.config.name == 'Geode'
+        if: matrix.config.name == 'Geode'
         uses: ./.github/workflows/ci-geode.yml
       
 
