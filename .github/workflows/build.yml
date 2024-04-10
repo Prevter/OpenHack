@@ -13,8 +13,16 @@ env:
 
 jobs:
   geode:
-    name: Build Geode Mod
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Windows
+            os: windows-latest
+
+    name: Geode OpenHack
+    runs-on: ${{ matrix.config.os }}
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,7 +36,7 @@ jobs:
           export-pdb: true
           build-config: ${{env.BUILD_TYPE}}
           configure-args: "-DBUILD_STANDALONE=OFF"
-          target: Geode
+          target: ${{ matrix.config.target }}
 
   package-geode:
     name: Package Geode Mod
