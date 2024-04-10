@@ -1,5 +1,7 @@
 name: Build Geode Mod
 
+on: workflow_call
+
 jobs:
   build:
     strategy:

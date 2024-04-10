@@ -1,5 +1,7 @@
 name: Build Vanilla Mod
 
+on: workflow_call
+
 env:
   BUILD_TYPE: RelWithDebInfo
 
