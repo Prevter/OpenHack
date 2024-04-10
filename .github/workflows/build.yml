@@ -15,16 +15,18 @@ jobs:
       matrix:
         config:
           - name: Standalone
-            ci-file: ci-standalone.yml
           - name: Geode
-            ci-file: ci-geode.yml
 
     name: OpenHack Build
     steps:
-      - name: Build OpenHack
-        uses: ./.github/workflows/${{ matrix.config.ci-file }}
-        with:
-          target: ${{ matrix.config.name }}
+      - name: Standalone
+        if: matrix.config.name == 'Standalone'
+        uses: ./.github/workflows/ci-standalone.yml
+
+      - name: Geode
+        if: matrix.config.name == 'Geode'
+        uses: ./.github/workflows/ci-geode.yml
+      
 
   package:
     name: Create nigtly release
