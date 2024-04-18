@@ -301,6 +301,10 @@
     {
       "type": "embedded",
       "hack": "smart_startpos"
+    },
+    {
+      "type": "embedded",
+      "hack": "auto_kill"
     }
   ]
 }
