@@ -22,9 +22,16 @@
 #ifdef OPENHACK_GEODE
 #include "../geode/pch.hpp"
 #include <gd.hpp>
+
+#define ON_GEODE(...) __VA_ARGS__
+#define ON_STANDALONE(...)
+
 #else
 
 #include "../standalone/pch.hpp"
+
+#define ON_GEODE(...)
+#define ON_STANDALONE(...) __VA_ARGS__
 
 #endif
 

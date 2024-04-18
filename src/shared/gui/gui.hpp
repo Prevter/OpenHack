@@ -4,6 +4,7 @@
 
 #include "themes/themes.hpp"
 #include "window.hpp"
+#include "modal.hpp"
 
 namespace openhack::gui {
     /// @brief Struct containing variants of one font.

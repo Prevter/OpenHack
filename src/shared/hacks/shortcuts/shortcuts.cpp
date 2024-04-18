@@ -12,16 +12,35 @@ namespace openhack::hacks {
 #ifdef PLATFORM_WINDOWS
 
     void Shortcuts::patchGame() {
-        bool success = win32::four_gb::patch();
-        L_INFO("Patched the game to use 4GB of memory: {}", success);
-        MessageBox(nullptr, success ? "Patched the game to use 4GB of memory. Please restart the game."
-                                    : "Failed to patch the game. Could not write to the file.",
-                   "4GB Patch", (success ? MB_ICONINFORMATION : MB_ICONERROR) | MB_OK);
+        gui::Modal::create("4GB Patch", [](gui::Modal *popup) {
+            ImGui::TextWrapped("This patch allows the game to use 4GB, instead of only 2GB.");
+            ImGui::TextWrapped("It is highly recommended to install this patch, as "
+                               "it resolves some \"Out of memory\"/\"Bad Allocation\" crashes.");
 
-        if (success) {
-            // Close the game
-            std::exit(0);
-        }
+            if (gui::button("Apply Patch", {0.5, 0.f})) {
+                bool success = win32::four_gb::patch();
+                L_INFO("Patched the game to use 4GB of memory: {}", success);
+                if (success) {
+                    popup->close();
+                    gui::Modal::create("4GB Patch", [](gui::Modal *popup) {
+                        ImGui::TextWrapped("Patched the game to use 4GB of memory. Please restart the game.");
+                        if (gui::button("Restart")) {
+                            ON_STANDALONE( std::exit(0); ) // TODO: Implement proper restart for standalone
+                            ON_GEODE( geode::utils::game::restart(); )
+                        }
+                    });
+                } else {
+                    popup->close();
+                    gui::Modal::create("4GB Patch", "Failed to patch the game. Could not write to the file.");
+                }
+            }
+
+            ImGui::SameLine(0, 2);
+
+            if (gui::button("Cancel")) {
+                popup->close();
+            }
+        });
     }
 
 #else
@@ -32,7 +51,7 @@ namespace openhack::hacks {
 
 #endif
 
-    void Shortcuts::uncompleteLevel() {
+    void uncompleteLevelConfirmed() {
         if (gd::PlayLayer *playLayer = gd::PlayLayer::get()) {
             auto *level = playLayer->m_level();
             auto *statsManager = gd::GameStatsManager::sharedState();
@@ -63,6 +82,24 @@ namespace openhack::hacks {
             // Save the level
             gd::GameLevelManager::sharedState()->saveLevel(level);
         }
+    }
+
+    void Shortcuts::uncompleteLevel() {
+        gui::Modal::create("Uncomplete level", [](gui::Modal *popup) {
+            ImGui::TextWrapped("This will clear all progress from the current level (except for orbs).");
+            ImGui::TextWrapped("Are you sure you want to uncomplete the level?");
+
+            if (gui::button("Yes", {0.5f, 0.f})) {
+                uncompleteLevelConfirmed();
+                popup->close();
+            }
+
+            ImGui::SameLine(0, 2);
+
+            if (gui::button("Cancel")) {
+                popup->close();
+            }
+        });
     }
 
     void Shortcuts::openOptions() {

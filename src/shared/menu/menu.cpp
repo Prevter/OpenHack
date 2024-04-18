@@ -104,6 +104,21 @@ namespace openhack::menu {
         return isOpened || !moveActions.empty();
     }
 
+    void createOpenURLPopup(const std::string &url) {
+        gui::Modal::create("Open URL", [url](gui::Modal *popup) {
+            ImGui::TextWrapped("You are about to open\n%s in your browser.", url.c_str());
+            ImGui::TextWrapped("Do you want to continue?");
+            if (gui::button("Yes", {0.5f, 0.f})) {
+                utils::openURL(url.c_str());
+                popup->close();
+            }
+            ImGui::SameLine(0, 2);
+            if (gui::button("No")) {
+                popup->close();
+            }
+        });
+    }
+
     void init() {
         // Make sure to initialize ImGui
         gui::init();
@@ -128,10 +143,10 @@ namespace openhack::menu {
 #endif
 
             if (gui::button("Open GitHub page"))
-                utils::openURL(OPENHACK_HOME_URL);
+                createOpenURLPopup(OPENHACK_HOME_URL);
 
             if (gui::button("Join Discord server"))
-                utils::openURL("https://discord.gg/QSd4jUyc45");
+                createOpenURLPopup("https://discord.gg/QSd4jUyc45");
 
             auto searchValue = config::getGlobal<std::string>("searchValue", "");
             gui::widthF(1.0);
@@ -275,6 +290,38 @@ namespace openhack::menu {
 
     uint8_t firstRunState = 0;
 
+    void updateColors() {
+        // Rainbow menu
+        bool rainbowEnabled = config::get<bool>("menu.rainbow.enabled");
+        gui::Color accentOrig;
+        if (rainbowEnabled) {
+            accentOrig = config::get<gui::Color>("menu.color.accent");
+
+            // Calculate new colors
+            auto speed = config::get<float>("menu.rainbow.speed");
+            auto saturation = config::get<float>("menu.rainbow.saturation");
+            auto value = config::get<float>("menu.rainbow.value");
+
+            float r, g, b;
+            ImGui::ColorConvertHSVtoRGB(
+                    (float) ImGui::GetTime() * speed,
+                    saturation / 100.0f,
+                    value / 100.0f,
+                    r, g, b);
+
+            gui::Color primary = {r, g, b, accentOrig.a};
+            config::set("menu.color.accent", primary);
+        }
+
+        // Update theme
+        gui::setStyles();
+
+        // Revert rainbow menu colors
+        if (rainbowEnabled) {
+            config::set("menu.color.accent", accentOrig);
+        }
+    }
+
     void draw() {
         // Calculate relative UI scale against 1080p
         auto resW = ImGui::GetIO().DisplaySize.x;
@@ -311,50 +358,43 @@ namespace openhack::menu {
 #ifdef OPENHACK_STANDALONE
         // Check for updates
         if (config::getGlobal<bool>("update.available", false)) {
-            gui::setStyles();
-            ImGui::OpenPopup("Update Available");
+            gui::Modal::create("Update Available", [](gui::Modal* modal){
+                gui::text("A new version of OpenHack is available!");
+                gui::text("Current version: " OPENHACK_VERSION);
+                gui::text("Latest version: %s", config::getGlobal<std::string>("update.version").c_str());
+
+                std::string content = "# " + config::getGlobal<std::string>("update.title") + "\n" +
+                                      config::getGlobal<std::string>("update.changelog");
+
+                ImGui::MarkdownConfig mdConfig;
+                mdConfig.linkCallback = markdownOpenLink;
+                mdConfig.tooltipCallback = nullptr;
+                mdConfig.imageCallback = nullptr;
+                mdConfig.userData = nullptr;
+                auto font = gui::getFont();
+                mdConfig.headingFormats[0] = {font.title, true};
+                mdConfig.headingFormats[1] = {font.title, false};
+                mdConfig.headingFormats[2] = {font.normal, false};
+
+                ImGui::Markdown(content.c_str(), content.length(), mdConfig);
+
+                if (downloadProgress) {
+                    if (*downloadProgress == 1.0f)
+                        gui::text("Installing update...");
+                    else
+                        gui::progressBar(*downloadProgress);
+                } else {
+                    if (gui::button("Download", ImVec2(0.5, 0))) {
+                        downloadProgress = new float(0.0f);
+                        updater::install(config::getGlobal<std::string>("update.downloadUrl"), downloadProgress);
+                    }
+                    ImGui::SameLine(0, 0);
+                    if (gui::button("Close")) {
+                        modal->close();
+                    }
+                }
+            });
             config::setGlobal("update.available", false);
-        }
-
-        // Update available popup
-        ImGui::SetNextWindowSizeConstraints(ImVec2(400, 0), ImVec2(600, 800));
-        if (ImGui::BeginPopupModal("Update Available", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-            gui::text("A new version of OpenHack is available!");
-            gui::text("Current version: " OPENHACK_VERSION);
-            gui::text("Latest version: %s", config::getGlobal<std::string>("update.version").c_str());
-
-            std::string content = "# " + config::getGlobal<std::string>("update.title") + "\n" +
-                                  config::getGlobal<std::string>("update.changelog");
-
-            ImGui::MarkdownConfig mdConfig;
-            mdConfig.linkCallback = markdownOpenLink;
-            mdConfig.tooltipCallback = nullptr;
-            mdConfig.imageCallback = nullptr;
-            mdConfig.userData = nullptr;
-            auto font = gui::getFont();
-            mdConfig.headingFormats[0] = {font.title, true};
-            mdConfig.headingFormats[1] = {font.title, false};
-            mdConfig.headingFormats[2] = {font.normal, false};
-
-            ImGui::Markdown(content.c_str(), content.length(), mdConfig);
-
-            if (downloadProgress) {
-                if (*downloadProgress == 1.0f)
-                    gui::text("Installing update...");
-                else
-                    gui::progressBar(*downloadProgress);
-            } else {
-                if (gui::button("Download", ImVec2(0.5, 0))) {
-                    downloadProgress = new float(0.0f);
-                    updater::install(config::getGlobal<std::string>("update.downloadUrl"), downloadProgress);
-                }
-                ImGui::SameLine(0, 0);
-                if (gui::button("Close")) {
-                    ImGui::CloseCurrentPopup();
-                }
-            }
-
-            ImGui::EndPopup();
         }
 #endif
 
@@ -403,46 +443,26 @@ namespace openhack::menu {
             isAnimating = false;
         }
 
-        if (!isVisible())
+        if (!isVisible()) {
+            if (!gui::getPopups().empty()) {
+                updateColors();
+                gui::drawPopups();
+            }
             return;
+        }
 
         // Show mouse cursor if the menu is open
         updateCursorState();
 
-        // Rainbow menu
-        bool rainbowEnabled = config::get<bool>("menu.rainbow.enabled");
-        gui::Color accentOrig;
-        if (rainbowEnabled) {
-            accentOrig = config::get<gui::Color>("menu.color.accent");
-
-            // Calculate new colors
-            auto speed = config::get<float>("menu.rainbow.speed");
-            auto saturation = config::get<float>("menu.rainbow.saturation");
-            auto value = config::get<float>("menu.rainbow.value");
-
-            float r, g, b;
-            ImGui::ColorConvertHSVtoRGB(
-                    (float) ImGui::GetTime() * speed,
-                    saturation / 100.0f,
-                    value / 100.0f,
-                    r, g, b);
-
-            gui::Color primary = {r, g, b, accentOrig.a};
-            config::set("menu.color.accent", primary);
-        }
-
-        // Update theme
-        gui::setStyles();
-
-        // Revert rainbow menu colors
-        if (rainbowEnabled) {
-            config::set("menu.color.accent", accentOrig);
-        }
+        // Update colors
+        updateColors();
 
         // Draw all windows
         for (auto &window: windows) {
             window.draw();
         }
+
+        gui::drawPopups();
 
         // Auto reset window positions
         auto isDragging = config::getGlobal("draggingWindow", false);
