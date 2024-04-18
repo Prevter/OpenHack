@@ -29,7 +29,7 @@ jobs:
           submodules: recursive
 
       - name: Build the mod
-        uses: prevter/build-geode-mod@main
+        uses: geode-sdk/build-geode-mod@main
         with:
           combine: true
           ccache-variant: ''
@@ -44,7 +44,7 @@ jobs:
     needs: ['geode']
 
     steps:
-      - uses: prevter/build-geode-mod/combine@main
+      - uses: geode-sdk/build-geode-mod/combine@main
         id: build
 
       - uses: actions/upload-artifact@v4
@@ -121,12 +121,12 @@ jobs:
           tag_name: nightly
           name: 'Development Release'
           body: |
-            This is a nightly build of OpenHack for commit ${{ github.sha }}.
+            This is a nightly build of OpenHack for commit ${{ github.sha }} (${{ github.event.head_commit.message }}).
             You can use this build to test the latest features and changes.
             
             > **Note:** This build is not stable and may contain bugs.
             
-            Changes since the last release: ${{ github.event.before }}..${{ github.sha }}
+            Changes since the last release: https://github.com/Prevter/OpenHack/compare/${{ github.repository.releases[0].tag_name }}...nightly
           files: |
             ${{ github.workspace }}/bin/OpenHack-Nightly.zip
             ${{ github.workspace }}/bin/prevter.openhack.geode
