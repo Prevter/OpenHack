@@ -1,28 +1,7 @@
 #include "hacks.hpp"
 #include "../openhack.hpp"
 #include <dash/sigscan.hpp>
-
-// Hacks
-#include "speedhack/speedhack.hpp"
-#include "display/display.hpp"
-#include "shortcuts/shortcuts.hpp"
-#include "auto-safemode/auto-safemode.hpp"
-#include "instant-complete/instant-complete.hpp"
-#include "auto-pickup-coins/auto-pickup-coins.hpp"
-#include "startpos-switcher/startpos-switcher.hpp"
-#include "discord-rpc/discord-rpc.hpp"
-#include "click-tp/click-tp.hpp"
-#include "labels/labels.hpp"
-#include "noclip-limit/noclip-limit.hpp"
-#include "rgb-icons/rgb-icons.hpp"
-#include "zephyrus/replays.hpp"
-#include "frame-stepper/frame-stepper.hpp"
-#include "random-seed/random-seed.hpp"
-#include "menu-gameplay/menu-gameplay.hpp"
-#include "hitboxes/hitboxes.hpp"
-#include "respawn-delay/respawn-delay.hpp"
-#include "auto-deafen/auto-deafen.hpp"
-#include "smart-startpos/smart-startpos.hpp"
+#include "hack-list.hpp"
 
 namespace openhack::hacks {
     void ToggleComponent::onInit() {
@@ -86,7 +65,6 @@ namespace openhack::hacks {
     static std::vector<gui::Window> windows;
     static std::vector<Component *> components;
     static std::vector<ToggleComponent *> hacks;
-    static std::vector<EmbeddedHack *> embeddedHacks;
 
     /// @brief Read an opcode from a JSON object
     gd::sigscan::Opcode readOpcode(const nlohmann::json &opcode) {
@@ -228,30 +206,7 @@ namespace openhack::hacks {
         }
 
         // Add the embedded hacks
-        embeddedHacks = {
-            new SpeedHack(),
-            new Display(),
-            new Shortcuts(),
-            new AutoSafemode(),
-            new InstantComplete(),
-            new AutoPickupCoins(),
-            new StartPosSwitcher(),
-            new DiscordRPC(),
-            new ClickTeleport(),
-            new Labels(),
-            new NoclipLimit(),
-            new RGBIcons(),
-            new Zephyrus(),
-            new FrameStepper(),
-            new RandomSeed(),
-            new MenuGameplay(),
-            new Hitboxes(),
-            new RespawnDelay(),
-            new AutoDeafen(),
-            new SmartStartPos(),
-        };
-
-        std::vector<EmbeddedHack *> embeddedHacksCopy = embeddedHacks;
+        std::vector<EmbeddedHack*> embeddedHacks = hacks::s_allHacks;
 
         for (const auto &entry: std::filesystem::directory_iterator(hacksDir)) {
             if (entry.is_regular_file() && entry.path().extension() == ".json") {
@@ -432,9 +387,6 @@ namespace openhack::hacks {
         for (auto &hack: embeddedHacks) {
             hack->onInit();
         }
-
-        // Add the embedded hacks back
-        embeddedHacks = embeddedHacksCopy;
     }
 
     std::vector<gui::Window> &getWindows() {
@@ -450,7 +402,7 @@ namespace openhack::hacks {
     }
 
     std::vector<EmbeddedHack *> &getEmbeddedHacks() {
-        return embeddedHacks;
+        return s_allHacks;
     }
 
     bool applyOpcode(const gd::sigscan::Opcode &opcode, bool enable) {
