@@ -1,5 +1,5 @@
 # OpenHack
-A free and open source collection of hacks for Geometry Dash version 2.2.
+A free and open source collection of hacks for Geometry Dash version 2.2.  
 ![Screenshot](prevter.openhack/screenshot-res.png)
 
 ## How to use
