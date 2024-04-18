@@ -121,7 +121,12 @@ jobs:
           tag_name: nightly
           name: 'Development Release'
           body: |
-            This is a nightly build of OpenHack for commit ${{ github.sha }}. You can use this build to test the latest features and changes.
+            This is a nightly build of OpenHack for commit ${{ github.sha }}.
+            You can use this build to test the latest features and changes.
+            
+            > **Note:** This build is not stable and may contain bugs.
+            
+            Changes since the last release: ${{ github.event.before }}..${{ github.sha }}
           files: |
             ${{ github.workspace }}/bin/OpenHack-Nightly.zip
             ${{ github.workspace }}/bin/prevter.openhack.geode
