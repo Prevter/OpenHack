@@ -113,6 +113,10 @@ jobs:
         run: |
           7z a -tzip ${{ github.workspace }}/bin/OpenHack-Nightly.zip ${{ github.workspace }}/bin/standalone/*
 
+      - name: Get latest release tag
+        id: get_latest_release
+        run: echo ::set-output name=tag::$(curl -s https://api.github.com/repos/Prevter/OpenHack/releases/latest | jq -r .tag_name)
+
       - name: Create nightly release
         uses: andelf/nightly-release@main
         env:
@@ -126,7 +130,7 @@ jobs:
             
             > **Note:** This build is not stable and may contain bugs.
             
-            Changes since the last release: https://github.com/Prevter/OpenHack/compare/${{ github.repository.releases[0].tag_name }}...nightly
+            Changes since the last release: https://github.com/Prevter/OpenHack/compare/${{ steps.get_latest_release.outputs.tag }}...nightly
           files: |
             ${{ github.workspace }}/bin/OpenHack-Nightly.zip
             ${{ github.workspace }}/bin/prevter.openhack.geode
