@@ -111,6 +111,8 @@ namespace openhack::hacks {
 
         if (s_fpsLimitBypass)
             s_fpsLimitBypass->applyPatch(config::get<bool>("hack.display.unlock_fps"));
+
+        refreshPhysics();
     }
 
     void Display::refreshRate() {
@@ -147,8 +149,6 @@ namespace openhack::hacks {
         float pfps = bypass ? config::get<float>("hack.display.pfps") : 240.0f;
 
         utils::writeMemory<float>(config::getGlobal<uintptr_t>("physicsTickAddr"), 1.f / pfps);
-        if (pfps == 240.0f)
-            return;
 
         auto *playLayer = gd::PlayLayer::get();
         if (playLayer && playLayer->m_level()->m_timestamp() > 0) {

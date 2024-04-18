@@ -603,6 +603,19 @@ namespace openhack::hacks {
                     if (!playLayer) return std::string("0");
                     return std::to_string(static_cast<uint32_t>(playLayer->m_dTime() * 240.0f));
                 }},
+                {"{time}",        [playLayer]() {
+                    if (!playLayer) return std::string("");
+                    auto time = playLayer->m_dTime();
+                    return fmt::format("{:.3f}", time);
+                }},
+                {"{formatted_time}",        [playLayer]() {
+                    if (!playLayer) return std::string("");
+                    auto time = playLayer->m_dTime();
+                    int minutes = (int) time / 60;
+                    int seconds = (int) time % 60;
+                    int millis = (int) (time * 1000) % 1000;
+                    return fmt::format("{:02d}:{:02d}.{:03d}", minutes, seconds, millis);
+                }},
         };
 
         std::string result = text;
