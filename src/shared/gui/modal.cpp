@@ -20,9 +20,24 @@ namespace openhack::gui {
 
     void Modal::create(const std::string &title, const std::string &message) {
         create(title, [message](Modal *popup) {
-            gui::text("%s", message.c_str());
+            ImGui::TextWrapped("%s", message.c_str());
             if (gui::button("OK")) {
                 popup->close();
+            }
+        });
+    }
+
+    void Modal::create(const std::string &title, const std::string &message, const std::string &firstButton, const std::string &secondButton, const std::function<void(bool)>& callback) {
+        create(title, [message, firstButton, secondButton, callback](Modal *popup) {
+            ImGui::TextWrapped("%s", message.c_str());
+            if (gui::button(firstButton.c_str(), {0.5f, 0.f})) {
+                popup->close();
+                callback(true);
+            }
+            ImGui::SameLine(0, 2);
+            if (gui::button(secondButton.c_str())) {
+                popup->close();
+                callback(false);
             }
         });
     }

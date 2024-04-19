@@ -22,6 +22,14 @@ namespace openhack::gui {
         /// @param message The message to display
         static void create(const std::string &title, const std::string &message);
 
+        /// @brief Create a new popup with a message and two buttons
+        /// @param title The title of the popup
+        /// @param message The message to display
+        /// @param firstButton The text of the first button
+        /// @param secondButton The text of the second button
+        /// @param callback The function that is called when a button is pressed (true for the first button, false for the second button)
+        static void create(const std::string &title, const std::string &message, const std::string &firstButton, const std::string &secondButton, const std::function<void(bool)>& callback);
+
     public:
         Modal(std::string title, std::function<void(Modal *)> onDraw, bool canEscapeClose)
                 : m_title(std::move(title)), m_onDraw(std::move(onDraw)), m_canEscapeClose(canEscapeClose) {}

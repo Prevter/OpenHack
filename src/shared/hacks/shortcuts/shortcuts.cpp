@@ -25,8 +25,8 @@ namespace openhack::hacks {
                     gui::Modal::create("4GB Patch", [](gui::Modal *popup) {
                         ImGui::TextWrapped("Patched the game to use 4GB of memory. Please restart the game.");
                         if (gui::button("Restart")) {
-                            ON_STANDALONE( std::exit(0); ) // TODO: Implement proper restart for standalone
-                            ON_GEODE( geode::utils::game::restart(); )
+                            ON_STANDALONE(std::exit(0);) // TODO: Implement proper restart for standalone
+                            ON_GEODE(geode::utils::game::restart();)
                         }
                     });
                 } else {
@@ -85,21 +85,20 @@ namespace openhack::hacks {
     }
 
     void Shortcuts::uncompleteLevel() {
-        gui::Modal::create("Uncomplete level", [](gui::Modal *popup) {
-            ImGui::TextWrapped("This will clear all progress from the current level (except for orbs).");
-            ImGui::TextWrapped("Are you sure you want to uncomplete the level?");
+        if (!gd::PlayLayer::get()) {
+            gui::Modal::create("Uncomplete level", "You need to be in a level to use this.");
+            return;
+        }
 
-            if (gui::button("Yes", {0.5f, 0.f})) {
-                uncompleteLevelConfirmed();
-                popup->close();
-            }
-
-            ImGui::SameLine(0, 2);
-
-            if (gui::button("Cancel")) {
-                popup->close();
-            }
-        });
+        gui::Modal::create(
+                "Uncomplete level",
+                "This will clear all progress from the current level (except for orbs).\n"
+                "Are you sure you want to uncomplete the level?",
+                "Yes", "Cancel", [](bool confirmed) {
+                    if (confirmed) {
+                        uncompleteLevelConfirmed();
+                    }
+                });
     }
 
     void Shortcuts::openOptions() {
