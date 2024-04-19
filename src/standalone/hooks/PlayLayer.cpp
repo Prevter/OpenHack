@@ -9,6 +9,7 @@
 #include "../../shared/hacks/random-seed/random-seed.hpp"
 #include "../../shared/hacks/hitboxes/hitboxes.hpp"
 #include "../../shared/hacks/smart-startpos/smart-startpos.hpp"
+#include "../../shared/hacks/auto-save/auto-save.hpp"
 
 #include <dash/hook/PlayLayer.hpp>
 
@@ -77,6 +78,11 @@ namespace openhack::hooks::PlayLayer {
         hook::PlayLayer::playPlatformerEndAnimationToPos(self, pos, unk);
     }
 
+    void onQuit(gd::PlayLayer *self) {
+        hacks::AutoSave::onLevelQuit();
+        hook::PlayLayer::onQuit(self);
+    }
+
     void installHooks() {
         LOG_HOOK(PlayLayer, init);
         LOG_HOOK(PlayLayer, resetLevel);
@@ -86,5 +92,6 @@ namespace openhack::hooks::PlayLayer {
         LOG_HOOK(PlayLayer, fullReset);
         LOG_HOOK(PlayLayer, playEndAnimationToPos);
         LOG_HOOK(PlayLayer, playPlatformerEndAnimationToPos);
+        LOG_HOOK(PlayLayer, onQuit);
     }
 }

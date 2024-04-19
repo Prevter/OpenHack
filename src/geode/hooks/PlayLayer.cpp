@@ -9,6 +9,7 @@
 #include "../../shared/hacks/random-seed/random-seed.hpp"
 #include "../../shared/hacks/hitboxes/hitboxes.hpp"
 #include "../../shared/hacks/smart-startpos/smart-startpos.hpp"
+#include "../../shared/hacks/auto-save/auto-save.hpp"
 
 #include <Geode/modify/PlayLayer.hpp>
 
@@ -76,6 +77,11 @@ namespace openhack::hooks {
         void playPlatformerEndAnimationToPos(cocos2d::CCPoint pos, bool unk) {
             hacks::Zephyrus::endAnimation();
             PlayLayer::playPlatformerEndAnimationToPos(pos, unk);
+        }
+
+        void onQuit() {
+            hacks::AutoSave::onLevelQuit();
+            PlayLayer::onQuit();
         }
     };
 }

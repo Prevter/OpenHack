@@ -21,6 +21,7 @@
 #include "auto-deafen/auto-deafen.hpp"
 #include "smart-startpos/smart-startpos.hpp"
 #include "auto-kill/auto-kill.hpp"
+#include "auto-save/auto-save.hpp"
 
 #include <vector>
 #include <memory>
@@ -49,7 +50,8 @@ namespace openhack::hacks {
         new RespawnDelay(),
         new AutoDeafen(),
         new SmartStartPos(),
-        new AutoKill()
+        new AutoKill(),
+        new AutoSave(),
     };
 
 }

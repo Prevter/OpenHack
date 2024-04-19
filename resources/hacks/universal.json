@@ -87,6 +87,10 @@
     {
       "type": "embedded",
       "hack": "auto_deafen"
+    },
+    {
+      "type": "embedded",
+      "hack": "auto_save"
     }
   ]
 }
