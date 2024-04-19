@@ -16,7 +16,7 @@ namespace openhack::hacks {
 
     void ClickTeleport::onDraw() {
         gui::checkbox("Click Teleport", "hack.click_tp.enabled");
-        gui::tooltip("Use right click to teleport to the location to the mouse cursor.");
+        gui::tooltip("Use right click to teleport to the location of the mouse cursor.");
         menu::keybinds::addMenuKeybind("click_tp.enabled", "Click Teleport", []() {
             bool enabled = !config::get<bool>("hack.click_tp.enabled", false);
             config::set("hack.click_tp.enabled", enabled);

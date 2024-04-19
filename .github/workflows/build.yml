@@ -94,6 +94,7 @@ jobs:
   package:
     name: Create Nightly Release
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     needs: ['standalone', 'package-geode']
 
     steps:
