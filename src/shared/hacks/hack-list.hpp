@@ -23,6 +23,7 @@
 #include "auto-kill/auto-kill.hpp"
 #include "auto-save/auto-save.hpp"
 #include "hide-triggers/hide-triggers.hpp"
+#include "accurate-percentage/accurate-percentage.hpp"
 
 #include <vector>
 #include <memory>
@@ -53,7 +54,8 @@ namespace openhack::hacks {
         new SmartStartPos(),
         new AutoKill(),
         new AutoSave(),
-        new HideTriggers()
+        new HideTriggers(),
+        new AccuratePercentage()
     };
 
 }

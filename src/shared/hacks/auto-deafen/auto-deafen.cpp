@@ -1,6 +1,8 @@
 #include "auto-deafen.hpp"
 #include "../../menu/menu.hpp"
 
+#include "../accurate-percentage/accurate-percentage.hpp"
+
 namespace openhack::hacks {
 
     bool AutoDeafen::isMuted = false;
@@ -9,21 +11,6 @@ namespace openhack::hacks {
         if (state == AutoDeafen::isMuted) return;
         utils::pressKey(config::get<std::string>("hack.auto_deafen.mute_key", "Pause"));
         AutoDeafen::isMuted = state;
-    }
-
-    inline float getCurrentPercent(gd::PlayLayer *playLayer) {
-        float percent;
-        auto *level = playLayer->m_level();
-        auto timestamp = level->m_timestamp();
-        if (timestamp > 0) {
-            percent = static_cast<float>(playLayer->m_gameState().m_stepSpeed()) / timestamp * 100.f;
-        } else {
-            percent = playLayer->m_player1()->m_position().x / playLayer->m_levelLength() * 100.f;
-        }
-
-        if (percent >= 100.f) return 100.f;
-        else if (percent <= 0.f) return 0.f;
-        else return percent;
     }
 
     void AutoDeafen::onInit() {
@@ -73,7 +60,7 @@ namespace openhack::hacks {
         if (playLayer == nullptr) return setState(false);
 
         // Get the current percentage
-        float percentage = getCurrentPercent(playLayer);
+        float percentage = AccuratePercentage::getPercentage();
 
         // Get the mute percentage
         auto startPercentage = config::get<float>("hack.auto_deafen.start_percentage", 75.0f);

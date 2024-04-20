@@ -10,6 +10,7 @@
 #include "../../shared/hacks/hitboxes/hitboxes.hpp"
 #include "../../shared/hacks/smart-startpos/smart-startpos.hpp"
 #include "../../shared/hacks/auto-save/auto-save.hpp"
+#include "../../shared/hacks/accurate-percentage/accurate-percentage.hpp"
 
 #include <Geode/modify/PlayLayer.hpp>
 
@@ -62,6 +63,7 @@ namespace openhack::hooks {
         void postUpdate(float dt) {
             PlayLayer::postUpdate(dt);
             hacks::Hitboxes::postUpdate();
+            hacks::AccuratePercentage::postUpdate();
         }
 
         void fullReset() {

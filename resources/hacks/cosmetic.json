@@ -286,6 +286,10 @@
     {
       "type": "embedded",
       "hack": "rgb_icons"
+    },
+    {
+      "type": "embedded",
+      "hack": "accurate_percentage"
     }
   ]
 }

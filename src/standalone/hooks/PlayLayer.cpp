@@ -10,6 +10,7 @@
 #include "../../shared/hacks/hitboxes/hitboxes.hpp"
 #include "../../shared/hacks/smart-startpos/smart-startpos.hpp"
 #include "../../shared/hacks/auto-save/auto-save.hpp"
+#include "../../shared/hacks/accurate-percentage/accurate-percentage.hpp"
 
 #include <dash/hook/PlayLayer.hpp>
 
@@ -61,6 +62,7 @@ namespace openhack::hooks::PlayLayer {
     void postUpdate(gd::PlayLayer *self, float dt) {
         hook::PlayLayer::postUpdate(self, dt);
         hacks::Hitboxes::postUpdate();
+        hacks::AccuratePercentage::postUpdate();
     }
 
     void fullReset(gd::PlayLayer *self) {
