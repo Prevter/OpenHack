@@ -22,6 +22,7 @@
 #include "smart-startpos/smart-startpos.hpp"
 #include "auto-kill/auto-kill.hpp"
 #include "auto-save/auto-save.hpp"
+#include "hide-triggers/hide-triggers.hpp"
 
 #include <vector>
 #include <memory>
@@ -52,6 +53,7 @@ namespace openhack::hacks {
         new SmartStartPos(),
         new AutoKill(),
         new AutoSave(),
+        new HideTriggers()
     };
 
 }

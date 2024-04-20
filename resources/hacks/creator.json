@@ -231,6 +231,10 @@
           "mask": "*0B90"
         }
       ]
+    },
+    {
+      "type": "embedded",
+      "hack": "hide_triggers"
     }
   ]
 }

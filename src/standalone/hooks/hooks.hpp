@@ -27,6 +27,8 @@ namespace openhack::hooks {
     INSTALL_NAMESPACE(PlayLayer)
     INSTALL_NAMESPACE(PlayerObject)
     INSTALL_NAMESPACE(MenuGameLayer)
+    INSTALL_NAMESPACE(EditorUI)
+    INSTALL_NAMESPACE(LevelEditorLayer)
 
     inline void installHooks() {
         L_TRACE("Installing hooks...");
@@ -42,6 +44,8 @@ namespace openhack::hooks {
         PlayLayer::installHooks();
         PlayerObject::installHooks();
         MenuGameLayer::installHooks();
+        EditorUI::installHooks();
+        LevelEditorLayer::installHooks();
 
         MH_EnableHook(MH_ALL_HOOKS);
         L_TRACE("All hooks installed.");
