@@ -88,7 +88,7 @@ namespace openhack::hacks {
             } else {
                 label->setString(fmt::format("{:.3f}", time));
             }
-        } else {
+        } else if (config::get<bool>("hack.accurate_percentage.normal_mode")) {
             bool oldEvaluation = config::get<bool>("hack.accurate_percentage.old_eval");
             float percent = getPercentage(oldEvaluation);
             int decimalPlaces = floor(config::get<float>("hack.accurate_percentage.decimal_places", 6.f));
