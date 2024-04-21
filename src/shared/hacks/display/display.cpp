@@ -6,16 +6,16 @@ namespace openhack::hacks {
     static ToggleComponent* s_fpsLimitBypass = nullptr;
 
     void Display::onInit() {
-        config::setGlobal("physicsTickAddr", gd::sigscan::findPattern("8988883B"));
+        config::setGlobal("physicsTickAddr", sinaps::find("8988883B"));
         config::setIfEmpty("hack.display.tps", 240.0f);
         config::setIfEmpty("hack.display.tps_bypass", false);
 
         // Patch to remove minimum 60 FPS limit
-        auto match = gd::sigscan::match("0F2F05????^762AFF15", "9090");
-        if (match.empty())
-            L_WARN("Failed to find signature for Display");
+        auto match = sinaps::match("0F2F05????^762AFF15", "9090");
+        if (match.isErr())
+            L_WARN("Failed to find signature for Display: {}", match.err());
         else
-            s_fpsLimitBypass = new ToggleComponent("", "", match);
+            s_fpsLimitBypass = new ToggleComponent("", "", { match.val() });
 
         // Create window
         menu::addWindow("Display", [&]() {

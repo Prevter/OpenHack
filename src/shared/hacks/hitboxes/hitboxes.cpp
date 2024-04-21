@@ -23,12 +23,14 @@ namespace openhack::hacks {
         s_hitboxesToggle->applyPatch(enabled);
     }
 
-    inline bool
-    appendPatch(std::vector<gd::sigscan::Opcode> &opcodes, const std::string &pattern, const std::string &mask) {
-        auto patch = gd::sigscan::match(pattern, mask);
-        if (patch.empty()) return false;
+    inline bool appendPatch(std::vector<sinaps::patch_t> &opcodes, const std::string &pattern, const std::string &mask) {
+        auto patch = sinaps::match(pattern, mask);
+        if (patch.isErr()) {
+            L_WARN("Failed to find signature for Hitboxes: {}", patch.err());
+            return false;
+        }
 
-        opcodes.insert(opcodes.end(), patch.begin(), patch.end());
+        opcodes.push_back(patch.val());
         return true;
     }
 
@@ -83,7 +85,7 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.hitboxes.other_color", gui::Color(0, 1, 0));
 
         // Initialize the toggle component
-        std::vector<gd::sigscan::Opcode> opcodes;
+        std::vector<sinaps::patch_t> opcodes;
         bool success = true;
         success &= appendPatch(opcodes, "000000740D^80BB??000000", "*0790");
         success &= appendPatch(opcodes, "000000^741380BE??000000740A", "9090???????9090");
@@ -91,7 +93,7 @@ namespace openhack::hacks {
             // Log the addresses of the patches
             L_INFO("Hitboxes patch addresses:");
             for (auto &opcode: opcodes) {
-                L_TRACE("0x{:X}", opcode.address);
+                L_TRACE("0x{:X}", (uintptr_t) opcode.address);
             }
         }
         if (!success) return;

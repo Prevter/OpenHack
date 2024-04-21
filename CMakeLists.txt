@@ -67,16 +67,27 @@ target_include_directories(
     ${PROJECT_NAME}
     INTERFACE
     ${CMAKE_BINARY_DIR}
-    libs/glew/include
 )
 
 target_link_libraries(
     ${PROJECT_NAME}
     INTERFACE
     external_libs
-    opengl32
-    ${CMAKE_SOURCE_DIR}/libs/glew/lib/Release/Win32/glew32.lib
 )
+
+if (WIN32)
+    # Add GLEW for Windows
+    target_include_directories(
+            ${PROJECT_NAME}
+            INTERFACE
+            libs/glew/include
+    )
+    target_link_libraries(
+            ${PROJECT_NAME}
+            INTERFACE
+            ${CMAKE_SOURCE_DIR}/libs/glew/lib/Release/Win32/glew32.lib
+    )
+endif ()
 
 if (PROJECT_IS_TOP_LEVEL)
     target_compile_definitions(${PROJECT_NAME} INTERFACE OPENHACK_EXPORT)

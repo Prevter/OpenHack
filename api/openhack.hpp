@@ -3,10 +3,14 @@
 #include <string>
 #include <functional>
 
+#ifdef WIN32
 #if OPENHACK_EXPORT
     #define OPENHACK_DLL __declspec(dllexport)
 #else
     #define OPENHACK_DLL __declspec(dllimport)
+#endif
+#else
+#define OPENHACK_DLL
 #endif
 
 #ifdef GEODE_IS_WINDOWS

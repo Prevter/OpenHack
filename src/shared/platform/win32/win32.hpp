@@ -54,6 +54,17 @@ namespace openhack::utils {
         return reinterpret_cast<uintptr_t>(GetModuleHandleA(module));
     }
 
+    inline sinaps::module_t getModule(const std::string& module) {
+        uintptr_t base = getModuleHandle(module.c_str());
+        uintptr_t size = 0;
+        if (base) {
+            auto dosHeader = reinterpret_cast<PIMAGE_DOS_HEADER>(base);
+            auto ntHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>(base + dosHeader->e_lfanew);
+            size = ntHeaders->OptionalHeader.SizeOfImage;
+        }
+        return {module, base, size};
+    }
+
     /// @brief Write bytes to the game's memory.
     /// @param address The address to write to.
     /// @param bytes The bytes to write.

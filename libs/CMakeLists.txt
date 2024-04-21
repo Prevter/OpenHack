@@ -29,16 +29,11 @@ target_include_directories(
     imgui/backends
 )
 
-target_link_libraries(
-    imgui PUBLIC
-    opengl32
-)
-
 # Other libraries
-add_subdirectory(gd.hpp)
 add_subdirectory(json)
-add_subdirectory(discord-rpc)
 add_subdirectory(zephyrus)
+add_subdirectory(gd.hpp)
+add_subdirectory(sinaps)
 
 # Link all external libraries
 target_link_libraries(
@@ -46,15 +41,18 @@ target_link_libraries(
     imgui
     gd.hpp
     nlohmann_json::nlohmann_json
-    discord-rpc
     Zephyrus
+    sinaps
 )
 
 if (WIN32)
     # GLFW
     add_subdirectory(glfw)
+    add_subdirectory(discord-rpc)
+
     target_link_libraries(
         external_libs INTERFACE
         glfw
+        discord-rpc
     )
 endif()

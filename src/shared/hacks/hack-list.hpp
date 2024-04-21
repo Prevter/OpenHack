@@ -33,24 +33,24 @@ namespace openhack::hacks {
     /// @brief List of all hacks.
     static std::vector<EmbeddedHack*> s_allHacks = {
         new SpeedHack(),
-        new Display(),
+        ON_WINDOWS(new Display(),)
         new Shortcuts(),
         new AutoSafemode(),
         new InstantComplete(),
         new AutoPickupCoins(),
         new StartPosSwitcher(),
-        new DiscordRPC(),
+        ON_WINDOWS(new DiscordRPC(),)
         new ClickTeleport(),
         new Labels(),
         new NoclipLimit(),
         new RGBIcons(),
-        new Zephyrus(),
+        ON_WINDOWS(new Zephyrus(),)
         new FrameStepper(),
         new RandomSeed(),
         new MenuGameplay(),
         new Hitboxes(),
         new RespawnDelay(),
-        new AutoDeafen(),
+        ON_WINDOWS(new AutoDeafen(),)
         new SmartStartPos(),
         new AutoKill(),
         new AutoSave(),

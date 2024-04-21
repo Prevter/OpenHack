@@ -1,6 +1,7 @@
 #include "discord-rpc.hpp"
 #include "../../menu/menu.hpp"
 #include "../labels/labels.hpp"
+#ifdef PLATFORM_WINDOWS
 
 #include <discord_rpc.h>
 
@@ -288,3 +289,4 @@ namespace openhack::hacks {
     }
 
 }
+#endif

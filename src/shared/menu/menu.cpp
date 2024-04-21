@@ -398,7 +398,7 @@ namespace openhack::menu {
         }
 #endif
 
-        utils::resetKeyStates();
+        ON_WINDOWS(utils::resetKeyStates();)
 
         if (utils::isKeyPressed(config::get<std::string>("menu.toggleKey", "Tab")))
             toggle();

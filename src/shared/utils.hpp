@@ -32,6 +32,18 @@
 #define L_BENCHMARK(name, code) code
 #endif
 
+#ifdef OPENHACK_GEODE
+
+#define ON_GEODE(...) __VA_ARGS__
+#define ON_STANDALONE(...)
+
+#else
+
+#define ON_GEODE(...)
+#define ON_STANDALONE(...) __VA_ARGS__
+
+#endif
+
 namespace openhack::utils {
     /// @brief Generates a random number between min and max.
     /// @param min The minimum value.
@@ -46,7 +58,7 @@ namespace openhack::utils {
     /// @param max The maximum value.
     /// @return Random number between min and max.
     inline float random(float min, float max) {
-        return min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+        return min + static_cast<float>(rand()) / (static_cast<float>((float)RAND_MAX / (max - min)));
     }
 
     /// @brief Generates a random number between min and max.
@@ -54,7 +66,7 @@ namespace openhack::utils {
     /// @param max The maximum value.
     /// @return Random number between min and max.
     inline double random(double min, double max) {
-        return min + static_cast <double> (rand()) / (static_cast <double> (RAND_MAX / (max - min)));
+        return min + static_cast<double>(rand()) / (static_cast<double>((double)RAND_MAX / (max - min)));
     }
 
     /// @brief Generates a random number between 0 and max.
@@ -111,14 +123,15 @@ namespace openhack::utils {
     /// @brief Converts a screen position to a frame position.
     /// @param pos The screen position.
     /// @return The frame position.
-    inline ImVec2 screenToFrame(const ImVec2& pos) {
-        auto *director = gd::cocos2d::CCDirector::sharedDirector();
+    inline ImVec2 screenToFrame(const ImVec2 &pos) {
+        ON_STANDALONE(auto *director = gd::cocos2d::CCDirector::sharedDirector();)
+        ON_GEODE(auto *director = cocos2d::CCDirector::sharedDirector();)
         const auto frameSize = director->getOpenGLView()->getFrameSize();
         const auto winSize = director->getWinSize();
 
         return {
-            pos.x / frameSize.width * winSize.width,
-            (1.f - pos.y / frameSize.height) * winSize.height
+                pos.x / frameSize.width * winSize.width,
+                (1.f - pos.y / frameSize.height) * winSize.height
         };
     }
 
@@ -244,7 +257,7 @@ namespace openhack::utils {
 
             // Convert from hex to byte
             std::string byteString = hexCopy.substr(index, 2);
-            uint8_t byte = (uint8_t) strtol(byteString.c_str(), nullptr, 16);
+            auto byte = (uint8_t) strtol(byteString.c_str(), nullptr, 16);
             bytes.push_back(byte);
             index += 2;
         }
@@ -268,7 +281,7 @@ namespace openhack::utils {
     /// @tparam T The type of the value.
     /// @param value The value.
     /// @return The vector of bytes.
-    template <typename T>
+    template<typename T>
     inline std::vector<uint8_t> getBytes(T value) {
         return std::vector<uint8_t>((uint8_t *) &value, (uint8_t *) &value + sizeof(T));
     }

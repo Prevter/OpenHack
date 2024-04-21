@@ -1,6 +1,6 @@
 #include "replays.hpp"
 #include "../../menu/menu.hpp"
-
+#ifdef PLATFORM_WINDOWS
 #ifndef OPENHACK_GEODE
 
 #include <cocos2d.h>
@@ -197,3 +197,4 @@ namespace openhack::hacks {
     }
 
 }
+#endif

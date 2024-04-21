@@ -42,7 +42,7 @@ namespace openhack::hooks {
             hacks::AutoPickupCoins::resetLevel();
             hacks::StartPosSwitcher::resetLevel();
             config::setGlobal("fromPercent", getCurrentPercentInt());
-            hacks::Zephyrus::PlayLayerResetLevel();
+            ON_WINDOWS(hacks::Zephyrus::PlayLayerResetLevel();)
             hacks::RandomSeed::resetLevel();
         }
 
@@ -72,12 +72,12 @@ namespace openhack::hooks {
         }
 
         void playEndAnimationToPos(cocos2d::CCPoint pos) {
-            hacks::Zephyrus::endAnimation();
+            ON_WINDOWS(hacks::Zephyrus::endAnimation();)
             PlayLayer::playEndAnimationToPos(pos);
         }
 
         void playPlatformerEndAnimationToPos(cocos2d::CCPoint pos, bool unk) {
-            hacks::Zephyrus::endAnimation();
+            ON_WINDOWS(hacks::Zephyrus::endAnimation();)
             PlayLayer::playPlatformerEndAnimationToPos(pos, unk);
         }
 

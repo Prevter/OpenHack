@@ -1,6 +1,7 @@
 #include "auto-deafen.hpp"
 #include "../../menu/menu.hpp"
 
+#ifdef PLATFORM_WINDOWS
 #include "../accurate-percentage/accurate-percentage.hpp"
 
 namespace openhack::hacks {
@@ -81,3 +82,4 @@ namespace openhack::hacks {
     }
 
 }
+#endif

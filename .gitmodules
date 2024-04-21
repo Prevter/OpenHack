@@ -31,3 +31,6 @@
 [submodule "libs/zephyrus"]
 	path = libs/zephyrus
 	url = https://github.com/Prevter/Zephyrus
+[submodule "libs/sinaps"]
+	path = libs/sinaps
+	url = https://github.com/prevter/sinaps

@@ -1,5 +1,5 @@
 #include "blur.hpp"
-
+#ifdef WIN32
 #include <vector>
 
 #include <GL/glew.h>
@@ -99,3 +99,4 @@ namespace openhack::menu::blur {
         }
     }
 }
+#endif

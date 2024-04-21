@@ -562,8 +562,8 @@ namespace openhack::hacks {
                 }},
                 {"{clock}",        []() {
                     std::time_t now = std::time(nullptr);
-                    std::tm tm{};
-                    localtime_s(&tm, &now);
+                    ON_WINDOWS(std::tm tm{}; localtime_s(&tm, &now);)
+                    ON_ANDROID(std::tm tm{}; localtime_r(&now, &tm);)
                     return fmt::format("{:02d}:{:02d}:{:02d}", tm.tm_hour, tm.tm_min, tm.tm_sec);
                 }},
                 {"{fps}",          []() {

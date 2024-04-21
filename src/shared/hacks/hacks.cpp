@@ -1,6 +1,5 @@
 #include "hacks.hpp"
 #include "../openhack.hpp"
-#include <dash/sigscan.hpp>
 #include "hack-list.hpp"
 
 namespace openhack::hacks {
@@ -67,7 +66,7 @@ namespace openhack::hacks {
     static std::vector<ToggleComponent *> hacks;
 
     /// @brief Read an opcode from a JSON object
-    gd::sigscan::Opcode readOpcode(const nlohmann::json &opcode) {
+    sinaps::patch_t readOpcode(const nlohmann::json &opcode) {
         auto addrStr = opcode.at("addr").get<std::string>();
         auto onStr = opcode.at("on").get<std::string>();
         auto offStr = opcode.at("off").get<std::string>();
@@ -80,10 +79,19 @@ namespace openhack::hacks {
             library = opcode.at("lib").get<std::string>();
         }
 
-        return {utils::hexToAddr(addrStr), library, off, on};
+        auto offset = utils::hexToAddr(addrStr);
+
+        auto base = utils::getModuleHandle(library.c_str());
+        void* address = reinterpret_cast<void *>(base + offset);
+
+        sinaps::patch_t patch(address, off, on);
+        patch.module = library;
+        patch.offset = offset;
+
+        return patch;
     }
 
-    using Opcodes = std::vector<gd::sigscan::Opcode>;
+    using Opcodes = std::vector<sinaps::patch_t>;
     using MaskMap = std::unordered_map<std::string, Opcodes>;
     using PatternMap = std::unordered_map<std::string, MaskMap>;
 
@@ -183,10 +191,10 @@ namespace openhack::hacks {
                 nlohmann::json opcodeList;
                 for (const auto &opcode: opcodes) {
                     nlohmann::json opcodeJson;
-                    opcodeJson["addr"] = fmt::format("0x{:X}", opcode.address);
-                    opcodeJson["on"] = utils::bytesToHex(opcode.patched);
+                    opcodeJson["addr"] = fmt::format("0x{:X}", (uintptr_t) opcode.address);
+                    opcodeJson["on"] = utils::bytesToHex(opcode.patch);
                     opcodeJson["off"] = utils::bytesToHex(opcode.original);
-                    opcodeJson["lib"] = opcode.library;
+                    opcodeJson["lib"] = opcode.module;
                     opcodeList.push_back(opcodeJson);
                 }
                 maskMap[mask] = opcodeList;
@@ -231,7 +239,7 @@ namespace openhack::hacks {
                     PatternMap cache = tryGetCache(title);
                     PatternMap newCache;
 
-                    L_BENCHMARK(title,
+                    //L_BENCHMARK(title,
                     for (const auto &component: json.at("items")) {
                         if (component.contains("version")) {
                             auto version = component.at("version").get<std::string>();
@@ -246,7 +254,7 @@ namespace openhack::hacks {
                         } else if (type == "toggle") {
                             auto toggleTitle = component.at("title").get<std::string>();
                             auto id = component.at("id").get<std::string>();
-                            std::vector<gd::sigscan::Opcode> opcodes;
+                            std::vector<sinaps::patch_t> opcodes;
                             bool warn = false;
                             for (const auto &opcode: component.at("opcodes")) {
                                 if (opcode.contains("version")) {
@@ -283,7 +291,7 @@ namespace openhack::hacks {
 
                                     if (!found || !verified) {
                                         // Scan for the addresses
-                                        opc = gd::sigscan::match(pattern, mask, library);
+                                        opc = sinaps::matchAll(pattern, mask, utils::getModule(library));
                                         if (opc.empty()) {
                                             warn = true;
                                             break;
@@ -345,7 +353,7 @@ namespace openhack::hacks {
                             }
                         }
                     }
-                    );
+                    //);
 
                     // Sort the components
                     std::sort(windowComponents.begin(), windowComponents.end(), [](const auto &a, const auto &b) {
@@ -405,30 +413,12 @@ namespace openhack::hacks {
         return s_allHacks;
     }
 
-    bool applyOpcode(const gd::sigscan::Opcode &opcode, bool enable) {
-        uintptr_t handle;
-        if (opcode.library.empty()) {
-            handle = utils::getModuleHandle();
-        } else {
-            handle = utils::getModuleHandle(opcode.library.c_str());
-        }
-
-        uintptr_t address = handle + opcode.address;
-
-        std::vector<uint8_t> bytes = enable ? opcode.patched : opcode.original;
-        return utils::patchMemory(address, bytes);
+    bool applyOpcode(const sinaps::patch_t &opcode, bool enable) {
+        return opcode.write(enable);
     }
 
-    bool verifyOpcode(const gd::sigscan::Opcode &opcode) {
-        uintptr_t handle;
-        if (opcode.library.empty()) {
-            handle = utils::getModuleHandle();
-        } else {
-            handle = utils::getModuleHandle(opcode.library.c_str());
-        }
-
-        uintptr_t address = handle + opcode.address;
-
+    bool verifyOpcode(const sinaps::patch_t &opcode) {
+        auto address = reinterpret_cast<uintptr_t>(opcode.address);
         std::vector<uint8_t> bytes = utils::readMemory(address, opcode.original.size());
         return bytes == opcode.original;
     }

@@ -21,7 +21,7 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.random_seed.freeze", false);
 
         // Find the seed address from "mov [DWORD PTR ds:?], eax"
-        uintptr_t movToSeedAddr = gd::sigscan::findPattern("A3^????C783??000000000000C6");
+        uintptr_t movToSeedAddr = sinaps::find("A3^????C783??000000000000C6");
         if (movToSeedAddr != 0) {
             s_seedAddr = *reinterpret_cast<uint32_t*>(movToSeedAddr);
             if (openhack::debugMode) {

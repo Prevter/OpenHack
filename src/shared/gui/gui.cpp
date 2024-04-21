@@ -55,7 +55,7 @@ namespace openhack::gui {
     }
 
     void init() {
-        utils::resetWindowHandle();
+        ON_WINDOWS(utils::resetWindowHandle();)
 
         // Load all fonts from "OPENHACK_DIRECTORY/fonts/"
         auto fontDir = utils::getModFontsDirectory();

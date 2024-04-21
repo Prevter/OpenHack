@@ -125,13 +125,17 @@ namespace openhack::hacks {
     }
 
     void Shortcuts::openResources() {
-        auto path = utils::getCurrentDirectory() + "/Resources";
-        utils::openDirectory(path.c_str());
+        ON_WINDOWS(
+            auto path = utils::getCurrentDirectory() + "/Resources";
+            utils::openDirectory(path.c_str());
+        )
     }
 
     void Shortcuts::openAppData() {
-        auto path = utils::getSaveDirectory();
-        utils::openDirectory(path.c_str());
+        ON_WINDOWS(
+            auto path = utils::getSaveDirectory();
+            utils::openDirectory(path.c_str());
+        )
     }
 
     void Shortcuts::onInit() {
@@ -182,7 +186,6 @@ namespace openhack::hacks {
 #else
             gui::tooltip("Injects a DLL into the game process. Useful for debugging and modding.");
 #endif
-#endif
 
             if (gui::button("Resources", {0.5f, 0.f}))
                 openResources();
@@ -199,6 +202,7 @@ namespace openhack::hacks {
             menu::keybinds::addMenuKeybind("shortcuts.appdata", "AppData", []() {
                 openAppData();
             });
+#endif
         });
 
         // Initialize keybinds

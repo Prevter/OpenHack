@@ -4,7 +4,7 @@
 #include <string>
 
 #include <utility>
-#include <dash/sigscan.hpp>
+#include <sinaps.hpp>
 #include "../gui/gui.hpp"
 #include "../gui/window.hpp"
 
@@ -47,7 +47,7 @@ namespace openhack::hacks {
     class ToggleComponent : public Component {
     public:
         /// @brief Construct a new Toggle Component object
-        ToggleComponent(std::string name, std::string id, std::vector<gd::sigscan::Opcode> opcodes)
+        ToggleComponent(std::string name, std::string id, std::vector<sinaps::patch_t> opcodes)
                 : m_name(std::move(name)), m_id(std::move(id)), m_opcodes(std::move(opcodes)) {}
 
         /// @brief Loads initial state from the configuration and sets the keybinding if needed
@@ -94,7 +94,7 @@ namespace openhack::hacks {
         std::string m_name;
         std::string m_description;
         std::string m_id;
-        std::vector<gd::sigscan::Opcode> m_opcodes;
+        std::vector<sinaps::patch_t> m_opcodes;
         bool m_enabled = false;
         bool m_cheat = false;
         bool m_hasWarning = false;
@@ -161,10 +161,10 @@ namespace openhack::hacks {
     /// @param opcode The opcode to apply
     /// @param enable Whether to enable or disable the opcode
     /// @return True if the opcode was successfully applied
-    bool applyOpcode(const gd::sigscan::Opcode &opcode, bool enable);
+    bool applyOpcode(const sinaps::patch_t &opcode, bool enable);
 
     /// @brief Verify that the opcode has valid original bytes
     /// @param opcode The opcode to verify
     /// @return True if the opcode has valid original bytes
-    bool verifyOpcode(const gd::sigscan::Opcode &opcode);
+    bool verifyOpcode(const sinaps::patch_t &opcode);
 }
