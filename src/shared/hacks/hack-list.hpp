@@ -32,7 +32,7 @@ namespace openhack::hacks {
 
     /// @brief List of all hacks.
     static std::vector<EmbeddedHack*> s_allHacks = {
-        new SpeedHack(),
+        ON_WINDOWS(new SpeedHack(),
         ON_WINDOWS(new Display(),)
         new Shortcuts(),
         new AutoSafemode(),
@@ -55,7 +55,7 @@ namespace openhack::hacks {
         new AutoKill(),
         new AutoSave(),
         new HideTriggers(),
-        new AccuratePercentage()
+        new AccuratePercentage())
     };
 
 }
