@@ -7,7 +7,7 @@ namespace openhack::hooks {
     struct EditorUIHook : geode::Modify<EditorUIHook, EditorUI> {
         void onPlaytest(cocos2d::CCObject* sender) {
             EditorUI::onPlaytest(sender);
-            hacks::HideTriggers::onPlaytest();
+            ON_WINDOWS(hacks::HideTriggers::onPlaytest();)
         }
     };
 }

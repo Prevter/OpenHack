@@ -50,6 +50,7 @@ namespace openhack::menu {
     }
 
     inline void updateCursorState() {
+#ifdef PLATFORM_WINDOWS
         bool canShowInLevel = true;
         if (auto *playLayer = gd::PlayLayer::get()) {
             canShowInLevel = playLayer->m_hasCompletedLevel() ||
@@ -60,6 +61,7 @@ namespace openhack::menu {
             if (config::get<bool>("hack.click_tp.enabled", false)) return;
         }
         gd::cocos2d::CCEGLView::sharedOpenGLView()->showCursor(isOpened || canShowInLevel);
+#endif
     }
 
     void toggle() {
@@ -286,6 +288,8 @@ namespace openhack::menu {
 
         isInitialized = true;
 
+        // toggle the menu on android for testing
+        ON_ANDROID(toggle();)
     }
 
     uint8_t firstRunState = 0;

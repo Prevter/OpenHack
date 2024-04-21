@@ -17,58 +17,58 @@
 namespace openhack::hooks {
     struct PlayLayerHook : geode::Modify<PlayLayerHook, PlayLayer> {
         bool init(GJGameLevel *level, bool useReplay, bool dontCreateObjects) {
-            hacks::Display::playLayerInit(reinterpret_cast<gd::GJGameLevel *>(level));
+            ON_WINDOWS(hacks::Display::playLayerInit(reinterpret_cast<gd::GJGameLevel *>(level));
             hacks::AutoPickupCoins::initLevel();
             hacks::StartPosSwitcher::initLevel();
             hacks::Labels::playLayerInit();
-            hacks::SmartStartPos::initLevel();
+            hacks::SmartStartPos::initLevel();)
 
             if (!PlayLayer::init(level, useReplay, dontCreateObjects))
                 return false;
 
-            hacks::StartPosSwitcher::lateInitLevel();
+            ON_WINDOWS(hacks::StartPosSwitcher::lateInitLevel();
             hacks::Labels::playLayerLateInit();
-            config::setGlobal("discord_rpc.levelTime", std::time(nullptr));
+            config::setGlobal("discord_rpc.levelTime", std::time(nullptr));)
             return true;
         }
 
         void resetLevel() {
-            hacks::NoclipLimit::resetLevel();
-            hacks::Labels::beforeResetLevel();
+            ON_WINDOWS(hacks::NoclipLimit::resetLevel();
+            hacks::Labels::beforeResetLevel();)
             PlayLayer::resetLevel();
-            hacks::Hitboxes::resetLevel();
+            ON_WINDOWS(hacks::Hitboxes::resetLevel();
             hacks::InstantComplete::resetLevel();
             hacks::Display::playLayerReset();
             hacks::AutoPickupCoins::resetLevel();
             hacks::StartPosSwitcher::resetLevel();
+            hacks::Zephyrus::PlayLayerResetLevel();
+            hacks::RandomSeed::resetLevel();)
             config::setGlobal("fromPercent", getCurrentPercentInt());
-            ON_WINDOWS(hacks::Zephyrus::PlayLayerResetLevel();)
-            hacks::RandomSeed::resetLevel();
         }
 
         void addObject(GameObject *object) {
             PlayLayer::addObject(object);
-            hacks::AutoPickupCoins::addObject(reinterpret_cast<gd::GameObject *>(object));
+            ON_WINDOWS(hacks::AutoPickupCoins::addObject(reinterpret_cast<gd::GameObject *>(object));
             hacks::StartPosSwitcher::addObject(reinterpret_cast<gd::GameObject *>(object));
-            hacks::SmartStartPos::addObject(reinterpret_cast<gd::GameObject *>(object));
+            hacks::SmartStartPos::addObject(reinterpret_cast<gd::GameObject *>(object));)
         }
 
         void destroyPlayer(PlayerObject* player, GameObject* object) {
-            hacks::NoclipLimit::destroyPlayer(reinterpret_cast<gd::GameObject *>(object));
+            ON_WINDOWS(hacks::NoclipLimit::destroyPlayer(reinterpret_cast<gd::GameObject *>(object));)
             PlayLayer::destroyPlayer(player, object);
-            hacks::NoclipLimit::postDestroyPlayer();
-            hacks::Hitboxes::destroyPlayer();
+            ON_WINDOWS(hacks::NoclipLimit::postDestroyPlayer();
+            hacks::Hitboxes::destroyPlayer();)
         }
 
         void postUpdate(float dt) {
             PlayLayer::postUpdate(dt);
-            hacks::Hitboxes::postUpdate();
-            hacks::AccuratePercentage::postUpdate();
+            ON_WINDOWS(hacks::Hitboxes::postUpdate();
+            hacks::AccuratePercentage::postUpdate();)
         }
 
         void fullReset() {
             PlayLayer::fullReset();
-            hacks::Hitboxes::fullReset();
+            ON_WINDOWS(hacks::Hitboxes::fullReset();)
         }
 
         void playEndAnimationToPos(cocos2d::CCPoint pos) {
@@ -82,7 +82,7 @@ namespace openhack::hooks {
         }
 
         void onQuit() {
-            hacks::AutoSave::onLevelQuit();
+            ON_WINDOWS(hacks::AutoSave::onLevelQuit();)
             PlayLayer::onQuit();
         }
     };

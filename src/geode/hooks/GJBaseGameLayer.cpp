@@ -21,8 +21,8 @@ namespace openhack::hooks::GJBaseGameLayerHook {
 namespace openhack::hooks {
     struct GJBaseGameLayerHook2 : geode::Modify<GJBaseGameLayerHook2, GJBaseGameLayer> {
         void update(float dt) {
-            hacks::FrameStepper::gameUpdate(&dt);
-            ON_WINDOWS(hacks::Display::schedulerUpdate(dt, [&](float dt) {
+            ON_WINDOWS(hacks::FrameStepper::gameUpdate(&dt);
+            hacks::Display::schedulerUpdate(dt, [&](float dt) {
                 GJBaseGameLayer::update(dt);
             });)
             ON_ANDROID(GJBaseGameLayer::update(dt);)

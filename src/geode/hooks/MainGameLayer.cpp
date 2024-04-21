@@ -12,7 +12,7 @@ namespace openhack::hooks::MenuGameLayerHook {
 
     struct MenuGameLayerHook2 : geode::Modify<MenuGameLayerHook2, MenuGameLayer> {
         void update(float dt) {
-            // hacks::MenuGameplay::menuUpdate(reinterpret_cast<gd::PlayerObject *>(m_playerObject));
+            ON_WINDOWS(hacks::MenuGameplay::menuUpdate(reinterpret_cast<gd::PlayerObject *>(m_playerObject));)
             MenuGameLayer::update(dt);
         }
     };

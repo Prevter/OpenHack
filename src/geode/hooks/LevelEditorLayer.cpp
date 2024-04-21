@@ -7,12 +7,12 @@ namespace openhack::hooks {
     struct LevelEditorLayerHook : geode::Modify<LevelEditorLayerHook, LevelEditorLayer> {
         void onStopPlaytest() {
             LevelEditorLayer::onStopPlaytest();
-            hacks::HideTriggers::onStopPlaytest();
+            ON_WINDOWS(hacks::HideTriggers::onStopPlaytest();)
         }
 
         void updateVisibility(float dt) {
             LevelEditorLayer::updateVisibility(dt);
-            hacks::HideTriggers::updateVisibility();
+            ON_WINDOWS(hacks::HideTriggers::updateVisibility();)
         }
     };
 }
