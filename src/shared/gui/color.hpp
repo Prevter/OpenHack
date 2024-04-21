@@ -105,7 +105,7 @@ namespace openhack::gui {
         /// @return New color
         static Color fromString(const char *color) {
             uint32_t c;
-#ifdef WIN32
+#if defined(WIN32) || defined(OPENHACK_STANDALONE)
             sscanf_s(color, "%X", &c);
 #else
             sscanf(color, "%X", &c);

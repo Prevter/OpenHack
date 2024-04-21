@@ -180,6 +180,7 @@ target_link_libraries(
     spdlog::spdlog
     libcurl
     cocos2d
+    opengl32
 )
 
 # Set "OPENHACK_STANDALONE" to 1

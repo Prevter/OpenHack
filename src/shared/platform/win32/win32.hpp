@@ -15,6 +15,7 @@
 #include "dll_inject.hpp"
 
 #include <gd.hpp>
+#include <sinaps.hpp>
 
 namespace openhack::utils {
     /// @brief Gets the current directory of the running executable.
