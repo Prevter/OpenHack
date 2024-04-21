@@ -30,6 +30,7 @@ namespace openhack::hooks {
     };
 }
 
+#ifdef PLATFORM_WINDOWS
 $execute {
     (void) geode::Mod::get()->hook(
             (void *) gd::findOffset("GJBaseGameLayer::processCommands"),
@@ -37,3 +38,4 @@ $execute {
             "GJBaseGameLayer::processCommands",
             tulip::hook::TulipConvention::Thiscall);
 }
+#endif

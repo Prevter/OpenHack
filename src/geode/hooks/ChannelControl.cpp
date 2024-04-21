@@ -12,6 +12,7 @@ namespace openhack::hooks::ChannelControl {
     }
 }
 
+#ifdef PLATFORM_WINDOWS
 $execute {
     (void) geode::Mod::get()->hook(
             (void *) gd::findSignature("FMOD::ChannelControl::setVolume"),
@@ -19,3 +20,4 @@ $execute {
             "FMOD::ChannelControl::setVolume",
             tulip::hook::TulipConvention::Stdcall);
 }
+#endif

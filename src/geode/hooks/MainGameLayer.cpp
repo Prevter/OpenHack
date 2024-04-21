@@ -18,6 +18,7 @@ namespace openhack::hooks::MenuGameLayerHook {
     };
 }
 
+#ifdef PLATFORM_WINDOWS
 $execute {
     (void) geode::Mod::get()->hook(
             (void *) gd::findOffset("MenuGameLayer::tryJump"),
@@ -25,4 +26,4 @@ $execute {
             "MenuGameLayer::tryJump",
             tulip::hook::TulipConvention::Thiscall);
 }
-
+#endif
