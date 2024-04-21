@@ -20,6 +20,13 @@ endif()
 option(BUILD_STANDALONE "Build the standalone version" ON)
 option(BUILD_GEODE "Build the Geode version" ON)
 
+# Android build
+if (ANDROID)
+    message(STATUS "Android build detected, disabling standalone build")
+    set(BUILD_STANDALONE OFF)
+    set(BUILD_GEODE ON CACHE BOOL "Build the Geode version" FORCE)
+endif()
+
 # Get the latest abbreviated commit hash of the working branch
 execute_process(
     COMMAND git log -1 --format=%h

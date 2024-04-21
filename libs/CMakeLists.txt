@@ -11,10 +11,17 @@ add_library(
     imgui/imgui_draw.cpp
     imgui/imgui_widgets.cpp
     imgui/imgui_tables.cpp
-    imgui/backends/imgui_impl_win32.cpp
-    imgui/backends/imgui_impl_opengl3.cpp
     imgui/misc/cpp/imgui_stdlib.cpp
 )
+
+if (WIN32)
+    # Windows specific files
+    target_sources(
+        imgui PRIVATE
+        imgui/backends/imgui_impl_win32.cpp
+        imgui/backends/imgui_impl_opengl3.cpp
+    )
+endif()
 
 target_include_directories(
     imgui PUBLIC
@@ -30,7 +37,6 @@ target_link_libraries(
 # Other libraries
 add_subdirectory(gd.hpp)
 add_subdirectory(json)
-add_subdirectory(glfw)
 add_subdirectory(discord-rpc)
 add_subdirectory(zephyrus)
 
@@ -38,9 +44,17 @@ add_subdirectory(zephyrus)
 target_link_libraries(
     external_libs INTERFACE
     imgui
-    glfw
     gd.hpp
     nlohmann_json::nlohmann_json
     discord-rpc
     Zephyrus
 )
+
+if (WIN32)
+    # GLFW
+    add_subdirectory(glfw)
+    target_link_libraries(
+        external_libs INTERFACE
+        glfw
+    )
+endif()

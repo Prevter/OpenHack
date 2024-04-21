@@ -1,7 +1,8 @@
 {
 	"geode": "2.0.0-beta.24",
 	"gd": {
-		"win": "2.204"
+		"win": "2.204",
+		"android": "2.205"
 	},
 	"version": "v2.2.2",
 	"id": "prevter.openhack",
