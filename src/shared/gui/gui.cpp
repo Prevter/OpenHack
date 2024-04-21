@@ -69,6 +69,7 @@ namespace openhack::gui {
         ImGuiIO &io = ImGui::GetIO();
 
         io.IniFilename = nullptr;
+        io.MouseWheelFriction = 6.0f;
 
         // Scan for fonts
         ImFontConfig font_cfg;

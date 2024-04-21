@@ -20,8 +20,15 @@ namespace openhack::gui {
         ImGuiWindowFlags flags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar;
         auto scale = config::getGlobal<float>("UIScale");
 
+        // Calculate distance to the bottom to make window fit the screen
+        auto screenSize = ImGui::GetIO().DisplaySize;
+        auto maxSizeH = MAX_SIZE.y * scale;
+        auto bottomMargin = config::get<float>("menu.windowSnap");
+        if (m_position.y + m_size.y > screenSize.y - bottomMargin - 1) // -1 to prevent flickering
+            maxSizeH = screenSize.y - m_position.y - bottomMargin;
+
         ImGui::SetNextWindowSizeConstraints({MIN_SIZE.x * scale, MIN_SIZE.y * scale},
-                                            {MAX_SIZE.x * scale, MAX_SIZE.y * scale});
+                                            {MAX_SIZE.x * scale, maxSizeH});
 
         ImGui::SetNextWindowCollapsed(!m_isOpen, ImGuiCond_Always);
 
