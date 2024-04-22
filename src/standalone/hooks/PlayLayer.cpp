@@ -11,6 +11,7 @@
 #include "../../shared/hacks/smart-startpos/smart-startpos.hpp"
 #include "../../shared/hacks/auto-save/auto-save.hpp"
 #include "../../shared/hacks/accurate-percentage/accurate-percentage.hpp"
+#include "../../shared/hacks/rgb-icons/rgb-icons.hpp"
 
 #include <dash/hook/PlayLayer.hpp>
 
@@ -63,6 +64,7 @@ namespace openhack::hooks::PlayLayer {
         hook::PlayLayer::postUpdate(self, dt);
         hacks::Hitboxes::postUpdate();
         hacks::AccuratePercentage::postUpdate();
+        hacks::RGBIcons::postUpdate();
     }
 
     void fullReset(gd::PlayLayer *self) {

@@ -61,10 +61,10 @@ namespace openhack::hacks {
         return gui::Color::fromHSV(h, saturation, value);
     }
 
-    void RGBIcons::update() {
+    void RGBIcons::postUpdate() {
         if (!config::get<bool>("hack.rgb_icons.enabled", false)) return;
 
-        auto *gameLayer = gd::GameManager::sharedState()->m_gameLayer();
+        auto *gameLayer = gd::GJBaseGameLayer::get();
         if (!gameLayer) return;
 
         auto *player1 = gameLayer->m_player1();

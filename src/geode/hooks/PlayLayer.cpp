@@ -11,6 +11,7 @@
 #include "../../shared/hacks/smart-startpos/smart-startpos.hpp"
 #include "../../shared/hacks/auto-save/auto-save.hpp"
 #include "../../shared/hacks/accurate-percentage/accurate-percentage.hpp"
+#include "../../shared/hacks/rgb-icons/rgb-icons.hpp"
 
 #include <Geode/modify/PlayLayer.hpp>
 
@@ -64,6 +65,7 @@ namespace openhack::hooks {
             PlayLayer::postUpdate(dt);
             hacks::Hitboxes::postUpdate();
             hacks::AccuratePercentage::postUpdate();
+            hacks::RGBIcons::postUpdate();
         }
 
         void fullReset() {
