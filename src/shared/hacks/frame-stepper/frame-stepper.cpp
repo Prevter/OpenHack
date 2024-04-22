@@ -3,6 +3,7 @@
 
 namespace openhack::hacks {
 
+    static double s_holdDelayTimer = 0;
     static uint32_t s_holdAdvanceTimer = 0;
 
     void FrameStepper::onInit() {
@@ -10,6 +11,7 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.framestep.enabled", false);
         config::setIfEmpty("hack.framestep.step_key", "C");
         config::setIfEmpty("hack.framestep.hold", false);
+        config::setIfEmpty("hack.framestep.hold_delay", 0.25f);
         config::setIfEmpty("hack.framestep.hold_speed", 5.0f);
 
         // Initialize keybind
@@ -32,6 +34,8 @@ namespace openhack::hacks {
             gui::keybind("Step key", "hack.framestep.step_key");
             gui::checkbox("Hold to advance", "hack.framestep.hold");
             gui::tooltip("Hold the step key to advance the game frame by frame");
+            gui::inputFloat("Hold delay", "hack.framestep.hold_delay", 0.f, FLT_MAX, "%.2f");
+            gui::tooltip("How long to wait before activating the hold feature");
             gui::inputFloat("Hold speed", "hack.framestep.hold_speed", 0.f, FLT_MAX, "%.0f");
             gui::tooltip("How many frames to skip when holding the step key. (0 = play at normal speed)");
             gui::width();
@@ -54,14 +58,21 @@ namespace openhack::hacks {
 
         bool shouldStep = false;
         if (config::get<bool>("hack.framestep.hold")) {
-            shouldStep = utils::isKeyDown(config::get<std::string>("hack.framestep.step_key"));
+            s_holdDelayTimer += *dt;
+            auto stepKey = config::get<std::string>("hack.framestep.step_key");
+            if (utils::isKeyPressed(stepKey)) {
+                s_holdDelayTimer = 0;
+            }
+
+            shouldStep = utils::isKeyDown(stepKey);
+            auto delay = config::get<float>("hack.framestep.hold_delay", 0.1f);
             if (shouldStep) {
                 s_holdAdvanceTimer++;
                 if (s_holdAdvanceTimer >= holdTimer) {
                     s_holdAdvanceTimer = 0;
-                    shouldStep = true;
+                    shouldStep = s_holdDelayTimer >= delay;
                 } else {
-                    shouldStep = false;
+                    shouldStep = s_holdDelayTimer == 0;
                 }
             } else {
                 s_holdAdvanceTimer = 0;
