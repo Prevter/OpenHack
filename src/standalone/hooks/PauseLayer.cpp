@@ -5,7 +5,7 @@
 
 namespace openhack::hooks::PauseLayer {
     void customSetup(gd::PauseLayer* self) {
-        hacks::HidePause::customSetup(self);
+        hacks::HidePause::pauseInit(self);
         gd::hook::PauseLayer::customSetup(self);
     }
 
