@@ -30,6 +30,7 @@ namespace openhack::hooks {
     INSTALL_NAMESPACE(EditorUI)
     INSTALL_NAMESPACE(LevelEditorLayer)
     INSTALL_NAMESPACE(HardStreak)
+    INSTALL_NAMESPACE(PauseLayer)
 
     inline void installHooks() {
         L_TRACE("Installing hooks...");
@@ -48,6 +49,7 @@ namespace openhack::hooks {
         EditorUI::installHooks();
         LevelEditorLayer::installHooks();
         HardStreak::installHooks();
+        PauseLayer::installHooks();
 
         MH_EnableHook(MH_ALL_HOOKS);
         L_TRACE("All hooks installed.");

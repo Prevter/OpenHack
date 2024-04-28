@@ -25,6 +25,7 @@
 #include "hide-triggers/hide-triggers.hpp"
 #include "accurate-percentage/accurate-percentage.hpp"
 #include "custom-wave-trail/custom-wave-trail.hpp"
+#include "hide-pause/hide-pause.hpp"
 
 #include <vector>
 #include <memory>
@@ -57,7 +58,8 @@ namespace openhack::hacks {
         new AutoSave(),
         new HideTriggers(),
         new AccuratePercentage(),
-        new CustomWaveTrail()
+        new CustomWaveTrail(),
+        new HidePause()
     };
 
 }

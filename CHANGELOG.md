@@ -6,6 +6,7 @@
 * Added "Auto Save"
 * Added "Custom Wave Trail"
 * Added "Fullscreen"/"Borderless" toggles
+* Added "Hide Pause Menu"
 * Added "Objects Scale Bypass"
 
 **Fixes**:

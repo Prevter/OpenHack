@@ -294,6 +294,10 @@
     {
       "type": "embedded",
       "hack": "custom_wave_trail"
+    },
+    {
+      "type": "embedded",
+      "hack": "hide_pause"
     }
   ]
 }
