@@ -1,4 +1,26 @@
-## v.2.2.2
+## v2.3.0
+**New**:
+* Added "Accurate Percentage"
+* Added "Auto Hide Triggers"
+* Added "Auto Kill"
+* Added "Auto Save"
+* Added "Custom Wave Trail"
+* Added "Fullscreen"/"Borderless" toggles
+* Added "Objects Scale Bypass"
+
+**Fixes**:
+* Fixed some typos in the UI
+* Fixed "RGB Icons" reverting to default colors
+
+**Other**:
+* Added modal windows for some UI elements
+* FPS/TPS minimum values are now 5/0 respectively
+* Added time/formatted_time to the labels
+* Added hold delay to "Frame Stepper"
+* Make windows scrollable if they don't fit vertically
+* Replay bot no longer triggers "Auto Safe Mode" when inactive
+
+## v2.2.2
 * Fixed hitboxes showing up in practice mode when they shouldn't
 * Fixed hitboxes not working with mirror portals 
 * Fixed player getting stuck in the air on level complete in replays
@@ -9,7 +31,7 @@
 **Other**:
 * Added symbols export to help with debugging
 
-## v.2.2.1
+## v2.2.1
 * Fixed crash with corrupted config files (again)
 * Added inner hitbox for hitbox trail
 
