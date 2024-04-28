@@ -159,8 +159,8 @@ namespace openhack::hacks {
     void Zephyrus::update() {}
 
     bool Zephyrus::isCheating() {
-        if (s_replayEngine.getState() == zephyrus::BotState::Idle) return false;
-        return true;
+        return s_replayEngine.getState() == zephyrus::BotState::Playing
+                && !s_replayEngine.getMacro().getFrames().empty();
     }
 
     void Zephyrus::PlayerObjectPushButton(gd::PlayerObject *player, int buttonIndex) {
