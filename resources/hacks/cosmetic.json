@@ -290,6 +290,10 @@
     {
       "type": "embedded",
       "hack": "accurate_percentage"
+    },
+    {
+      "type": "embedded",
+      "hack": "custom_wave_trail"
     }
   ]
 }

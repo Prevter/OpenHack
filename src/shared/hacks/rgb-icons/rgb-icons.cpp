@@ -55,7 +55,7 @@ namespace openhack::hacks {
         }, ImVec2(0, 0));
     }
 
-    gui::Color getRainbowColor(float speed, float saturation, float value, float offset) {
+    gui::Color RGBIcons::getRainbowColor(float speed, float saturation, float value, float offset) {
         time_t ms = utils::getTime();
         float h = fmodf(ms * speed + offset, 360.0f);
         return gui::Color::fromHSV(h, saturation, value);
