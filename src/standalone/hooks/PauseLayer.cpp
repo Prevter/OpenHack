@@ -3,10 +3,10 @@
 
 #include "../../shared/hacks/hide-pause/hide-pause.hpp"
 
-namespace openhack::hooks::HardStreak {
+namespace openhack::hooks::PauseLayer {
     void customSetup(gd::PauseLayer* self) {
         hacks::HidePause::customSetup(self);
-        gd::hook::HardStreak::customSetup(self);
+        gd::hook::PauseLayer::customSetup(self);
     }
 
     void installHooks() {
