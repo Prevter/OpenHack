@@ -298,6 +298,18 @@
           "mask": "9090???9090"
         }
       ]
+    },
+    {
+      "type": "toggle",
+      "title": "Load Failed Bypass",
+      "description": "Allows to load modified official levels",
+      "id": "bypass.modbypass",
+      "opcodes": [
+        {
+          "pattern": "83F913^0F87????FF24",
+          "mask": "E9&(01+01)*03$0190"
+        }
+      ]
     }
   ]
 }

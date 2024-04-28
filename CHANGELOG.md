@@ -7,6 +7,7 @@
 * Added "Custom Wave Trail"
 * Added "Fullscreen"/"Borderless" toggles
 * Added "Hide Pause Menu"
+* Added "Load Failed Bypass"
 * Added "Objects Scale Bypass"
 
 **Fixes**:
