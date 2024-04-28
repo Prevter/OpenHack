@@ -79,11 +79,13 @@ namespace openhack::hacks {
             changeColor = true;
         }
 
-        reinterpret_cast<cocos2d::CCDrawNode *>(streak)->setColor({
-            static_cast<uint8_t>(target.r * 255),
-            static_cast<uint8_t>(target.g * 255),
-            static_cast<uint8_t>(target.b * 255)
-        });
+        if (changeColor) {
+            reinterpret_cast<cocos2d::CCDrawNode *>(streak)->setColor({
+                static_cast<uint8_t>(target.r * 255),
+                static_cast<uint8_t>(target.g * 255),
+                static_cast<uint8_t>(target.b * 255)
+            });
+        }
 
         auto scale = config::get<float>("hack.custom_wave_trail.scale");
         streak->m_pulseSize() = scale;
