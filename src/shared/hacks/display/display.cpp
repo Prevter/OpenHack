@@ -65,7 +65,18 @@ namespace openhack::hacks {
             });
 
             needRefresh |= gui::checkbox("Fullscreen", "hack.display.fullscreen");
+            menu::keybinds::addMenuKeybind("display.fullscreen", "Fullscreen", []() {
+                config::set("hack.display.fullscreen", !config::get<bool>("hack.display.fullscreen"));
+                refreshRate();
+                refreshPhysics();
+            });
+
             needRefresh |= gui::checkbox("Borderless", "hack.display.borderless");
+            menu::keybinds::addMenuKeybind("display.borderless", "Borderless", []() {
+                config::set("hack.display.borderless", !config::get<bool>("hack.display.borderless"));
+                refreshRate();
+                refreshPhysics();
+            });
 
             if (needRefresh) {
                 refreshRate();
@@ -94,6 +105,18 @@ namespace openhack::hacks {
 
         menu::keybinds::setKeybindCallback("display.vsync", []() {
             config::set("hack.display.vsync", !config::get<bool>("hack.display.vsync"));
+            refreshRate();
+            refreshPhysics();
+        });
+
+        menu::keybinds::setKeybindCallback("display.fullscreen", []() {
+            config::set("hack.display.fullscreen", !config::get<bool>("hack.display.fullscreen"));
+            refreshRate();
+            refreshPhysics();
+        });
+
+        menu::keybinds::setKeybindCallback("display.borderless", []() {
+            config::set("hack.display.borderless", !config::get<bool>("hack.display.borderless"));
             refreshRate();
             refreshPhysics();
         });
