@@ -63,8 +63,9 @@ namespace openhack::hacks {
                 refreshRate();
                 refreshPhysics();
             });
-            // gui::checkbox("Fullscreen", "hack.display.fullscreen");
-            // gui::checkbox("Borderless", "hack.display.borderless");
+
+            needRefresh |= gui::checkbox("Fullscreen", "hack.display.fullscreen");
+            needRefresh |= gui::checkbox("Borderless", "hack.display.borderless");
 
             if (needRefresh) {
                 refreshRate();
@@ -101,13 +102,13 @@ namespace openhack::hacks {
     void Display::onLateInit() {
         // Set default values
         auto *manager = gd::GameManager::sharedState();
-        config::setIfEmpty("hack.display.fps", manager->m_customFPSTarget());
-        config::setIfEmpty("hack.display.unlock_fps", manager->getGameVariable("0116"));
+        config::set("hack.display.fps", manager->m_customFPSTarget());
+        config::set("hack.display.unlock_fps", manager->getGameVariable("0116"));
         config::setIfEmpty("hack.display.pfps", 240.0f);
         config::setIfEmpty("hack.display.physics_bypass", false);
-        config::setIfEmpty("hack.display.vsync", manager->getGameVariable("0030"));
-        config::setIfEmpty("hack.display.fullscreen", false);
-        config::setIfEmpty("hack.display.borderless", false);
+        config::set("hack.display.vsync", manager->getGameVariable("0030"));
+        config::set("hack.display.fullscreen", !manager->getGameVariable("0025")); // 0025 is windowed
+        config::set("hack.display.borderless", manager->getGameVariable("0170"));
 
         if (s_fpsLimitBypass)
             s_fpsLimitBypass->applyPatch(config::get<bool>("hack.display.unlock_fps"));
@@ -122,6 +123,12 @@ namespace openhack::hacks {
         // Get settings
         bool vsync = config::get<bool>("hack.display.vsync");
         bool unlockFps = config::get<bool>("hack.display.unlock_fps");
+
+        // Get window settings
+        bool isFullscreen = !manager->getGameVariable("0025");
+        bool isBorderless = manager->getGameVariable("0170");
+        bool fullscreen = config::get<bool>("hack.display.fullscreen");
+        bool borderless = config::get<bool>("hack.display.borderless");
 
         // Save settings
         manager->setGameVariable("0030", vsync);
@@ -142,6 +149,13 @@ namespace openhack::hacks {
             manager->m_customFPSTarget(fps);
         }
         manager->updateCustomFPS();
+
+        // Set Fullscreen/Borderless
+        if (isFullscreen != fullscreen || isBorderless != borderless) {
+            manager->setGameVariable("0025", !fullscreen);
+            manager->setGameVariable("0170", borderless);
+            manager->reloadAll(true, fullscreen || borderless, borderless, false);
+        }
     }
 
     void Display::refreshPhysics() {
