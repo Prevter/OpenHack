@@ -7,6 +7,7 @@
 #include "../../shared/hacks/display/display.hpp"
 
 #include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/GameObject.hpp>
 
 namespace openhack::hooks::GJBaseGameLayerHook {
     void processCommands(GJBaseGameLayer *self) {
@@ -19,12 +20,28 @@ namespace openhack::hooks::GJBaseGameLayerHook {
 }
 
 namespace openhack::hooks {
+    static bool s_insideDebugUpdate = false;
+
     struct GJBaseGameLayerHook2 : geode::Modify<GJBaseGameLayerHook2, GJBaseGameLayer> {
         void update(float dt) {
             hacks::FrameStepper::gameUpdate(&dt);
             hacks::Display::schedulerUpdate(dt, [&](float dt) {
                 GJBaseGameLayer::update(dt);
             });
+        }
+
+        // This is used to fix slopes killing the player when entering a mirror portal
+        void updateDebugDraw() {
+            s_insideDebugUpdate = true;
+            GJBaseGameLayer::updateDebugDraw();
+            s_insideDebugUpdate = false;
+        }
+    };
+
+    struct GameObjectBugfixHook : geode::Modify<GameObjectBugfixHook, GameObject> {
+        void determineSlopeDirection() {
+            if (s_insideDebugUpdate) return;
+            GameObject::determineSlopeDirection();
         }
     };
 }

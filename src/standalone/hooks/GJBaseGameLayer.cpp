@@ -1,5 +1,6 @@
 #include "hooks.hpp"
 #include <dash/hook/GJBaseGameLayer.hpp>
+#include <dash/hook/GameObject.hpp>
 
 #include "../../shared/hacks/labels/labels.hpp"
 #include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
@@ -24,8 +25,27 @@ namespace openhack::hooks::GJBaseGameLayer {
         });
     }
 
+    /// This is used to fix slopes killing the player when entering a mirror portal
+
+    static bool s_insideDebugUpdate = false;
+
+    void updateDebugDraw(gd::GJBaseGameLayer *self) {
+        s_insideDebugUpdate = true;
+        gd::hook::GJBaseGameLayer::updateDebugDraw(self);
+        s_insideDebugUpdate = false;
+    }
+
+    void determineSlopeDirection(gd::GameObject *self) {
+        if (s_insideDebugUpdate) return;
+        gd::hook::GameObject::determineSlopeDirection(self);
+    }
+
+    /// ==========================================================================
+
     void installHooks() {
         LOG_HOOK(GJBaseGameLayer, processCommands);
         LOG_HOOK(GJBaseGameLayer, update);
+        LOG_HOOK(GJBaseGameLayer, updateDebugDraw);
+        LOG_HOOK(GameObject, determineSlopeDirection);
     }
 }
