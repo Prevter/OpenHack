@@ -69,6 +69,7 @@ namespace openhack::hacks {
         config::setIfEmpty("hack.hitboxes.enabled", false);
         config::setIfEmpty("hack.hitboxes.death", false);
         config::setIfEmpty("hack.hitboxes.accurate_player", true);
+        config::setIfEmpty("hack.hitboxes.hide_player", false);
         config::setIfEmpty("hack.hitboxes.trail", false);
         config::setIfEmpty("hack.hitboxes.trail_max_length", 240.0f);
         config::setIfEmpty("hack.hitboxes.scale", 1.0f);
@@ -130,6 +131,9 @@ namespace openhack::hacks {
 
             gui::checkbox("Show Trail", "hack.hitboxes.trail");
             gui::tooltip("Makes player hitbox render without clearing.");
+
+            gui::checkbox("Hide Rotated Hitbox", "hack.hitboxes.hide_player");
+            gui::tooltip("Hides the rotated hitbox of the player.");
 
             gui::width(70);
             gui::inputFloat("Trail Max Length", "hack.hitboxes.trail_max_length", 0.0f, 10000.0f, "%.0f");
@@ -227,7 +231,8 @@ namespace openhack::hacks {
         return HitboxType::Danger;
     }
 
-    void Hitboxes::modifyDraw(gd::cocos2d::CCDrawNode* node, gui::Color &color, float &borderWidth, gui::Color &borderColor) {
+    void Hitboxes::modifyDraw(gd::cocos2d::CCDrawNode *node, gui::Color &color, float &borderWidth,
+                              gui::Color &borderColor) {
         if (s_skipDrawHook) {
             s_skipDrawHook = false;
             return;
@@ -249,7 +254,7 @@ namespace openhack::hacks {
                 borderColor = config::get<gui::Color>("hack.hitboxes.danger_color");
                 break;
             case HitboxType::Player:
-                accuratePlayer = config::get<bool>("hack.hitboxes.accurate_player", true);
+                accuratePlayer = config::get<bool>("hack.hitboxes.hide_player", false);
                 borderColor = accuratePlayer ? gui::Color(0.f, 0.f, 0.f, 0.f) : config::get<gui::Color>(
                         "hack.hitboxes.player_color");
                 break;
