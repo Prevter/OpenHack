@@ -22,7 +22,20 @@ namespace openhack::hacks {
         std::vector<gd::sigscan::Opcode> opcodes = gd::sigscan::match(
                 "E9????F30F1005^????68????C683",
                 utils::bytesToHex(utils::getBytes((uintptr_t)&delay)));
-        auto customBypass = gd::sigscan::match("84C0^7410F30F10", "EB");
+
+        std::map<std::string, std::string> bypasses = {
+                {"F30F108B????0F2FC8^76", "EB"}, // respawnTime = this->m_gameState.m_unk2c8;
+                {"84C0^7410F30F10", "EB"}, // respawnTime = 0.5f;
+                {"F30F104424180F2FC1^77", "EB"} // respawnTime = 1.4f;
+        };
+
+        std::vector<gd::sigscan::Opcode> customBypass;
+        for (auto& [pattern, mask] : bypasses) {
+            auto opcode = gd::sigscan::match(pattern, mask);
+            if (!opcode.empty()) {
+                customBypass.push_back(opcode[0]);
+            }
+        }
 
         if (openhack::debugMode) {
             L_INFO("Respawn Delay patch addresses:");
@@ -39,7 +52,8 @@ namespace openhack::hacks {
             return;
         }
 
-        opcodes.push_back(customBypass[0]);
+        // Merge opcodes and customBypass
+        opcodes.insert(opcodes.end(), customBypass.begin(), customBypass.end());
         s_respawnDelay = new ToggleComponent("", "", opcodes);
         togglePatch();
 
