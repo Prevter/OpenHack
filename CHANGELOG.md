@@ -1,3 +1,16 @@
+## v2.3.1
+**Fixes**:
+* Fixed vanilla bug with hitboxes, mirror portals and slopes
+* Fixed compatibility with some mods
+* Fixed wave trail color being wrong with hitboxes enabled
+* Attempted to fix "Respawn Delay" not working for some users
+* Fixed "Show Minutes" in "Accurate Percentage"
+* Fixed some label templates
+
+**Other**:
+* Added "{session_time}" label template
+* Added ability to see the rotated player hitbox
+
 ## v2.3.0
 **New**:
 * Added "Accurate Percentage"
