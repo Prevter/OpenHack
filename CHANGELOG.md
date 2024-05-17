@@ -1,3 +1,6 @@
+## v2.3.2
+* Resolved issue with "Respawn Delay"
+
 ## v2.3.1
 **Fixes**:
 * Fixed vanilla bug with hitboxes, mirror portals and slopes
