@@ -75,18 +75,16 @@ namespace openhack::hacks {
 
         bool isPlatformer = playLayer->m_level()->isPlatformer();
         if (isPlatformer) {
-            double time = playLayer->m_dTime();
             bool showMinutes = config::get<bool>("hack.accurate_percentage.show_minutes");
             if (showMinutes) {
-                int minutes = floor(time / 60.0);
-                time -= minutes * 60;
-                if (minutes > 0) {
-                    label->setString(fmt::format("{:01}:{:02.3f}", minutes, time));
-                } else {
-                    label->setString(fmt::format("{:.3f}", time));
-                }
-            } else {
-                label->setString(fmt::format("{:.3f}", time));
+                auto time = playLayer->m_dTime();
+                int minutes = (int) time / 60;
+                int seconds = (int) time % 60;
+                int millis = (int) (time * 1000) % 1000;
+                if (minutes > 0)
+                    label->setString(fmt::format("{}:{:02d}.{:03d}", minutes, seconds, millis));
+                else
+                    label->setString(fmt::format("{}.{:03d}", seconds, millis));
             }
         } else if (config::get<bool>("hack.accurate_percentage.normal_mode")) {
             bool oldEvaluation = config::get<bool>("hack.accurate_percentage.old_eval");
