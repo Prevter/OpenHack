@@ -4,7 +4,7 @@ namespace openhack {
     bool debugMode = false;
 
     void initialize() {
-        debugMode = utils::isKeyDown("Alt");
+        debugMode = true;
 
         utils::initRandom();
 
