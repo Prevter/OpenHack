@@ -9,20 +9,10 @@
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/GameObject.hpp>
 
-namespace openhack::hooks::GJBaseGameLayerHook {
-    void processCommands(GJBaseGameLayer *self) {
-        hacks::Labels::gameUpdate();
-        hacks::NoclipLimit::processCommands();
-        reinterpret_cast<gd::GJBaseGameLayer *>(self)->processCommands();
-        hacks::Hitboxes::processCommands();
-        hacks::Zephyrus::GJBaseGameLayerProcessCommands();
-    }
-}
-
 namespace openhack::hooks {
     static bool s_insideDebugUpdate = false;
 
-    struct GJBaseGameLayerHook2 : geode::Modify<GJBaseGameLayerHook2, GJBaseGameLayer> {
+    struct GJBaseGameLayerHook : geode::Modify<GJBaseGameLayerHook, GJBaseGameLayer> {
         void update(float dt) {
             hacks::FrameStepper::gameUpdate(&dt);
             hacks::Display::schedulerUpdate(dt, [&](float dt) {
@@ -36,6 +26,14 @@ namespace openhack::hooks {
             GJBaseGameLayer::updateDebugDraw();
             s_insideDebugUpdate = false;
         }
+
+        void processCommands(float dt) {
+            hacks::Labels::gameUpdate();
+            hacks::NoclipLimit::processCommands();
+            GJBaseGameLayer::processCommands(dt);
+            hacks::Hitboxes::processCommands();
+            hacks::Zephyrus::GJBaseGameLayerProcessCommands();
+        }
     };
 
     struct GameObjectBugfixHook : geode::Modify<GameObjectBugfixHook, GameObject> {
@@ -44,12 +42,4 @@ namespace openhack::hooks {
             GameObject::determineSlopeDirection();
         }
     };
-}
-
-$execute {
-    (void) geode::Mod::get()->hook(
-            (void *) gd::findOffset("GJBaseGameLayer::processCommands"),
-            &openhack::hooks::GJBaseGameLayerHook::processCommands,
-            "GJBaseGameLayer::processCommands",
-            tulip::hook::TulipConvention::Thiscall);
 }
