@@ -166,12 +166,20 @@ namespace openhack::hacks {
                     .text = "Best: {best}%",
             },
             {
-                    .caption = "From%",
-                    .text = "From: {from}%",
+                    .caption = "Best Run",
+                    .text = "Best Run: {from}-{best_run}%",
             },
             {
-                    .caption = "Best Run",
-                    .text = "Best Run: {best_run}%",
+                    .caption = "Attempt Time",
+                    .text = "{formatted_time}",
+            },
+            {
+                    .caption = "Session Time",
+                    .text = "Session time: {session_time}",
+            },
+            {
+                    .caption = "Frame",
+                    .text = "Frame: {frame}",
             },
             {
                     .caption = "Custom Message",
@@ -189,8 +197,10 @@ namespace openhack::hacks {
             "Progress",
             "Clock",
             "Best",
-            "From%",
             "Best Run",
+            "Attempt Time",
+            "Session Time",
+            "Frame",
             "Custom Message"
     };
 
@@ -230,7 +240,7 @@ namespace openhack::hacks {
 
             ImGui::Separator();
 
-            gui::callback([](){
+            gui::callback([]() {
                 gui::tooltip("Shows a red indicator if you have any cheats enabled.");
             });
             gui::toggleSetting("Cheat Indicator", "hack.cheat-indicator.enabled", [&]() {
@@ -486,41 +496,44 @@ namespace openhack::hacks {
         // {best_run} - current best run %
         // {random_seed} - current random seed
         // {frame} - current frame
+        // {time} - attempt time in seconds
+        // {formatted_time} - attempt time in MM:SS.mmm format
+        // {session_time} - session time in MM:SS.mmm format
         std::unordered_map<std::string, std::function<std::string()>> tokens = {
-                {"{username}",     []() {
+                {"{username}",       []() {
                     auto *gameManager = gd::GameManager::sharedState();
                     return gameManager->m_playerName();
                 }},
-                {"{id}",           [playLayer, editorLayer]() {
+                {"{id}",             [playLayer, editorLayer]() {
                     gd::GJBaseGameLayer *layer = playLayer ? (gd::GJBaseGameLayer *) playLayer
                                                            : (gd::GJBaseGameLayer *) editorLayer;
                     if (!layer) return std::string("");
                     return std::to_string(layer->m_level()->m_levelID().value());
                 }},
-                {"{name}",         [playLayer, editorLayer]() {
+                {"{name}",           [playLayer, editorLayer]() {
                     gd::GJBaseGameLayer *layer = playLayer ? (gd::GJBaseGameLayer *) playLayer
                                                            : (gd::GJBaseGameLayer *) editorLayer;
                     if (!layer) return std::string("Unknown");
                     return layer->m_level()->m_levelName();
                 }},
-                {"{author}",       [playLayer, editorLayer]() {
+                {"{author}",         [playLayer, editorLayer]() {
                     gd::GJBaseGameLayer *layer = playLayer ? (gd::GJBaseGameLayer *) playLayer
                                                            : (gd::GJBaseGameLayer *) editorLayer;
                     if (!layer) return std::string("Unknown");
                     if (isRobTopLevel(layer->m_level())) return std::string("RobTop");
                     return layer->m_level()->m_creatorName();
                 }},
-                {"{difficulty}",   [playLayer]() {
+                {"{difficulty}",     [playLayer]() {
                     if (!playLayer) return std::string("");
                     return getDifficultyAsset(playLayer->m_level());
                 }},
-                {"{progress}",     [playLayer]() {
+                {"{progress}",       [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto progress = playLayer->getCurrentPercentInt();
                     if (progress < 0) progress = 0;
                     return std::to_string(progress);
                 }},
-                {"{best}",         [playLayer]() {
+                {"{best}",           [playLayer]() {
                     if (!playLayer) return std::string("");
                     if (playLayer->m_level()->isPlatformer()) {
                         int millis = playLayer->m_level()->m_bestTime();
@@ -534,7 +547,7 @@ namespace openhack::hacks {
                     }
                     return std::to_string(playLayer->m_level()->m_normalPercent().value());
                 }},
-                {"{objects}",      [playLayer, editorLayer]() {
+                {"{objects}",        [playLayer, editorLayer]() {
                     if (playLayer) {
                         return std::to_string(playLayer->m_level()->m_objectCount().value());
                     } else if (editorLayer) {
@@ -542,79 +555,85 @@ namespace openhack::hacks {
                     }
                     return std::string("");
                 }},
-                {"{stars}",        [playLayer]() {
+                {"{stars}",          [playLayer]() {
                     if (playLayer) {
                         return std::to_string(playLayer->m_level()->m_stars().value());
                     }
                     return std::string("");
                 }},
-                {"{attempts}",     [playLayer]() {
+                {"{attempts}",       [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(playLayer->m_attempts());
                 }},
-                {"{rating}",       [playLayer]() {
+                {"{rating}",         [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(playLayer->m_level()->m_ratingsSum());
                 }},
-                {"{star_emoji}",   [playLayer]() {
+                {"{star_emoji}",     [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::string(playLayer->m_level()->isPlatformer() ? "🌙" : "⭐");
                 }},
-                {"{clock}",        []() {
+                {"{clock}",          []() {
                     std::time_t now = std::time(nullptr);
                     std::tm tm{};
                     localtime_s(&tm, &now);
                     return fmt::format("{:02d}:{:02d}:{:02d}", tm.tm_hour, tm.tm_min, tm.tm_sec);
                 }},
-                {"{fps}",          []() {
+                {"{fps}",            []() {
                     return std::to_string(static_cast<int>(ImGui::GetIO().Framerate));
                 }},
-                {"{cps}",          [playLayer]() {
+                {"{cps}",            [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(config::getGlobal<uint32_t>("cps", 0));
                 }},
-                {"{clicks}",       [playLayer]() {
+                {"{clicks}",         [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(config::getGlobal<uint32_t>("totalClicks", 0));
                 }},
-                {"{noclip_acc}",   [playLayer]() {
+                {"{noclip_acc}",     [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto noclipAcc = config::getGlobal<float>("noclipAcc", 0);
                     return fmt::format("{:.2f}", noclipAcc);
                 }},
-                {"{noclip_death}", [playLayer]() {
+                {"{noclip_death}",   [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto noclipDeath = config::getGlobal<int>("noclipDeath", 0);
                     return std::to_string(noclipDeath);
                 }},
-                {"{from}",         [playLayer]() {
+                {"{from}",           [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto from = config::getGlobal<int>("fromPercent", 0);
                     return std::to_string(from < 0 ? 0 : from);
                 }},
-                {"{best_run}",     [playLayer]() {
+                {"{best_run}",       [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(config::getGlobal<int>("bestRun", 0));
                 }},
-                {"{random_seed}",     []() {
+                {"{random_seed}",    []() {
                     return std::to_string(RandomSeed::getCurrentSeed());
                 }},
-                {"{frame}",        [playLayer]() {
+                {"{frame}",          [playLayer]() {
                     if (!playLayer) return std::string("0");
                     return std::to_string(static_cast<uint32_t>(playLayer->m_dTime() * 240.0f));
                 }},
-                {"{time}",        [playLayer]() {
+                {"{time}",           [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto time = playLayer->m_dTime();
                     return fmt::format("{:.3f}", time);
                 }},
-                {"{formatted_time}",        [playLayer]() {
+                {"{formatted_time}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto time = playLayer->m_dTime();
                     int minutes = (int) time / 60;
                     int seconds = (int) time % 60;
                     int millis = (int) (time * 1000) % 1000;
-                    return fmt::format("{:02d}:{:02d}.{:03d}", minutes, seconds, millis);
+                    return fmt::format("{}:{:02d}.{:03d}", minutes, seconds, millis);
+                }},
+                {"{session_time}",   []() {
+                    auto time = std::time(nullptr) - config::getGlobal<time_t>("discord_rpc.levelTime", std::time(nullptr));
+                    int minutes = (int) time / 60;
+                    int seconds = (int) time % 60;
+                    return fmt::format("{}:{:02d}", minutes, seconds);
                 }},
         };
 
