@@ -303,7 +303,7 @@
       "type": "toggle",
       "title": "Load Failed Bypass",
       "description": "Allows to load modified official levels",
-      "id": "bypass.modbypass",
+      "id": "bypass.loadfailed",
       "opcodes": [
         {
           "pattern": "83F913^0F87????FF24",
