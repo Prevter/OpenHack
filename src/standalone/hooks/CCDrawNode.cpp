@@ -10,7 +10,7 @@ namespace openhack::hooks::CCDrawNode {
         // Fix border width being negative (robtop made a mirror portal bug)
         borderWidth = abs(borderWidth);
 
-        hacks::Hitboxes::modifyDraw((gui::Color &) fillColor, borderWidth, (gui::Color &) borderColor);
+        hacks::Hitboxes::modifyDraw(self, (gui::Color &) fillColor, borderWidth, (gui::Color &) borderColor);
         return hook::CCDrawNode::drawPolygon(self, vertex, count, fillColor, borderWidth, borderColor);
     }
 
@@ -19,7 +19,7 @@ namespace openhack::hooks::CCDrawNode {
         // Fix border width being negative (robtop made a mirror portal bug)
         borderWidth = abs(borderWidth);
 
-        hacks::Hitboxes::modifyDraw((gui::Color &) color, borderWidth, (gui::Color &) borderColor);
+        hacks::Hitboxes::modifyDraw(self, (gui::Color &) color, borderWidth, (gui::Color &) borderColor);
         return hook::CCDrawNode::drawCircle(self, position, radius, color, borderWidth, borderColor, segments);
     }
 

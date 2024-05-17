@@ -227,13 +227,14 @@ namespace openhack::hacks {
         return HitboxType::Danger;
     }
 
-    void Hitboxes::modifyDraw(gui::Color &color, float &borderWidth, gui::Color &borderColor) {
+    void Hitboxes::modifyDraw(gd::cocos2d::CCDrawNode* node, gui::Color &color, float &borderWidth, gui::Color &borderColor) {
         if (s_skipDrawHook) {
             s_skipDrawHook = false;
             return;
         }
 
         if (!gd::PlayLayer::get()) return;
+        if (node != gd::PlayLayer::get()->m_debugDrawNode()) return;
         if (!shouldDrawHitboxes()) return;
 
         bool accuratePlayer = false;

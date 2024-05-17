@@ -10,7 +10,7 @@ namespace openhack::hooks {
             // Fix border width being negative (robtop made a mirror portal bug)
             borderWidth = abs(borderWidth);
 
-            hacks::Hitboxes::modifyDraw((gui::Color &) fillColor, borderWidth, (gui::Color &) borderColor);
+            hacks::Hitboxes::modifyDraw((gd::cocos2d::CCDrawNode *) this, (gui::Color &) fillColor, borderWidth, (gui::Color &) borderColor);
             return cocos2d::CCDrawNode::drawPolygon(vertex, count, fillColor, borderWidth, borderColor);
         }
 
@@ -19,7 +19,7 @@ namespace openhack::hooks {
             // Fix border width being negative (robtop made a mirror portal bug)
             borderWidth = abs(borderWidth);
 
-            hacks::Hitboxes::modifyDraw((gui::Color &) color, borderWidth, (gui::Color &) borderColor);
+            hacks::Hitboxes::modifyDraw((gd::cocos2d::CCDrawNode *) this, (gui::Color &) color, borderWidth, (gui::Color &) borderColor);
             return cocos2d::CCDrawNode::drawCircle(position, radius, color, borderWidth, borderColor, segments);
         }
     };
