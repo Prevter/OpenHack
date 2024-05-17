@@ -30,7 +30,7 @@ namespace openhack::hooks::GJBaseGameLayer {
     static bool s_insideDebugUpdate = false;
 
     void updateDebugDraw(gd::GJBaseGameLayer *self) {
-        s_insideDebugUpdate = true;
+        s_insideDebugUpdate = gd::PlayLayer::get() != nullptr;
         gd::hook::GJBaseGameLayer::updateDebugDraw(self);
         s_insideDebugUpdate = false;
     }

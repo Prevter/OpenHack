@@ -32,7 +32,7 @@ namespace openhack::hooks {
 
         // This is used to fix slopes killing the player when entering a mirror portal
         void updateDebugDraw() {
-            s_insideDebugUpdate = true;
+            s_insideDebugUpdate = PlayLayer::get() != nullptr;
             GJBaseGameLayer::updateDebugDraw();
             s_insideDebugUpdate = false;
         }
