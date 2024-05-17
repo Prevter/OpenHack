@@ -6,10 +6,19 @@ namespace openhack::hacks {
     float RespawnDelay::delay = 0.5f;
     static ToggleComponent* s_respawnDelay = nullptr;
 
-    inline void togglePatch() {
-        if (!s_respawnDelay) return;
+    void toggleDelayPatch() {
+        L_TRACE("Toggling Respawn Delay patch");
+        if (!s_respawnDelay) {
+            L_WARN("Respawn Delay not initialized");
+            return;
+        }
         bool enabled = config::get<bool>("hack.respawn_delay.enabled");
-        s_respawnDelay->applyPatch(enabled);
+        bool success = s_respawnDelay->applyPatch(enabled);
+        if (success) {
+            L_INFO("Respawn Delay patch {}!", enabled ? "enabled" : "disabled");
+        } else {
+            L_WARN("Failed to patch Respawn Delay");
+        }
     }
 
     void RespawnDelay::onInit() {
@@ -53,15 +62,19 @@ namespace openhack::hacks {
         }
 
         // Merge opcodes and customBypass
+        L_TRACE("Merging opcodes and customBypass ({} + {})", opcodes.size(), customBypass.size());
         opcodes.insert(opcodes.end(), customBypass.begin(), customBypass.end());
+        L_TRACE("Merged opcodes size: {}", opcodes.size());
         s_respawnDelay = new ToggleComponent("", "", opcodes);
-        togglePatch();
+        L_TRACE("Respawn Delay initialized");
+        toggleDelayPatch();
+        L_TRACE("Respawn Delay patched");
 
         // Initialize keybind
         menu::keybinds::setKeybindCallback("respawn_delay.enabled", []() {
             bool enabled = !config::get<bool>("hack.respawn_delay.enabled");
             config::set("hack.respawn_delay.enabled", enabled);
-            togglePatch();
+            toggleDelayPatch();
         });
     }
 
@@ -71,7 +84,7 @@ namespace openhack::hacks {
             menu::keybinds::addMenuKeybind("respawn_delay.enabled", "Respawn Delay", [](){
                 bool enabled = !config::get<bool>("hack.respawn_delay.enabled");
                 config::set("hack.respawn_delay.enabled", enabled);
-                togglePatch();
+                toggleDelayPatch();
             });
         });
         if (gui::toggleSetting("Respawn Delay", "hack.respawn_delay.enabled", []() {
@@ -82,7 +95,7 @@ namespace openhack::hacks {
             gui::tooltip("The delay before respawning");
             gui::width();
         }, ImVec2(0, 0))) {
-            togglePatch();
+            toggleDelayPatch();
         }
     }
 
