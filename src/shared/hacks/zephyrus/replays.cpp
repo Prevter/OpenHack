@@ -92,6 +92,20 @@ namespace openhack::hacks {
 
         // Create window
         menu::addWindow("Replays (beta)", [&]() {
+#ifdef OPENHACK_GEODE
+            // Show a warning if user has "syzzi.click_between_frames" enabled
+            static geode::Mod* cbfMod = geode::Loader::get()->getLoadedMod("syzzi.click_between_frames");
+            static bool hasCBF = cbfMod != nullptr && cbfMod->isEnabled();
+
+            if (hasCBF) {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.5f, 0.5f, 1.0f));
+                ImGui::TextWrapped("Warning: \"Click Between Frames\" is enabled");
+                gui::tooltip("The replay system may not work correctly with this mod enabled.\n"
+                            "Please disable it to use the replay system.");
+                ImGui::PopStyleColor();
+            }
+#endif
+
             gui::width(120);
             if (gui::combo("State", "zephyrus.state", "Disabled\0Playing\0Recording\0\0")) {
                 s_replayEngine.setState(static_cast<zephyrus::BotState>(config::get<int>("zephyrus.state")));

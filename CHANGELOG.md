@@ -1,3 +1,6 @@
+## v2.4.0
+* Added a notice for "Click Between Frames" users
+
 ## v2.3.2
 * Resolved issue with "Respawn Delay"
 
