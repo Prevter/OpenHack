@@ -71,6 +71,7 @@ namespace openhack::hooks {
         void fullReset() {
             PlayLayer::fullReset();
             hacks::Hitboxes::fullReset();
+            config::setGlobal<int>("bestRun", 0);
         }
 
         void playEndAnimationToPos(cocos2d::CCPoint pos) {

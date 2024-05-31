@@ -70,6 +70,7 @@ namespace openhack::hooks::PlayLayer {
     void fullReset(gd::PlayLayer *self) {
         hook::PlayLayer::fullReset(self);
         hacks::Hitboxes::fullReset();
+        config::setGlobal<int>("bestRun", 0);
     }
 
     void playEndAnimationToPos(gd::PlayLayer *self, cocos2d::CCPoint pos) {

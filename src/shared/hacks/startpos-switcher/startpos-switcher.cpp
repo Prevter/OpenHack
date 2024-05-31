@@ -167,6 +167,8 @@ namespace openhack::hacks {
 
         // Update label
         updateLabel();
+
+        config::setGlobal<int>("bestRun", 0);
     }
 
 }
