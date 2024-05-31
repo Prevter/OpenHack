@@ -68,8 +68,23 @@ target_link_libraries(
     INTERFACE
     external_libs
     opengl32
-    ${CMAKE_SOURCE_DIR}/libs/glew/lib/Release/Win32/glew32.lib
 )
+
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    # Windows 64
+    target_link_libraries(
+        ${PROJECT_NAME}
+        INTERFACE
+        ${CMAKE_SOURCE_DIR}/libs/glew/lib/Release/x64/glew32.lib
+    )
+else()
+    # Windows 32
+    target_link_libraries(
+        ${PROJECT_NAME}
+        INTERFACE
+        ${CMAKE_SOURCE_DIR}/libs/glew/lib/Release/Win32/glew32.lib
+    )
+endif()
 
 if (PROJECT_IS_TOP_LEVEL)
     target_compile_definitions(${PROJECT_NAME} INTERFACE OPENHACK_EXPORT)

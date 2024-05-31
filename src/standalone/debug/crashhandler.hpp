@@ -4,6 +4,16 @@
 #include "logger.hpp"
 
 #ifdef PLATFORM_WINDOWS
+#if _WIN64
+
+namespace crashhandler
+{
+    void init()
+    {
+    }
+}
+
+#else
 
 #include <spdlog/fmt/xchar.h>
 #include <filesystem>
@@ -333,6 +343,7 @@ namespace crashhandler {
     }
 }
 
+#endif
 #else
 
 namespace crashhandler
