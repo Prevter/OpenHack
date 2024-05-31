@@ -4,16 +4,6 @@
 #include "logger.hpp"
 
 #ifdef PLATFORM_WINDOWS
-#if _WIN64
-
-namespace crashhandler
-{
-    void init()
-    {
-    }
-}
-
-#else
 
 #include <spdlog/fmt/xchar.h>
 #include <filesystem>
@@ -139,6 +129,35 @@ namespace crashhandler {
     }
 
     std::wstring getRegisters(PCONTEXT ctx) {
+#if _WIN64
+return fmt::format(
+                L"RAX: {:016x}\n"
+                L"RBX: {:016x}\n"
+                L"RCX: {:016x}\n"
+                L"RDX: {:016x}\n"
+                L"RBP: {:016x}\n"
+                L"RSP: {:016x}\n"
+                L"RDI: {:016x}\n"
+                L"RSI: {:016x}\n"
+                L"R8: {:016x}\n"
+                L"R9: {:016x}\n"
+                L"R10: {:016x}\n"
+                L"R11: {:016x}\n"
+                L"R12: {:016x}\n"
+                L"R13: {:016x}\n"
+                L"R14: {:016x}\n"
+                L"R15: {:016x}\n"
+                L"RIP: {:016x}\n",
+                ctx->Rax, ctx->Rbx,
+                ctx->Rcx, ctx->Rdx,
+                ctx->Rbp, ctx->Rsp,
+                ctx->Rdi, ctx->Rsi,
+                ctx->R8, ctx->R9,
+                ctx->R10, ctx->R11,
+                ctx->R12, ctx->R13,
+                ctx->R14, ctx->R15,
+                ctx->Rip);
+#else
         return fmt::format(
                 L"EAX: {:08x}\n"
                 L"EBX: {:08x}\n"
@@ -149,15 +168,12 @@ namespace crashhandler {
                 L"EDI: {:08x}\n"
                 L"ESI: {:08x}\n"
                 L"EIP: {:08x}\n",
-                ctx->Eax,
-                ctx->Ebx,
-                ctx->Ecx,
-                ctx->Edx,
-                ctx->Ebp,
-                ctx->Esp,
-                ctx->Edi,
-                ctx->Esi,
+                ctx->Eax, ctx->Ebx,
+                ctx->Ecx, ctx->Edx,
+                ctx->Ebp, ctx->Esp,
+                ctx->Edi, ctx->Esi,
                 ctx->Eip);
+#endif
     }
 
     std::wstring getStackTrace(PCONTEXT ctx) {
@@ -167,12 +183,21 @@ namespace crashhandler {
         memset(&stackFrame, 0, sizeof(STACKFRAME64));
 
         DWORD machineType = IMAGE_FILE_MACHINE_I386;
+#if _WIN64
+        stackFrame.AddrPC.Offset = ctx->Rip;
+        stackFrame.AddrPC.Mode = AddrModeFlat;
+        stackFrame.AddrFrame.Offset = ctx->Rbp;
+        stackFrame.AddrFrame.Mode = AddrModeFlat;
+        stackFrame.AddrStack.Offset = ctx->Rsp;
+        stackFrame.AddrStack.Mode = AddrModeFlat;
+#else
         stackFrame.AddrPC.Offset = ctx->Eip;
         stackFrame.AddrPC.Mode = AddrModeFlat;
         stackFrame.AddrFrame.Offset = ctx->Ebp;
         stackFrame.AddrFrame.Mode = AddrModeFlat;
         stackFrame.AddrStack.Offset = ctx->Esp;
         stackFrame.AddrStack.Mode = AddrModeFlat;
+#endif
 
         HANDLE process = GetCurrentProcess();
         HANDLE thread = GetCurrentThread();
@@ -343,7 +368,6 @@ namespace crashhandler {
     }
 }
 
-#endif
 #else
 
 namespace crashhandler
