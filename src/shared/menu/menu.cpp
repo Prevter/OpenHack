@@ -142,10 +142,12 @@ namespace openhack::menu {
             gui::checkbox("Check for updates", "menu.checkForUpdates");
 #endif
 
-            if (gui::button("Open GitHub page"))
+            if (gui::button("GitHub", ImVec2(0.5, 0)))
                 createOpenURLPopup(OPENHACK_HOME_URL);
 
-            if (gui::button("Join Discord server"))
+            ImGui::SameLine(0, 2);
+
+            if (gui::button("Discord"))
                 createOpenURLPopup("https://discord.gg/QSd4jUyc45");
 
             auto searchValue = config::getGlobal<std::string>("searchValue", "");
@@ -230,6 +232,7 @@ namespace openhack::menu {
             //     blur::setState(config::get<blur::State>("menu.blur"));
             // }
 
+
             gui::callback([]() {
                 gui::tooltip("Makes the title bar change colors.");
             });
@@ -248,7 +251,11 @@ namespace openhack::menu {
                 stackWindows();
             gui::tooltip("Reorganizes the windows to take as little space as possible");
 
+            gui::checkbox("Lock First Column", "menu.lockFirstColumn");
+            gui::tooltip("Makes OpenHack specific windows stay in the first column");
+
             gui::checkbox("Lock Windows", "menu.stackWindows");
+            gui::tooltip("Realign all windows automatically");
 
         });
 
@@ -485,10 +492,14 @@ namespace openhack::menu {
     }
 
     std::map<gui::Window *, ImVec2> getStackedPositions() {
-        const std::string builtInWindows[] = {"OpenHack", "Interface", "Keybinds"};
-        const size_t builtInCount = sizeof(builtInWindows) / sizeof(builtInWindows[0]);
-        auto snap = config::get<float>("menu.windowSnap");
+        auto firstColumnLock = config::get<bool>("menu.lockFirstColumn");
+        static std::array<std::string, 3> s_builtInWindows = {"OpenHack", "Interface", "Keybinds"};
+        std::array<std::string, 3> builtInWindows = s_builtInWindows;
+        if (!firstColumnLock) {
+            builtInWindows = {};
+        }
 
+        auto snap = config::get<float>("menu.windowSnap");
         ImVec2 screenSize = ImGui::GetIO().DisplaySize;
 
         const auto scale = config::getGlobal<float>("UIScale");
@@ -513,11 +524,11 @@ namespace openhack::menu {
             return positions;
 
         // Rest are stacked to take as little space as possible
-        std::vector<float> heights(columns - 1, snap);
+        auto columnCount = firstColumnLock ? columns - 1 : columns;
+        std::vector<float> heights(columnCount, snap);
         for (auto &window: windows) {
             // Skip built-in windows
-            if (std::find(builtInWindows, builtInWindows + builtInCount, window.getTitle()) !=
-                builtInWindows + builtInCount)
+            if (std::find(builtInWindows.begin(), builtInWindows.end(), window.getTitle()) != builtInWindows.end())
                 continue;
 
             // Find the column with the smallest height
@@ -525,7 +536,8 @@ namespace openhack::menu {
             auto index = std::distance(heights.begin(), min);
 
             // Set the position
-            positions[&window] = ImVec2((float) (index + 1) * (windowWidth + snap) + snap, *min);
+            auto windowColumn = firstColumnLock ? index + 1 : index;
+            positions[&window] = ImVec2((float) windowColumn * (windowWidth + snap) + snap, *min);
             *min += window.getSize().y + snap;
 
             // Update the height
