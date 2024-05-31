@@ -1,4 +1,9 @@
 ## v2.4.0
+* Improved "Best Run" calculation
+* Added "Total Attempts" label ({total_attempts})
+* Added "Mod version" label ({openhack_ver})
+* Added 12-hour clock label ({clock12})
+* [Geode] Added "Mod count" label ({mod_count})
 * Added a notice for "Click Between Frames" users
 
 ## v2.3.2
