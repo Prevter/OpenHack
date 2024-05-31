@@ -182,6 +182,10 @@ namespace openhack::hacks {
                     .text = "Frame: {frame}",
             },
             {
+                    .caption = "Total Attempts",
+                    .text = "Attempts: {total_attempts}",
+            },
+            {
                     .caption = "Custom Message",
                     .text = "",
             }
@@ -201,6 +205,7 @@ namespace openhack::hacks {
             "Attempt Time",
             "Session Time",
             "Frame",
+            "Total Attempts",
             "Custom Message"
     };
 
@@ -487,6 +492,7 @@ namespace openhack::hacks {
         // {attempts} - attempts in the level
         // {star_emoji} - places ⭐ or 🌙 depending on whether the level is platformer or not
         // {clock} - current time
+        // {clock12} - current time in 12-hour format
         // {fps} - current FPS
         // {cps} - clicks per second
         // {clicks} - total clicks in the level
@@ -499,45 +505,48 @@ namespace openhack::hacks {
         // {time} - attempt time in seconds
         // {formatted_time} - attempt time in MM:SS.mmm format
         // {session_time} - session time in MM:SS.mmm format
+        // {total_attempts} - total attempts in the level
+        // {openhack_ver} - OpenHack version
+        // {mod_count} - number of loaded mods in Geode
         std::unordered_map<std::string, std::function<std::string()>> tokens = {
-                {"{username}",       []() {
+                {"{username}", []() {
                     auto *gameManager = gd::GameManager::sharedState();
                     return gameManager->m_playerName();
                 }},
-                {"{id}",             [playLayer, editorLayer]() {
+                {"{id}", [playLayer, editorLayer]() {
                     gd::GJBaseGameLayer *layer = playLayer ? (gd::GJBaseGameLayer *) playLayer
                                                            : (gd::GJBaseGameLayer *) editorLayer;
                     if (!layer) return std::string("");
                     return std::to_string(layer->m_level()->m_levelID().value());
                 }},
-                {"{name}",           [playLayer, editorLayer]() {
+                {"{name}", [playLayer, editorLayer]() {
                     gd::GJBaseGameLayer *layer = playLayer ? (gd::GJBaseGameLayer *) playLayer
                                                            : (gd::GJBaseGameLayer *) editorLayer;
                     if (!layer) return std::string("Unknown");
                     return layer->m_level()->m_levelName();
                 }},
-                {"{author}",         [playLayer, editorLayer]() {
+                {"{author}", [playLayer, editorLayer]() {
                     gd::GJBaseGameLayer *layer = playLayer ? (gd::GJBaseGameLayer *) playLayer
                                                            : (gd::GJBaseGameLayer *) editorLayer;
                     if (!layer) return std::string("Unknown");
                     if (isRobTopLevel(layer->m_level())) return std::string("RobTop");
                     return layer->m_level()->m_creatorName();
                 }},
-                {"{difficulty}",     [playLayer]() {
+                {"{difficulty}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     return getDifficultyAsset(playLayer->m_level());
                 }},
-                {"{progress}",       [playLayer]() {
+                {"{progress}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto progress = playLayer->getCurrentPercentInt();
                     if (progress < 0) progress = 0;
                     return std::to_string(progress);
                 }},
-                {"{best}",           [playLayer]() {
+                {"{best}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     if (playLayer->m_level()->isPlatformer()) {
                         int millis = playLayer->m_level()->m_bestTime();
-                        if (millis == 0) return std::string("No Best Time");
+                        if (millis == 0) return std::string("N/A");
                         double seconds = millis / 1000.0;
                         if (seconds < 60.0)
                             return fmt::format("{:.3f}", seconds);
@@ -547,7 +556,7 @@ namespace openhack::hacks {
                     }
                     return std::to_string(playLayer->m_level()->m_normalPercent().value());
                 }},
-                {"{objects}",        [playLayer, editorLayer]() {
+                {"{objects}", [playLayer, editorLayer]() {
                     if (playLayer) {
                         return std::to_string(playLayer->m_level()->m_objectCount().value());
                     } else if (editorLayer) {
@@ -555,68 +564,77 @@ namespace openhack::hacks {
                     }
                     return std::string("");
                 }},
-                {"{stars}",          [playLayer]() {
+                {"{stars}", [playLayer]() {
                     if (playLayer) {
                         return std::to_string(playLayer->m_level()->m_stars().value());
                     }
                     return std::string("");
                 }},
-                {"{attempts}",       [playLayer]() {
+                {"{attempts}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(playLayer->m_attempts());
                 }},
-                {"{rating}",         [playLayer]() {
+                {"{rating}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(playLayer->m_level()->m_ratingsSum());
                 }},
-                {"{star_emoji}",     [playLayer]() {
+                {"{star_emoji}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::string(playLayer->m_level()->isPlatformer() ? "🌙" : "⭐");
                 }},
-                {"{clock}",          []() {
+                {"{clock}", []() {
                     std::time_t now = std::time(nullptr);
                     std::tm tm{};
                     localtime_s(&tm, &now);
                     return fmt::format("{:02d}:{:02d}:{:02d}", tm.tm_hour, tm.tm_min, tm.tm_sec);
                 }},
-                {"{fps}",            []() {
+                {"{clock12}", []() {
+                    std::time_t now = std::time(nullptr);
+                    std::tm tm{};
+                    localtime_s(&tm, &now);
+                    int hour = tm.tm_hour;
+                    if (hour > 12) hour -= 12;
+                    return fmt::format("{:02d}:{:02d}:{:02d} {}", hour, tm.tm_min, tm.tm_sec,
+                                       tm.tm_hour > 12 ? "PM" : "AM");
+                }},
+                {"{fps}", []() {
                     return std::to_string(static_cast<int>(ImGui::GetIO().Framerate));
                 }},
-                {"{cps}",            [playLayer]() {
+                {"{cps}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(config::getGlobal<uint32_t>("cps", 0));
                 }},
-                {"{clicks}",         [playLayer]() {
+                {"{clicks}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(config::getGlobal<uint32_t>("totalClicks", 0));
                 }},
-                {"{noclip_acc}",     [playLayer]() {
+                {"{noclip_acc}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto noclipAcc = config::getGlobal<float>("noclipAcc", 0);
                     return fmt::format("{:.2f}", noclipAcc);
                 }},
-                {"{noclip_death}",   [playLayer]() {
+                {"{noclip_death}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto noclipDeath = config::getGlobal<int>("noclipDeath", 0);
                     return std::to_string(noclipDeath);
                 }},
-                {"{from}",           [playLayer]() {
+                {"{from}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto from = config::getGlobal<int>("fromPercent", 0);
                     return std::to_string(from < 0 ? 0 : from);
                 }},
-                {"{best_run}",       [playLayer]() {
+                {"{best_run}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     return std::to_string(config::getGlobal<int>("bestRun", 0));
                 }},
-                {"{random_seed}",    []() {
+                {"{random_seed}", []() {
                     return std::to_string(RandomSeed::getCurrentSeed());
                 }},
-                {"{frame}",          [playLayer]() {
+                {"{frame}", [playLayer]() {
                     if (!playLayer) return std::string("0");
                     return std::to_string(static_cast<uint32_t>(playLayer->m_dTime() * 240.0f));
                 }},
-                {"{time}",           [playLayer]() {
+                {"{time}", [playLayer]() {
                     if (!playLayer) return std::string("");
                     auto time = playLayer->m_dTime();
                     return fmt::format("{:.3f}", time);
@@ -629,12 +647,33 @@ namespace openhack::hacks {
                     int millis = (int) (time * 1000) % 1000;
                     return fmt::format("{}:{:02d}.{:03d}", minutes, seconds, millis);
                 }},
-                {"{session_time}",   []() {
+                {"{session_time}", []() {
                     auto time = std::time(nullptr) - config::getGlobal<time_t>("discord_rpc.levelTime", std::time(nullptr));
                     int minutes = (int) time / 60;
                     int seconds = (int) time % 60;
                     return fmt::format("{}:{:02d}", minutes, seconds);
                 }},
+                {"{total_attempts}", [playLayer]() {
+                    if (!playLayer) return std::string("");
+                    return std::to_string(playLayer->m_level()->m_attempts().value());
+                }},
+                {"{openhack_ver}", []() {
+                    static std::string version = fmt::format(
+                            "{}.{}.{}",
+                            OPENHACK_VERSION_MAJOR,
+                            OPENHACK_VERSION_MINOR,
+                            OPENHACK_VERSION_PATCH);
+                    return version;
+                }},
+#ifdef OPENHACK_GEODE
+                {"{mod_count}", []() {
+                    static auto allMods = geode::Loader::get()->getAllMods();
+                    static auto modCount = std::count_if(allMods.begin(), allMods.end(), [](const auto &mod) {
+                        return mod->shouldLoad();
+                    });
+                    return std::to_string(modCount);
+                }},
+#endif
         };
 
         std::string result = text;
