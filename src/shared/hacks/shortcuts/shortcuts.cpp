@@ -9,48 +9,6 @@
 
 namespace openhack::hacks {
 
-#ifdef PLATFORM_WINDOWS
-
-    void Shortcuts::patchGame() {
-        gui::Modal::create("4GB Patch", [](gui::Modal *popup) {
-            ImGui::TextWrapped("This patch allows the game to use 4GB, instead of only 2GB.");
-            ImGui::TextWrapped("It is highly recommended to install this patch, as "
-                               "it resolves some \"Out of memory\"/\"Bad Allocation\" crashes.");
-
-            if (gui::button("Apply Patch", {0.5, 0.f})) {
-                bool success = win32::four_gb::patch();
-                L_INFO("Patched the game to use 4GB of memory: {}", success);
-                if (success) {
-                    popup->close();
-                    gui::Modal::create("4GB Patch", [](gui::Modal *popup) {
-                        ImGui::TextWrapped("Patched the game to use 4GB of memory. Please restart the game.");
-                        if (gui::button("Restart")) {
-                            ON_STANDALONE(std::exit(0);) // TODO: Implement proper restart for standalone
-                            ON_GEODE(geode::utils::game::restart();)
-                        }
-                    });
-                } else {
-                    popup->close();
-                    gui::Modal::create("4GB Patch", "Failed to patch the game. Could not write to the file.");
-                }
-            }
-
-            ImGui::SameLine(0, 2);
-
-            if (gui::button("Cancel")) {
-                popup->close();
-            }
-        });
-    }
-
-#else
-
-    void Shortcuts::patchGame() {
-        L_WARN("4GB patch is not supported on this platform.");
-    }
-
-#endif
-
     void uncompleteLevelConfirmed() {
         if (gd::PlayLayer *playLayer = gd::PlayLayer::get()) {
             auto *level = playLayer->m_level();
@@ -167,13 +125,6 @@ namespace openhack::hacks {
             });
 
 #ifdef PLATFORM_WINDOWS
-            if (!win32::four_gb::isPatched()) {
-                if (gui::button("Apply 4GB patch")) {
-                    patchGame();
-                }
-                gui::tooltip("Highly recommended to install.\n"
-                             "Allows the game to use more memory, which resolves some crashes.");
-            }
             if (gui::button("Inject DLL")) {
                 win32::promptDllInjection();
             }

@@ -11,7 +11,6 @@
 #include <shellapi.h>
 #include <filesystem>
 
-#include "4gb_patch.hpp"
 #include "dll_inject.hpp"
 
 #include <gd.hpp>

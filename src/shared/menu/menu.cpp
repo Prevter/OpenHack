@@ -127,12 +127,6 @@ namespace openhack::menu {
         if (isInitialized)
             return;
 
-#ifdef PLATFORM_WINDOWS
-        if (!win32::four_gb::isPatched()) {
-            L_WARN("The game is not patched to use 4GB of memory");
-        }
-#endif
-
         addWindow("OpenHack", []() {
             gui::text("Version: " OPENHACK_VERSION);
             gui::text("Build: " __DATE__ " " __TIME__);
