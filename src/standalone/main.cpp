@@ -24,9 +24,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             crashhandler::init();
 
             // TODO: Add support for other versions
-            if (openhack::utils::getGameVersion() != "2.204") {
+            if (openhack::utils::getGameVersion() != "2.206") {
                 L_ERROR("Unsupported game version");
-                return FALSE;
+                return TRUE;
             }
 
             // Initialize OpenHack
