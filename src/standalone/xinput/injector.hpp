@@ -12,7 +12,7 @@ namespace xinput {
     void initialize() {
         char syspath[MAX_PATH];
         GetSystemDirectoryA(syspath, MAX_PATH);
-        strcat_s(syspath, "\\xinput9_1_0.dll");
+        strcat_s(syspath, "\\xinput1_4.dll");
         hMod = LoadLibraryA(syspath);
         if (hMod > (HMODULE) 31) {
             oXInputEnable = (tXInputEnable) GetProcAddress(hMod, "XInputEnable");

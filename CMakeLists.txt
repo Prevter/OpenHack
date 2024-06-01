@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(
     OpenHack 
-    VERSION 2.3.2
+    VERSION 2.4.0
     HOMEPAGE_URL "https://github.com/Prevter/OpenHack"
     LANGUAGES C CXX
 )
@@ -189,7 +189,7 @@ target_compile_definitions(
 set_target_properties(
     ${PROJECT_NAME}-Standalone
     PROPERTIES
-    OUTPUT_NAME "xinput9_1_0"
+    OUTPUT_NAME "xinput1_4"
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
