@@ -41,10 +41,10 @@ namespace openhack::hacks {
         void multiplyHeight(float multiplier);
 
         /// @brief Add the label to a layer.
-        void addToLayer(gd::cocos2d::CCLayer *layer);
+        void addToLayer(cocos2d::CCLayer *layer);
 
         /// @brief Remove the label from a layer.
-        void remove(gd::cocos2d::CCLayer *layer);
+        void remove(cocos2d::CCLayer *layer);
 
     public:
         /// @brief Get the label's text.
@@ -72,7 +72,7 @@ namespace openhack::hacks {
         const gui::Color &getColor() const { return m_color; }
 
     private:
-        gd::cocos2d::CCLabelBMFont *m_label = nullptr;
+        cocos2d::CCLabelBMFont *m_label = nullptr;
 
         bool m_visible = true;
         ImVec2 m_position = {0, 0};

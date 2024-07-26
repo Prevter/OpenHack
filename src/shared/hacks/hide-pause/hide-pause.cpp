@@ -3,14 +3,14 @@
 
 namespace openhack::hacks {
 
-    gd::PauseLayer* g_pauseLayer = nullptr;
+    PauseLayer* g_pauseLayer = nullptr;
 
     void updatePauseVisibility() {
         if (!g_pauseLayer) return;
-        __try {
+        if (PlayLayer::get()->m_isPaused) {
             bool enabled = config::get<bool>("hack.hide_pause.enabled", false);
             g_pauseLayer->setVisible(!enabled);
-        } __except (EXCEPTION_EXECUTE_HANDLER) {
+        } else {
             g_pauseLayer = nullptr;
         }
     }
@@ -39,7 +39,7 @@ namespace openhack::hacks {
         });
     }
 
-    void HidePause::pauseInit(gd::PauseLayer *self) {
+    void HidePause::pauseInit(PauseLayer *self) {
         g_pauseLayer = self;
         updatePauseVisibility();
     }

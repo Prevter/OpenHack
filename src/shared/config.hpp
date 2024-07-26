@@ -8,14 +8,14 @@
 
 /// @brief Namespace for all save data and configuration.
 namespace openhack::config {
-    inline nlohmann::json storage; // Object that holds options which are saved to disk
-    inline nlohmann::json globals; // Object that holds temporary values
+    nlohmann::json& getStorage();
+    nlohmann::json& getGlobals();
 
     /// @brief Check if a key exists in the configuration.
     /// @param key Key to check.
     /// @return True if the key exists in the configuration.
     inline bool has(const std::string &key) {
-        return storage.contains(key);
+        return getStorage().contains(key);
     }
 
     /// @brief Get a value by key from the configuration.
@@ -28,7 +28,7 @@ namespace openhack::config {
         if (!has(key))
             return defaultValue;
 
-        return storage.at(key).get<T>();
+        return getStorage().at(key).get<T>();
     }
 
     /// @brief Get a value by key from the configuration.
@@ -41,7 +41,7 @@ namespace openhack::config {
         if (!has(key))
             throw std::runtime_error("Key " + key + " does not exist");
 
-        return storage.at(key).get<T>();
+        return getStorage().at(key).get<T>();
     }
 
     /// @brief Set a value by key in the configuration.
@@ -50,7 +50,7 @@ namespace openhack::config {
     /// @param value Value to set.
     template<typename T>
     inline void set(const std::string &key, const T &value) {
-        storage[key] = value;
+        getStorage()[key] = value;
     }
 
     /// @brief Check if the value is of the specified type.
@@ -63,7 +63,7 @@ namespace openhack::config {
             return false;
 
         try {
-            storage.at(key).get<T>();
+            getStorage().at(key).get<T>();
             return true;
         } catch (const nlohmann::json::exception &e) {
             return false;
@@ -84,7 +84,7 @@ namespace openhack::config {
     /// @param key Key to check.
     /// @return True if the key exists in the global variables.
     inline bool hasGlobal(const std::string &key) {
-        return globals.contains(key);
+        return getGlobals().contains(key);
     }
 
     /// @brief Get a value by key from the global variables.
@@ -97,7 +97,7 @@ namespace openhack::config {
         if (!hasGlobal(key))
             return defaultValue;
 
-        return globals.at(key).get<T>();
+        return getGlobals().at(key).get<T>();
     }
 
     /// @brief Get a value by key from the global variables.
@@ -110,7 +110,7 @@ namespace openhack::config {
         if (!hasGlobal(key))
             throw std::runtime_error("Key " + key + " does not exist");
 
-        return globals.at(key).get<T>();
+        return getGlobals().at(key).get<T>();
     }
 
     /// @brief Set a value by key in the global variables.
@@ -119,7 +119,7 @@ namespace openhack::config {
     /// @param value Value to set.
     template<typename T>
     inline void setGlobal(const std::string &key, const T &value) {
-        globals[key] = value;
+        getGlobals()[key] = value;
     }
 
     /// @brief Set the default values for the configuration.

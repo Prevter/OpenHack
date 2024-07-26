@@ -21,7 +21,7 @@ namespace openhack::hacks {
         static void initLevel();
 
         /// @brief PlayLayer::addObject hook
-        static void addObject(gd::GameObject* object);
+        static void addObject(GameObject* object);
     };
 
 }

@@ -4,7 +4,7 @@
 #include <string>
 
 #include <utility>
-#include <dash/sigscan.hpp>
+#include "../platform/win32/sigscan.hpp"
 #include "../gui/gui.hpp"
 #include "../gui/window.hpp"
 

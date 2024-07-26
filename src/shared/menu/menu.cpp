@@ -51,15 +51,15 @@ namespace openhack::menu {
 
     inline void updateCursorState() {
         bool canShowInLevel = true;
-        if (auto *playLayer = gd::PlayLayer::get()) {
-            canShowInLevel = playLayer->m_hasCompletedLevel() ||
-                             playLayer->m_isPaused() ||
-                             gd::GameManager::sharedState()->getGameVariable("0024");
+        if (auto *playLayer = PlayLayer::get()) {
+            canShowInLevel = playLayer->m_hasCompletedLevel ||
+                             playLayer->m_isPaused ||
+                             GameManager::get()->getGameVariable("0024");
 
             // "Click Teleport" enables cursor, so we need to check if it's enabled
             if (config::get<bool>("hack.click_tp.enabled", false)) return;
         }
-        gd::cocos2d::CCEGLView::sharedOpenGLView()->showCursor(isOpened || canShowInLevel);
+        cocos2d::CCEGLView::sharedOpenGLView()->showCursor(isOpened || canShowInLevel);
     }
 
     void toggle() {
@@ -286,7 +286,6 @@ namespace openhack::menu {
         });
 
         isInitialized = true;
-
     }
 
     uint8_t firstRunState = 0;

@@ -10,40 +10,40 @@
 namespace openhack::hacks {
 
     void uncompleteLevelConfirmed() {
-        if (gd::PlayLayer *playLayer = gd::PlayLayer::get()) {
-            auto *level = playLayer->m_level();
-            auto *statsManager = gd::GameStatsManager::sharedState();
+        if (PlayLayer *playLayer = PlayLayer::get()) {
+            auto *level = playLayer->m_level;
+            auto *statsManager = GameStatsManager::sharedState();
             statsManager->uncompleteLevel(level);
 
             // Clear progress
-            level->m_practicePercent() = 0;
-            level->m_normalPercent() = 0;
-            level->m_newNormalPercent2() = 0;
-            level->m_orbCompletion() = 0;
-            level->m_54() = 0;
-            level->m_k111() = 0;
-            level->m_bestPoints() = 0;
-            level->m_bestTime() = 0;
+            level->m_practicePercent = 0;
+            level->m_normalPercent = 0;
+            level->m_newNormalPercent2 = 0;
+            level->m_orbCompletion = 0;
+            level->m_54 = 0;
+            level->m_k111 = 0;
+            level->m_bestPoints = 0;
+            level->m_bestTime = 0;
 
             // Remove coins
-            auto *coinDict = reinterpret_cast<cocos2d::CCDictionary *>(statsManager->m_verifiedUserCoins());
+            auto *coinDict = statsManager->m_verifiedUserCoins;
             if (!coinDict) {
                 L_WARN("coinDict is null");
                 return;
             }
-            auto coins = level->m_coins();
+            auto coins = level->m_coins;
             for (auto i = 0; i < coins; i++) {
                 auto *key = level->getCoinKey(i + 1);
                 coinDict->removeObjectForKey(key);
             }
 
             // Save the level
-            gd::GameLevelManager::sharedState()->saveLevel(level);
+            GameLevelManager::sharedState()->saveLevel(level);
         }
     }
 
     void Shortcuts::uncompleteLevel() {
-        if (!gd::PlayLayer::get()) {
+        if (!PlayLayer::get()) {
             gui::Modal::create("Uncomplete level", "You need to be in a level to use this.");
             return;
         }
@@ -60,24 +60,24 @@ namespace openhack::hacks {
     }
 
     void Shortcuts::openOptions() {
-        auto *options = gd::OptionsLayer::create();
-        auto *scene = gd::cocos2d::CCDirector::sharedDirector()->getRunningScene();
+        auto *options = OptionsLayer::create();
+        auto *scene = cocos2d::CCDirector::sharedDirector()->getRunningScene();
         scene->addChild(options);
         options->setZOrder(1000);
         options->showLayer(false);
     }
 
     void Shortcuts::restartLevel() {
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (playLayer) {
             playLayer->resetLevel();
         }
     }
 
     void Shortcuts::togglePractice() {
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (playLayer) {
-            bool isPractice = playLayer->m_isPracticeMode();
+            bool isPractice = playLayer->m_isPracticeMode;
             playLayer->togglePracticeMode(!isPractice);
         }
     }

@@ -139,6 +139,11 @@ endif()
 # ========================================
 # | Standalone build
 # ========================================
+if (BUILD_STANDALONE)
+    message(ERROR "Standalone build is deprecated, please use Geode instead")
+    return()
+end()
+
 if (NOT BUILD_STANDALONE)
     message(STATUS "Standalone build disabled")
     return()

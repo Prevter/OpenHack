@@ -41,7 +41,7 @@ namespace openhack::menu::keybinds {
 
     /// @brief Gets all keybinds.
     /// @return All keybinds.
-    std::vector<Keybind> getKeybinds();
+    std::vector<Keybind>& getKeybinds();
 
     /// @brief Sets the callback for a keybind if it exists.
     /// @param id The ID of the keybind.

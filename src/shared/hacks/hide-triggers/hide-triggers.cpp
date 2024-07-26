@@ -9,7 +9,7 @@
 
 namespace openhack::hacks {
 
-    static std::vector<gd::GameObject*> triggers;
+    static std::vector<GameObject*> triggers;
 
     void HideTriggers::onInit() {
         // Set the default value
@@ -34,15 +34,15 @@ namespace openhack::hacks {
     void HideTriggers::onPlaytest() {
         if (!config::get<bool>("hack.hide_triggers.enabled")) return;
 
-        auto *editorLayer = gd::LevelEditorLayer::get();
+        auto *editorLayer = LevelEditorLayer::get();
         if (!editorLayer) return;
 
         triggers.clear();
-        auto objects = reinterpret_cast<cocos2d::CCArray*>(editorLayer->m_objects());
+        auto objects = editorLayer->m_objects;
         for (int i = 0; i < objects->count(); i++) {
             auto obj = objects->objectAtIndex(i);
-            auto* gameObject = reinterpret_cast<gd::GameObject*>(obj);
-            if (gameObject->m_objectType() == gd::GameObjectType::Modifier) {
+            auto* gameObject = reinterpret_cast<GameObject*>(obj);
+            if (gameObject->m_objectType == GameObjectType::Modifier) {
                 triggers.push_back(gameObject);
             }
         }

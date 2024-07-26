@@ -2,6 +2,7 @@
 
 #include <random>
 #include <imgui.h>
+#include <Geode/Geode.hpp>
 #include "platform/platform.hpp"
 
 #ifndef M_PI
@@ -9,15 +10,11 @@
 #endif
 
 #ifdef __clang__
-
 #include <ctime>
-
 #else
 
 #include <time.h>
-
 #endif
-
 #include <chrono>
 
 #if 0
@@ -112,7 +109,7 @@ namespace openhack::utils {
     /// @param pos The screen position.
     /// @return The frame position.
     inline ImVec2 screenToFrame(const ImVec2& pos) {
-        auto *director = gd::cocos2d::CCDirector::sharedDirector();
+        auto *director = cocos2d::CCDirector::sharedDirector();
         const auto frameSize = director->getOpenGLView()->getFrameSize();
         const auto winSize = director->getWinSize();
 
@@ -125,103 +122,103 @@ namespace openhack::utils {
     /// @brief Compare the version of the game with the given version.
     /// @param version The version to compare with, in the format "[>=|<=|>|<|=]x.yyy,x.yyy-x.yyy,..."
     /// @return True if the version is compatible with the given version.
-    inline bool compareVersion(const std::string &version) {
-        // Split the versions
-        std::vector<std::string> parts;
-        std::string versionCopy = version;
-        std::string delimiter = ",";
-        size_t pos = 0;
-        std::string token;
-        while ((pos = versionCopy.find(delimiter)) != std::string::npos) {
-            token = versionCopy.substr(0, pos);
-            parts.push_back(token);
-            versionCopy.erase(0, pos + delimiter.length());
-        }
-        parts.push_back(versionCopy);
-
-        // Get current version
-        auto currentVersion = utils::getGameVersion();
-
-        // Check if any of the versions are compatible
-        bool match = false;
-        for (auto &part: parts) {
-            // Check if it's a range
-            if (part.find('-') != std::string::npos) {
-                std::vector<std::string> range;
-                std::string rangeCopy = part;
-                std::string rangeDelimiter = "-";
-                size_t rangePos = 0;
-                std::string rangeToken;
-                while ((rangePos = rangeCopy.find(rangeDelimiter)) != std::string::npos) {
-                    rangeToken = rangeCopy.substr(0, rangePos);
-                    range.push_back(rangeToken);
-                    rangeCopy.erase(0, rangePos + rangeDelimiter.length());
-                }
-                range.push_back(rangeCopy);
-
-                if (range.size() != 2)
-                    continue;
-
-                if (strcmp(currentVersion.c_str(), range.at(0).c_str()) >= 0 &&
-                    strcmp(currentVersion.c_str(), range.at(0).c_str()) <= 0) {
-                    match = true;
-                    break;
-                }
-            } else {
-                // Get operator
-                auto op = part.at(0);
-                std::string ver = part.substr(1);
-                std::string operation;
-                switch (op) {
-                    case '=':
-                        operation = "==";
-                        break;
-                    case '!':
-                        operation = "!=";
-                        break;
-                    case '>':
-                        // Check if it's >=
-                        if (part.at(1) == '=') {
-                            operation = ">=";
-                            ver = ver.substr(1);
-                        } else {
-                            operation = ">";
-                        }
-                        break;
-                    case '<':
-                        // Check if it's <=
-                        if (part.at(1) == '=') {
-                            operation = "<=";
-                            ver = ver.substr(1);
-                        } else {
-                            operation = "<";
-                        }
-                        break;
-                    default:
-                        operation = "==";
-                        break;
-                }
-
-                int32_t result = strcmp(currentVersion.c_str(), ver.c_str());
-                if (operation == "==" && result == 0)
-                    match = true;
-                else if (operation == "!=" && result != 0)
-                    match = true;
-                else if (operation == "<" && result < 0)
-                    match = true;
-                else if (operation == "<=" && result <= 0)
-                    match = true;
-                else if (operation == ">" && result > 0)
-                    match = true;
-                else if (operation == ">=" && result >= 0)
-                    match = true;
-
-                if (match)
-                    break;
-            }
-        }
-
-        return match;
+    inline bool compareVersion(std::string version) {
+        return false;
+//        // Split the versions
+//        std::vector<std::string> parts;
+//        std::string delimiter = ",";
+//        size_t pos = 0;
+//        std::string token;
+//        while ((pos = version.find(delimiter)) != std::string::npos) {
+//            token = version.substr(0, pos);
+//            parts.push_back(token);
+//            version.erase(0, pos + delimiter.length());
+//        }
+//        parts.push_back(version);
+//
+//        // Get current version
+//        auto currentVersion = utils::getGameVersion();
+//
+//        // Check if any of the versions are compatible
+//        bool match = false;
+//        for (auto &part: parts) {
+//            // Check if it's a range
+//            if (part.find('-') != std::string::npos) {
+//                std::vector<std::string> range;
+//                std::string rangeCopy = part;
+//                std::string rangeDelimiter = "-";
+//                size_t rangePos = 0;
+//                std::string rangeToken;
+//                while ((rangePos = rangeCopy.find(rangeDelimiter)) != std::string::npos) {
+//                    rangeToken = rangeCopy.substr(0, rangePos);
+//                    range.push_back(rangeToken);
+//                    rangeCopy.erase(0, rangePos + rangeDelimiter.length());
+//                }
+//                range.push_back(rangeCopy);
+//
+//                if (range.size() != 2)
+//                    continue;
+//
+//                if (strcmp(currentVersion.c_str(), range.at(0).c_str()) >= 0 &&
+//                    strcmp(currentVersion.c_str(), range.at(0).c_str()) <= 0) {
+//                    match = true;
+//                    break;
+//                }
+//            } else {
+//                // Get operator
+//                auto op = part.at(0);
+//                std::string ver = part.substr(1);
+//                std::string operation;
+//                switch (op) {
+//                    case '=':
+//                        operation = "==";
+//                        break;
+//                    case '!':
+//                        operation = "!=";
+//                        break;
+//                    case '>':
+//                        // Check if it's >=
+//                        if (part.at(1) == '=') {
+//                            operation = ">=";
+//                            ver = ver.substr(1);
+//                        } else {
+//                            operation = ">";
+//                        }
+//                        break;
+//                    case '<':
+//                        // Check if it's <=
+//                        if (part.at(1) == '=') {
+//                            operation = "<=";
+//                            ver = ver.substr(1);
+//                        } else {
+//                            operation = "<";
+//                        }
+//                        break;
+//                    default:
+//                        operation = "==";
+//                        break;
+//                }
+//
+//                int32_t result = strcmp(currentVersion.c_str(), ver.c_str());
+//                if (operation == "==" && result == 0)
+//                    match = true;
+//                else if (operation == "!=" && result != 0)
+//                    match = true;
+//                else if (operation == "<" && result < 0)
+//                    match = true;
+//                else if (operation == "<=" && result <= 0)
+//                    match = true;
+//                else if (operation == ">" && result > 0)
+//                    match = true;
+//                else if (operation == ">=" && result >= 0)
+//                    match = true;
+//
+//                if (match)
+//                    break;
+//            }
+//        }
+//
+//        return match;
     }
 
     /// @brief Convert a string of hex characters to a vector of bytes.

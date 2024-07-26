@@ -6,7 +6,7 @@ namespace openhack::hacks {
     bool isDead = false;
     bool lastFrameDead = false;
     bool isAntiCheatDeath = false;
-    gd::GameObject* antiCheatObject = nullptr;
+    GameObject* antiCheatObject = nullptr;
     uint32_t deathCount = 0;
 
     void NoclipLimit::onInit() {
@@ -68,7 +68,7 @@ namespace openhack::hacks {
         return result;
     }
 
-    void NoclipLimit::destroyPlayer(gd::GameObject* object) {
+    void NoclipLimit::destroyPlayer(GameObject* object) {
         isAntiCheatDeath = false;
 
         auto frames = config::getGlobal("frame", 0);
@@ -111,8 +111,8 @@ namespace openhack::hacks {
     }
 
     void NoclipLimit::processCommands() {
-        auto* playlayer = gd::PlayLayer::get();
-        if (!playlayer || playlayer->m_hasCompletedLevel() || playlayer->m_player1()->m_isDead()) return;
+        auto* playlayer = PlayLayer::get();
+        if (!playlayer || playlayer->m_hasCompletedLevel || playlayer->m_player1->m_isDead) return;
 
         if (isDead) {
             deathCount++;

@@ -3,23 +3,26 @@
 #include "menu.hpp"
 
 namespace openhack::menu::keybinds {
-    static std::vector<Keybind> keybinds;
+    std::vector<Keybind>& getKeybinds() {
+        static std::vector<Keybind> keybinds;
+        return keybinds;
+    }
 
     void addKeybind(const Keybind &keybind) {
-        keybinds.push_back(keybind);
+        getKeybinds().push_back(keybind);
     }
 
     void removeKeybind(const std::string &id) {
-        for (auto it = keybinds.begin(); it != keybinds.end(); ++it) {
+        for (auto it = getKeybinds().begin(); it != getKeybinds().end(); ++it) {
             if (it->id == id) {
-                keybinds.erase(it);
+                getKeybinds().erase(it);
                 return;
             }
         }
     }
 
     Keybind getKeybind(const std::string &id) {
-        for (auto &keybind: keybinds) {
+        for (auto &keybind: getKeybinds()) {
             if (keybind.id == id) {
                 return keybind;
             }
@@ -28,17 +31,13 @@ namespace openhack::menu::keybinds {
     }
 
     bool hasKeybind(const std::string &id) {
-        return std::any_of(keybinds.begin(), keybinds.end(), [&](const Keybind &keybind) {
+        return std::any_of(getKeybinds().begin(), getKeybinds().end(), [&](const Keybind &keybind) {
             return keybind.id == id;
         });
     }
 
-    std::vector<Keybind> getKeybinds() {
-        return keybinds;
-    }
-
     void setKeybindCallback(const std::string &id, const std::function<void()> &callback) {
-        for (auto &keybind: keybinds) {
+        for (auto &keybind: getKeybinds()) {
             if (keybind.id == id) {
                 keybind.callback = callback;
                 return;
@@ -47,7 +46,7 @@ namespace openhack::menu::keybinds {
     }
 
     void load() {
-        keybinds = config::get("keybinds", std::vector<Keybind>());
+        getKeybinds() = config::get("keybinds", std::vector<Keybind>());
 
         // Create the keybinds window
         menu::addWindow("Keybinds", [&]() {
@@ -61,10 +60,10 @@ namespace openhack::menu::keybinds {
             gui::checkbox("In-game only", "keybinds.ingame");
             gui::tooltip("Only allow keybinds to be triggered when you're inside a level.\nUseful, to avoid triggering keybinds while searching for levels.");
 
-            if (keybinds.empty())
+            if (getKeybinds().empty())
                 gui::text("Right click any hack and\npress \"Add keybind\" to set it.");
 
-            for (auto &keybind: keybinds) {
+            for (auto &keybind: getKeybinds()) {
                 uint32_t originalKeycode = keybind.keycode;
                 if (gui::keybind(keybind.name.c_str(), &keybind.keycode, true)) {
                     removeKeybind(keybind.id);
@@ -79,10 +78,10 @@ namespace openhack::menu::keybinds {
     }
 
     void update() {
-        if (config::get<bool>("keybinds.ingame") && !gd::PlayLayer::get())
+        if (config::get<bool>("keybinds.ingame") && !PlayLayer::get())
             return;
 
-        for (auto &keybind: keybinds) {
+        for (auto &keybind: getKeybinds()) {
             if (utils::isKeyPressed(keybind.keycode) && keybind.callback) {
                 keybind.callback();
                 save();
@@ -91,7 +90,7 @@ namespace openhack::menu::keybinds {
     }
 
     void save() {
-        config::set("keybinds", keybinds);
+        config::set("keybinds", getKeybinds());
         config::save();
     }
 

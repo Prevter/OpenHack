@@ -18,7 +18,7 @@
 namespace openhack::hooks {
     struct PlayLayerHook : geode::Modify<PlayLayerHook, PlayLayer> {
         bool init(GJGameLevel *level, bool useReplay, bool dontCreateObjects) {
-            hacks::Display::playLayerInit(reinterpret_cast<gd::GJGameLevel *>(level));
+            hacks::Display::playLayerInit(level);
             hacks::AutoPickupCoins::initLevel();
             hacks::StartPosSwitcher::initLevel();
             hacks::Labels::playLayerInit();
@@ -49,13 +49,13 @@ namespace openhack::hooks {
 
         void addObject(GameObject *object) {
             PlayLayer::addObject(object);
-            hacks::AutoPickupCoins::addObject(reinterpret_cast<gd::GameObject *>(object));
-            hacks::StartPosSwitcher::addObject(reinterpret_cast<gd::GameObject *>(object));
-            hacks::SmartStartPos::addObject(reinterpret_cast<gd::GameObject *>(object));
+            hacks::AutoPickupCoins::addObject(object);
+            hacks::StartPosSwitcher::addObject(object);
+            hacks::SmartStartPos::addObject(object);
         }
 
         void destroyPlayer(PlayerObject* player, GameObject* object) {
-            hacks::NoclipLimit::destroyPlayer(reinterpret_cast<gd::GameObject *>(object));
+            hacks::NoclipLimit::destroyPlayer(object);
             PlayLayer::destroyPlayer(player, object);
             hacks::NoclipLimit::postDestroyPlayer();
             hacks::Hitboxes::destroyPlayer();

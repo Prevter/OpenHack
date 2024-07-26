@@ -64,11 +64,11 @@ namespace openhack::hacks {
     void RGBIcons::postUpdate() {
         if (!config::get<bool>("hack.rgb_icons.enabled", false)) return;
 
-        auto *gameLayer = gd::GJBaseGameLayer::get();
+        auto *gameLayer = GJBaseGameLayer::get();
         if (!gameLayer) return;
 
-        auto *player1 = gameLayer->m_player1();
-        auto *player2 = gameLayer->m_player2();
+        auto *player1 = gameLayer->m_player1;
+        auto *player2 = gameLayer->m_player2;
 
         auto speed = config::get<float>("hack.rgb_icons.speed") / 10.0f;
         auto saturation = config::get<float>("hack.rgb_icons.saturation") / 100.f;
@@ -80,13 +80,13 @@ namespace openhack::hacks {
         if (player1) {
             if (applyPrimary) {
                 auto color1 = getRainbowColor(speed, saturation, value, 0.0f);
-                reinterpret_cast<cocos2d::CCSprite *>(player1)->setColor({static_cast<uint8_t>(color1.r * 255),
-                                                                          static_cast<uint8_t>(color1.g * 255),
-                                                                          static_cast<uint8_t>(color1.b * 255)});
+                player1->setColor({static_cast<uint8_t>(color1.r * 255),
+                                   static_cast<uint8_t>(color1.g * 255),
+                                   static_cast<uint8_t>(color1.b * 255)});
             }
             if (applySecondary) {
                 auto color2 = getRainbowColor(speed, saturation, value, secondOffset);
-                reinterpret_cast<cocos2d::CCSprite *>(player1->m_iconSpriteSecondary())->setColor(
+                player1->m_iconSpriteSecondary->setColor(
                         {static_cast<uint8_t>(color2.r * 255),
                          static_cast<uint8_t>(color2.g * 255),
                          static_cast<uint8_t>(color2.b * 255)});
@@ -97,13 +97,13 @@ namespace openhack::hacks {
             auto offset = config::get<float>("hack.rgb_icons.playerOffset");
             if (applyPrimary) {
                 auto color1 = getRainbowColor(speed, saturation, value, offset);
-                reinterpret_cast<cocos2d::CCSprite *>(player2)->setColor({static_cast<uint8_t>(color1.r * 255),
-                                                                          static_cast<uint8_t>(color1.g * 255),
-                                                                          static_cast<uint8_t>(color1.b * 255)});
+                player2->setColor({static_cast<uint8_t>(color1.r * 255),
+                                  static_cast<uint8_t>(color1.g * 255),
+                                  static_cast<uint8_t>(color1.b * 255)});
             }
             if (applySecondary) {
                 auto color2 = getRainbowColor(speed, saturation, value, secondOffset + offset);
-                reinterpret_cast<cocos2d::CCSprite *>(player2->m_iconSpriteSecondary())->setColor(
+                player2->m_iconSpriteSecondary->setColor(
                         {static_cast<uint8_t>(color2.r * 255),
                          static_cast<uint8_t>(color2.g * 255),
                          static_cast<uint8_t>(color2.b * 255)});

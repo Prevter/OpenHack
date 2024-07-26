@@ -6,8 +6,8 @@
 namespace openhack::hacks {
 
     struct PlayerHitbox {
-        gd::cocos2d::CCRect hitbox;
-        gd::cocos2d::CCRect tinyHitbox;
+        cocos2d::CCRect hitbox;
+        cocos2d::CCRect tinyHitbox;
     };
 
     static ToggleComponent *s_hitboxesToggle = nullptr;
@@ -45,18 +45,18 @@ namespace openhack::hacks {
 
     /// @brief Check whether hitboxes made by RobTop should be drawn. (e.g. in practice mode)
     inline bool robtopHitboxCheck() {
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (!playLayer) return false;
-        return playLayer->m_isPracticeMode() && gd::GameManager::sharedState()->getGameVariable("0166");
+        return playLayer->m_isPracticeMode && GameManager::get()->getGameVariable("0166");
     }
 
     /// @brief Clears the hitboxes if the feature is disabled.
     inline void toggleOffIfNeeded() {
         if (isEnabled()) return;
 
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (!playLayer) return;
-        auto *debugDrawNode = playLayer->m_debugDrawNode();
+        auto *debugDrawNode = playLayer->m_debugDrawNode;
         if (!debugDrawNode) return;
 
         // Toggle the visibility of the debug draw node
@@ -189,26 +189,23 @@ namespace openhack::hacks {
         return config::get<bool>("hack.hitboxes.enabled", false);
     }
 
-    gd::cocos2d::CCRect getPlayerHitbox(gd::PlayerObject *player) {
-        auto *rect = player->getObjectRect();
-        return {rect->origin.x, rect->origin.y, rect->size.width, rect->size.height};
-    }
-
-    inline void drawRect(gd::cocos2d::CCDrawNode *node, const gd::cocos2d::CCRect &rect, const gui::Color &color,
+    inline void drawRect(cocos2d::CCDrawNode *node, const cocos2d::CCRect &rect, const gui::Color &color,
                          float borderWidth, const gui::Color &borderColor) {
-        std::vector<gd::cocos2d::CCPoint> vertices = {
-                gd::cocos2d::CCPoint(rect.getMinX(), rect.getMinY()),
-                gd::cocos2d::CCPoint(rect.getMinX(), rect.getMaxY()),
-                gd::cocos2d::CCPoint(rect.getMaxX(), rect.getMaxY()),
-                gd::cocos2d::CCPoint(rect.getMaxX(), rect.getMinY())
+        std::vector<cocos2d::CCPoint> vertices = {
+                cocos2d::CCPoint(rect.getMinX(), rect.getMinY()),
+                cocos2d::CCPoint(rect.getMinX(), rect.getMaxY()),
+                cocos2d::CCPoint(rect.getMaxX(), rect.getMaxY()),
+                cocos2d::CCPoint(rect.getMaxX(), rect.getMinY())
         };
         s_skipDrawHook = true;
-        node->drawPolygon(vertices.data(), vertices.size(),
-                          (const gd::cocos2d::_ccColor4F &) color, borderWidth,
-                          (const gd::cocos2d::_ccColor4F &) borderColor);
+        node->drawPolygon(
+            vertices.data(), vertices.size(),
+            (const cocos2d::_ccColor4F &) color, borderWidth,
+            (const cocos2d::_ccColor4F &) borderColor
+        );
     }
 
-    inline gd::cocos2d::CCRect scaleHitbox(const gd::cocos2d::CCRect &rect, float scale) {
+    inline cocos2d::CCRect scaleHitbox(const cocos2d::CCRect &rect, float scale) {
         auto width = rect.size.width * scale;
         auto height = rect.size.height * scale;
         auto x = rect.origin.x + (rect.size.width - width) / 2;
@@ -231,15 +228,15 @@ namespace openhack::hacks {
         return HitboxType::Danger;
     }
 
-    void Hitboxes::modifyDraw(gd::cocos2d::CCDrawNode *node, gui::Color &color, float &borderWidth,
+    void Hitboxes::modifyDraw(cocos2d::CCDrawNode *node, gui::Color &color, float &borderWidth,
                               gui::Color &borderColor) {
         if (s_skipDrawHook) {
             s_skipDrawHook = false;
             return;
         }
 
-        if (!gd::PlayLayer::get()) return;
-        if (node != gd::PlayLayer::get()->m_debugDrawNode()) return;
+        if (!PlayLayer::get()) return;
+        if (node != PlayLayer::get()->m_debugDrawNode) return;
         if (!shouldDrawHitboxes()) return;
 
         bool accuratePlayer = false;
@@ -278,8 +275,8 @@ namespace openhack::hacks {
     void Hitboxes::postUpdate() {
         if (!isEnabled()) return;
 
-        auto *playLayer = gd::PlayLayer::get();
-        auto *debugDrawNode = playLayer->m_debugDrawNode();
+        auto *playLayer = PlayLayer::get();
+        auto *debugDrawNode = playLayer->m_debugDrawNode;
 
         bool enabled = shouldDrawHitboxes();
         debugDrawNode->setVisible(enabled || robtopHitboxCheck());
@@ -301,19 +298,19 @@ namespace openhack::hacks {
             gui::Color innerFillColor(innerColor.r, innerColor.g, innerColor.b, fill ? fillAlpha : 0.f);
             float borderWidth = 0.25f * scale;
 
-            auto *player1 = playLayer->m_player1();
+            auto *player1 = playLayer->m_player1;
             if (player1) {
-                auto hitbox = getPlayerHitbox(player1);
+                auto hitbox = player1->getObjectRect();
                 drawRect(debugDrawNode, hitbox, fillColor, borderWidth, borderColor);
-                auto tinyHitbox = scaleHitbox(hitbox, player1->m_vehicleSize() >= 1.f ? 0.25f : 0.4f);
+                auto tinyHitbox = scaleHitbox(hitbox, player1->m_vehicleSize >= 1.f ? 0.25f : 0.4f);
                 drawRect(debugDrawNode, tinyHitbox, innerFillColor, borderWidth, innerColor);
             }
 
-            auto *player2 = playLayer->m_player2();
+            auto *player2 = playLayer->m_player2;
             if (player2) {
-                auto hitbox = getPlayerHitbox(player2);
+                auto hitbox = player2->getObjectRect();
                 drawRect(debugDrawNode, hitbox, fillColor, borderWidth, borderColor);
-                auto tinyHitbox = scaleHitbox(hitbox, player2->m_vehicleSize() >= 1.f ? 0.25f : 0.4f);
+                auto tinyHitbox = scaleHitbox(hitbox, player2->m_vehicleSize >= 1.f ? 0.25f : 0.4f);
                 drawRect(debugDrawNode, tinyHitbox, innerFillColor, borderWidth, innerColor);
             }
         }
@@ -354,9 +351,9 @@ namespace openhack::hacks {
     }
 
     void Hitboxes::destroyPlayer() {
-        auto *playLayer = gd::PlayLayer::get();
-        auto *player = playLayer->m_player1();
-        if (player && !player->m_isDead()) return;
+        auto *playLayer = PlayLayer::get();
+        auto *player = playLayer->m_player1;
+        if (player && !player->m_isDead) return;
         s_isDead = true;
     }
 
@@ -364,20 +361,20 @@ namespace openhack::hacks {
         if (!config::get<bool>("hack.hitboxes.trail", false)) return;
 
         // Add player trail to the queue
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (!playLayer) return;
 
-        auto *player1 = playLayer->m_player1();
-        auto *player2 = playLayer->m_player2();
+        auto *player1 = playLayer->m_player1;
+        auto *player2 = playLayer->m_player2;
 
-        if (player1 && !player1->m_isDead()) {
-            auto hitbox = getPlayerHitbox(player1);
-            s_playerTrail1.emplace_back(hitbox, scaleHitbox(hitbox, player1->m_vehicleSize() >= 1.f ? 0.25f : 0.4f));
+        if (player1 && !player1->m_isDead) {
+            auto hitbox = player1->getObjectRect();
+            s_playerTrail1.emplace_back(hitbox, scaleHitbox(hitbox, player1->m_vehicleSize >= 1.f ? 0.25f : 0.4f));
         }
 
-        if (player2 && !player2->m_isDead()) {
-            auto hitbox = getPlayerHitbox(player2);
-            s_playerTrail2.emplace_back(hitbox, scaleHitbox(hitbox, player2->m_vehicleSize() >= 1.f ? 0.25f : 0.4f));
+        if (player2 && !player2->m_isDead) {
+            auto hitbox = player2->getObjectRect();
+            s_playerTrail2.emplace_back(hitbox, scaleHitbox(hitbox, player2->m_vehicleSize >= 1.f ? 0.25f : 0.4f));
         }
 
         // Remove old player trail

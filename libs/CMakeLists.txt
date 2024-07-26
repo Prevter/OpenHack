@@ -28,18 +28,22 @@ target_link_libraries(
 )
 
 # Other libraries
-add_subdirectory(gd.hpp)
 add_subdirectory(json)
 add_subdirectory(glfw)
 add_subdirectory(discord-rpc)
 add_subdirectory(zephyrus)
+
+# Fix debug build
+if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND WIN32)
+    target_compile_definitions(discord-rpc PRIVATE _HAS_ITERATOR_DEBUGGING=0)
+    target_compile_definitions(Zephyrus PRIVATE _HAS_ITERATOR_DEBUGGING=0)
+endif()
 
 # Link all external libraries
 target_link_libraries(
     external_libs INTERFACE
     imgui
     glfw
-    gd.hpp
     nlohmann_json::nlohmann_json
     discord-rpc
     Zephyrus

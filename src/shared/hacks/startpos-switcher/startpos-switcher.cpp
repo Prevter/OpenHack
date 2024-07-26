@@ -4,13 +4,13 @@
 
 namespace openhack::hacks {
 
-    std::vector<gd::StartPosObject *> StartPosSwitcher::m_startposes;
+    std::vector<StartPosObject *> StartPosSwitcher::m_startposes;
     int32_t StartPosSwitcher::m_currentIndex;
     Label *m_label;
 
     void StartPosSwitcher::updateLabel() {
         // Check if PlayLayer is available
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (playLayer == nullptr) return;
 
         // Check if label is available
@@ -23,7 +23,7 @@ namespace openhack::hacks {
         m_label->setVisible(show);
         m_label->setTextColor(config::get<gui::Color>("hack.startpos_switch.label.color"));
         m_label->setScale(config::get<float>("hack.startpos_switch.label.scale"));
-        auto winSize = gd::cocos2d::CCDirector::sharedDirector()->getWinSize();
+        auto winSize = cocos2d::CCDirector::sharedDirector()->getWinSize();
         m_label->setPosition({winSize.width / 2.f, 2.0f});
         m_label->setAnchor({0.5f, 0.0f});
         auto text = fmt::format("{}/{}", m_currentIndex + 1, m_startposes.size());
@@ -78,7 +78,7 @@ namespace openhack::hacks {
 
     void StartPosSwitcher::update() {
         // Get PlayLayer
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (playLayer == nullptr) {
             if (m_label != nullptr) {
                 delete m_label;
@@ -104,25 +104,25 @@ namespace openhack::hacks {
 
     void StartPosSwitcher::lateInitLevel() {
         // Sort startposes by x position
-        std::sort(m_startposes.begin(), m_startposes.end(), [](gd::GameObject *a, gd::GameObject *b) {
-            return a->m_startPosition().x < b->m_startPosition().x;
+        std::sort(m_startposes.begin(), m_startposes.end(), [](GameObject *a, GameObject *b) {
+            return a->m_startPosition.x < b->m_startPosition.x;
         });
 
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         size_t count = m_startposes.size();
-        m_currentIndex = playLayer->m_isTestMode() ? count - 1 : -1;
+        m_currentIndex = playLayer->m_isTestMode ? count - 1 : -1;
 
         // Setup label
         m_label = new Label("", "bigFont.fnt");
         m_label->setId("openhack-startpos-label");
-        m_label->addToLayer(gd::PlayLayer::get());
+        m_label->addToLayer(PlayLayer::get());
         updateLabel();
     }
 
-    void StartPosSwitcher::addObject(gd::GameObject *object) {
-        uint32_t id = object->m_objectID();
+    void StartPosSwitcher::addObject(GameObject *object) {
+        uint32_t id = object->m_objectID;
         if (id == 31) {
-            m_startposes.push_back(reinterpret_cast<gd::StartPosObject *>(object));
+            m_startposes.push_back(static_cast<StartPosObject *>(object));
         }
     }
 
@@ -130,7 +130,7 @@ namespace openhack::hacks {
         if (!config::get<bool>("hack.startpos_switch.enabled", false)) return;
 
         // Get PlayLayer
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (playLayer == nullptr) return;
 
         updateLabel();
@@ -139,7 +139,7 @@ namespace openhack::hacks {
             playLayer->resetCamera();
     }
 
-    void StartPosSwitcher::pickStartPos(gd::PlayLayer *playLayer, int32_t index) {
+    void StartPosSwitcher::pickStartPos(PlayLayer *playLayer, int32_t index) {
         if (m_startposes.empty()) return;
 
         size_t count = m_startposes.size();
@@ -151,7 +151,7 @@ namespace openhack::hacks {
         }
 
         m_currentIndex = index;
-        playLayer->m_startPosCheckpoint(nullptr);
+        playLayer->m_currentCheckpoint = nullptr;
 
         if (index >= 0) {
             playLayer->setStartPosObject(m_startposes[index]);
@@ -159,7 +159,7 @@ namespace openhack::hacks {
             playLayer->setStartPosObject(nullptr);
         }
 
-        if (playLayer->m_isPracticeMode())
+        if (playLayer->m_isPracticeMode)
             playLayer->resetLevelFromStart();
 
         playLayer->resetLevel();

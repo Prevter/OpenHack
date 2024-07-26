@@ -194,15 +194,15 @@ namespace openhack::hacks {
         }
     }
 
-    std::string DiscordRPC::replaceTokens(const char *id, gd::PlayLayer *playLayer, gd::LevelEditorLayer *editorLayer) {
+    std::string DiscordRPC::replaceTokens(const char *id, PlayLayer *playLayer, LevelEditorLayer *editorLayer) {
         auto str = config::get<std::string>(id);
         return Labels::replaceTokens(str, playLayer, editorLayer);
     }
 
     /// @brief Get the current state of the game and return corresponding strings
     DiscordRPCState DiscordRPC::getState() {
-        if (auto playLayer = gd::PlayLayer::get()) {
-            if (playLayer->m_level()->m_levelLength() == gd::GJLevelLength::Platformer) {
+        if (auto playLayer = PlayLayer::get()) {
+            if (playLayer->m_level->isPlatformer()) {
                 // Playing a platformer level
                 return {
                         replaceTokens("hack.discord_rpc.platformer.state", playLayer),
@@ -221,7 +221,7 @@ namespace openhack::hacks {
                     playLayer,
                     nullptr,
             };
-        } else if (auto editorLayer = gd::LevelEditorLayer::get()) {
+        } else if (auto editorLayer = LevelEditorLayer::get()) {
             // Editing a level
             return {
                     replaceTokens("hack.discord_rpc.editor.state", nullptr, editorLayer),

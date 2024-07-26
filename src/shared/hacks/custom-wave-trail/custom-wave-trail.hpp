@@ -16,7 +16,7 @@ namespace openhack::hacks {
 
     public:
         /// @brief PlayLayer::postUpdate hook
-        static void updateStroke(gd::HardStreak* streak);
+        static void updateStroke(HardStreak* streak);
     };
 
 }

@@ -23,7 +23,7 @@ namespace openhack::hacks {
 
     public:
         /// @brief PlayLayer::init hook
-        static void playLayerInit(gd::GJGameLevel *level);
+        static void playLayerInit(GJGameLevel *level);
 
         /// @brief PlayLayer::resetLevel hook
         static void playLayerReset();

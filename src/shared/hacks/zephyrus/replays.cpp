@@ -22,65 +22,63 @@ namespace openhack::hacks {
         // Initialize Zephyrus
         s_replayEngine = zephyrus::Zephyrus();
         s_replayEngine.setGetFrameMethod([]() -> uint32_t {
-            auto *playLayer = gd::PlayLayer::get();
+            auto *playLayer = PlayLayer::get();
             if (playLayer == nullptr) return 0;
-            auto frame = static_cast<uint32_t>(playLayer->m_dTime() * 240.0f);
+            auto frame = static_cast<uint32_t>(playLayer->m_gameState.m_levelTime * 240.0f);
             return frame;
         });
 
         s_replayEngine.setHandleButtonMethod([](int player, int button, bool pressed) {
-            auto *playLayer = gd::PlayLayer::get();
+            auto *playLayer = PlayLayer::get();
             if (playLayer == nullptr) return;
             playLayer->handleButton(
-                    pressed,
-                    static_cast<gd::PlayerButton>(button),
+                    pressed, button,
                     player == 0 ?
-                    playLayer->m_player1() : playLayer->m_player2());
+                    playLayer->m_player1 : playLayer->m_player2);
         });
 
         s_replayEngine.setFixPlayerMethod([](int player, const zephyrus::Macro::FrameFix::PlayerData &data) {
-            auto *playLayer = gd::PlayLayer::get();
+            auto *playLayer = PlayLayer::get();
             if (playLayer == nullptr) return;
             auto *playerObj = player == 0 ?
-                              playLayer->m_player1() : playLayer->m_player2();
+                              playLayer->m_player1 : playLayer->m_player2;
 
             if (playerObj == nullptr || s_levelFinished) return;
 
             // set position
-            auto*playerSpr = reinterpret_cast<cocos2d::CCSprite*>(playerObj);
-            playerObj->m_position().x = data.x;
-            playerObj->m_position().y = data.y;
-            playerObj->m_yAccel(data.ySpeed);
-            playerSpr->setPosition({data.x, data.y});
+            playerObj->m_position.x = data.x;
+            playerObj->m_position.y = data.y;
+            playerObj->m_yVelocity = data.ySpeed;
+            playerObj->setPosition({data.x, data.y});
 
             if (config::get<bool>("zephyrus.rotationFix", true)) {
-                playerSpr->setRotation(data.rotation);
+                playerObj->setRotation(data.rotation);
             }
         });
 
         s_replayEngine.setRequestMacroFixMethod([]() -> zephyrus::Macro::FrameFix {
-            auto *playLayer = gd::PlayLayer::get();
+            auto *playLayer = PlayLayer::get();
             if (playLayer == nullptr) return zephyrus::Macro::FrameFix(0, {0, 0, 0, 0});
 
-            auto *player1 = playLayer->m_player1();
-            auto *player2 = playLayer->m_player2();
+            auto *player1 = playLayer->m_player1;
+            auto *player2 = playLayer->m_player2;
 
             if (player1 == nullptr) return zephyrus::Macro::FrameFix(0, {0, 0, 0, 0});
 
             zephyrus::Macro::FrameFix::PlayerData player1Data = {
-                    player1->m_position().x,
-                    player1->m_position().y,
-                    player1->m_yAccel(),
-                    reinterpret_cast<cocos2d::CCSprite *>(player1)->getRotation()
+                    player1->m_position.x,
+                    player1->m_position.y,
+                    player1->m_yVelocity,
+                    player1->getRotation()
             };
 
             if (player2 == nullptr) return {0, player1Data};
 
             zephyrus::Macro::FrameFix::PlayerData player2Data = {
-                    player2->m_position().x,
-                    player2->m_position().y,
-                    player2->m_yAccel(),
-                    reinterpret_cast<cocos2d::CCSprite *>(player2)->getRotation()
+                    player2->m_position.x,
+                    player2->m_position.y,
+                    player2->m_yVelocity,
+                    player2->getRotation()
             };
 
             return {0, player1Data, player2Data};
@@ -97,11 +95,11 @@ namespace openhack::hacks {
             static geode::Mod* cbfMod = geode::Loader::get()->getLoadedMod("syzzi.click_between_frames");
             static bool hasCBF = cbfMod != nullptr && cbfMod->isEnabled();
 
-            if (hasCBF) {
+            if (hasCBF && !cbfMod->getSettingValue<bool>("soft-toggle")) {
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.5f, 0.5f, 1.0f));
                 ImGui::TextWrapped("Warning: \"Click Between Frames\" is enabled");
                 gui::tooltip("The replay system may not work correctly with this mod enabled.\n"
-                            "Please disable it to use the replay system.");
+                             "Please disable it to use the replay system.");
                 ImGui::PopStyleColor();
             }
 #endif
@@ -165,7 +163,7 @@ namespace openhack::hacks {
                 }
             }
 
-            ImGui::Text("Macro actions: %d", s_replayEngine.getMacro().getFrames().size());
+            ImGui::Text("Macro actions: %zu", s_replayEngine.getMacro().getFrames().size());
             ImGui::Text("Frame: %d", s_replayEngine.getFrame());
         });
     }
@@ -177,30 +175,30 @@ namespace openhack::hacks {
                 && !s_replayEngine.getMacro().getFrames().empty();
     }
 
-    void Zephyrus::PlayerObjectPushButton(gd::PlayerObject *player, int buttonIndex) {
-        auto *playLayer = gd::PlayLayer::get();
+    void Zephyrus::PlayerObjectPushButton(PlayerObject *player, int buttonIndex) {
+        auto *playLayer = PlayLayer::get();
         if (playLayer == nullptr) return;
         s_replayEngine.PlayerObjectPushButton(
-                player == playLayer->m_player2() ? 1 : 0,
+                player == playLayer->m_player2 ? 1 : 0,
                 buttonIndex);
     }
 
-    void Zephyrus::PlayerObjectReleaseButton(gd::PlayerObject *player, int buttonIndex) {
-        auto *playLayer = gd::PlayLayer::get();
+    void Zephyrus::PlayerObjectReleaseButton(PlayerObject *player, int buttonIndex) {
+        auto *playLayer = PlayLayer::get();
         if (playLayer == nullptr) return;
         s_replayEngine.PlayerObjectReleaseButton(
-                player == playLayer->m_player2() ? 1 : 0,
+                player == playLayer->m_player2 ? 1 : 0,
                 buttonIndex);
     }
 
     void Zephyrus::GJBaseGameLayerProcessCommands() {
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (playLayer == nullptr) return;
         s_replayEngine.GJBaseGameLayerProcessCommands();
     }
 
     void Zephyrus::PlayLayerResetLevel() {
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (playLayer == nullptr) return;
         s_levelFinished = false;
         s_replayEngine.PlayLayerResetLevel();

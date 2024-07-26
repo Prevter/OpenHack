@@ -9,8 +9,8 @@ namespace openhack::hacks {
         std::string details;
         std::string imageKey;
         std::string imageText;
-        gd::PlayLayer *playLayer;
-        gd::LevelEditorLayer *editorLayer;
+        PlayLayer *playLayer;
+        LevelEditorLayer *editorLayer;
     };
 
     /// @brief Discord Rich Presence integration
@@ -34,7 +34,7 @@ namespace openhack::hacks {
         /// @brief Gets the string from config and replaces all tokens with their values
         /// @param id The string to replace tokens in
         /// @return The string with tokens replaced
-        static std::string replaceTokens(const char *id, gd::PlayLayer *playLayer = nullptr, gd::LevelEditorLayer *editorLayer = nullptr);
+        static std::string replaceTokens(const char *id, PlayLayer *playLayer = nullptr, LevelEditorLayer *editorLayer = nullptr);
     };
 
 }

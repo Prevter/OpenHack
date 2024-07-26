@@ -31,10 +31,10 @@ namespace openhack::hacks {
         if (!config::get<bool>("hack.instant_complete.enabled", false)) return;
 
         // Get the current PlayLayer
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (!playLayer) return;
-        auto *level = playLayer->m_level();
-        if (level->m_levelLength() == gd::GJLevelLength::Platformer) {
+        auto *level = playLayer->m_level;
+        if (level->isPlatformer()) {
             playLayer->playPlatformerEndAnimationToPos({2, 2}, false);
         } else {
             playLayer->playEndAnimationToPos({2, 2});

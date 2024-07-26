@@ -3,8 +3,8 @@
 
 namespace openhack::hacks {
 
-    static std::vector<gd::StartPosObject*> s_startPosObjects;
-    static std::vector<gd::GameObject*> s_gravityPortals, s_dualPortals, s_gamemodePortals, s_miniPortals, s_speedChanges, s_mirrorPortals;
+    static std::vector<StartPosObject*> s_startPosObjects;
+    static std::vector<GameObject*> s_gravityPortals, s_dualPortals, s_gamemodePortals, s_miniPortals, s_speedChanges, s_mirrorPortals;
 
     void SmartStartPos::onInit() {
         // Set default values
@@ -38,8 +38,8 @@ namespace openhack::hacks {
         s_mirrorPortals.clear();
     }
 
-    void SmartStartPos::addObject(gd::GameObject* object) {
-        auto objID = object->m_objectID();
+    void SmartStartPos::addObject(GameObject* object) {
+        auto objID = object->m_objectID;
         switch (objID) {
             case 10: // Blue Gravity Portal
             case 11: // Yellow Gravity Portal
@@ -76,7 +76,7 @@ namespace openhack::hacks {
                 s_speedChanges.push_back(object);
                 break;
             case 31: // StartPos
-                s_startPosObjects.push_back(reinterpret_cast<gd::StartPosObject*>(object));
+                s_startPosObjects.push_back(static_cast<StartPosObject*>(object));
                 break;
             default:
                 return;
@@ -87,8 +87,8 @@ namespace openhack::hacks {
     }
 
     /// @brief Get all objects that are before the given x position
-    std::vector<gd::GameObject*> findBefore(std::vector<gd::GameObject*>& vec, float x) {
-        std::vector<gd::GameObject*> result;
+    std::vector<GameObject*> findBefore(std::vector<GameObject*>& vec, float x) {
+        std::vector<GameObject*> result;
         for (auto* obj : vec) {
             if (obj->getPositionX() < x) {
                 result.push_back(obj);
@@ -97,8 +97,8 @@ namespace openhack::hacks {
         return result;
     }
 
-    gd::GameObject* findLastBefore(std::vector<gd::GameObject*>& vec, float x) {
-        gd::GameObject* result = nullptr;
+    GameObject* findLastBefore(std::vector<GameObject*>& vec, float x) {
+        GameObject* result = nullptr;
         for (auto* obj : vec) {
             if (obj->getPositionX() < x) {
                 result = obj;
@@ -113,13 +113,13 @@ namespace openhack::hacks {
 
         for (auto* startPos : s_startPosObjects) {
             auto x = startPos->getPositionX();
-            auto* startPosSettings = startPos->m_levelSettings();
-            bool upsideDown = startPosSettings->m_isFlipped();
-            bool dual = startPosSettings->m_startDual();
-            bool mini = startPosSettings->m_startMini();
-            bool mirror = startPosSettings->m_mirrorMode();
-            int speed = startPosSettings->m_startSpeed();
-            int gamemode = startPosSettings->m_startMode();
+            auto* startPosSettings = startPos->m_startSettings;
+            bool upsideDown = startPosSettings->m_isFlipped;
+            bool dual = startPosSettings->m_startDual;
+            bool mini = startPosSettings->m_startMini;
+            bool mirror = startPosSettings->m_mirrorMode;
+            int speed = static_cast<int>(startPosSettings->m_startSpeed);
+            int gamemode = startPosSettings->m_startMode;
 
             // Get all objects that are before the current StartPos
             auto gravityPortals = findBefore(s_gravityPortals, x + 10);
@@ -131,7 +131,7 @@ namespace openhack::hacks {
 
             // Iterate over all objects and set the settings accordingly
             for (auto* gravityPortal : gravityPortals) {
-                switch (gravityPortal->m_objectID()) {
+                switch (gravityPortal->m_objectID) {
                     case 10: // Blue Gravity Portal
                         upsideDown = false;
                         break;
@@ -145,7 +145,7 @@ namespace openhack::hacks {
             }
 
             if (dualPortal) {
-                switch (dualPortal->m_objectID()) {
+                switch (dualPortal->m_objectID) {
                     case 286: // Orange Dual Portal
                         dual = true;
                         break;
@@ -156,7 +156,7 @@ namespace openhack::hacks {
             }
 
             if (dualPortal) {
-                switch (gamemodePortal->m_objectID()) {
+                switch (gamemodePortal->m_objectID) {
                     case 12: // Cube Portal
                         gamemode = 0;
                         break;
@@ -185,7 +185,7 @@ namespace openhack::hacks {
             }
 
             if (miniPortal) {
-                switch (miniPortal->m_objectID()) {
+                switch (miniPortal->m_objectID) {
                     case 99: // Normal Size Portal
                         mini = false;
                         break;
@@ -196,7 +196,7 @@ namespace openhack::hacks {
             }
 
             if (speedChange) {
-                switch (speedChange->m_objectID()) {
+                switch (speedChange->m_objectID) {
                     case 200: // -1x Speed Change
                         speed = 1;
                         break;
@@ -216,7 +216,7 @@ namespace openhack::hacks {
             }
 
             if (mirrorPortal) {
-                switch (mirrorPortal->m_objectID()) {
+                switch (mirrorPortal->m_objectID) {
                     case 45: // Orange Mirror Portal
                         mirror = true;
                         break;
@@ -226,12 +226,12 @@ namespace openhack::hacks {
                 }
             }
 
-            startPosSettings->m_startMode() = gamemode;
-            startPosSettings->m_startSpeed() = speed;
-            startPosSettings->m_startMini() = mini;
-            startPosSettings->m_startDual() = dual;
-            startPosSettings->m_mirrorMode() = mirror;
-            startPosSettings->m_isFlipped() = upsideDown;
+            startPosSettings->m_startMode = gamemode;
+            startPosSettings->m_startSpeed = static_cast<Speed>(speed);
+            startPosSettings->m_startMini = mini;
+            startPosSettings->m_startDual = dual;
+            startPosSettings->m_mirrorMode = mirror;
+            startPosSettings->m_isFlipped = upsideDown;
         }
 
     }

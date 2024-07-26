@@ -23,10 +23,10 @@ namespace openhack::hacks {
         });
     }
 
-    ImVec2 screenToGame(ImVec2 screenPos, gd::PlayLayer *playLayer) {
-        auto cameraPos = playLayer->m_gameState().m_cameraPosition();
-        auto cameraScale = playLayer->m_gameState().m_cameraScale();
-        auto cameraAngle = playLayer->m_gameState().m_cameraAngle();
+    ImVec2 screenToGame(ImVec2 screenPos, PlayLayer *playLayer) {
+        auto cameraPos = playLayer->m_gameState.m_cameraPosition;
+        auto cameraScale = playLayer->m_gameState.m_cameraZoom;
+        auto cameraAngle = playLayer->m_gameState.m_cameraAngle;
 
         // Rotate the position around the camera angle
         // TODO: Fix rotation
@@ -46,14 +46,14 @@ namespace openhack::hacks {
         if (!config::get<bool>("hack.click_tp.enabled", false)) return;
 
         // Always show the cursor
-        gd::cocos2d::CCEGLView::sharedOpenGLView()->showCursor(true);
+        cocos2d::CCEGLView::sharedOpenGLView()->showCursor(true);
 
         // Check if the right mouse button is pressed
         if (!utils::isKeyPressed("RMB")) return;
 
         // Check if the player is in the play layer
-        if (auto *playLayer = gd::PlayLayer::get()) {
-            auto *player = playLayer->m_player1();
+        if (auto *playLayer = PlayLayer::get()) {
+            auto *player = playLayer->m_player1;
             if (!player) return;
 
             ImVec2 mousePos = ImGui::GetMousePos();
@@ -63,7 +63,7 @@ namespace openhack::hacks {
             auto teleportPos = screenToGame({framePos.x, framePos.y}, playLayer);
 
             // Teleport the player
-            player->m_position({teleportPos.x, teleportPos.y});
+            player->m_position = cocos2d::CCPoint {teleportPos.x, teleportPos.y};
         }
     }
 

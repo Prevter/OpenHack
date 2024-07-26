@@ -32,7 +32,7 @@ namespace openhack::hacks {
 
     void SpeedHack::update() {
         FMOD::Channel *channel;
-        FMOD::System *system = gd::FMODAudioEngine::sharedEngine()->m_system();
+        FMOD::System *system = FMODAudioEngine::sharedEngine()->m_system;
         for (auto i = 0; i < 2; i++) {
             system->getChannel(126 + i, &channel);
             if (channel)

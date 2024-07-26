@@ -1,9 +1,6 @@
 [submodule "libs/imgui"]
 	path = libs/imgui
 	url = https://github.com/prevter/imgui
-[submodule "libs/gd.hpp"]
-	path = libs/gd.hpp
-	url = https://github.com/prevter/gd.hpp
 [submodule "libs/minhook"]
 	path = libs/minhook
 	url = https://github.com/TsudaKageyu/minhook

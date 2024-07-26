@@ -56,7 +56,7 @@ namespace openhack::hacks {
         if (!config::get<bool>("hack.auto_deafen.enabled", false)) return;
 
         // Get PlayLayer
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (playLayer == nullptr) return setState(false);
 
         // Get the current percentage
@@ -69,12 +69,12 @@ namespace openhack::hacks {
         bool testMode = config::get<bool>("hack.auto_deafen.test_mode", false);
 
         // Ignore practice and test mode if disabled
-        if (!practice && playLayer->m_isPracticeMode()) return setState(false);
-        if (!testMode && playLayer->m_isTestMode()) return setState(false);
+        if (!practice && playLayer->m_isPracticeMode) return setState(false);
+        if (!testMode && playLayer->m_isTestMode) return setState(false);
 
         // Check if paused, level ended or died
-        auto* player = playLayer->m_player1();
-        if (playLayer->m_isPaused() || playLayer->m_hasCompletedLevel() || player->m_isDead())
+        auto* player = playLayer->m_player1;
+        if (playLayer->m_isPaused || playLayer->m_hasCompletedLevel || player->m_isDead)
             return setState(false);
 
         setState(percentage >= startPercentage && percentage <= endPercentage);

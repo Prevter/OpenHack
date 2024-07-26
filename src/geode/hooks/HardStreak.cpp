@@ -7,7 +7,7 @@
 namespace openhack::hooks {
     struct HardStreakHook : geode::Modify<HardStreakHook, HardStreak> {
         void updateStroke(float dt) {
-            hacks::CustomWaveTrail::updateStroke(reinterpret_cast<gd::HardStreak *>(this));
+            hacks::CustomWaveTrail::updateStroke(this);
             HardStreak::updateStroke(dt);
         }
     };
