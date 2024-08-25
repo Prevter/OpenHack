@@ -69,7 +69,7 @@ namespace openhack::utils {
     /// @brief Convert a key name to a key code.
     /// @param key The key name.
     /// @return The key code.
-    uint32_t getKeyCode(std::string key);
+    uint32_t getKeyCode(std::string_view key);
 
     /// @brief Gets the window handle of the game.
     HWND getWindowHandle();
@@ -81,7 +81,7 @@ namespace openhack::utils {
     bool isKeyDown(uint32_t keycode);
 
     /// @brief Check whether a key is down.
-    bool isKeyDown(std::string key);
+    bool isKeyDown(std::string_view key);
 
     /// @brief Check whether a key was pressed during the current frame.
     /// @param keycode The key code.
@@ -91,7 +91,7 @@ namespace openhack::utils {
     /// @brief Check whether a key was pressed during the current frame.
     /// @param key Key name.
     /// @return True if the key was pressed.
-    bool isKeyPressed(std::string key);
+    bool isKeyPressed(std::string_view key);
 
     /// @brief Check whether a key was released during the current frame.
     /// @param keycode The key code.
@@ -101,7 +101,7 @@ namespace openhack::utils {
     /// @brief Check whether a key was released during the current frame.
     /// @param key Key name.
     /// @return True if the key was released.
-    bool isKeyReleased(std::string key);
+    bool isKeyReleased(std::string_view key);
 
     /// @brief Needs to be called every frame to update the key states.
     void resetKeyStates();
@@ -112,7 +112,7 @@ namespace openhack::utils {
 
     /// @brief Simulates a key press.
     /// @param key The key name.
-    void pressKey(std::string key);
+    void pressKey(std::string_view key);
 
     /// @brief Open a file dialog to select a file.
     std::filesystem::path filePickerDialog(const char *filter, const char *title);

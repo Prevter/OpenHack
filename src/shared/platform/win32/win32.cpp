@@ -277,12 +277,12 @@ namespace openhack::utils {
         return "Unknown";
     }
 
-    uint32_t getKeyCode(std::string key) {
+    uint32_t getKeyCode(std::string_view key) {
         // find key in map
+        std::string key_lower = std::string(key);
+        std::transform(key_lower.begin(), key_lower.end(), key_lower.begin(), ::tolower);
+
         for (auto &key_: getKeyNames()) {
-            // compare lowercase strings
-            std::string key_lower = key;
-            std::transform(key_lower.begin(), key_lower.end(), key_lower.begin(), ::tolower);
             std::string key_lower_ = key_.second;
             std::transform(key_lower_.begin(), key_lower_.end(), key_lower_.begin(), ::tolower);
             if (key_lower == key_lower_) {
@@ -328,8 +328,8 @@ namespace openhack::utils {
         return GetAsyncKeyState(keycode) & 0x8000;
     }
 
-    bool isKeyDown(std::string key) {
-        return isKeyDown(getKeyCode(std::move(key)));
+    bool isKeyDown(std::string_view key) {
+        return isKeyDown(getKeyCode(key));
     }
 
     bool isKeyPressed(uint32_t keycode) {
@@ -346,8 +346,8 @@ namespace openhack::utils {
         return false;
     }
 
-    bool isKeyPressed(std::string key) {
-        return isKeyPressed(getKeyCode(std::move(key)));
+    bool isKeyPressed(std::string_view key) {
+        return isKeyPressed(getKeyCode(key));
     }
 
     bool isKeyReleased(uint32_t keycode) {
@@ -364,8 +364,8 @@ namespace openhack::utils {
         return false;
     }
 
-    bool isKeyReleased(std::string key) {
-        return isKeyReleased(getKeyCode(std::move(key)));
+    bool isKeyReleased(std::string_view key) {
+        return isKeyReleased(getKeyCode(key));
     }
 
     void resetKeyStates() {
@@ -385,8 +385,8 @@ namespace openhack::utils {
         keybd_event(keycode, 0, KEYEVENTF_KEYUP, 0);
     }
 
-    void pressKey(std::string key) {
-        pressKey(getKeyCode(std::move(key)));
+    void pressKey(std::string_view key) {
+        pressKey(getKeyCode(key));
     }
 
     std::filesystem::path filePickerDialog(const char *filter, const char *title) {

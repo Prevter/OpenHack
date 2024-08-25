@@ -12,7 +12,7 @@ namespace openhack::menu::keybinds {
         getKeybinds().push_back(keybind);
     }
 
-    void removeKeybind(const std::string &id) {
+    void removeKeybind(std::string_view id) {
         for (auto it = getKeybinds().begin(); it != getKeybinds().end(); ++it) {
             if (it->id == id) {
                 getKeybinds().erase(it);
@@ -21,7 +21,7 @@ namespace openhack::menu::keybinds {
         }
     }
 
-    Keybind getKeybind(const std::string &id) {
+    Keybind getKeybind(std::string_view id) {
         for (auto &keybind: getKeybinds()) {
             if (keybind.id == id) {
                 return keybind;
@@ -30,13 +30,13 @@ namespace openhack::menu::keybinds {
         return {"", "", 0};
     }
 
-    bool hasKeybind(const std::string &id) {
+    bool hasKeybind(std::string_view id) {
         return std::any_of(getKeybinds().begin(), getKeybinds().end(), [&](const Keybind &keybind) {
             return keybind.id == id;
         });
     }
 
-    void setKeybindCallback(const std::string &id, const std::function<void()> &callback) {
+    void setKeybindCallback(std::string_view id, const std::function<void()> &callback) {
         for (auto &keybind: getKeybinds()) {
             if (keybind.id == id) {
                 keybind.callback = callback;
@@ -94,8 +94,8 @@ namespace openhack::menu::keybinds {
         config::save();
     }
 
-    void addMenuKeybind(const std::string &id, const std::string &label, const std::function<void()> &callback) {
-        auto popupName = "##popup_" + id;
+    void addMenuKeybind(std::string_view id, std::string_view label, const std::function<void()> &callback) {
+        auto popupName = fmt::format("##popup_{}", id);
         if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
             ImGui::OpenPopup(popupName.c_str());
         }
@@ -108,7 +108,7 @@ namespace openhack::menu::keybinds {
                 }
             } else {
                 if (ImGui::MenuItem("Add keybind")) {
-                    addKeybind({label, id, 0, callback});
+                    addKeybind({std::string(label), std::string(id), 0, callback});
                     save();
                 }
             }

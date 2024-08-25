@@ -41,8 +41,5 @@ namespace openhack {
     /// This function should be called from the entry point of the mod.
     void initialize();
 
-    /// @brief Unloads everything.
-    void deinitialize();
-
     extern bool debugMode;
 }

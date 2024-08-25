@@ -214,9 +214,12 @@ namespace openhack::menu {
                 gui::inputFloat("Animation Time", "menu.animationTime", 0.0f, 10.0f, "%.3f");
                 gui::width();
                 gui::width(110);
-                gui::combo("Easing Type", "menu.easingType", gui::animation::EASING_NAMES,
-                           gui::animation::EASING_COUNT);
-                gui::combo("Easing Mode", "menu.easingMode", gui::animation::EASING_MODE_NAMES, 3);
+                gui::combo("Easing Type", "menu.easingType",
+                           gui::animation::EASING_NAMES.data(),
+                           gui::animation::EASING_NAMES.size());
+                gui::combo("Easing Mode", "menu.easingMode",
+                           gui::animation::EASING_MODE_NAMES.data(),
+                            gui::animation::EASING_MODE_NAMES.size());
                 gui::width();
                 gui::checkbox("Animate Opacity", "menu.animateOpacity");
             });
@@ -480,7 +483,7 @@ namespace openhack::menu {
         }
     }
 
-    void addWindow(const std::string &title, const std::function<void()> &onDraw) {
+    void addWindow(std::string_view title, const std::function<void()> &onDraw) {
         windows.emplace_back(title, onDraw);
     }
 

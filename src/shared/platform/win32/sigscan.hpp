@@ -114,7 +114,7 @@ namespace gd::sigscan {
                   patched(std::move(patched)) {}
     };
 
-    inline PatternToken parseToken(std::string pattern, uint32_t &currentIndex) {
+    inline PatternToken parseToken(std::string_view pattern, uint32_t &currentIndex) {
         PatternToken token;
         token.any_byte = false;
         token.byte = 0;
@@ -132,14 +132,14 @@ namespace gd::sigscan {
             token.multi_pattern = true;
             currentIndex++;
         } else {
-            token.byte = std::stoi(pattern.substr(currentIndex, 2), nullptr, 16);
+            token.byte = std::stoi(std::string(pattern.substr(currentIndex, 2)), nullptr, 16);
             currentIndex += 2;
         }
 
         return token;
     }
 
-    inline bool eatToken(const char symbol, const std::string &pattern, uint32_t &currentIndex) {
+    inline bool eatToken(const char symbol, std::string_view pattern, uint32_t &currentIndex) {
         if (pattern[currentIndex] == symbol) {
             currentIndex++;
             return true;
@@ -147,7 +147,7 @@ namespace gd::sigscan {
         return false;
     }
 
-    inline int8_t readSignedByte(const std::string &pattern, uint32_t &currentIndex) {
+    inline int8_t readSignedByte(std::string_view pattern, uint32_t &currentIndex) {
         bool is_negative = false;
         switch (pattern[currentIndex]) {
             case '+':
@@ -161,7 +161,7 @@ namespace gd::sigscan {
                 break;
         }
 
-        int8_t byte = std::stoi(pattern.substr(currentIndex, 2), nullptr, 16);
+        int8_t byte = std::stoi(std::string(pattern.substr(currentIndex, 2)), nullptr, 16);
         if (is_negative)
             byte = -byte;
         currentIndex += 2;
@@ -172,7 +172,7 @@ namespace gd::sigscan {
     /// @brief Parses a pattern string to get a list of tokens
     /// @param pattern Pattern string
     /// @return List of pattern tokens
-    inline std::vector<PatternToken> parsePattern(const std::string &pattern) {
+    inline std::vector<PatternToken> parsePattern(std::string_view pattern) {
         uint32_t current_index = 0;
         std::vector<PatternToken> tokens;
 
@@ -206,7 +206,7 @@ namespace gd::sigscan {
     /// @brief Parses a mask string to get a list of tokens
     /// @param mask Mask string
     /// @return List of mask tokens
-    inline std::vector<MaskToken> parseMask(const std::string &mask) {
+    inline std::vector<MaskToken> parseMask(std::string_view mask) {
         uint32_t current_index = 0;
         std::vector<MaskToken> bytes;
 
@@ -250,7 +250,7 @@ namespace gd::sigscan {
             } else if (mask[current_index] == '*') // repeat next byte n times
             {
                 eatToken('(', mask, ++current_index);
-                repeat_count = std::stoi(mask.substr(current_index, 2), nullptr, 16);
+                repeat_count = std::stoi(std::string(mask.substr(current_index, 2)), nullptr, 16);
                 current_index += 2;
                 eatToken(')', mask, current_index);
                 continue;
@@ -258,7 +258,7 @@ namespace gd::sigscan {
             {
                 byte.is_pattern = true;
                 // read how many bytes should be stored
-                uint8_t bytes_to_store = std::stoi(mask.substr(++current_index, 1), nullptr, 10);
+                uint8_t bytes_to_store = std::stoi(std::string(mask.substr(++current_index, 1)), nullptr, 10);
                 eatToken('(', mask, ++current_index);
 
                 // read the pattern
@@ -271,7 +271,7 @@ namespace gd::sigscan {
                 byte.value = bytes_to_store;
                 byte.pattern = pattern;
             } else {
-                byte.value = std::stoi(mask.substr(current_index, 2), nullptr, 16);
+                byte.value = std::stoi(std::string(mask.substr(current_index, 2)), nullptr, 16);
                 current_index += 2;
             }
 
@@ -288,13 +288,13 @@ namespace gd::sigscan {
     /// @param pattern A list of pattern tokens
     /// @param library Library name
     /// @return All found addresses
-    inline std::vector<uintptr_t> findPattern(std::vector<PatternToken> pattern, const std::string &library = "") {
+    inline std::vector<uintptr_t> findPattern(std::vector<PatternToken> pattern, std::string_view library = "") {
         // get module handle
         HMODULE module;
         if (library.empty())
             module = GetModuleHandle(nullptr);
         else
-            module = GetModuleHandle(library.c_str());
+            module = GetModuleHandle(library.data());
 
         if (module == nullptr)
             return {};
@@ -381,7 +381,7 @@ namespace gd::sigscan {
     /// @param pattern Pattern string
     /// @param library Library name
     /// @return All found addresses
-    inline std::vector<uintptr_t> findPatterns(const std::string &pattern, const std::string &library = "") {
+    inline std::vector<uintptr_t> findPatterns(std::string_view pattern, std::string_view library = "") {
         return findPattern(parsePattern(pattern), library);
     }
 
@@ -389,7 +389,7 @@ namespace gd::sigscan {
     /// @param pattern Pattern string
     /// @param library Library name
     /// @return The first found address
-    inline uintptr_t findPattern(const std::string &pattern, const std::string &library = "") {
+    inline uintptr_t findPattern(std::string_view pattern, std::string_view library = "") {
         auto result = findPatterns(pattern, library);
         if (result.empty()) {
             return 0;
@@ -402,8 +402,7 @@ namespace gd::sigscan {
     /// @param mask Mask string
     /// @param library Library name
     /// @return All opcodes found
-    inline std::vector<Opcode>
-    match(const std::string &pattern, const std::string &mask = "", const std::string &library = "") {
+    inline std::vector<Opcode> match(std::string_view pattern, std::string_view mask = "", std::string_view library = "") {
         std::vector<Opcode> results;
 
         auto patternTokens = parsePattern(pattern);
@@ -420,9 +419,9 @@ namespace gd::sigscan {
             if (library.empty())
                 module_addr = (uintptr_t) GetModuleHandle(nullptr);
             else
-                module_addr = (uintptr_t) GetModuleHandle(library.c_str());
+                module_addr = (uintptr_t) GetModuleHandle(library.data());
 
-            Opcode opcode((uintptr_t) address - module_addr, library, {}, {});
+            Opcode opcode((uintptr_t) address - module_addr, std::string(library), {}, {});
             uintptr_t global_offset = 0;
 
 

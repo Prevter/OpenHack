@@ -13,25 +13,44 @@
 
 namespace openhack::gui {
     struct Color {
+        static const Color WHITE;
+        static const Color BLACK;
+        static const Color RED;
+        static const Color GREEN;
+        static const Color BLUE;
+        static const Color YELLOW;
+        static const Color CYAN;
+        static const Color MAGENTA;
+
         float r, g, b, a;
 
         Color() : r(0), g(0), b(0), a(1.0f) {}
-
         Color(float r, float g, float b, float a = 1.0f) : r(r), g(g), b(b), a(a) {}
+        Color(const Color& other) = default;
+        explicit Color(const cocos2d::ccColor4F& other) : r(other.r), g(other.g), b(other.b), a(other.a) {}
+
+        Color(Color&& other) noexcept : r(other.r), g(other.g), b(other.b), a(other.a) {
+            other.r = other.g = other.b = 0;
+            other.a = 1.0f;
+        }
+
+        Color& operator=(const Color& other);
+
+        Color& operator=(Color&& other) noexcept;
 
         /// @brief Converts the color to ImVec4
-        operator ImVec4() const {
-            return {r, g, b, a};
-        }
+        operator ImVec4() const;
 
         /// @brief Converts the color to ImU32
-        operator ImU32() const {
-            return ImGui::ColorConvertFloat4ToU32(ImVec4(r, g, b, a));
-        }
+        operator ImU32() const;
+
+        Color& operator=(const ImVec4& col2);
+
+        operator cocos2d::ccColor4F() const;
 
         /// @brief Returns a pointer to the color data
         /// @return Pointer to the color data
-        float *data() {
+        inline float* data() {
             return &r;
         }
 
@@ -41,80 +60,45 @@ namespace openhack::gui {
         /// @param v Value
         /// @param a Alpha
         /// @return New color
-        static Color fromHSV(float h, float s, float v, float a = 1.0f) {
-            float c = v * s;
-            float x = c * (1 - std::abs(fmod(h / 60.0f, 2) - 1));
-            float m = v - c;
-
-            float r, g, b;
-            if (h < 60) {
-                r = c;
-                g = x;
-                b = 0;
-            } else if (h < 120) {
-                r = x;
-                g = c;
-                b = 0;
-            } else if (h < 180) {
-                r = 0;
-                g = c;
-                b = x;
-            } else if (h < 240) {
-                r = 0;
-                g = x;
-                b = c;
-            } else if (h < 300) {
-                r = x;
-                g = 0;
-                b = c;
-            } else {
-                r = c;
-                g = 0;
-                b = x;
-            }
-
-            return {r + m, g + m, b + m, a};
-        }
+        static Color fromHSV(float h, float s, float v, float a = 1.0f);
 
         /// @brief Creates a new color from HSV values
         /// @param hsv HSV values
         /// @return New color
-        static Color fromHSV(const ImVec4 &hsv) {
+        inline static Color fromHSV(const ImVec4& hsv) {
             return fromHSV(hsv.x, hsv.y, hsv.z, hsv.w);
         }
 
+        enum class IntType {
+            RGBA, ARGB,
+            ABGR, BGRA
+        };
+
         /// @brief Gets the color from an integer
         /// @param color Integer color
+        /// @param type Integer type to convert from
         /// @return New color
-        static Color fromInt(int color) {
-            return {
-                    (float) ((color >> 16) & 0xFF) / 255.0f,
-                    (float) ((color >> 8) & 0xFF) / 255.0f,
-                    (float) (color & 0xFF) / 255.0f,
-                    (float) ((color >> 24) & 0xFF) / 255.0f};
-        }
+        static Color fromInt(int color, IntType type = IntType::RGBA);
 
         /// @brief Converts the color to an integer
+        /// @param type Integer type to convert to
         /// @return Integer color
-        [[nodiscard]] int toInt() const {
-            return ((int) (r * 255) << 16) | ((int) (g * 255) << 8) | (int) (b * 255) | ((int) (a * 255) << 24);
-        }
+        [[nodiscard]] int toInt(IntType type = IntType::RGBA) const;
 
         /// @brief Creates a new color from a string
-        /// @param color String color in format "RRGGBBAA"
+        /// @param color String color in proper format
+        /// @param type Integer type to convert from
         /// @return New color
-        static Color fromString(const char *color) {
-            uint32_t c;
-            sscanf_s(color, "%X", &c);
-            return fromInt(c);
-        }
+        static Color fromString(const std::string& color, IntType type = IntType::RGBA);
 
         /// @brief Converts the color to a string
+        /// @param type Integer type to convert to
         /// @return String color in format "RRGGBBAA"
-        [[nodiscard]] std::string toString() const {
-            uint32_t c = toInt();
-            return fmt::format("{:08X}", c);
-        }
+        [[nodiscard]] std::string toString(IntType type = IntType::RGBA) const;
+
+        /// @brief Converts the color to a CCColor3B
+        /// @return CCColor3B color
+        [[nodiscard]] cocos2d::ccColor3B toCCColor3B() const;
     };
 
 }

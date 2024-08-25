@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-// #include "hacks/labels/labels.hpp"
+#include "hacks/labels/labels.hpp"
 
 namespace openhack::config {
     nlohmann::json& getStorage() {
@@ -62,7 +62,7 @@ namespace openhack::config {
     }
 
     void save() {
-        // hacks::Labels::save();
+        hacks::Labels::save();
 
         auto path = utils::getModSaveDirectory() / "config.json";
         std::ofstream file(path);

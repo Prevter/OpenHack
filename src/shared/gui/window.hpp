@@ -20,6 +20,9 @@ namespace openhack::gui {
         /// @param onDraw Callback which will be called when the window is drawn
         Window(const std::string &title, std::function<void()> onDraw);
 
+        Window(std::string_view title, std::function<void()> onDraw)
+            : Window(std::string(title), onDraw) {}
+
         /// @brief Draw the window
         void draw();
 

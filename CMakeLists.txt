@@ -17,7 +17,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # Create build options
-option(BUILD_STANDALONE "Build the standalone version" ON)
+option(BUILD_STANDALONE "Build the standalone version" OFF)
 option(BUILD_GEODE "Build the Geode version" ON)
 
 # Get the latest abbreviated commit hash of the working branch
@@ -142,7 +142,7 @@ endif()
 if (BUILD_STANDALONE)
     message(ERROR "Standalone build is deprecated, please use Geode instead")
     return()
-end()
+endif()
 
 if (NOT BUILD_STANDALONE)
     message(STATUS "Standalone build disabled")

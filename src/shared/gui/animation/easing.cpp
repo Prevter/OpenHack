@@ -1,14 +1,7 @@
 #include "easing.hpp"
 
-#if defined(__clang__) || defined(__GNUC__)
 #include <cmath>
-#else
-#include <math.h>
-#endif
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+#include <numbers>
 
 namespace openhack::gui::animation {
     EasingFunction getEasingFunction(Easing easing, EasingMode mode) {
@@ -30,15 +23,15 @@ namespace openhack::gui::animation {
         /* == Sine == */
 
         double easeInSine(double t) {
-            return 1.0 - cos(t * M_PI / 2.0);
+            return 1.0 - cos(t * std::numbers::pi / 2.0);
         }
 
         double easeOutSine(double t) {
-            return sin(t * M_PI / 2.0);
+            return sin(t * std::numbers::pi / 2.0);
         }
 
         double easeInOutSine(double t) {
-            return -(cos(M_PI * t) - 1.0) / 2.0;
+            return -(cos(std::numbers::pi * t) - 1.0) / 2.0;
         }
 
         /* == Quadratic == */
@@ -157,7 +150,7 @@ namespace openhack::gui::animation {
             if (t == 0.0 || t == 1.0)
                 return t;
 
-            const double c4 = (2 * M_PI) / 3;
+            const double c4 = (2 * std::numbers::pi) / 3;
             return -pow(2.0, 10.0 * t - 10.0) * sin((t * 10.0 - 10.75) * c4);
         }
 
@@ -165,7 +158,7 @@ namespace openhack::gui::animation {
             if (t == 0.0 || t == 1.0)
                 return t;
 
-            const double c4 = (2 * M_PI) / 3;
+            const double c4 = (2 * std::numbers::pi) / 3;
             return pow(2.0, -10.0 * t) * sin((t * 10.0 - 0.75) * c4) + 1.0;
         }
 
@@ -174,9 +167,9 @@ namespace openhack::gui::animation {
                 return t;
 
             if (t < 0.5)
-                return -(pow(2.0, 20.0 * t - 10.0) * sin((20.0 * t - 11.125) * (2 * M_PI) / 4.5)) / 2.0;
+                return -(pow(2.0, 20.0 * t - 10.0) * sin((20.0 * t - 11.125) * (2 * std::numbers::pi) / 4.5)) / 2.0;
 
-            return (pow(2.0, -20.0 * t + 10.0) * sin((20.0 * t - 11.125) * (2 * M_PI) / 4.5)) / 2.0 + 1.0;
+            return (pow(2.0, -20.0 * t + 10.0) * sin((20.0 * t - 11.125) * (2 * std::numbers::pi) / 4.5)) / 2.0 + 1.0;
         }
 
         /* == Bounce == */
@@ -191,11 +184,16 @@ namespace openhack::gui::animation {
 
             if (t < 1.0 / d1)
                 return n1 * t * t;
-            if (t < 2.0 / d1)
-                return n1 * (t -= 1.5 / d1) * t + 0.75;
-            if (t < 2.5 / d1)
-                return n1 * (t -= 2.25 / d1) * t + 0.9375;
-            return n1 * (t -= 2.625 / d1) * t + 0.984375;
+            if (t < 2.0 / d1) {
+                auto t2 = t - 1.5 / d1;
+                return n1 * t2 * t2 + 0.75;
+            }
+            if (t < 2.5 / d1) {
+                auto t2 = t - 2.25 / d1;
+                return n1 * t2 * t2 + 0.9375;
+            }
+            auto t2 = t - 2.625 / d1;
+            return n1 * t2 * t2 + 0.984375;
         }
 
         double easeInOutBounce(double t) {

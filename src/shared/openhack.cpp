@@ -21,8 +21,4 @@ namespace openhack {
         hacks::initialize();
         L_INFO("Initialized hacks");
     }
-
-    void deinitialize() {
-        config::save();
-    }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <array>
 
 namespace openhack::gui::animation {
     /// @brief Function pointer for an easing function.
@@ -24,7 +25,7 @@ namespace openhack::gui::animation {
     };
 
     /// @brief Easing names.
-    const char *const EASING_NAMES[] = {
+    const std::array<const char*, 11> EASING_NAMES = {
             "Linear",
             "Sine",
             "Quadratic",
@@ -38,7 +39,7 @@ namespace openhack::gui::animation {
             "Bounce",
     };
 
-    const size_t EASING_COUNT = sizeof(EASING_NAMES) / sizeof(EASING_NAMES[0]);
+    const size_t EASING_COUNT = EASING_NAMES.size();
 
     /// @brief Easing modes.
     enum class EasingMode {
@@ -48,7 +49,7 @@ namespace openhack::gui::animation {
     };
 
     /// @brief Easing mode names.
-    const char *const EASING_MODE_NAMES[] = {
+    const std::array<const char*, 3> EASING_MODE_NAMES = {
             "EaseIn",
             "EaseOut",
             "EaseInOut",

@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 #include <nlohmann/json.hpp>
 #include <imgui.h>
@@ -14,7 +15,7 @@ namespace openhack::config {
     /// @brief Check if a key exists in the configuration.
     /// @param key Key to check.
     /// @return True if the key exists in the configuration.
-    inline bool has(const std::string &key) {
+    inline bool has(std::string_view key) {
         return getStorage().contains(key);
     }
 
@@ -24,7 +25,7 @@ namespace openhack::config {
     /// @param defaultValue Default value to return if the key does not exist.
     /// @return Value from the configuration or the default value if the key does not exist.
     template<typename T>
-    inline T get(const std::string &key, const T &defaultValue) {
+    inline T get(std::string_view key, const T &defaultValue) {
         if (!has(key))
             return defaultValue;
 
@@ -37,9 +38,9 @@ namespace openhack::config {
     /// @param key Key to get the value from.
     /// @return Value from the configuration.
     template<typename T>
-    inline T get(const std::string &key) {
+    inline T get(std::string_view key) {
         if (!has(key))
-            throw std::runtime_error("Key " + key + " does not exist");
+            throw std::runtime_error(fmt::format("Key '{}' does not exist", key));
 
         return getStorage().at(key).get<T>();
     }
@@ -49,7 +50,7 @@ namespace openhack::config {
     /// @param key Key to set the value to.
     /// @param value Value to set.
     template<typename T>
-    inline void set(const std::string &key, const T &value) {
+    inline void set(std::string_view key, const T &value) {
         getStorage()[key] = value;
     }
 
@@ -58,7 +59,7 @@ namespace openhack::config {
     /// @param key Key to check.
     /// @return True if the value is of the specified type.
     template<typename T>
-    inline bool is(const std::string &key) {
+    inline bool is(std::string_view key) {
         if (!has(key))
             return false;
 
@@ -75,7 +76,7 @@ namespace openhack::config {
     /// @param key Key to set the value to.
     /// @param value Value to set.
     template<typename T>
-    inline void setIfEmpty(const std::string &key, const T &value) {
+    inline void setIfEmpty(std::string_view key, const T &value) {
         if (!has(key))
             set(key, value);
     }
@@ -83,7 +84,7 @@ namespace openhack::config {
     /// @brief Check if a key exists in the global variables.
     /// @param key Key to check.
     /// @return True if the key exists in the global variables.
-    inline bool hasGlobal(const std::string &key) {
+    inline bool hasGlobal(std::string_view key) {
         return getGlobals().contains(key);
     }
 
@@ -93,7 +94,7 @@ namespace openhack::config {
     /// @param defaultValue Default value to return if the key does not exist.
     /// @return Value from the global variables or the default value if the key does not exist.
     template<typename T>
-    inline T getGlobal(const std::string &key, const T &defaultValue) {
+    inline T getGlobal(std::string_view key, const T &defaultValue) {
         if (!hasGlobal(key))
             return defaultValue;
 
@@ -106,9 +107,9 @@ namespace openhack::config {
     /// @param key Key to get the value from.
     /// @return Value from the global variables.
     template<typename T>
-    inline T getGlobal(const std::string &key) {
+    inline T getGlobal(std::string_view key) {
         if (!hasGlobal(key))
-            throw std::runtime_error("Key " + key + " does not exist");
+            throw std::runtime_error(fmt::format("Key '{}' does not exist", key));
 
         return getGlobals().at(key).get<T>();
     }
@@ -118,7 +119,7 @@ namespace openhack::config {
     /// @param key Key to set the value to.
     /// @param value Value to set.
     template<typename T>
-    inline void setGlobal(const std::string &key, const T &value) {
+    inline void setGlobal(std::string_view key, const T &value) {
         getGlobals()[key] = value;
     }
 
