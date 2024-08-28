@@ -31,6 +31,11 @@ namespace openhack::hacks {
         });
     }
 
+    static bool isSpeedPortal(GameObject* obj) {
+        auto id = obj->m_objectID;
+        return id == 200 || id == 201 || id == 202 || id == 203 || id == 1334;
+    }
+
     void HideTriggers::onPlaytest() {
         if (!config::get<bool>("hack.hide_triggers.enabled")) return;
 
@@ -42,7 +47,9 @@ namespace openhack::hacks {
         for (int i = 0; i < objects->count(); i++) {
             auto obj = objects->objectAtIndex(i);
             auto* gameObject = reinterpret_cast<GameObject*>(obj);
-            if (gameObject->m_objectType == GameObjectType::Modifier) {
+            if (gameObject->m_objectType == GameObjectType::Modifier &&
+                    !isSpeedPortal(gameObject) &&
+                    gameObject->m_objectID != 2063) {
                 triggers.push_back(gameObject);
             }
         }

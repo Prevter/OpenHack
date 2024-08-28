@@ -2,17 +2,8 @@
   "title": "Level",
   "items": [
     {
-      "type": "toggle",
-      "title": "Noclip",
-      "description": "Disables dying.",
-      "id": "level.noclip",
-      "opcodes": [
-        {
-          "pattern": "6A148BCBFF15",
-          "mask": "E9@4(8BCBFF15????^8B4C24?64890D00000000595F5E)"
-        }
-      ],
-      "cheat": true
+      "type": "embedded",
+      "hack": "noclip"
     },
     {
       "type": "embedded",

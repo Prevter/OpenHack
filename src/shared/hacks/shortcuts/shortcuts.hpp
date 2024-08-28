@@ -15,7 +15,7 @@ namespace openhack::hacks {
         bool isCheating() override { return false; }
 
     private:
-        static void patchGame();
+        // static void patchGame();
         static void uncompleteLevel();
         static void openOptions();
         static void restartLevel();

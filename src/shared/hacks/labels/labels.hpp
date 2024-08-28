@@ -133,8 +133,7 @@ namespace openhack::hacks {
         bool isCheating() override { return false; }
 
         /// @brief Replaces all {} tokens in a string with their respective values
-        static std::string
-        replaceTokens(const std::string &text, PlayLayer *playLayer, LevelEditorLayer *editorLayer);
+        static std::string replaceTokens(const std::string &text, PlayLayer *playLayer, LevelEditorLayer *editorLayer);
 
         /// @brief Save the labels to the config
         static void save();

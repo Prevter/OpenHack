@@ -14,7 +14,7 @@ namespace openhack::hacks {
         void update() override {}
         bool isCheating() override { return false; }
 
-        static void updateSmartStartPos();
+        static void updateSmartStartPos(StartPosObject* startPos);
 
     public:
         /// @brief PlayLayer::init hook
@@ -22,6 +22,9 @@ namespace openhack::hacks {
 
         /// @brief PlayLayer::addObject hook
         static void addObject(GameObject* object);
+
+        /// @brief PlayLayer::resetLevel hook
+        static void resetLevel();
     };
 
 }

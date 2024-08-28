@@ -11,6 +11,7 @@
 #include "click-tp/click-tp.hpp"
 #include "labels/labels.hpp"
 #include "noclip-limit/noclip-limit.hpp"
+#include "noclip/noclip.hpp"
 #include "rgb-icons/rgb-icons.hpp"
 #include "zephyrus/replays.hpp"
 #include "frame-stepper/frame-stepper.hpp"
@@ -44,6 +45,7 @@ namespace openhack::hacks {
         new DiscordRPC(),
         new ClickTeleport(),
         new Labels(),
+        new Noclip(),
         new NoclipLimit(),
         new RGBIcons(),
         new Zephyrus(),

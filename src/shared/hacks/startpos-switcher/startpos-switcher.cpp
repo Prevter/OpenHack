@@ -114,7 +114,7 @@ namespace openhack::hacks {
 
         // Setup label
         m_label = new Label("", "bigFont.fnt");
-        m_label->setId("openhack-startpos-label");
+        m_label->setId("startpos-label"_spr);
         m_label->addToLayer(PlayLayer::get());
         updateLabel();
     }

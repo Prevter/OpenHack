@@ -16,7 +16,7 @@ namespace openhack::hacks {
 
     public:
         /// @brief PlayLayer::destroyPlayer hook
-        static void destroyPlayer(GameObject* object);
+        static void destroyPlayer(PlayerObject* player, GameObject* object);
 
         /// @brief PlayLayer::destroyPlayer hook (after the original function)
         static void postDestroyPlayer();

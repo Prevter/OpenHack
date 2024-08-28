@@ -4,6 +4,7 @@
 #include "../../shared/hacks/auto-pickup-coins/auto-pickup-coins.hpp"
 #include "../../shared/hacks/startpos-switcher/startpos-switcher.hpp"
 #include "../../shared/hacks/labels/labels.hpp"
+#include "../../shared/hacks/noclip/noclip.hpp"
 #include "../../shared/hacks/noclip-limit/noclip-limit.hpp"
 #include "../../shared/hacks/zephyrus/replays.hpp"
 #include "../../shared/hacks/random-seed/random-seed.hpp"
@@ -17,6 +18,10 @@
 
 namespace openhack::hooks {
     struct PlayLayerHook : geode::Modify<PlayLayerHook, PlayLayer> {
+        static void onModify(auto& self) {
+            (void) self.setHookPriority("PlayLayer::destroyPlayer", 0x500000);
+        }
+
         bool init(GJGameLevel *level, bool useReplay, bool dontCreateObjects) {
             hacks::Display::playLayerInit(level);
             hacks::AutoPickupCoins::initLevel();
@@ -54,14 +59,15 @@ namespace openhack::hooks {
             hacks::SmartStartPos::addObject(object);
         }
 
-        void destroyPlayer(PlayerObject* player, GameObject* object) {
-            hacks::NoclipLimit::destroyPlayer(object);
-            PlayLayer::destroyPlayer(player, object);
+        void destroyPlayer(PlayerObject* player, GameObject* object) override {
+            hacks::NoclipLimit::destroyPlayer(player, object);
+            if (!hacks::Noclip::destroyPlayer(player, object))
+                PlayLayer::destroyPlayer(player, object);
             hacks::NoclipLimit::postDestroyPlayer();
             hacks::Hitboxes::destroyPlayer();
         }
 
-        void postUpdate(float dt) {
+        void postUpdate(float dt) override {
             PlayLayer::postUpdate(dt);
             hacks::Hitboxes::postUpdate();
             hacks::AccuratePercentage::postUpdate();

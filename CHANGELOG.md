@@ -1,16 +1,23 @@
 ## v2.4.0
 **New**:
-* Ported to 2.206
+* Ported to 2.206 (Geode only)
 * Improved "Best Run" calculation
 * Tweaked some UI elements
 * Added a "Lock First Column" option for the menu
 * Added a notice for "Click Between Frames" users
+* Performance improvements
+* Noclip now has separate settings for each player
+
+**Fixes**:
+* Fixed "Auto Hide Triggers" hiding speed portals and checkpoints
+* Fixed "Speedhack Audio" compatibility with some mods
+* Fixed "Smart StartPos" having issues with some levels
 
 **Labels**:
 * Added "Total Attempts" label ({total_attempts})
 * Added "Mod version" label ({openhack_ver})
 * Added 12-hour clock label ({clock12})
-* [Geode] Added "Mod count" label ({mod_count})
+* Added "Mod count" label ({mod_count})
 
 ## v2.3.2
 * Resolved issue with "Respawn Delay"

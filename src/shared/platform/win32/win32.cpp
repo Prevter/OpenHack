@@ -50,6 +50,9 @@ namespace openhack::utils {
         if (!gameVersion.empty())
             return gameVersion;
 
+#ifdef OPENHACK_GEODE
+        gameVersion = geode::Loader::get()->getGameVersion();
+#else
         HMODULE module = GetModuleHandleA(nullptr);
         auto dosHeader = (PIMAGE_DOS_HEADER) module;
 
@@ -121,6 +124,7 @@ namespace openhack::utils {
         }
 
         gameVersion = "Unknown";
+#endif
         return gameVersion;
     }
 

@@ -4,7 +4,7 @@
 namespace openhack::hacks {
 
     static std::vector<StartPosObject*> s_startPosObjects;
-    static std::vector<GameObject*> s_gravityPortals, s_dualPortals, s_gamemodePortals, s_miniPortals, s_speedChanges, s_mirrorPortals;
+    static std::vector<GameObject*> s_dualPortals, s_gamemodePortals, s_miniPortals, s_speedChanges, s_mirrorPortals;
 
     void SmartStartPos::onInit() {
         // Set default values
@@ -30,7 +30,6 @@ namespace openhack::hacks {
     void SmartStartPos::initLevel() {
         // Clear all vectors
         s_startPosObjects.clear();
-        s_gravityPortals.clear();
         s_dualPortals.clear();
         s_gamemodePortals.clear();
         s_miniPortals.clear();
@@ -38,14 +37,26 @@ namespace openhack::hacks {
         s_mirrorPortals.clear();
     }
 
+    GameObject* getClosestObject(std::vector<GameObject*>& vec, StartPosObject* startPos) {
+        GameObject* closest = nullptr;
+
+        std::sort(vec.begin(), vec.end(), [] (GameObject* a, GameObject* b) {
+            return a->getPositionX() < b->getPositionX();
+        });
+
+        for (auto obj : vec) {
+            if (obj->getPositionX() - 10 > startPos->getPositionX())
+                break;
+            else if (obj->getPositionX() - 10 < startPos->getPositionX())
+                closest = obj;
+        }
+
+        return closest;
+    }
+
     void SmartStartPos::addObject(GameObject* object) {
         auto objID = object->m_objectID;
         switch (objID) {
-            case 10: // Blue Gravity Portal
-            case 11: // Yellow Gravity Portal
-            case 2926: // Green Gravity Portal
-                s_gravityPortals.push_back(object);
-                break;
             case 12: // Cube Portal
             case 13: // Ship Portal
             case 47: // Ball Portal
@@ -81,159 +92,84 @@ namespace openhack::hacks {
             default:
                 return;
         }
-
-        // Recalculate start positions when a new object is added
-        updateSmartStartPos();
     }
 
-    /// @brief Get all objects that are before the given x position
-    std::vector<GameObject*> findBefore(std::vector<GameObject*>& vec, float x) {
-        std::vector<GameObject*> result;
-        for (auto* obj : vec) {
-            if (obj->getPositionX() < x) {
-                result.push_back(obj);
+    void SmartStartPos::updateSmartStartPos(StartPosObject* startPos) {
+        LevelSettingsObject* startPosSettings = startPos->m_startSettings;
+        LevelSettingsObject* levelSettings = PlayLayer::get()->m_levelSettings;
+
+        startPosSettings->m_startDual = levelSettings->m_startDual;
+        startPosSettings->m_startMode = levelSettings->m_startMode;
+        startPosSettings->m_startMini = levelSettings->m_startMini;
+        startPosSettings->m_startSpeed = levelSettings->m_startSpeed;
+
+        GameObject* obj = getClosestObject(s_dualPortals, startPos);
+        if (obj)
+            startPosSettings->m_startDual = obj->m_objectID == 286;
+
+        obj = getClosestObject(s_gamemodePortals, startPos);
+
+        if (obj) {
+            switch(obj->m_objectID) {
+                case 12:
+                    startPosSettings->m_startMode = 0;
+                    break;
+                case 13:
+                    startPosSettings->m_startMode = 1;
+                    break;
+                case 47:
+                    startPosSettings->m_startMode = 2;
+                    break;
+                case 111:
+                    startPosSettings->m_startMode = 3;
+                    break;
+                case 660:
+                    startPosSettings->m_startMode = 4;
+                    break;
+                case 745:
+                    startPosSettings->m_startMode = 5;
+                    break;
+                case 1331:
+                    startPosSettings->m_startMode = 6;
+                    break;
+                case 1933:
+                    startPosSettings->m_startMode = 7;
+                    break;
             }
         }
-        return result;
+
+        obj = getClosestObject(s_miniPortals, startPos);
+
+        if (obj)
+            startPosSettings->m_startMini = obj->m_objectID == 101;
+
+        obj = getClosestObject(s_speedChanges, startPos);
+        if (obj) {
+            switch(obj->m_objectID) {
+                case 200:
+                    startPosSettings->m_startSpeed = Speed::Slow;
+                    break;
+                case 201:
+                    startPosSettings->m_startSpeed = Speed::Normal;
+                    break;
+                case 202:
+                    startPosSettings->m_startSpeed = Speed::Fast;
+                    break;
+                case 203:
+                    startPosSettings->m_startSpeed = Speed::Faster;
+                    break;
+                case 1334:
+                    startPosSettings->m_startSpeed = Speed::Fastest;
+                    break;
+            }
+        }
     }
 
-    GameObject* findLastBefore(std::vector<GameObject*>& vec, float x) {
-        GameObject* result = nullptr;
-        for (auto* obj : vec) {
-            if (obj->getPositionX() < x) {
-                result = obj;
-            }
+    void SmartStartPos::resetLevel() {
+        if (config::get<bool>("hack.smart_startpos.enabled", false)) {
+            for (StartPosObject* obj : s_startPosObjects)
+                updateSmartStartPos(obj);
         }
-        return result;
-    }
-
-    void SmartStartPos::updateSmartStartPos() {
-        if (!config::get<bool>("hack.smart_startpos.enabled")) return;
-        if (s_startPosObjects.empty()) return;
-
-        for (auto* startPos : s_startPosObjects) {
-            auto x = startPos->getPositionX();
-            auto* startPosSettings = startPos->m_startSettings;
-            bool upsideDown = startPosSettings->m_isFlipped;
-            bool dual = startPosSettings->m_startDual;
-            bool mini = startPosSettings->m_startMini;
-            bool mirror = startPosSettings->m_mirrorMode;
-            int speed = static_cast<int>(startPosSettings->m_startSpeed);
-            int gamemode = startPosSettings->m_startMode;
-
-            // Get all objects that are before the current StartPos
-            auto gravityPortals = findBefore(s_gravityPortals, x + 10);
-            auto dualPortal = findLastBefore(s_dualPortals, x + 10);
-            auto gamemodePortal = findLastBefore(s_gamemodePortals, x + 10);
-            auto miniPortal = findLastBefore(s_miniPortals, x + 10);
-            auto speedChange = findLastBefore(s_speedChanges, x + 50);
-            auto mirrorPortal = findLastBefore(s_mirrorPortals, x + 10);
-
-            // Iterate over all objects and set the settings accordingly
-            for (auto* gravityPortal : gravityPortals) {
-                switch (gravityPortal->m_objectID) {
-                    case 10: // Blue Gravity Portal
-                        upsideDown = false;
-                        break;
-                    case 11: // Yellow Gravity Portal
-                        upsideDown = true;
-                        break;
-                    case 2926: // Green Gravity Portal
-                        upsideDown = !upsideDown;
-                        break;
-                }
-            }
-
-            if (dualPortal) {
-                switch (dualPortal->m_objectID) {
-                    case 286: // Orange Dual Portal
-                        dual = true;
-                        break;
-                    case 287: // Blue Dual Portal
-                        dual = false;
-                        break;
-                }
-            }
-
-            if (dualPortal) {
-                switch (gamemodePortal->m_objectID) {
-                    case 12: // Cube Portal
-                        gamemode = 0;
-                        break;
-                    case 13: // Ship Portal
-                        gamemode = 1;
-                        break;
-                    case 47: // Ball Portal
-                        gamemode = 2;
-                        break;
-                    case 111: // UFO Portal
-                        gamemode = 3;
-                        break;
-                    case 660: // Wave Portal
-                        gamemode = 4;
-                        break;
-                    case 745: // Robot Portal
-                        gamemode = 5;
-                        break;
-                    case 1331: // Spider Portal
-                        gamemode = 6;
-                        break;
-                    case 1933: // SwingCopter Portal
-                        gamemode = 7;
-                        break;
-                }
-            }
-
-            if (miniPortal) {
-                switch (miniPortal->m_objectID) {
-                    case 99: // Normal Size Portal
-                        mini = false;
-                        break;
-                    case 101: // Mini Portal
-                        mini = true;
-                        break;
-                }
-            }
-
-            if (speedChange) {
-                switch (speedChange->m_objectID) {
-                    case 200: // -1x Speed Change
-                        speed = 1;
-                        break;
-                    case 201: // 1x Speed Change
-                        speed = 0;
-                        break;
-                    case 202: // 2x Speed Change
-                        speed = 2;
-                        break;
-                    case 203: // 3x Speed Change
-                        speed = 3;
-                        break;
-                    case 1334: // 4x Speed Change
-                        speed = 4;
-                        break;
-                }
-            }
-
-            if (mirrorPortal) {
-                switch (mirrorPortal->m_objectID) {
-                    case 45: // Orange Mirror Portal
-                        mirror = true;
-                        break;
-                    case 46: // Blue Mirror Portal
-                        mirror = false;
-                        break;
-                }
-            }
-
-            startPosSettings->m_startMode = gamemode;
-            startPosSettings->m_startSpeed = static_cast<Speed>(speed);
-            startPosSettings->m_startMini = mini;
-            startPosSettings->m_startDual = dual;
-            startPosSettings->m_mirrorMode = mirror;
-            startPosSettings->m_isFlipped = upsideDown;
-        }
-
     }
 
 }
