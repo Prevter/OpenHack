@@ -61,7 +61,7 @@ namespace openhack::hacks {
         }, ImVec2(0, 0));
     }
 
-    void CustomWaveTrail::updateStroke(gd::HardStreak *streak) {
+    void CustomWaveTrail::updateStroke(HardStreak *streak) {
         if (!config::get<bool>("hack.custom_wave_trail.enabled", false)) return;
 
         gui::Color target;
@@ -80,7 +80,7 @@ namespace openhack::hacks {
         }
 
         if (changeColor) {
-            reinterpret_cast<cocos2d::CCDrawNode *>(streak)->setColor({
+            streak->setColor({
                 static_cast<uint8_t>(target.r * 255),
                 static_cast<uint8_t>(target.g * 255),
                 static_cast<uint8_t>(target.b * 255)
@@ -88,7 +88,7 @@ namespace openhack::hacks {
         }
 
         auto scale = config::get<float>("hack.custom_wave_trail.scale");
-        streak->m_pulseSize() = scale;
+        streak->m_pulseSize = scale;
     }
 
 }

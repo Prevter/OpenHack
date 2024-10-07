@@ -1,6 +1,6 @@
 #include "pch.hpp"
 
-#include "hooks/hooks.hpp"
+// #include "hooks/hooks.hpp"
 #include "debug/crashhandler.hpp"
 #include "imgui/imgui_hook.hpp"
 #include "utils.hpp"
@@ -19,18 +19,18 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             xinput::initialize();
 
             // Debugging
-            bool altPressed = openhack::utils::isKeyDown("Alt");
-            logger::initialize(altPressed, true, "openhack.log");
+            // bool altPressed = openhack::utils::isKeyDown("Alt");
+            logger::initialize(true, true, "openhack.log");
             crashhandler::init();
 
             // TODO: Add support for other versions
-            if (openhack::utils::getGameVersion() != "2.204") {
+            if (openhack::utils::getGameVersion() != "2.206") {
                 L_ERROR("Unsupported game version");
-                return FALSE;
+                return TRUE;
             }
 
             // Initialize OpenHack
-            openhack::initialize();
+            // openhack::initialize();
 
             // Setup ImGui
             ImGuiHook::setInitCallback([]() {
@@ -58,7 +58,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             ImGuiHook::setDrawCallback(openhack::menu::draw);
 
             // Install hooks
-            openhack::hooks::installHooks();
+            // openhack::hooks::installHooks();
 
             // Load DLL files from the "dll" directory
             auto dllDir = openhack::utils::getModAssetsDirectory() / "dll";
@@ -79,8 +79,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             break;
         }
         case DLL_PROCESS_DETACH:
-            ImGuiHook::destroy();
-            openhack::deinitialize();
+            // ImGuiHook::destroy();
+            // openhack::deinitialize();
             break;
 
         default:

@@ -12,8 +12,3 @@ $on_mod(Loaded) {
         ImGuiCocos::get().setForceLegacy(value);
     });
 }
-
-$on_mod(Unloaded) {
-    ImGuiCocos::get().destroy();
-    openhack::deinitialize();
-}

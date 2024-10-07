@@ -78,7 +78,7 @@ namespace openhack::gui {
     bool GruvboxCheckbox(const char *label, bool value, float width = -1.0f) {
         auto *drawList = ImGui::GetWindowDrawList();
         auto pos = ImGui::GetCursorScreenPos();
-        auto scale = config::getGlobal<float>("UIScale");
+        auto scale = config::getGlobal<float>("UIScale", 1.f);
         auto padding = scale * 3;
         auto size = ImGui::GetFrameHeight() - padding * 2;
         auto frameColor = ImGui::GetColorU32(ImGuiCol_FrameBg);

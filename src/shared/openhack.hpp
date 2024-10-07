@@ -21,7 +21,7 @@
 
 #ifdef OPENHACK_GEODE
 #include "../geode/pch.hpp"
-#include <gd.hpp>
+// #include <gd.hpp>
 
 #define ON_GEODE(...) __VA_ARGS__
 #define ON_STANDALONE(...)
@@ -40,9 +40,6 @@ namespace openhack {
     /// @brief Initializes everything.
     /// This function should be called from the entry point of the mod.
     void initialize();
-
-    /// @brief Unloads everything.
-    void deinitialize();
 
     extern bool debugMode;
 }

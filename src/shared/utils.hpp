@@ -2,6 +2,7 @@
 
 #include <random>
 #include <imgui.h>
+#include <Geode/Geode.hpp>
 #include "platform/platform.hpp"
 
 #ifndef M_PI
@@ -9,15 +10,11 @@
 #endif
 
 #ifdef __clang__
-
 #include <ctime>
-
 #else
 
 #include <time.h>
-
 #endif
-
 #include <chrono>
 
 #if 0
@@ -112,7 +109,7 @@ namespace openhack::utils {
     /// @param pos The screen position.
     /// @return The frame position.
     inline ImVec2 screenToFrame(const ImVec2& pos) {
-        auto *director = gd::cocos2d::CCDirector::sharedDirector();
+        auto *director = cocos2d::CCDirector::sharedDirector();
         const auto frameSize = director->getOpenGLView()->getFrameSize();
         const auto winSize = director->getWinSize();
 
@@ -125,19 +122,18 @@ namespace openhack::utils {
     /// @brief Compare the version of the game with the given version.
     /// @param version The version to compare with, in the format "[>=|<=|>|<|=]x.yyy,x.yyy-x.yyy,..."
     /// @return True if the version is compatible with the given version.
-    inline bool compareVersion(const std::string &version) {
+    inline bool compareVersion(std::string version) {
         // Split the versions
         std::vector<std::string> parts;
-        std::string versionCopy = version;
         std::string delimiter = ",";
         size_t pos = 0;
         std::string token;
-        while ((pos = versionCopy.find(delimiter)) != std::string::npos) {
-            token = versionCopy.substr(0, pos);
+        while ((pos = version.find(delimiter)) != std::string::npos) {
+            token = version.substr(0, pos);
             parts.push_back(token);
-            versionCopy.erase(0, pos + delimiter.length());
+            version.erase(0, pos + delimiter.length());
         }
-        parts.push_back(versionCopy);
+        parts.push_back(version);
 
         // Get current version
         auto currentVersion = utils::getGameVersion();

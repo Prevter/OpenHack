@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(
     OpenHack 
-    VERSION 2.3.2
+    VERSION 2.4.0
     HOMEPAGE_URL "https://github.com/Prevter/OpenHack"
     LANGUAGES C CXX
 )
@@ -17,7 +17,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # Create build options
-option(BUILD_STANDALONE "Build the standalone version" ON)
+option(BUILD_STANDALONE "Build the standalone version" OFF)
 option(BUILD_GEODE "Build the Geode version" ON)
 
 # Get the latest abbreviated commit hash of the working branch
@@ -68,8 +68,23 @@ target_link_libraries(
     INTERFACE
     external_libs
     opengl32
-    ${CMAKE_SOURCE_DIR}/libs/glew/lib/Release/Win32/glew32.lib
 )
+
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    # Windows 64
+    target_link_libraries(
+        ${PROJECT_NAME}
+        INTERFACE
+        ${CMAKE_SOURCE_DIR}/libs/glew/lib/Release/x64/glew32.lib
+    )
+else()
+    # Windows 32
+    target_link_libraries(
+        ${PROJECT_NAME}
+        INTERFACE
+        ${CMAKE_SOURCE_DIR}/libs/glew/lib/Release/Win32/glew32.lib
+    )
+endif()
 
 if (PROJECT_IS_TOP_LEVEL)
     target_compile_definitions(${PROJECT_NAME} INTERFACE OPENHACK_EXPORT)
@@ -124,6 +139,11 @@ endif()
 # ========================================
 # | Standalone build
 # ========================================
+if (BUILD_STANDALONE)
+    message(ERROR "Standalone build is deprecated, please use Geode instead")
+    return()
+endif()
+
 if (NOT BUILD_STANDALONE)
     message(STATUS "Standalone build disabled")
     return()
@@ -174,7 +194,7 @@ target_compile_definitions(
 set_target_properties(
     ${PROJECT_NAME}-Standalone
     PROPERTIES
-    OUTPUT_NAME "xinput9_1_0"
+    OUTPUT_NAME "xinput1_4"
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin"

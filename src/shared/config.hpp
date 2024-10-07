@@ -2,20 +2,21 @@
 
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 #include <nlohmann/json.hpp>
 #include <imgui.h>
 
 /// @brief Namespace for all save data and configuration.
 namespace openhack::config {
-    inline nlohmann::json storage; // Object that holds options which are saved to disk
-    inline nlohmann::json globals; // Object that holds temporary values
+    nlohmann::json& getStorage();
+    nlohmann::json& getGlobals();
 
     /// @brief Check if a key exists in the configuration.
     /// @param key Key to check.
     /// @return True if the key exists in the configuration.
-    inline bool has(const std::string &key) {
-        return storage.contains(key);
+    inline bool has(std::string_view key) {
+        return getStorage().contains(key);
     }
 
     /// @brief Get a value by key from the configuration.
@@ -24,11 +25,11 @@ namespace openhack::config {
     /// @param defaultValue Default value to return if the key does not exist.
     /// @return Value from the configuration or the default value if the key does not exist.
     template<typename T>
-    inline T get(const std::string &key, const T &defaultValue) {
+    inline T get(std::string_view key, const T &defaultValue) {
         if (!has(key))
             return defaultValue;
 
-        return storage.at(key).get<T>();
+        return getStorage().at(key).get<T>();
     }
 
     /// @brief Get a value by key from the configuration.
@@ -37,11 +38,11 @@ namespace openhack::config {
     /// @param key Key to get the value from.
     /// @return Value from the configuration.
     template<typename T>
-    inline T get(const std::string &key) {
+    inline T get(std::string_view key) {
         if (!has(key))
-            throw std::runtime_error("Key " + key + " does not exist");
+            throw std::runtime_error(fmt::format("Key '{}' does not exist", key));
 
-        return storage.at(key).get<T>();
+        return getStorage().at(key).get<T>();
     }
 
     /// @brief Set a value by key in the configuration.
@@ -49,8 +50,8 @@ namespace openhack::config {
     /// @param key Key to set the value to.
     /// @param value Value to set.
     template<typename T>
-    inline void set(const std::string &key, const T &value) {
-        storage[key] = value;
+    inline void set(std::string_view key, const T &value) {
+        getStorage()[key] = value;
     }
 
     /// @brief Check if the value is of the specified type.
@@ -58,12 +59,12 @@ namespace openhack::config {
     /// @param key Key to check.
     /// @return True if the value is of the specified type.
     template<typename T>
-    inline bool is(const std::string &key) {
+    inline bool is(std::string_view key) {
         if (!has(key))
             return false;
 
         try {
-            storage.at(key).get<T>();
+            getStorage().at(key).get<T>();
             return true;
         } catch (const nlohmann::json::exception &e) {
             return false;
@@ -75,7 +76,7 @@ namespace openhack::config {
     /// @param key Key to set the value to.
     /// @param value Value to set.
     template<typename T>
-    inline void setIfEmpty(const std::string &key, const T &value) {
+    inline void setIfEmpty(std::string_view key, const T &value) {
         if (!has(key))
             set(key, value);
     }
@@ -83,8 +84,8 @@ namespace openhack::config {
     /// @brief Check if a key exists in the global variables.
     /// @param key Key to check.
     /// @return True if the key exists in the global variables.
-    inline bool hasGlobal(const std::string &key) {
-        return globals.contains(key);
+    inline bool hasGlobal(std::string_view key) {
+        return getGlobals().contains(key);
     }
 
     /// @brief Get a value by key from the global variables.
@@ -93,11 +94,11 @@ namespace openhack::config {
     /// @param defaultValue Default value to return if the key does not exist.
     /// @return Value from the global variables or the default value if the key does not exist.
     template<typename T>
-    inline T getGlobal(const std::string &key, const T &defaultValue) {
+    inline T getGlobal(std::string_view key, const T &defaultValue) {
         if (!hasGlobal(key))
             return defaultValue;
 
-        return globals.at(key).get<T>();
+        return getGlobals().at(key).get<T>();
     }
 
     /// @brief Get a value by key from the global variables.
@@ -106,11 +107,11 @@ namespace openhack::config {
     /// @param key Key to get the value from.
     /// @return Value from the global variables.
     template<typename T>
-    inline T getGlobal(const std::string &key) {
+    inline T getGlobal(std::string_view key) {
         if (!hasGlobal(key))
-            throw std::runtime_error("Key " + key + " does not exist");
+            throw std::runtime_error(fmt::format("Key '{}' does not exist", key));
 
-        return globals.at(key).get<T>();
+        return getGlobals().at(key).get<T>();
     }
 
     /// @brief Set a value by key in the global variables.
@@ -118,8 +119,8 @@ namespace openhack::config {
     /// @param key Key to set the value to.
     /// @param value Value to set.
     template<typename T>
-    inline void setGlobal(const std::string &key, const T &value) {
-        globals[key] = value;
+    inline void setGlobal(std::string_view key, const T &value) {
+        getGlobals()[key] = value;
     }
 
     /// @brief Set the default values for the configuration.

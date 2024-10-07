@@ -1,18 +1,14 @@
 {
-	"geode": "2.0.0-beta.26",
+	"geode": "3.4.0",
 	"gd": {
-		"win": "2.204"
+		"win": "2.206"
 	},
-	"version": "v2.3.2",
+	"version": "v2.4.0",
 	"id": "prevter.openhack",
 	"name": "OpenHack",
 	"developer": "Prevter",
 	"description": "A collection of hacks for Geometry Dash",
-	"tags": [
-		"Universal",
-		"Gameplay",
-		"Cheats"
-	],
+	"tags": ["universal", "gameplay", "cheats", "bugfix"],
 	"repository": "https://github.com/Prevter/GDOpenHack",
 	"issues": {
 		"info": "Join the Discord server for support",
@@ -28,7 +24,6 @@
 			"resources/licenses/*"
 		]
 	},
-	"early-load": true,
 	"api": {
 		"include": [
 			"api/*.hpp"

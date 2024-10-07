@@ -22,7 +22,7 @@ namespace openhack::menu {
 
     /// @brief Adds specified window to the draw stack
     /// @param window Window to add
-    void addWindow(const std::string &title, const std::function<void()> &onDraw);
+    void addWindow(std::string_view title, const std::function<void()> &onDraw);
 
     /// @brief Generates a new position for each window, so they don't overlap and are stacked nicely.
     /// @return Map of window pointers and their new positions

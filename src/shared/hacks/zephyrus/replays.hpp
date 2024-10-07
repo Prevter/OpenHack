@@ -17,9 +17,9 @@ namespace openhack::hacks {
 
     public:
         /// @brief PlayerObject::pushButton hook
-        static void PlayerObjectPushButton(gd::PlayerObject* player, int buttonIndex);
+        static void PlayerObjectPushButton(PlayerObject* player, int buttonIndex);
         /// @brief PlayerObject::releaseButton hook
-        static void PlayerObjectReleaseButton(gd::PlayerObject* player, int buttonIndex);
+        static void PlayerObjectReleaseButton(PlayerObject* player, int buttonIndex);
         /// @brief GJBaseGameLayer::processCommands hook
         static void GJBaseGameLayerProcessCommands();
         /// @brief PlayLayer::resetLevel hook

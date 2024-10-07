@@ -52,50 +52,50 @@ jobs:
           name: OpenHack-Geode
           path: ${{ steps.build.outputs.build-output }}
 
-  standalone:
-    name: Vanilla OpenHack
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
-
-    - name: Install Ninja
-      shell: bash
-      run: |
-        curl -L https://github.com/ninja-build/ninja/releases/latest/download/ninja-win.zip -o ninja.zip
-        7z x ninja.zip -o"$GITHUB_WORKSPACE/ninja"
-        echo "$GITHUB_WORKSPACE/ninja" >> $GITHUB_PATH
-
-    - name: Update LLVM
-      shell: bash
-      run: |
-        curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/LLVM-17.0.6-win64.exe -o llvm-inst.exe
-        7z x llvm-inst.exe -ollvm bin/clang.exe bin/clang++.exe bin/lld-link.exe bin/llvm-rc.exe bin/*.dll lib/clang/*/include/*
-        echo "$GITHUB_WORKSPACE/llvm/bin" >> $GITHUB_PATH
-
-    - name: Configure CMake and build
-      id: build
-      shell: bash
-      run: |
-        mkdir -p $HOME/.sccache
-        export CFLAGS="--target=i686-windows-msvc"
-        export CXXFLAGS="--target=i686-windows-msvc"
-        export LDFLAGS="--target=i686-windows-msvc"
-        cmake -B build -DBUILD_GEODE=OFF -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
-        cmake --build build --config ${{env.BUILD_TYPE}}
-
-    - name: Save artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: OpenHack-Standalone
-        path: ${{github.workspace}}/bin
+#  standalone:
+#    name: Vanilla OpenHack
+#    runs-on: windows-latest
+#    steps:
+#    - uses: actions/checkout@v4
+#      with:
+#        submodules: recursive
+#
+#    - name: Install Ninja
+#      shell: bash
+#      run: |
+#        curl -L https://github.com/ninja-build/ninja/releases/latest/download/ninja-win.zip -o ninja.zip
+#        7z x ninja.zip -o"$GITHUB_WORKSPACE/ninja"
+#        echo "$GITHUB_WORKSPACE/ninja" >> $GITHUB_PATH
+#
+#    - name: Update LLVM
+#      shell: bash
+#      run: |
+#        curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/LLVM-17.0.6-win64.exe -o llvm-inst.exe
+#        7z x llvm-inst.exe -ollvm bin/clang.exe bin/clang++.exe bin/lld-link.exe bin/llvm-rc.exe bin/*.dll lib/clang/*/include/*
+#        echo "$GITHUB_WORKSPACE/llvm/bin" >> $GITHUB_PATH
+#
+#    - name: Configure CMake and build
+#      id: build
+#      shell: bash
+#      run: |
+#        mkdir -p $HOME/.sccache
+#        export CFLAGS="--target=x86_64-windows-msvc"
+#        export CXXFLAGS="--target=x86_64-windows-msvc"
+#        export LDFLAGS="--target=x86_64-windows-msvc"
+#        cmake -B build -DBUILD_GEODE=OFF -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
+#        cmake --build build --config ${{env.BUILD_TYPE}}
+#
+#    - name: Save artifacts
+#      uses: actions/upload-artifact@v4
+#      with:
+#        name: OpenHack-Standalone
+#        path: ${{github.workspace}}/bin
 
   package:
     name: Create Nightly Release
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/lemonade'
-    needs: ['standalone', 'package-geode']
+    needs: ['package-geode']
 
     steps:
       - name: Download artifacts
@@ -104,15 +104,15 @@ jobs:
           path: ${{ github.workspace }}/bin
           merge-multiple: true
 
-      - name: Prepare standalone zip
-        run: |
-          mkdir -p ${{ github.workspace }}/bin/standalone
-          cp -r ${{ github.workspace }}/bin/openhack ${{ github.workspace }}/bin/standalone/openhack
-          cp ${{ github.workspace }}/bin/xinput9_1_0.dll ${{ github.workspace }}/bin/standalone/xinput9_1_0.dll
-
-      - name: Package standalone
-        run: |
-          7z a -tzip ${{ github.workspace }}/bin/OpenHack-Nightly.zip ${{ github.workspace }}/bin/standalone/*
+#      - name: Prepare standalone zip
+#        run: |
+#          mkdir -p ${{ github.workspace }}/bin/standalone
+#          cp -r ${{ github.workspace }}/bin/openhack ${{ github.workspace }}/bin/standalone/openhack
+#          cp ${{ github.workspace }}/bin/xinput1_4.dll ${{ github.workspace }}/bin/standalone/xinput1_4.dll
+#
+#      - name: Package standalone
+#        run: |
+#          7z a -tzip ${{ github.workspace }}/bin/OpenHack-Nightly.zip ${{ github.workspace }}/bin/standalone/*
 
       - name: Get latest release tag
         id: get_latest_release
@@ -133,7 +133,7 @@ jobs:
             
             Changes since the last release: https://github.com/Prevter/OpenHack/compare/${{ steps.get_latest_release.outputs.tag }}...nightly
           files: |
-            ${{ github.workspace }}/bin/OpenHack-Nightly.zip
+#            ${{ github.workspace }}/bin/OpenHack-Nightly.zip
             ${{ github.workspace }}/bin/prevter.openhack.geode
             ${{ github.workspace }}/bin/prevter.openhack.pdb
-            ${{ github.workspace }}/bin/xinput9_1_0.pdb
+#            ${{ github.workspace }}/bin/xinput1_4.pdb

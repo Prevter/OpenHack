@@ -4,7 +4,7 @@
 #include <string>
 
 #include <utility>
-#include <dash/sigscan.hpp>
+#include "../platform/win32/sigscan.hpp"
 #include "../gui/gui.hpp"
 #include "../gui/window.hpp"
 
@@ -138,7 +138,7 @@ namespace openhack::hacks {
     /// @param id The ID of the component
     /// @return The component casted to type T or nullptr if not found
     template<typename T>
-    inline T *getComponent(const std::string &id) {
+    inline T *getComponent(std::string_view id) {
         for (auto &component : getComponents()) {
             if (component->getId() == id)
                 return dynamic_cast<T *>(component);
@@ -149,7 +149,7 @@ namespace openhack::hacks {
     /// @brief Get a hack by its ID
     /// @param id The ID of the hack
     /// @return The hack or nullptr if not found
-    inline ToggleComponent *getHack(const std::string &id) {
+    inline ToggleComponent *getHack(std::string_view id) {
         for (auto &hack : getHacks()) {
             if (hack->getId() == id)
                 return hack;

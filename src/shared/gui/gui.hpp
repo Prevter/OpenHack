@@ -128,7 +128,7 @@ namespace openhack::gui {
     /// @param minWidth The minimum width of the popup.
     /// @return True if the checkbox was clicked.
     /// @note Uses the configuration to store the value.
-    bool toggleSetting(const char *label, const char *settingKey, std::function<void()> popupDraw,
+    bool toggleSetting(const char *label, const char *settingKey, const std::function<void()>& popupDraw,
                        ImVec2 size = ImVec2(0, 0), float minWidth = 0.0f);
 
     /// @brief Allows to set a callback, which will be called for some GUI elements, which have more than one ImGui call.

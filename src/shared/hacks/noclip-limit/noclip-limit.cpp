@@ -5,9 +5,9 @@ namespace openhack::hacks {
 
     bool isDead = false;
     bool lastFrameDead = false;
-    bool isAntiCheatDeath = false;
-    gd::GameObject* antiCheatObject = nullptr;
     uint32_t deathCount = 0;
+    bool isAntiCheatDeath = false;
+    bool hadNoclip = false;
 
     void NoclipLimit::onInit() {
         // Set the default value
@@ -68,17 +68,12 @@ namespace openhack::hacks {
         return result;
     }
 
-    void NoclipLimit::destroyPlayer(gd::GameObject* object) {
-        isAntiCheatDeath = false;
+    void NoclipLimit::destroyPlayer(PlayerObject* player, GameObject* object) {
+        PlayLayer* pl = PlayLayer::get();
+        if (!pl) return;
+        if (player != pl->m_player1 || player != pl->m_player2) return;
 
-        auto frames = config::getGlobal("frame", 0);
-        if (!antiCheatObject && frames < 5) {
-            isAntiCheatDeath = true;
-            antiCheatObject = object;
-            return;
-        }
-
-        if (antiCheatObject == object) {
+        if (pl->m_anticheatSpike == object) {
             isAntiCheatDeath = true;
             return;
         }
@@ -86,7 +81,8 @@ namespace openhack::hacks {
         if (!config::get<bool>("hack.noclip_limit.enabled", false)) return;
 
         if (shouldDie()) {
-            hacks::getHack("level.noclip")->applyPatch(false); // disable noclip
+            hadNoclip = config::get<bool>("hack.noclip", false);
+            config::set("hack.noclip", false);
         }
     }
 
@@ -97,7 +93,7 @@ namespace openhack::hacks {
         if (!config::get<bool>("hack.noclip_limit.enabled", false)) return;
 
         if (shouldDie()) {
-            hacks::getHack("level.noclip")->applyPatch(); // restore original setting
+            config::set("hack.noclip", hadNoclip);
         }
     }
 
@@ -105,14 +101,13 @@ namespace openhack::hacks {
         isDead = false;
         lastFrameDead = false;
         deathCount = 0;
-        antiCheatObject = nullptr;
         config::setGlobal("noclipAcc", 100.0f);
         config::setGlobal("noclipDeath", 0);
     }
 
     void NoclipLimit::processCommands() {
-        auto* playlayer = gd::PlayLayer::get();
-        if (!playlayer || playlayer->m_hasCompletedLevel() || playlayer->m_player1()->m_isDead()) return;
+        auto* playlayer = PlayLayer::get();
+        if (!playlayer || playlayer->m_hasCompletedLevel || playlayer->m_player1->m_isDead) return;
 
         if (isDead) {
             deathCount++;

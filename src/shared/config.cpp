@@ -6,6 +6,16 @@
 #include "hacks/labels/labels.hpp"
 
 namespace openhack::config {
+    nlohmann::json& getStorage() {
+        static nlohmann::json storage;
+        return storage;
+    }
+
+    nlohmann::json& getGlobals() {
+        static nlohmann::json globals;
+        return globals;
+    }
+
     void setDefaults() {
         setIfEmpty("menu.animationTime", 0.35);
         setIfEmpty("menu.easingType", gui::animation::Easing::Cubic);
@@ -26,6 +36,7 @@ namespace openhack::config {
         setIfEmpty("menu.rainbow.value", 65.0f);
         setIfEmpty("menu.checkForUpdates", true);
         setIfEmpty("menu.animateOpacity", false);
+        setIfEmpty("menu.lockFirstColumn", true);
         setIfEmpty("keybinds.ingame", false);
     }
 
@@ -39,11 +50,11 @@ namespace openhack::config {
             return;
         }
 
-        storage = nlohmann::json::parse(file, nullptr, false);
-        if (storage.is_discarded()) {
+        getStorage() = nlohmann::json::parse(file, nullptr, false);
+        if (getStorage().is_discarded()) {
             file.close();
             L_WARN("Failed to parse config file, creating a new one");
-            storage = nlohmann::json();
+            getStorage() = nlohmann::json();
             save();
         } else {
             file.close();
@@ -55,7 +66,7 @@ namespace openhack::config {
 
         auto path = utils::getModSaveDirectory() / "config.json";
         std::ofstream file(path);
-        file << storage.dump(4);
+        file << getStorage().dump(4);
         file.close();
     }
 }

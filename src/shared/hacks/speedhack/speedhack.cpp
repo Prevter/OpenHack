@@ -3,6 +3,16 @@
 
 namespace openhack::hacks {
 
+    void updateChannels() {
+        FMOD::Channel *channel;
+        FMOD::System *system = FMODAudioEngine::sharedEngine()->m_system;
+        for (auto i = 0; i < 2; i++) {
+            system->getChannel(126 + i, &channel);
+            if (channel)
+                SpeedHack::setVolume(channel);
+        }
+    }
+
     void SpeedHack::onInit() {
         // Set default values
         // We're disabling speedhack by default, so the game actually loads
@@ -30,14 +40,16 @@ namespace openhack::hacks {
         });
     }
 
+    static bool s_lastSpeedhackState = false;
+
     void SpeedHack::update() {
-        FMOD::Channel *channel;
-        FMOD::System *system = gd::FMODAudioEngine::sharedEngine()->m_system();
-        for (auto i = 0; i < 2; i++) {
-            system->getChannel(126 + i, &channel);
-            if (channel)
-                setVolume(channel);
-        }
+        bool speedhack = config::get<bool>("hack.speedhack.enabled", false);
+        bool toggledSpeedhack = s_lastSpeedhackState != speedhack;
+        s_lastSpeedhackState = speedhack;
+
+        bool sync = config::get<bool>("hack.speedhack.music", false);
+        if ((speedhack || toggledSpeedhack) && sync)
+            updateChannels();
     }
 
     bool SpeedHack::isCheating() {

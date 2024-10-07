@@ -16,7 +16,7 @@ namespace openhack::hacks {
 
     public:
         /// @brief MenuGameLayer::update hook
-        static void menuUpdate(gd::PlayerObject *player);
+        static void menuUpdate(PlayerObject *player);
     };
 
 }

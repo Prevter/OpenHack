@@ -133,8 +133,7 @@ namespace openhack::hacks {
         bool isCheating() override { return false; }
 
         /// @brief Replaces all {} tokens in a string with their respective values
-        static std::string
-        replaceTokens(const std::string &text, gd::PlayLayer *playLayer, gd::LevelEditorLayer *editorLayer);
+        static std::string replaceTokens(const std::string &text, PlayLayer *playLayer, LevelEditorLayer *editorLayer);
 
         /// @brief Save the labels to the config
         static void save();
@@ -153,10 +152,10 @@ namespace openhack::hacks {
         static void beforeResetLevel();
 
         /// @brief PlayerObject::pushButton hook
-        static void pushButton(gd::PlayerObject *player);
+        static void pushButton(PlayerObject *player);
 
         /// @brief PlayerObject::releaseButton hook
-        static void releaseButton(gd::PlayerObject *player);
+        static void releaseButton(PlayerObject *player);
 
         /// @brief GJBaseGameLayer::update hook
         static void gameUpdate();

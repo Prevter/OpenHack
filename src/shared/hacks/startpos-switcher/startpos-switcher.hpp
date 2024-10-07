@@ -23,16 +23,16 @@ namespace openhack::hacks {
         static void lateInitLevel();
 
         /// @brief PlayLayer::addObject hook
-        static void addObject(gd::GameObject *object);
+        static void addObject(GameObject *object);
 
         /// @brief PlayLayer::resetLevel hook
         static void resetLevel();
 
     private:
-        static void pickStartPos(gd::PlayLayer *playLayer, int32_t index);
+        static void pickStartPos(PlayLayer *playLayer, int32_t index);
         static void updateLabel();
 
-        static std::vector<gd::StartPosObject *> m_startposes;
+        static std::vector<StartPosObject *> m_startposes;
         static int32_t m_currentIndex;
     };
 

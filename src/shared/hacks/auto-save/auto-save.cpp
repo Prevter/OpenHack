@@ -34,7 +34,7 @@ namespace openhack::hacks {
     void AutoSave::triggerSave() {
         bool prompt = config::get<bool>("hack.auto_save.prompt_on_save");
         if (!prompt) {
-            gd::AppDelegate::get()->trySaveGame(true);
+            AppDelegate::get()->trySaveGame(true);
             return;
         }
 
@@ -43,7 +43,7 @@ namespace openhack::hacks {
                 "Do you want to save the game?",
                 "Yes", "No", [](bool confirmed) {
                     if (confirmed) {
-                        gd::AppDelegate::get()->trySaveGame(true);
+                        AppDelegate::get()->trySaveGame(true);
                     }
                 });
     }
@@ -51,8 +51,8 @@ namespace openhack::hacks {
     void AutoSave::onLevelQuit() {
         if (!config::get<bool>("hack.auto_save.enabled")) return;
 
-        auto *playLayer = gd::PlayLayer::get();
-        if (!playLayer || playLayer->m_level()->m_levelID().value() == 0)
+        auto *playLayer = PlayLayer::get();
+        if (!playLayer || playLayer->m_level->m_levelID.value() == 0)
             return;
 
         triggerSave();

@@ -4,11 +4,11 @@
 
 namespace openhack::utils {
     std::filesystem::path getModSaveDirectory() noexcept {
-        return static_cast<std::filesystem::path::string_type &&>(geode::Mod::get()->getSaveDir());
+        return geode::Mod::get()->getSaveDir();
     }
 
     std::filesystem::path getModAssetsDirectory() noexcept {
-        return static_cast<std::filesystem::path::string_type &&>(geode::Mod::get()->getResourcesDir());
+        return geode::Mod::get()->getResourcesDir();
     }
 
     std::filesystem::path getModFontsDirectory() noexcept {

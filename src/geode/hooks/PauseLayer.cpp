@@ -7,7 +7,7 @@
 namespace openhack::hooks {
     struct PauseLayerHook : geode::Modify<PauseLayerHook, PauseLayer> {
         void customSetup() {
-            hacks::HidePause::pauseInit(reinterpret_cast<gd::PauseLayer*>(this));
+            hacks::HidePause::pauseInit(this);
             PauseLayer::customSetup();
         }
     };

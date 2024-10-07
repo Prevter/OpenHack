@@ -3,14 +3,14 @@
 
 namespace openhack::hacks {
 
-    inline float getCurrentPercent(gd::PlayLayer *playLayer) {
+    inline float getCurrentPercent(PlayLayer *playLayer) {
         float percent;
-        auto *level = playLayer->m_level();
-        auto timestamp = level->m_timestamp();
+        auto *level = playLayer->m_level;
+        auto timestamp = level->m_timestamp;
         if (timestamp > 0) {
-            percent = static_cast<float>(playLayer->m_gameState().m_stepSpeed()) / timestamp * 100.f;
+            percent = static_cast<float>(playLayer->m_gameState.m_currentProgress) / timestamp * 100.f;
         } else {
-            percent = playLayer->m_player1()->m_position().x / playLayer->m_levelLength() * 100.f;
+            percent = playLayer->m_player1->m_position.x / playLayer->m_levelLength * 100.f;
         }
 
         if (percent >= 100.f) return 100.f;
@@ -57,13 +57,13 @@ namespace openhack::hacks {
     }
 
     void AutoKill::killPlayer() {
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (playLayer == nullptr) return;
 
         // Toggle noclip off to make sure the player dies
         hacks::getHack("level.noclip")->applyPatch(false);
-        auto *player = playLayer->m_player1();
-        if (player != nullptr && !player->m_isDead()) {
+        auto *player = playLayer->m_player1;
+        if (player != nullptr && !player->m_isDead) {
             playLayer->destroyPlayer(player, player);
         }
         hacks::getHack("level.noclip")->applyPatch();
@@ -73,11 +73,11 @@ namespace openhack::hacks {
         if (!config::get<bool>("hack.auto_kill.enabled", false)) return;
 
         // Get PlayLayer
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (playLayer == nullptr) return;
 
         float percentage = getCurrentPercent(playLayer);
-        double time = playLayer->m_dTime();
+        double time = playLayer->m_gameState.m_levelTime;
 
         bool checkPercentage = config::get<bool>("hack.auto_kill.use_percentage");
         bool checkTime = config::get<bool>("hack.auto_kill.use_time");

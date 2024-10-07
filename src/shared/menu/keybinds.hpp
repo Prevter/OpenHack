@@ -27,26 +27,26 @@ namespace openhack::menu::keybinds {
 
     /// @brief Removes a keybind by its ID.
     /// @param id The ID of the keybind to remove.
-    void removeKeybind(const std::string &id);
+    void removeKeybind(std::string_view id);
 
     /// @brief Gets a keybind by its ID.
     /// @param id The ID of the keybind to get.
     /// @return The keybind with the specified ID.
-    Keybind getKeybind(const std::string &id);
+    Keybind getKeybind(std::string_view id);
 
     /// @brief Checks if a keybind with the specified ID exists.
     /// @param id The ID of the keybind to check.
     /// @return True if a keybind with the specified ID exists.
-    bool hasKeybind(const std::string &id);
+    bool hasKeybind(std::string_view id);
 
     /// @brief Gets all keybinds.
     /// @return All keybinds.
-    std::vector<Keybind> getKeybinds();
+    std::vector<Keybind>& getKeybinds();
 
     /// @brief Sets the callback for a keybind if it exists.
     /// @param id The ID of the keybind.
     /// @param callback The callback to set.
-    void setKeybindCallback(const std::string &id, const std::function<void()> &callback);
+    void setKeybindCallback(std::string_view id, const std::function<void()> &callback);
 
     /// @brief Loads the keybinds from the configuration file and creates the window.
     /// @warning It doesn't create keybinding callbacks, they need to be added by each hack separately.
@@ -65,5 +65,5 @@ namespace openhack::menu::keybinds {
     /// @param id The ID of the keybinding.
     /// @param label The label of the keybinding.
     /// @param callback The callback to call when the keybinding is pressed.
-    void addMenuKeybind(const std::string& id, const std::string& label, const std::function<void()>& callback);
+    void addMenuKeybind(std::string_view id, std::string_view label, const std::function<void()>& callback);
 }

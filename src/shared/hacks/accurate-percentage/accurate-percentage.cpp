@@ -4,23 +4,23 @@
 namespace openhack::hacks {
 
     float AccuratePercentage::getPercentage(bool oldEvaluation) {
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
         if (!playLayer) return 0.f;
 
         if (oldEvaluation) {
-            float playerX = playLayer->m_player1()->getPositionX();
-            float endX = playLayer->m_endPortal()->getPositionX();
+            float playerX = playLayer->m_player1->getPositionX();
+            float endX = playLayer->m_endPortal->getPositionX();
             return playerX / endX * 100.f;
         }
 
-        auto *level = playLayer->m_level();
-        auto timestamp = level->m_timestamp();
+        auto *level = playLayer->m_level;
+        auto timestamp = level->m_timestamp;
 
         float percent;
         if (timestamp > 0) {
-            percent = static_cast<float>(playLayer->m_gameState().m_stepSpeed()) / timestamp * 100.f;
+            /// percent = static_cast<float>(playLayer->m_gameState.m_stepSpeed) / timestamp * 100.f;
         } else {
-            percent = playLayer->m_player1()->m_position().x / playLayer->m_levelLength() * 100.f;
+            percent = playLayer->m_player1->m_position.x / playLayer->m_levelLength * 100.f;
         }
 
         if (percent >= 100.f) return 100.f;
@@ -67,30 +67,30 @@ namespace openhack::hacks {
 
     void AccuratePercentage::postUpdate() {
         if (!config::get<bool>("hack.accurate_percentage.enabled", false)) return;
-        auto* playLayer = gd::PlayLayer::get();
+        auto* playLayer = PlayLayer::get();
         if (!playLayer) return;
 
-        auto* label = playLayer->m_percentageLabel();
+        auto* label = playLayer->m_percentageLabel;
         if (!label) return;
 
-        bool isPlatformer = playLayer->m_level()->isPlatformer();
+        bool isPlatformer = playLayer->m_level->isPlatformer();
         if (isPlatformer) {
             bool showMinutes = config::get<bool>("hack.accurate_percentage.show_minutes");
             if (showMinutes) {
-                auto time = playLayer->m_dTime();
+                auto time = playLayer->m_gameState.m_levelTime;
                 int minutes = (int) time / 60;
                 int seconds = (int) time % 60;
                 int millis = (int) (time * 1000) % 1000;
                 if (minutes > 0)
-                    label->setString(fmt::format("{}:{:02d}.{:03d}", minutes, seconds, millis));
+                    label->setString(fmt::format("{}:{:02d}.{:03d}", minutes, seconds, millis).c_str());
                 else
-                    label->setString(fmt::format("{}.{:03d}", seconds, millis));
+                    label->setString(fmt::format("{}.{:03d}", seconds, millis).c_str());
             }
         } else if (config::get<bool>("hack.accurate_percentage.normal_mode")) {
             bool oldEvaluation = config::get<bool>("hack.accurate_percentage.old_eval");
             float percent = getPercentage(oldEvaluation);
             int decimalPlaces = floor(config::get<float>("hack.accurate_percentage.decimal_places", 6.f));
-            label->setString(fmt::format("{:.{}f}%", percent, decimalPlaces));
+            label->setString(fmt::format("{:.{}f}%", percent, decimalPlaces).c_str());
         }
     }
 

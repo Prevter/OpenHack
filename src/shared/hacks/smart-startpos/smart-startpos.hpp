@@ -14,14 +14,17 @@ namespace openhack::hacks {
         void update() override {}
         bool isCheating() override { return false; }
 
-        static void updateSmartStartPos();
+        static void updateSmartStartPos(StartPosObject* startPos);
 
     public:
         /// @brief PlayLayer::init hook
         static void initLevel();
 
         /// @brief PlayLayer::addObject hook
-        static void addObject(gd::GameObject* object);
+        static void addObject(GameObject* object);
+
+        /// @brief PlayLayer::resetLevel hook
+        static void resetLevel();
     };
 
 }

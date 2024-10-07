@@ -3,7 +3,7 @@
 
 namespace openhack::hacks {
 
-    std::vector<gd::GameObject*> AutoPickupCoins::m_coins;
+    std::vector<GameObject*> AutoPickupCoins::m_coins;
 
     void AutoPickupCoins::onInit() {
         // Set the default value
@@ -33,8 +33,8 @@ namespace openhack::hacks {
         m_coins.clear();
     }
 
-    void AutoPickupCoins::addObject(gd::GameObject *object) {
-        uint32_t id = object->m_objectID();
+    void AutoPickupCoins::addObject(GameObject *object) {
+        uint32_t id = object->m_objectID;
         if (id == 142 || id == 1329) {
             m_coins.push_back(object);
         }
@@ -44,14 +44,14 @@ namespace openhack::hacks {
         if (!config::get<bool>("hack.auto_pickup_coins.enabled", false)) return;
 
         // Get PlayLayer
-        auto *playLayer = gd::PlayLayer::get();
+        auto *playLayer = PlayLayer::get();
 
         // Pickup all coins from m_coins
         for (auto *coin : m_coins) {
             if (coin == nullptr) continue;
 
             // Pickup the coin
-            playLayer->pickupItem(coin);
+            playLayer->pickupItem(static_cast<EffectGameObject *>(coin));
             playLayer->destroyObject(coin);
         }
     }

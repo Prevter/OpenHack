@@ -124,8 +124,8 @@ namespace openhack::hacks {
 
     void Display::onLateInit() {
         // Set default values
-        auto *manager = gd::GameManager::sharedState();
-        config::set("hack.display.fps", manager->m_customFPSTarget());
+        auto *manager = GameManager::sharedState();
+        config::set("hack.display.fps", manager->m_customFPSTarget);
         config::set("hack.display.unlock_fps", manager->getGameVariable("0116"));
         config::setIfEmpty("hack.display.pfps", 240.0f);
         config::setIfEmpty("hack.display.physics_bypass", false);
@@ -140,8 +140,8 @@ namespace openhack::hacks {
     }
 
     void Display::refreshRate() {
-        auto *application = gd::cocos2d::CCApplication::sharedApplication();
-        auto *manager = gd::GameManager::sharedState();
+        auto *application = cocos2d::CCApplication::sharedApplication();
+        auto *manager = GameManager::sharedState();
 
         // Get settings
         bool vsync = config::get<bool>("hack.display.vsync");
@@ -169,7 +169,7 @@ namespace openhack::hacks {
         // Set FPS
         if (unlockFps) {
             auto fps = config::get<float>("hack.display.fps");
-            manager->m_customFPSTarget(fps);
+            manager->m_customFPSTarget = fps;
         }
         manager->updateCustomFPS();
 
@@ -185,17 +185,19 @@ namespace openhack::hacks {
         bool bypass = config::get<bool>("hack.display.physics_bypass");
         float pfps = bypass ? config::get<float>("hack.display.pfps") : 240.0f;
 
-        utils::writeMemory<float>(config::getGlobal<uintptr_t>("physicsTickAddr"), 1.f / pfps);
+        auto addr = config::getGlobal<uintptr_t>("physicsTickAddr", 0);
+        if (!addr) return;
+        utils::writeMemory<float>(addr, 1.f / pfps);
 
-        auto *playLayer = gd::PlayLayer::get();
-        if (playLayer && playLayer->m_level()->m_timestamp() > 0) {
-            auto startTimestamp = config::getGlobal<float>("startTimestamp");
-            float timeMultiplier = pfps / 240.0f;
-            float stepsMultiplier = (startTimestamp * timeMultiplier) / playLayer->m_level()->m_timestamp();
-            float originalValue = playLayer->m_gameState().m_stepSpeed();
-            playLayer->m_level()->m_timestamp(startTimestamp * timeMultiplier);
-            playLayer->m_gameState().m_stepSpeed(originalValue * stepsMultiplier);
-        }
+//        auto *playLayer = PlayLayer::get();
+//        if (playLayer && playLayer->m_level->m_timestamp > 0) {
+//            auto startTimestamp = config::getGlobal<float>("startTimestamp");
+//            float timeMultiplier = pfps / 240.0f;
+//            float stepsMultiplier = (startTimestamp * timeMultiplier) / playLayer->m_level->m_timestamp();
+//            float originalValue = playLayer->m_gameState.m_currentProgress;
+//            playLayer->m_level->m_timestamp = (startTimestamp * timeMultiplier);
+//            playLayer->m_gameState.m_currentProgress = (originalValue * stepsMultiplier);
+//        }
     }
 
     bool Display::isCheating() {
@@ -203,8 +205,8 @@ namespace openhack::hacks {
                config::get<float>("hack.display.pfps") != 240.0f);
     }
 
-    void Display::playLayerInit(gd::GJGameLevel *level) {
-        config::setGlobal("startTimestamp", level->m_timestamp());
+    void Display::playLayerInit(GJGameLevel *level) {
+        config::setGlobal("startTimestamp", level->m_timestamp);
     }
 
     void Display::playLayerReset() {
@@ -214,7 +216,7 @@ namespace openhack::hacks {
     static double s_extraDeltaTime = 0;
 
     void Display::schedulerUpdate(float dt, const std::function<void(float)>& original) {
-        if (!config::get<bool>("hack.display.tps_bypass") || !gd::PlayLayer::get()) {
+        if (!config::get<bool>("hack.display.tps_bypass") || !PlayLayer::get()) {
             original(dt);
             return;
         }

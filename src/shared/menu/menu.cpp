@@ -51,15 +51,15 @@ namespace openhack::menu {
 
     inline void updateCursorState() {
         bool canShowInLevel = true;
-        if (auto *playLayer = gd::PlayLayer::get()) {
-            canShowInLevel = playLayer->m_hasCompletedLevel() ||
-                             playLayer->m_isPaused() ||
-                             gd::GameManager::sharedState()->getGameVariable("0024");
+        if (auto *playLayer = PlayLayer::get()) {
+            canShowInLevel = playLayer->m_hasCompletedLevel ||
+                             playLayer->m_isPaused ||
+                             GameManager::get()->getGameVariable("0024");
 
             // "Click Teleport" enables cursor, so we need to check if it's enabled
             if (config::get<bool>("hack.click_tp.enabled", false)) return;
         }
-        gd::cocos2d::CCEGLView::sharedOpenGLView()->showCursor(isOpened || canShowInLevel);
+        cocos2d::CCEGLView::sharedOpenGLView()->showCursor(isOpened || canShowInLevel);
     }
 
     void toggle() {
@@ -127,12 +127,6 @@ namespace openhack::menu {
         if (isInitialized)
             return;
 
-#ifdef PLATFORM_WINDOWS
-        if (!win32::four_gb::isPatched()) {
-            L_WARN("The game is not patched to use 4GB of memory");
-        }
-#endif
-
         addWindow("OpenHack", []() {
             gui::text("Version: " OPENHACK_VERSION);
             gui::text("Build: " __DATE__ " " __TIME__);
@@ -142,10 +136,12 @@ namespace openhack::menu {
             gui::checkbox("Check for updates", "menu.checkForUpdates");
 #endif
 
-            if (gui::button("Open GitHub page"))
+            if (gui::button("GitHub", ImVec2(0.5, 0)))
                 createOpenURLPopup(OPENHACK_HOME_URL);
 
-            if (gui::button("Join Discord server"))
+            ImGui::SameLine(0, 2);
+
+            if (gui::button("Discord"))
                 createOpenURLPopup("https://discord.gg/QSd4jUyc45");
 
             auto searchValue = config::getGlobal<std::string>("searchValue", "");
@@ -218,9 +214,12 @@ namespace openhack::menu {
                 gui::inputFloat("Animation Time", "menu.animationTime", 0.0f, 10.0f, "%.3f");
                 gui::width();
                 gui::width(110);
-                gui::combo("Easing Type", "menu.easingType", gui::animation::EASING_NAMES,
-                           gui::animation::EASING_COUNT);
-                gui::combo("Easing Mode", "menu.easingMode", gui::animation::EASING_MODE_NAMES, 3);
+                gui::combo("Easing Type", "menu.easingType",
+                           gui::animation::EASING_NAMES.data(),
+                           gui::animation::EASING_NAMES.size());
+                gui::combo("Easing Mode", "menu.easingMode",
+                           gui::animation::EASING_MODE_NAMES.data(),
+                            gui::animation::EASING_MODE_NAMES.size());
                 gui::width();
                 gui::checkbox("Animate Opacity", "menu.animateOpacity");
             });
@@ -229,6 +228,7 @@ namespace openhack::menu {
             // if (gui::combo("Blur", "menu.blur", "Off\0Windows\0Screen\0\0")) {
             //     blur::setState(config::get<blur::State>("menu.blur"));
             // }
+
 
             gui::callback([]() {
                 gui::tooltip("Makes the title bar change colors.");
@@ -248,7 +248,11 @@ namespace openhack::menu {
                 stackWindows();
             gui::tooltip("Reorganizes the windows to take as little space as possible");
 
+            gui::checkbox("Lock First Column", "menu.lockFirstColumn");
+            gui::tooltip("Makes OpenHack specific windows stay in the first column");
+
             gui::checkbox("Lock Windows", "menu.stackWindows");
+            gui::tooltip("Realign all windows automatically");
 
         });
 
@@ -285,7 +289,6 @@ namespace openhack::menu {
         });
 
         isInitialized = true;
-
     }
 
     uint8_t firstRunState = 0;
@@ -480,15 +483,19 @@ namespace openhack::menu {
         }
     }
 
-    void addWindow(const std::string &title, const std::function<void()> &onDraw) {
+    void addWindow(std::string_view title, const std::function<void()> &onDraw) {
         windows.emplace_back(title, onDraw);
     }
 
     std::map<gui::Window *, ImVec2> getStackedPositions() {
-        const std::string builtInWindows[] = {"OpenHack", "Interface", "Keybinds"};
-        const size_t builtInCount = sizeof(builtInWindows) / sizeof(builtInWindows[0]);
-        auto snap = config::get<float>("menu.windowSnap");
+        auto firstColumnLock = config::get<bool>("menu.lockFirstColumn");
+        static std::array<std::string, 3> s_builtInWindows = {"OpenHack", "Interface", "Keybinds"};
+        std::array<std::string, 3> builtInWindows = s_builtInWindows;
+        if (!firstColumnLock) {
+            builtInWindows = {};
+        }
 
+        auto snap = config::get<float>("menu.windowSnap");
         ImVec2 screenSize = ImGui::GetIO().DisplaySize;
 
         const auto scale = config::getGlobal<float>("UIScale");
@@ -513,11 +520,11 @@ namespace openhack::menu {
             return positions;
 
         // Rest are stacked to take as little space as possible
-        std::vector<float> heights(columns - 1, snap);
+        auto columnCount = firstColumnLock ? columns - 1 : columns;
+        std::vector<float> heights(columnCount, snap);
         for (auto &window: windows) {
             // Skip built-in windows
-            if (std::find(builtInWindows, builtInWindows + builtInCount, window.getTitle()) !=
-                builtInWindows + builtInCount)
+            if (std::find(builtInWindows.begin(), builtInWindows.end(), window.getTitle()) != builtInWindows.end())
                 continue;
 
             // Find the column with the smallest height
@@ -525,7 +532,8 @@ namespace openhack::menu {
             auto index = std::distance(heights.begin(), min);
 
             // Set the position
-            positions[&window] = ImVec2((float) (index + 1) * (windowWidth + snap) + snap, *min);
+            auto windowColumn = firstColumnLock ? index + 1 : index;
+            positions[&window] = ImVec2((float) windowColumn * (windowWidth + snap) + snap, *min);
             *min += window.getSize().y + snap;
 
             // Update the height

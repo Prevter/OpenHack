@@ -1,3 +1,13 @@
+<!-- Deprecation notice -->
+<div align="center">
+    <h1>Deprecation Notice!</h1>
+    <p>This repository is no longer maintained. Please consider using
+    <a href="https://github.com/EclipseMenu/EclipseMenu">Eclipse Menu</a> instead,
+    which is a more up-to-date and feature-rich mod for Geometry Dash.</p>
+    <p>Latest Geometry Dash version supported by OpenHack is 2.204.</p>
+</div>
+
+<!-- Old README.md content -->
 <div align="center">
     <a href="https://github.com/prevter/gdopenhack/releases/latest">
           <img src="https://img.shields.io/github/v/release/prevter/gdopenhack" alt="Release version">
@@ -7,14 +17,8 @@
     <a href="LICENSE">
       <img src="https://img.shields.io/github/license/prevter/gdopenhack" alt="License">
     </a>
-    <a href="https://github.com/prevter/gdopenhack/issues">
-      <img src="https://img.shields.io/github/issues/prevter/gdopenhack" alt="Issues">
-    </a>
     <a href="https://discord.gg/HaHn7RSJ4Q">
       <img src="https://img.shields.io/discord/1195179573122445312?label=discord&logo=discord" alt="Discord">
-    </a>
-    <a href="https://www.buymeacoffee.com/prevter">
-      <img src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee" alt="Buy Me A Coffee">
     </a>
 </div>
 <br>
@@ -26,10 +30,6 @@
    <p align="center">
       A free and open source collection of hacks for Geometry Dash 2.2 with many features, including noclip, speedhack, startpos switcher, and more!
    </p>
-</div>
-
-<div align="center">
-    Supports both <b>Geode</b> and <b>Vanilla</b> Geometry Dash!
 </div>
 
 ## Table of Contents
@@ -64,7 +64,7 @@ Please visit the [issues](https://github.com/prevter/gdopenhack/issues) page for
 - And more!
 
 ## Installation
-> **Note:** OpenHack is only compatible with Windows and Linux (using Wine). Other operating systems are not supported for now.
+> **Note:** OpenHack is only compatible with Windows (also Linux and macOS, if you're using Proton/Wine to run Geometry Dash). Other operating systems are not supported for now.
 
 There are two ways to install OpenHack: using Geode, or manually installing the mod. Each method has its own advantages and disadvantages, so choose the one that best suits your needs.
 
@@ -128,15 +128,11 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
 ## License
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
-## Contact
-Join the [Discord server](https://discord.gg/HaHn7RSJ4Q) to get in touch with the developers and other users.
-
-If you want to contact me directly, you can do so via
-- Discord: `@prevter`
-- Email: `support@prevter.me`
-
-## Support
-If you like the project, consider supporting it by [buying me a coffee](https://www.buymeacoffee.com/prevter) or by contributing to the project. Any support is greatly appreciated and helps me keep motivated to work on the project and add new features!
+[//]: # (## Contact)
+[//]: # (Join the [Discord server]&#40;https://discord.gg/HaHn7RSJ4Q&#41; to get in touch with the developers and other users.)
+[//]: # (If you want to contact me directly, you can do so via)
+[//]: # (- Discord: `@prevter`)
+[//]: # (- Email: `support@prevter.me`)
 
 ## Acknowledgements
 [MegaHack](https://absolllute.com/store/view_mega_hack_pro) by Absolute for design inspiration and ideas.

@@ -16,7 +16,7 @@ namespace openhack::hacks {
 
     public:
         /// @brief PauseLayer::updateVisibility hook
-        static void pauseInit(gd::PauseLayer *self);
+        static void pauseInit(PauseLayer *self);
 
     };
 

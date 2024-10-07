@@ -16,7 +16,7 @@ namespace openhack::hacks {
 
     public:
         /// @brief CCDrawNode::drawPolygon and CCDrawNode::drawCircle hook
-        static void modifyDraw(gd::cocos2d::CCDrawNode* node, gui::Color &color, float &borderWidth, gui::Color &borderColor);
+        static void modifyDraw(cocos2d::CCDrawNode* node, gui::Color &color, float &borderWidth, gui::Color &borderColor);
 
         /// @brief PlayLayer::postUpdate hook
         static void postUpdate();

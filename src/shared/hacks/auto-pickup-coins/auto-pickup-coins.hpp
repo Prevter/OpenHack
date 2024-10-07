@@ -19,12 +19,12 @@ namespace openhack::hacks {
         /// @brief PlayLayer::init hook
         static void initLevel();
         /// @brief PlayLayer::addObject hook
-        static void addObject(gd::GameObject *object);
+        static void addObject(GameObject *object);
         /// @brief PlayLayer::resetLevel hook
         static void resetLevel();
 
     private:
-        static std::vector<gd::GameObject*> m_coins;
+        static std::vector<GameObject*> m_coins;
     };
 
 }

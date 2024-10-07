@@ -1,6 +1,5 @@
 #include "hacks.hpp"
 #include "../openhack.hpp"
-#include <dash/sigscan.hpp>
 #include "hack-list.hpp"
 
 namespace openhack::hacks {

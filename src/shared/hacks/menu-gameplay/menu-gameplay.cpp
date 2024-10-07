@@ -21,16 +21,16 @@ namespace openhack::hacks {
         });
     }
 
-    void MenuGameplay::menuUpdate(gd::PlayerObject *player) {
+    void MenuGameplay::menuUpdate(PlayerObject *player) {
         if (!config::get<bool>("hack.menu_gameplay", false)) return;
-        if (!player || player->m_isSpider()) return;
+        if (!player || player->m_isSpider) return;
 
         const char *keys[] = {"LMB", "Up", "W"};
         for (const char *key: keys) {
             if (utils::isKeyPressed(key))
-                player->pushButton(gd::PlayerButton::Jump);
+                player->pushButton(PlayerButton::Jump);
             else if (utils::isKeyReleased(key))
-                player->releaseButton(gd::PlayerButton::Jump);
+                player->releaseButton(PlayerButton::Jump);
         }
     }
 
